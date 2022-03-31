@@ -16,8 +16,8 @@ class CandleStick extends graphics_1.Graphics {
         return this.open < this.close ? 0x00FF00 : 0xFF0000;
     }
     get stickWidth() {
-        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart;
-        return chartWidth * (stickInterval.milliseconds / dateRange.milliseconds);
+        const { renderDateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart;
+        return chartWidth * (stickInterval.asMilliseconds() / renderDateRange.milliseconds);
     }
     get rectHeight() {
         return this.valueIntoSize(Math.abs(this.open - this.close));
@@ -62,8 +62,8 @@ class CandleStick extends graphics_1.Graphics {
         return valuePoint * height;
     }
     timeIntoX(time) {
-        const { dateRange, width } = this.stickChart;
-        const timePoint = dateRange.findTimePoint(time);
+        const { renderDateRange, width } = this.stickChart;
+        const timePoint = renderDateRange.findTimePoint(time);
         return timePoint * width;
     }
 }

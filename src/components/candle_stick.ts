@@ -34,9 +34,9 @@ export class CandleStick extends Graphics {
     }
 
     private get stickWidth(): number {
-        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart
+        const { renderDateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart
 
-        return chartWidth * (stickInterval.milliseconds / dateRange.milliseconds)
+        return chartWidth * (stickInterval.asMilliseconds() / renderDateRange.milliseconds)
     }
 
     private get rectHeight(): number {
@@ -100,11 +100,10 @@ export class CandleStick extends Graphics {
     }
 
     private timeIntoX(time: Moment): number {
-        const { dateRange, width } = this.stickChart
+        const { renderDateRange, width } = this.stickChart
 
-        const timePoint = dateRange.findTimePoint(time)
+        const timePoint = renderDateRange.findTimePoint(time)
 
         return timePoint * width
     }
-
 }

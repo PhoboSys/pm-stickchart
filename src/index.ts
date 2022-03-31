@@ -1,3 +1,5 @@
+import { Duration } from 'moment'
+
 import { IStickChart } from './types/stick_chart'
 import { DateRange } from './utils/date_range'
 
@@ -14,9 +16,9 @@ export class StickChart {
 
     dateRange: DateRange
 
-    segmentInterval: DateRange
+    segmentInterval: Duration
 
-    stickInterval: DateRange
+    stickInterval: Duration
 
     constructor({ width, height, dateRange, segmentDateInterval: segmentInterval, stickDateInterval: stickInterval }: IStickChart) {
         this.width = width

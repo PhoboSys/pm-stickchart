@@ -1,4 +1,5 @@
 import { Graphics } from '@pixi/graphics'
+import { Duration } from 'moment'
 
 import { IStickChart } from '../types/stick_chart'
 import { DateRange } from '../utils/date_range'
@@ -10,26 +11,54 @@ export class Grid extends Graphics {
 
     dateRange: DateRange
 
-    segmentDateInterval: DateRange
+    renderDateRange: DateRange
 
-    stickDateInterval: DateRange
+    segmentDateInterval: Duration
+
+    stickDateInterval: Duration
 
     valueRange: ValueRange
 
-    valueInterval: ValueRange
+    valueInterval: number
 
-    constructor({ width, height, dateRange, segmentDateInterval, stickDateInterval, valueInterval, valueRange }: IStickChart) {
+    constructor({
+        width,
+        height,
+        renderDateRange,
+        dateRange,
+        segmentDateInterval,
+        stickDateInterval,
+        valueInterval,
+        valueRange,
+    }: IStickChart) {
         super()
 
         this.gridWidth = width
         this.gridHeight = height
 
         this.dateRange = dateRange
+        this.renderDateRange = renderDateRange
+
         this.segmentDateInterval = segmentDateInterval
         this.stickDateInterval = stickDateInterval
 
         this.valueRange = valueRange
         this.valueInterval = valueInterval
+    }
+
+    private get segmentWidth(): number {
+        return this.gridWidth / this.verticalSegmentsCount()
+    }
+
+    private get segmentHeight(): number {
+        return this.gridHeight / this.horizontalSegmentsCount()
+    }
+
+    private get firstSegmentX(): number {
+        const point =
+            ((this.renderDateRange.from.valueOf() - this.dateRange.from.valueOf()) / this.segmentDateInterval.asMilliseconds()) % 1
+
+        return point * this.segmentWidth
     }
 
     build(): Grid {
@@ -40,10 +69,15 @@ export class Grid extends Graphics {
     }
 
     private buildVerticalLines(): void {
+        const coords: Array<number> = [this.firstSegmentX]
+
         const verticalSegmentsCount = this.verticalSegmentsCount()
+        const widthForSegment = this.segmentWidth
 
         for (let i = 0; i < verticalSegmentsCount; i++) {
-            const pos = i * this.widthForSegment()
+            const pos = coords[i]
+
+            coords[i + 1] = pos + widthForSegment
 
             const line = new Graphics()
 
@@ -60,7 +94,7 @@ export class Grid extends Graphics {
         const horizontalSegmentsCount = this.horizontalSegmentsCount()
 
         for (let i = 0; i < horizontalSegmentsCount; i++) {
-            const pos = i * this.heightForSegment()
+            const pos = i * this.segmentHeight
 
             const line = new Graphics()
 
@@ -74,17 +108,9 @@ export class Grid extends Graphics {
         }
     }
 
-    private widthForSegment(): number {
-        return this.gridWidth / this.verticalSegmentsCount()
-    }
-
-    private heightForSegment(): number {
-        return this.gridHeight / this.horizontalSegmentsCount()
-    }
-
     private verticalSegmentsCount(): number {
         const verticalSegmentsCount =
-            this.dateRange.milliseconds / this.segmentDateInterval.milliseconds
+            this.renderDateRange.milliseconds / this.segmentDateInterval.asMilliseconds()
 
         if (verticalSegmentsCount < 1) {
             throw new Error('DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals')
@@ -95,7 +121,7 @@ export class Grid extends Graphics {
 
     private horizontalSegmentsCount(): number {
         const horizontalSegmentsCount =
-            this.valueRange.value / this.valueInterval.value
+            this.valueRange.value / this.valueInterval
 
         if (horizontalSegmentsCount < 1) {
             throw new Error('DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals')
