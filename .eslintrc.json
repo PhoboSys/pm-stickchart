@@ -1,0 +1,221 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "import"
+    ],
+    "extends": [
+        "airbnb-typescript/base",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "project": [
+            "./tsconfig.json",
+            "./tests/tsconfig.json"
+        ]
+    },
+    "rules": {
+        "max-len": [
+            "error",
+            140
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "class-methods-use-this": "off",
+        "comma-dangle": [
+            "off"
+        ],
+        "no-duplicate-imports": "error",
+        "no-redeclare": "error",
+        "no-trailing-spaces": "error",
+        "space-before-blocks": "error",
+        "space-infix-ops": "error",
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-multiple-empty-lines": [
+            "error",
+            {
+                "max": 1,
+                "maxEOF": 1,
+                "maxBOF": 0
+            }
+        ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "import/order": [
+            "error",
+            {
+                "pathGroups": [
+                    {
+                        "pattern": "diia-app",
+                        "group": "external",
+                        "position": "after"
+                    },
+                    {
+                        "pattern": "@diia-inhouse/diia-app",
+                        "group": "external",
+                        "position": "after"
+                    },
+                    {
+                        "pattern": "@src/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@actions/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@services/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@models/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@dataMappers/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@utils",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@utils/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@mocks/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@tests/**",
+                        "group": "internal",
+                        "position": "before"
+                    },
+                    {
+                        "pattern": "@interfaces/**",
+                        "group": "internal",
+                        "position": "before"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": [],
+                "newlines-between": "always-and-inside-groups",
+                "alphabetize": {
+                    "order": "asc",
+                    "caseInsensitive": true
+                }
+            }
+        ],
+        "newline-before-return": [
+            "error"
+        ],
+        "no-cond-assign": [
+            "error",
+            "always"
+        ],
+        "no-console": "error",
+        "lines-between-class-members": "off",
+        "consistent-return": [
+            "off"
+        ],
+        "padding-line-between-statements": [
+            "error",
+            {
+                "blankLine": "always",
+                "prev": "*",
+                "next": "return"
+            },
+            {
+                "blankLine": "always",
+                "prev": [
+                    "const",
+                    "let"
+                ],
+                "next": "*"
+            },
+            {
+                "blankLine": "any",
+                "prev": [
+                    "const",
+                    "let"
+                ],
+                "next": "block-like"
+            },
+            {
+                "blankLine": "any",
+                "prev": [
+                    "const",
+                    "let"
+                ],
+                "next": [
+                    "const",
+                    "let"
+                ]
+            },
+            {
+                "blankLine": "always",
+                "prev": "block-like",
+                "next": "*"
+            },
+            {
+                "blankLine": "never",
+                "prev": "case",
+                "next": "*"
+            }
+        ],
+        "object-curly-newline": [
+            "off"
+        ],
+        "no-underscore-dangle": [
+            "error",
+            {
+                "allow": [
+                    "_id"
+                ]
+            }
+        ],
+        "@typescript-eslint/consistent-type-assertions": [
+            "error",
+            {
+                "assertionStyle": "angle-bracket"
+            }
+        ],
+        "@typescript-eslint/indent": [
+            "error",
+            4
+        ],
+        "@typescript-eslint/quotes": [
+            "error",
+            "single"
+        ],
+        "@typescript-eslint/semi": [
+            "error",
+            "never"
+        ],
+        "@typescript-eslint/typedef": "off",
+        "@typescript-eslint/explicit-function-return-type": [
+            "error"
+        ],
+        "@typescript-eslint/comma-dangle": [
+            "error",
+            "always-multiline"
+        ],
+        "no-return-await": "off",
+        "@typescript-eslint/return-await": "error"
+    }
+}

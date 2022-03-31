@@ -1,0 +1,61 @@
+{
+  "name": "stickchart",
+  "version": "0.0.1",
+  "description": "Chart",
+  "main": "dist/index.js",
+  "types": "index.d.ts",
+  "author": "Phobosys",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "build": "rimraf dist/ && tsc",
+    "start": "yarn build && node dist/index.js",
+    "lint": "eslint --ext .ts .",
+    "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
+    "test": "jest --config ./tests/jest.config.ts"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "dependencies": {
+    "@pixi/app": "^6.3.0",
+    "@pixi/canvas-display": "^6.3.0",
+    "@pixi/constants": "^6.3.0",
+    "@pixi/core": "^6.3.0",
+    "@pixi/display": "^6.3.0",
+    "@pixi/graphics": "^6.3.0",
+    "@pixi/math": "^6.3.0",
+    "@pixi/runner": "^6.3.0",
+    "@pixi/settings": "^6.3.0",
+    "@pixi/ticker": "^6.3.0",
+    "@pixi/utils": "^6.3.0",
+    "rimraf": "3.0.2"
+  },
+  "devDependencies": {
+    "@types/amqplib": "0.8.2",
+    "@types/node": "13.13.8",
+    "@typescript-eslint/eslint-plugin": "5.4.0",
+    "@typescript-eslint/parser": "5.4.0",
+    "eslint": "8.3.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "16.0.0",
+    "eslint-plugin-import": "2.25.3",
+    "jest": "27.2.0",
+    "pre-commit": "1.2.2",
+    "ts-jest": "27.0.5",
+    "ts-node": "9.1.1",
+    "typescript": "4.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boyko-pavlo/stickchart.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/boyko-pavlo/stickchart/issues"
+  },
+  "homepage": "https://github.com/boyko-pavlo/stickchart#readme"
+}
