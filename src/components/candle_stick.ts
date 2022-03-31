@@ -1,17 +1,8 @@
 import { Graphics } from '@pixi/graphics'
 import { Moment } from 'moment'
 
-import { ChartOptions } from './chart'
-
-type CandleStickOptions = {
-    low: number,
-    high: number,
-    open: number,
-    close: number,
-    time: Moment,
-
-    chartOptions: ChartOptions
-}
+import { ICandleStick } from '../types/candle_stick'
+import { IStickChart } from '../types/stick_chart'
 
 export class CandleStick extends Graphics {
     low: number
@@ -24,9 +15,9 @@ export class CandleStick extends Graphics {
 
     time: Moment
 
-    chartOptions: ChartOptions
+    stickChart: IStickChart
 
-    constructor({ low, high, open, close, time, chartOptions }: CandleStickOptions) {
+    constructor({ low, high, open, close, time, stickChart }: ICandleStick) {
         super()
 
         this.low = low
@@ -35,7 +26,7 @@ export class CandleStick extends Graphics {
         this.close = close
         this.time = time
 
-        this.chartOptions = chartOptions
+        this.stickChart = stickChart
     }
 
     private get color(): number {
@@ -43,13 +34,13 @@ export class CandleStick extends Graphics {
     }
 
     private get stickWidth(): number {
-        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.chartOptions
+        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart
 
         return chartWidth * (stickInterval.milliseconds / dateRange.milliseconds)
     }
 
     private get rectHeight(): number {
-        return this.valueIntoY(Math.abs(this.open - this.close))
+        return this.valueIntoSize(Math.abs(this.open - this.close))
     }
 
     private get centerX(): number {
@@ -93,7 +84,7 @@ export class CandleStick extends Graphics {
     }
 
     private valueIntoY(value: number): number {
-        const { valueRange, height } = this.chartOptions
+        const { valueRange, height } = this.stickChart
 
         const valuePoint = 1 - valueRange.findValuePoint(value)
 
@@ -101,7 +92,7 @@ export class CandleStick extends Graphics {
     }
 
     private valueIntoSize(value: number): number {
-        const { valueRange, height } = this.chartOptions
+        const { valueRange, height } = this.stickChart
 
         const valuePoint = valueRange.findValuePoint(value)
 
@@ -109,7 +100,7 @@ export class CandleStick extends Graphics {
     }
 
     private timeIntoX(time: Moment): number {
-        const { dateRange, width } = this.chartOptions
+        const { dateRange, width } = this.stickChart
 
         const timePoint = dateRange.findTimePoint(time)
 

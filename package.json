@@ -32,6 +32,7 @@
     "@pixi/settings": "^6.3.0",
     "@pixi/ticker": "^6.3.0",
     "@pixi/utils": "^6.3.0",
+    "moment": "^2.29.1",
     "rimraf": "3.0.2"
   },
   "devDependencies": {

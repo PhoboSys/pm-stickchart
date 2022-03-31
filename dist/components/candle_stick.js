@@ -3,24 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStick = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStick extends graphics_1.Graphics {
-    constructor({ low, high, open, close, time, chartOptions }) {
+    constructor({ low, high, open, close, time, stickChart }) {
         super();
         this.low = low;
         this.high = high;
         this.open = open;
         this.close = close;
         this.time = time;
-        this.chartOptions = chartOptions;
+        this.stickChart = stickChart;
     }
     get color() {
         return this.open < this.close ? 0x00FF00 : 0xFF0000;
     }
     get stickWidth() {
-        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.chartOptions;
+        const { dateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart;
         return chartWidth * (stickInterval.milliseconds / dateRange.milliseconds);
     }
     get rectHeight() {
-        return this.valueIntoY(Math.abs(this.open - this.close));
+        return this.valueIntoSize(Math.abs(this.open - this.close));
     }
     get centerX() {
         return this.timeIntoX(this.time) + (this.stickWidth / 2);
@@ -52,20 +52,20 @@ class CandleStick extends graphics_1.Graphics {
         super.addChild(rectangle);
     }
     valueIntoY(value) {
-        const { valueRange, height } = this.chartOptions;
+        const { valueRange, height } = this.stickChart;
         const valuePoint = 1 - valueRange.findValuePoint(value);
         return valuePoint * height;
     }
     valueIntoSize(value) {
-        const { valueRange, height } = this.chartOptions;
+        const { valueRange, height } = this.stickChart;
         const valuePoint = valueRange.findValuePoint(value);
         return valuePoint * height;
     }
     timeIntoX(time) {
-        const { dateRange, width } = this.chartOptions;
+        const { dateRange, width } = this.stickChart;
         const timePoint = dateRange.findTimePoint(time);
         return timePoint * width;
     }
 }
 exports.CandleStick = CandleStick;
-//# sourceMappingURL=candlestick.js.map
+//# sourceMappingURL=candle_stick.js.map
