@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStick = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStick extends graphics_1.Graphics {
-    constructor({ low, high, open, close, time, stickChart }) {
+    constructor({ low, high, open, close, time }, stickChart) {
         super();
         this.low = low;
         this.high = high;
@@ -20,7 +20,7 @@ class CandleStick extends graphics_1.Graphics {
         return chartWidth * (stickInterval.asMilliseconds() / renderDateRange.milliseconds);
     }
     get rectHeight() {
-        return this.valueIntoSize(Math.abs(this.open - this.close));
+        return this.valueIntoHeight(Math.abs(this.open - this.close));
     }
     get centerX() {
         return this.timeIntoX(this.time) + (this.stickWidth / 2);
@@ -56,7 +56,7 @@ class CandleStick extends graphics_1.Graphics {
         const valuePoint = 1 - valueRange.findValuePoint(value);
         return valuePoint * height;
     }
-    valueIntoSize(value) {
+    valueIntoHeight(value) {
         const { valueRange, height } = this.stickChart;
         const valuePoint = valueRange.findValuePoint(value);
         return valuePoint * height;
