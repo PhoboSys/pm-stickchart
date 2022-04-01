@@ -1,8 +1,7 @@
 import { Graphics } from '@pixi/graphics'
 import { Moment } from 'moment'
 
-import { ICandleStick } from '../types/candle_stick'
-import { IStickChart } from '../types/stick_chart'
+import { ICandleStick, IStickChart } from '../types'
 
 export class CandleStick extends Graphics {
     low: number

@@ -14,7 +14,8 @@
     "start": "yarn build && node dist/index.js",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
-    "test": "jest --config ./tests/jest.config.ts"
+    "test": "jest --config ./tests/jest.config.ts",
+    "autolink": "npm link && cd ../pari-market-web-trader && npm link stickchart"
   },
   "pre-commit": [
     "lint",

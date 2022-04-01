@@ -1,12 +1,10 @@
 import { Duration } from 'moment'
 
-import { IStickChart } from './types/stick_chart'
-import { DateRange } from './utils/date_range'
+import { IStickChart } from './types'
+import { DateRange } from './utils'
 
-export { DateRange } from './utils/date_range'
-export { Grid } from './components/grid'
-export { CandleStick } from './components/candle_stick'
-export { ValueRange } from './utils/value_range'
+export { DateRange, ValueRange } from './utils'
+export { Grid, CandleStick } from './components'
 export { Application } from '@pixi/app'
 
 export class StickChart {

@@ -68,4 +68,4 @@ class CandleStick extends graphics_1.Graphics {
     }
 }
 exports.CandleStick = CandleStick;
-//# sourceMappingURL=candle_stick.js.map
+//# sourceMappingURL=CandleStick.js.map

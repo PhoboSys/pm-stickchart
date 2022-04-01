@@ -21,7 +21,9 @@ class Grid extends graphics_1.Graphics {
         return this.gridHeight / this.horizontalSegmentsCount();
     }
     get firstSegmentX() {
-        const point = ((this.renderDateRange.from.valueOf() - this.dateRange.from.valueOf()) / this.segmentDateInterval.asMilliseconds()) % 1;
+        const point = ((this.renderDateRange.from.valueOf() - this.dateRange.from.valueOf()) /
+            this.segmentDateInterval.asMilliseconds()) %
+            1;
         return point * this.segmentWidth;
     }
     build() {
@@ -38,7 +40,7 @@ class Grid extends graphics_1.Graphics {
             coords[i + 1] = pos + widthForSegment;
             const line = new graphics_1.Graphics();
             line
-                .lineStyle({ width: 1, color: 0xFFFF })
+                .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
                 .lineTo(pos, this.gridHeight);
             super.addChild(line);
@@ -50,7 +52,7 @@ class Grid extends graphics_1.Graphics {
             const pos = i * this.segmentHeight;
             const line = new graphics_1.Graphics();
             line
-                .lineStyle({ width: 1, color: 0xFFFF })
+                .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
                 .lineTo(this.gridWidth, pos)
                 .endFill();
@@ -58,7 +60,8 @@ class Grid extends graphics_1.Graphics {
         }
     }
     verticalSegmentsCount() {
-        const verticalSegmentsCount = this.renderDateRange.milliseconds / this.segmentDateInterval.asMilliseconds();
+        const verticalSegmentsCount = this.renderDateRange.milliseconds /
+            this.segmentDateInterval.asMilliseconds();
         if (verticalSegmentsCount < 1) {
             throw new Error('DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals');
         }
@@ -73,4 +76,4 @@ class Grid extends graphics_1.Graphics {
     }
 }
 exports.Grid = Grid;
-//# sourceMappingURL=grid.js.map
+//# sourceMappingURL=Grid.js.map

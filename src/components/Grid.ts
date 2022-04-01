@@ -1,25 +1,25 @@
 import { Graphics } from '@pixi/graphics'
 import { Duration } from 'moment'
 
-import { IStickChart } from '../types/stick_chart'
-import { DateRange } from '../utils/date_range'
-import { ValueRange } from '../utils/value_range'
+import { IStickChart } from '../types'
+import { DateRange, ValueRange } from '../utils'
+
 export class Grid extends Graphics {
-    gridWidth: number
+    private readonly gridWidth: number
 
-    gridHeight: number
+    private readonly gridHeight: number
 
-    dateRange: DateRange
+    private dateRange: DateRange
 
-    renderDateRange: DateRange
+    private renderDateRange: DateRange
 
-    segmentDateInterval: Duration
+    private segmentDateInterval: Duration
 
-    stickDateInterval: Duration
+    private stickDateInterval: Duration
 
-    valueRange: ValueRange
+    private valueRange: ValueRange
 
-    valueInterval: number
+    private readonly valueInterval: number
 
     constructor({
         width,
@@ -56,12 +56,14 @@ export class Grid extends Graphics {
 
     private get firstSegmentX(): number {
         const point =
-            ((this.renderDateRange.from.valueOf() - this.dateRange.from.valueOf()) / this.segmentDateInterval.asMilliseconds()) % 1
+      ((this.renderDateRange.from.valueOf() - this.dateRange.from.valueOf()) /
+        this.segmentDateInterval.asMilliseconds()) %
+      1
 
         return point * this.segmentWidth
     }
 
-    build(): Grid {
+    public build(): Grid {
         this.buildVerticalLines()
         this.buildHorizontalLines()
 
@@ -82,7 +84,7 @@ export class Grid extends Graphics {
             const line = new Graphics()
 
             line
-                .lineStyle({ width: 1, color: 0xFFFF })
+                .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
                 .lineTo(pos, this.gridHeight)
 
@@ -99,7 +101,7 @@ export class Grid extends Graphics {
             const line = new Graphics()
 
             line
-                .lineStyle({ width: 1, color: 0xFFFF })
+                .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
                 .lineTo(this.gridWidth, pos)
                 .endFill()
@@ -110,21 +112,25 @@ export class Grid extends Graphics {
 
     private verticalSegmentsCount(): number {
         const verticalSegmentsCount =
-            this.renderDateRange.milliseconds / this.segmentDateInterval.asMilliseconds()
+      this.renderDateRange.milliseconds /
+      this.segmentDateInterval.asMilliseconds()
 
         if (verticalSegmentsCount < 1) {
-            throw new Error('DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals')
+            throw new Error(
+                'DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals',
+            )
         }
 
         return verticalSegmentsCount
     }
 
     private horizontalSegmentsCount(): number {
-        const horizontalSegmentsCount =
-            this.valueRange.value / this.valueInterval
+        const horizontalSegmentsCount = this.valueRange.value / this.valueInterval
 
         if (horizontalSegmentsCount < 1) {
-            throw new Error('DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals')
+            throw new Error(
+                'DateRange could\'t be smaller than the Interval. It should contain 1 or more intervals',
+            )
         }
 
         return horizontalSegmentsCount
