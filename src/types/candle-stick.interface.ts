@@ -1,6 +1,6 @@
 import { Moment } from 'moment'
 
-import { IStickChart } from './stick_chart'
+import { IStickChart } from './stick-chart.interface'
 
 export interface ICandleStick {
     low: number,

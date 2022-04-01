@@ -19,4 +19,4 @@ class DateRange {
     }
 }
 exports.DateRange = DateRange;
-//# sourceMappingURL=date_range.js.map
+//# sourceMappingURL=DateRange.js.map

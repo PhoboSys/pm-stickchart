@@ -1,10 +1,10 @@
-import { IStickChart } from './types/stick_chart'
-import { DateRange } from './utils/date_range'
+import { Duration } from 'moment'
 
-export { DateRange } from './utils/date_range'
-export { Grid } from './components/grid'
-export { CandleStick } from './components/candle_stick'
-export { ValueRange } from './utils/value_range'
+import { IStickChart } from './types'
+import { DateRange } from './utils'
+
+export { DateRange, ValueRange } from './utils'
+export { Grid, CandleStick } from './components'
 export { Application } from '@pixi/app'
 
 export class StickChart {
@@ -14,9 +14,9 @@ export class StickChart {
 
     dateRange: DateRange
 
-    segmentInterval: DateRange
+    segmentInterval: Duration
 
-    stickInterval: DateRange
+    stickInterval: Duration
 
     constructor({ width, height, dateRange, segmentDateInterval: segmentInterval, stickDateInterval: stickInterval }: IStickChart) {
         this.width = width
