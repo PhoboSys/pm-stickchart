@@ -5,69 +5,18 @@ const graphics_1 = require("@pixi/graphics");
 const CandleStick_1 = require("./CandleStick");
 const Grid_1 = require("./Grid");
 class StickChart {
-    constructor({ width, height, dateRange, renderDateRange, segmentDateInterval, stickDateInterval, valueRange, valueInterval, }) {
+    constructor({ width, height, dateRange, renderDateRange, columnIntervalSize, stickIntervalWidth, valueRange, rowIntervalSize, }) {
         this.candleSticks = [];
         this.width = width;
         this.height = height;
         this.dateRange = dateRange;
         this.renderDateRange = renderDateRange;
-        this.segmentDateInterval = segmentDateInterval;
-        this.stickDateInterval = stickDateInterval;
+        this.columnIntervalSize = columnIntervalSize;
+        this.stickIntervalWidth = stickIntervalWidth;
         this.valueRange = valueRange;
-        this.valueInterval = valueInterval;
-    }
-    get segmentWidth() {
-        return this.width / this.verticalSegmentsCount;
-    }
-    get segmentHeight() {
-        return this.height / this.horizontalSegmentsCount;
-    }
-    get horizontalSegmentsCount() {
-        const horizontalSegmentsCount = this.valueRange.value / this.valueInterval;
-        if (horizontalSegmentsCount < 1) {
-            throw new Error('ValueRange could\'t be smaller than the ValueInterval. It should contain at least 1 Interval');
-        }
-        return horizontalSegmentsCount;
-    }
-    get verticalSegmentsCount() {
-        const { renderDateRange, segmentDateInterval } = this;
-        const verticalSegmentsCount = renderDateRange.milliseconds / segmentDateInterval.asMilliseconds();
-        if (verticalSegmentsCount < 1) {
-            throw new Error('DateRange could\'t be smaller than the Interval. It should contain at least 1 Interval');
-        }
-        return verticalSegmentsCount;
-    }
-    get firstVerticalSegmentX() {
-        const { renderDateRange, dateRange, segmentDateInterval } = this;
-        const distance = renderDateRange.from.valueOf() - dateRange.from.valueOf();
-        const segment = segmentDateInterval.asMilliseconds();
-        const point = 1 - (distance / segment % 1);
-        return point * this.segmentWidth;
-    }
-    get firstHorizontalSegmentY() {
-        return 0;
-    }
-    appendRenderStickChart() {
-        const renderStickChart = {
-            width: this.width,
-            height: this.height,
-            verticalSegmentsCount: this.verticalSegmentsCount,
-            horizontalSegmentsCount: this.horizontalSegmentsCount,
-            segmentWidth: this.segmentWidth,
-            segmentHeight: this.segmentHeight,
-            firstVerticalSegmentX: this.firstVerticalSegmentX,
-            firstHorizontalSegmentY: this.firstHorizontalSegmentY,
-            dateRange: this.dateRange,
-            renderDateRange: this.renderDateRange,
-            segmentDateInterval: this.segmentDateInterval,
-            stickDateInterval: this.stickDateInterval,
-            valueRange: this.valueRange,
-            valueInterval: this.valueInterval,
-        };
-        this.renderStickChart = renderStickChart;
+        this.rowIntervalSize = rowIntervalSize;
     }
     cacheBuild() {
-        this.appendRenderStickChart();
         const grid = this.buildGrid();
         const sticks = this.buildSticks();
         this.buildedGrid = grid;
@@ -79,13 +28,27 @@ class StickChart {
         return chart;
     }
     buildGrid() {
-        const grid = new Grid_1.Grid(this.renderStickChart);
+        const { width, height, dateRange, renderDateRange, columnIntervalSize, valueRange, rowIntervalSize, } = this;
+        const grid = new Grid_1.Grid({
+            width,
+            height,
+            dateRange,
+            renderDateRange,
+            columnIntervalSize,
+            valueRange,
+            rowIntervalSize,
+        });
         return grid.build();
     }
     buildSticks() {
         const builded = new graphics_1.Graphics();
         for (const iStick of this.candleSticks) {
-            const stick = new CandleStick_1.CandleStick(iStick, this.renderStickChart);
+            const { width, height, renderDateRange, stickIntervalWidth, valueRange, } = this;
+            const stick = new CandleStick_1.CandleStick(Object.assign(Object.assign({}, iStick), { width,
+                height,
+                renderDateRange,
+                stickIntervalWidth,
+                valueRange }));
             builded.addChild(stick.build());
         }
         return builded;

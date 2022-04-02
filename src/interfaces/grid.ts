@@ -1,6 +1,6 @@
 import { Duration } from 'moment'
 
-import { DateRange, ValueRange } from '@src/utils'
+import { DateRange, ValueRange } from '../utils'
 
 export interface IRenderGrid {
     width: number

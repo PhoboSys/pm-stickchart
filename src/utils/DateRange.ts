@@ -1,24 +1,29 @@
-import { Moment } from 'moment'
+import { Moment, Duration } from 'moment'
 
 export class DateRange {
-    from: Moment
+    protected from: Moment
 
-    to: Moment
+    protected to: Moment
 
-    constructor(from, to) {
+    constructor(from: Moment, to: Moment) {
         this.from = from
         this.to = to
     }
 
-    get milliseconds(): number {
+    get duration(): number {
         return this.to.valueOf() - this.from.valueOf()
     }
 
-    findTimePoint(time: Moment): number {
-        if (this.from.valueOf() > time.valueOf() || time.valueOf() > this.to.valueOf())
-            throw new Error(`TimePoint(${time}) should fit in the ${this.toString()}`)
+    static getBeginDistance(mainRange: DateRange, subRange: DateRange): number {
+        return subRange.from.valueOf() - mainRange.from.valueOf()
+    }
 
-        return (time.valueOf() - this.from.valueOf()) / this.milliseconds
+    getIntervalsCount(interval: Duration): number {
+        return this.duration / interval.asMilliseconds()
+    }
+
+    getPointByDate(date: Date): number {
+        return (date.valueOf() - this.from.valueOf()) / this.duration
     }
 
     toString(): string {

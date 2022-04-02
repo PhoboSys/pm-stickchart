@@ -3,30 +3,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStick = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStick extends graphics_1.Graphics {
-    constructor({ low, high, open, close, time }, stickChart) {
+    constructor({ low, high, open, close, date, width, height, renderDateRange, stickIntervalWidth, valueRange }) {
         super();
         this.low = low;
         this.high = high;
         this.open = open;
         this.close = close;
-        this.time = time;
-        this.stickChart = stickChart;
+        this.date = date;
+        this.screenWidth = width;
+        this.screenHeight = height;
+        this.renderDateRange = renderDateRange;
+        this.stickIntervalWidth = stickIntervalWidth;
+        this.valueRange = valueRange;
     }
     get color() {
         return this.open < this.close ? 0x00FF00 : 0xFF0000;
     }
-    get stickWidth() {
-        const { renderDateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart;
-        return chartWidth * (stickInterval.asMilliseconds() / renderDateRange.milliseconds);
+    get rectWidth() {
+        const { screenWidth, stickIntervalWidth, renderDateRange } = this;
+        return screenWidth * (stickIntervalWidth.asMilliseconds() / renderDateRange.duration);
     }
     get rectHeight() {
-        return this.valueIntoHeight(Math.abs(this.open - this.close));
+        const { valueRange, screenHeight } = this;
+        const valuePoint = valueRange.findValuePoint(Math.abs(this.open - this.close));
+        return valuePoint * screenHeight;
     }
     get centerX() {
-        return this.timeIntoX(this.time) + (this.stickWidth / 2);
+        return this.getPointX(this.date) + (this.rectWidth / 2);
     }
     get rectTopY() {
-        return this.valueIntoY(Math.max(this.open, this.close));
+        return this.getPointY(Math.max(this.open, this.close));
     }
     build() {
         this.buildLine();
@@ -37,34 +43,29 @@ class CandleStick extends graphics_1.Graphics {
         const line = new graphics_1.Graphics();
         line
             .lineStyle({ width: 1, color: this.color })
-            .moveTo(this.centerX, this.valueIntoY(this.high))
-            .lineTo(this.centerX, this.valueIntoY(this.low));
+            .moveTo(this.centerX, this.getPointY(this.high))
+            .lineTo(this.centerX, this.getPointY(this.low));
         super.addChild(line);
     }
     buildRectangle() {
         const rectangle = new graphics_1.Graphics();
-        const x = this.timeIntoX(this.time), y = this.rectTopY;
-        const width = this.stickWidth, height = this.rectHeight;
+        const x = this.getPointX(this.date), y = this.rectTopY;
+        const width = this.rectWidth, height = this.rectHeight;
         rectangle
             .beginFill(this.color)
             .drawRect(x, y, width, height)
             .endFill();
         super.addChild(rectangle);
     }
-    valueIntoY(value) {
-        const { valueRange, height } = this.stickChart;
+    getPointY(value) {
+        const { valueRange, screenHeight } = this;
         const valuePoint = 1 - valueRange.findValuePoint(value);
-        return valuePoint * height;
+        return valuePoint * screenHeight;
     }
-    valueIntoHeight(value) {
-        const { valueRange, height } = this.stickChart;
-        const valuePoint = valueRange.findValuePoint(value);
-        return valuePoint * height;
-    }
-    timeIntoX(time) {
-        const { renderDateRange, width } = this.stickChart;
-        const timePoint = renderDateRange.findTimePoint(time);
-        return timePoint * width;
+    getPointX(date) {
+        const { renderDateRange, screenWidth } = this;
+        const datePoint = renderDateRange.getPointByDate(date);
+        return datePoint * screenWidth;
     }
 }
 exports.CandleStick = CandleStick;

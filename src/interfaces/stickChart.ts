@@ -10,31 +10,9 @@ export interface IStickChart {
     dateRange: DateRange
     renderDateRange: DateRange
 
-    segmentDateInterval: Duration
-    stickDateInterval: Duration
+    columnIntervalSize: Duration
+    stickIntervalWidth: Duration
 
     valueRange: ValueRange
-    valueInterval: number
-}
-
-export interface IRenderStickChart {
-    width: number
-    height: number
-
-    verticalSegmentsCount: number
-    horizontalSegmentsCount: number
-
-    segmentWidth: number
-    segmentHeight: number
-
-    firstVerticalSegmentX: number
-    firstHorizontalSegmentY: number
-
-    dateRange: DateRange
-    renderDateRange: DateRange
-    segmentDateInterval: Duration
-    stickDateInterval: Duration
-
-    valueRange: ValueRange
-    valueInterval: number
+    rowIntervalSize: number
 }

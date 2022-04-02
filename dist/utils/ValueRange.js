@@ -11,6 +11,9 @@ class ValueRange {
             throw new Error(`ValuePoint(${value}) should fit in the ${this.toString()}`);
         return (value - this.from) / this.value;
     }
+    getIntervalsCount(interval) {
+        return this.value / interval;
+    }
     get value() {
         return this.to - this.from;
     }

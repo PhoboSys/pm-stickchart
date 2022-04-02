@@ -1,14 +1,68 @@
 import { Graphics } from '@pixi/graphics'
+import { Duration } from 'moment'
 
-import { IRenderStickChart } from '@interfaces/stickChart'
+import { IRenderGrid } from '../interfaces/'
+import { ValueRange, DateRange } from '../utils/'
 
 export class Grid extends Graphics {
-    private stickChart: IRenderStickChart
+    protected readonly screenWidth: number
 
-    constructor(stickChart: IRenderStickChart) {
+    protected readonly screenHeight: number
+
+    protected readonly dateRange: DateRange
+
+    protected readonly renderDateRange: DateRange
+
+    protected readonly columnIntervalSize: Duration
+
+    protected readonly valueRange: ValueRange
+
+    protected readonly rowIntervalSize: number
+
+    constructor({ width, height, dateRange, renderDateRange, columnIntervalSize, valueRange, rowIntervalSize }: IRenderGrid) {
         super()
 
-        this.stickChart = stickChart
+        this.screenWidth = width
+        this.screenHeight = height
+
+        this.dateRange = dateRange
+        this.renderDateRange = renderDateRange
+
+        this.columnIntervalSize = columnIntervalSize
+
+        this.valueRange = valueRange
+
+        this.rowIntervalSize = rowIntervalSize
+    }
+
+    private get beginColumnWhitespace(): number {
+        const { renderDateRange, dateRange, columnIntervalSize } = this
+
+        const distance = DateRange.getBeginDistance(dateRange, renderDateRange)
+        const segment = columnIntervalSize.asMilliseconds()
+        const point = 1 - (distance / segment % 1)
+
+        return point * this.columnWhitespace
+    }
+
+    private get columnWhitespace(): number {
+        const { screenWidth, renderDateRange, columnIntervalSize } = this
+
+        return screenWidth / renderDateRange.getIntervalsCount(columnIntervalSize)
+    }
+
+    private get rowWhitespace(): number {
+        const { screenHeight, valueRange, rowIntervalSize } = this
+
+        return screenHeight / valueRange.getIntervalsCount(rowIntervalSize)
+    }
+
+    private get columnsCount(): number {
+        return this.renderDateRange.getIntervalsCount(this.columnIntervalSize)
+    }
+
+    private get rowsCount(): number {
+        return this.valueRange.getIntervalsCount(this.rowIntervalSize)
     }
 
     public build(): Grid {
@@ -19,38 +73,38 @@ export class Grid extends Graphics {
     }
 
     private buildVerticalLines(): void {
-        const { verticalSegmentsCount, segmentWidth, height, firstVerticalSegmentX } = this.stickChart
+        const { columnsCount, columnWhitespace, screenHeight, beginColumnWhitespace } = this
 
-        const coords: Array<number> = [firstVerticalSegmentX]
+        const coords: Array<number> = [beginColumnWhitespace]
 
-        for (let i = 0; i < verticalSegmentsCount; i++) {
+        for (let i = 0; i < columnsCount; i++) {
             const pos = coords[i]
 
-            coords[i + 1] = pos + segmentWidth
+            coords[i + 1] = pos + columnWhitespace
 
             const line = new Graphics()
 
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
-                .lineTo(pos, height)
+                .lineTo(pos, screenHeight)
 
             super.addChild(line)
         }
     }
 
     private buildHorizontalLines(): void {
-        const { horizontalSegmentsCount, segmentHeight, width } = this.stickChart
+        const { rowsCount, rowWhitespace, screenWidth } = this
 
-        for (let i = 0; i < horizontalSegmentsCount; i++) {
-            const pos = i * segmentHeight
+        for (let i = 0; i < rowsCount; i++) {
+            const pos = i * rowWhitespace
 
             const line = new Graphics()
 
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
-                .lineTo(width, pos)
+                .lineTo(screenWidth, pos)
                 .endFill()
 
             super.addChild(line)

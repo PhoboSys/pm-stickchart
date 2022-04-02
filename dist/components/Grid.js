@@ -2,10 +2,38 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Grid = void 0;
 const graphics_1 = require("@pixi/graphics");
+const utils_1 = require("../utils/");
 class Grid extends graphics_1.Graphics {
-    constructor(stickChart) {
+    constructor({ width, height, dateRange, renderDateRange, columnIntervalSize, valueRange, rowIntervalSize }) {
         super();
-        this.stickChart = stickChart;
+        this.screenWidth = width;
+        this.screenHeight = height;
+        this.dateRange = dateRange;
+        this.renderDateRange = renderDateRange;
+        this.columnIntervalSize = columnIntervalSize;
+        this.valueRange = valueRange;
+        this.rowIntervalSize = rowIntervalSize;
+    }
+    get beginColumnWhitespace() {
+        const { renderDateRange, dateRange, columnIntervalSize } = this;
+        const distance = utils_1.DateRange.getBeginDistance(dateRange, renderDateRange);
+        const segment = columnIntervalSize.asMilliseconds();
+        const point = 1 - (distance / segment % 1);
+        return point * this.columnWhitespace;
+    }
+    get columnWhitespace() {
+        const { screenWidth, renderDateRange, columnIntervalSize } = this;
+        return screenWidth / renderDateRange.getIntervalsCount(columnIntervalSize);
+    }
+    get rowWhitespace() {
+        const { screenHeight, valueRange, rowIntervalSize } = this;
+        return screenHeight / valueRange.getIntervalsCount(rowIntervalSize);
+    }
+    get columnsCount() {
+        return this.renderDateRange.getIntervalsCount(this.columnIntervalSize);
+    }
+    get rowsCount() {
+        return this.valueRange.getIntervalsCount(this.rowIntervalSize);
     }
     build() {
         this.buildVerticalLines();
@@ -13,28 +41,28 @@ class Grid extends graphics_1.Graphics {
         return this;
     }
     buildVerticalLines() {
-        const { verticalSegmentsCount, segmentWidth, height, firstVerticalSegmentX } = this.stickChart;
-        const coords = [firstVerticalSegmentX];
-        for (let i = 0; i < verticalSegmentsCount; i++) {
+        const { columnsCount, columnWhitespace, screenHeight, beginColumnWhitespace } = this;
+        const coords = [beginColumnWhitespace];
+        for (let i = 0; i < columnsCount; i++) {
             const pos = coords[i];
-            coords[i + 1] = pos + segmentWidth;
+            coords[i + 1] = pos + columnWhitespace;
             const line = new graphics_1.Graphics();
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
-                .lineTo(pos, height);
+                .lineTo(pos, screenHeight);
             super.addChild(line);
         }
     }
     buildHorizontalLines() {
-        const { horizontalSegmentsCount, segmentHeight, width } = this.stickChart;
-        for (let i = 0; i < horizontalSegmentsCount; i++) {
-            const pos = i * segmentHeight;
+        const { rowsCount, rowWhitespace, screenWidth } = this;
+        for (let i = 0; i < rowsCount; i++) {
+            const pos = i * rowWhitespace;
             const line = new graphics_1.Graphics();
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
-                .lineTo(width, pos)
+                .lineTo(screenWidth, pos)
                 .endFill();
             super.addChild(line);
         }
