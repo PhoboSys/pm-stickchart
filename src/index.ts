@@ -1,14 +1,18 @@
+import 'module-alias/register'
+
 import { Graphics } from '@pixi/graphics'
+
 import { Duration } from 'moment'
 
 import { Grid } from './components'
 import { CandleStick } from './components/CandleStick'
-import { IStickChart } from './types'
-import { ICandleStick } from './types/candle-stick.interface'
-import { IRenderStickChart } from './types/stick-chart.interface'
-import { DateRange, ValueRange } from './utils'
+import { IStickChart } from './interfaces'
+import { ICandleStick } from './interfaces/candleStick'
+import { IRenderStickChart } from './interfaces/stickChart'
 
-export { DateRange, ValueRange } from './utils'
+import { DateRange } from '@utils/DateRange'
+import { ValueRange } from '@utils/ValueRange'
+
 export { Grid, CandleStick } from './components'
 export { Application } from '@pixi/app'
 

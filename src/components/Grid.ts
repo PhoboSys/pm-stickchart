@@ -1,6 +1,6 @@
 import { Graphics } from '@pixi/graphics'
 
-import { IRenderStickChart } from '../types/'
+import { IRenderStickChart } from '@interfaces/stickChart'
 
 export class Grid extends Graphics {
     private stickChart: IRenderStickChart

@@ -7,7 +7,19 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ],
+      "@interfaces/*": [
+        "src/interfaces/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+    }
   },
   "include": [
     "src/**/*",

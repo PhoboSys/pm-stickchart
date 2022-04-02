@@ -53,37 +53,12 @@
             {
                 "pathGroups": [
                     {
-                        "pattern": "diia-app",
-                        "group": "external",
-                        "position": "after"
-                    },
-                    {
-                        "pattern": "@diia-inhouse/diia-app",
+                        "pattern": "stickchart",
                         "group": "external",
                         "position": "after"
                     },
                     {
                         "pattern": "@src/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@actions/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@services/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@models/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@dataMappers/**",
                         "group": "internal",
                         "position": "before"
                     },
@@ -94,16 +69,6 @@
                     },
                     {
                         "pattern": "@utils/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@mocks/**",
-                        "group": "internal",
-                        "position": "before"
-                    },
-                    {
-                        "pattern": "@tests/**",
                         "group": "internal",
                         "position": "before"
                     },

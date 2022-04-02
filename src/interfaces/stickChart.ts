@@ -1,6 +1,7 @@
 import { Duration } from 'moment'
 
-import { DateRange, ValueRange } from '../utils'
+import { DateRange } from '@utils/DateRange'
+import { ValueRange } from '@utils/ValueRange'
 
 export interface IStickChart {
     width: number
