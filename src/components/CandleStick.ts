@@ -2,21 +2,22 @@ import { Graphics } from '@pixi/graphics'
 import { Moment } from 'moment'
 
 import { ICandleStick, IStickChart } from '../types'
+import { IRenderStickChart } from '../types/stick-chart.interface'
 
 export class CandleStick extends Graphics {
-    low: number
+    private readonly low: number
 
-    high: number
+    private readonly high: number
 
-    open: number
+    private readonly open: number
 
-    close: number
+    private readonly close: number
 
-    time: Moment
+    private readonly time: Moment
 
-    stickChart: IStickChart
+    private stickChart: IStickChart
 
-    constructor({ low, high, open, close, time, stickChart }: ICandleStick) {
+    constructor({ low, high, open, close, time }: ICandleStick, stickChart: IRenderStickChart) {
         super()
 
         this.low = low
@@ -39,7 +40,7 @@ export class CandleStick extends Graphics {
     }
 
     private get rectHeight(): number {
-        return this.valueIntoSize(Math.abs(this.open - this.close))
+        return this.valueIntoHeight(Math.abs(this.open - this.close))
     }
 
     private get centerX(): number {
@@ -90,7 +91,7 @@ export class CandleStick extends Graphics {
         return valuePoint * height
     }
 
-    private valueIntoSize(value: number): number {
+    private valueIntoHeight(value: number): number {
         const { valueRange, height } = this.stickChart
 
         const valuePoint = valueRange.findValuePoint(value)
