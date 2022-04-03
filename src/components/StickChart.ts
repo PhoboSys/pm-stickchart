@@ -45,7 +45,7 @@ export class StickChart {
     public zoomEventHandler(event: WheelEvent): void {
         event.preventDefault()
 
-        const { offsetX, deltaY } = event
+        const { /*offsetX,*/ deltaY } = event
         const { renderDateRange } = this
 
         const zoomValue = deltaY * (renderDateRange.duration * 0.001)

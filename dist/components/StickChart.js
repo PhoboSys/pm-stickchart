@@ -15,7 +15,7 @@ class StickChart {
     }
     zoomEventHandler(event) {
         event.preventDefault();
-        const { offsetX, deltaY } = event;
+        const { /*offsetX,*/ deltaY } = event;
         const { renderDateRange } = this;
         const zoomValue = deltaY * (renderDateRange.duration * 0.001);
         renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
@@ -27,6 +27,7 @@ class StickChart {
         if (intervalCount < 7) {
             columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds');
         }
+        // eslint-disable-next-line no-console
         console.log(intervalCount, columnIntervalSize.asMilliseconds());
         this.cacheBuild();
     }
