@@ -1,8 +1,12 @@
+import { Container } from '@pixi/display'
 import { Graphics } from '@pixi/graphics'
 import { Duration } from 'moment'
 
 import { ICandleStick, IStickChart } from '../interfaces'
 
+// import { IRenderStickChart } from '../interfaces/stickChart'
+// import { GridBuilderMiddleware } from '../middlewares/Grid'
+// import { MiddlewareHandler } from '../middlewares/Handler'
 import { DateRange, ValueRange } from '../utils'
 
 import { CandleStick } from './CandleStick'
@@ -29,30 +33,39 @@ export class StickChart {
 
     protected buildedGrid: Graphics
 
-    protected candleSticks: Array<ICandleStick> = []
+    protected readonly buildedChart: Graphics = new Graphics()
 
-    constructor({
-        width,
-        height,
-        dateRange,
-        renderDateRange,
-        columnIntervalSize,
-        stickIntervalWidth,
-        valueRange,
-        rowIntervalSize,
-    }: IStickChart) {
-        this.width = width
-        this.height = height
+    protected readonly candleSticks: Array<ICandleStick> = []
 
-        this.dateRange = dateRange
-        this.renderDateRange = renderDateRange
+    constructor(init: IStickChart) {
+        Object.assign(this, init)
+    }
 
-        this.columnIntervalSize = columnIntervalSize
+    public viewport(container: Container): void {
+        container.addChild(this.buildedChart)
+    }
 
-        this.stickIntervalWidth = stickIntervalWidth
+    public zoomEventHandler(event: WheelEvent): void {
+        event.preventDefault()
 
-        this.valueRange = valueRange
-        this.rowIntervalSize = rowIntervalSize
+        const { /*offsetX,*/ deltaY } = event
+        const { renderDateRange } = this
+
+        const zoomValue = deltaY * (renderDateRange.duration * 0.001)
+
+        renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue)
+
+        const { columnIntervalSize } = this
+        const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize)
+        if (intervalCount > 15) {
+            columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
+        }
+
+        if (intervalCount < 7) {
+            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
+        }
+
+        this.cacheBuild()
     }
 
     public cacheBuild(): Graphics {
@@ -62,13 +75,13 @@ export class StickChart {
         this.buildedGrid = grid
         this.buildedSticks = sticks
 
-        const chart = new Graphics()
+        this.buildedChart.removeChildren()
 
-        chart
+        this.buildedChart
             .addChild(grid)
             .addChild(sticks)
 
-        return chart
+        return this.buildedChart
     }
 
     private buildGrid(): Graphics {
@@ -122,21 +135,55 @@ export class StickChart {
         return builded
     }
 
+    public clear(): void {
+        this.buildedChart.removeChildren()
+    }
+
     public rebuild(): Graphics {
         if (this.buildedGrid === undefined || this.buildedSticks === undefined) {
             throw Error('Expected to call this.cacheBuild() before')
         }
 
-        const chart = new Graphics()
+        this.buildedChart.removeChildren()
 
-        chart
+        this.buildedChart
             .addChild(this.buildedSticks)
             .addChild(this.buildedGrid)
 
-        return chart
+        return this.buildedChart
     }
 
     public addCandleStick(candleStick: ICandleStick): void {
         this.candleSticks.push(candleStick)
     }
 }
+
+/*export class StickChart implements IStickChart {
+    width: number
+
+    height: number
+
+    dateRange: DateRange
+
+    renderDateRange: DateRange
+
+    columnIntervalSize: Duration
+
+    stickIntervalWidth: Duration
+
+    valueRange: ValueRange
+
+    rowIntervalSize: number
+
+    middlewareHandler = new MiddlewareHandler<IRenderStickChart>()
+
+    constructor(init: IStickChart) {
+        Object.assign(this, init)
+
+        this.middlewareHandler.add(new GridBuilderMiddleware())
+    }
+
+    build(viewport: Graphics): void {
+        this.middlewareHandler.next({ ...this, viewport })
+    }
+}*/

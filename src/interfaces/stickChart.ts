@@ -1,3 +1,4 @@
+import { Graphics } from '@pixi/graphics'
 import { Duration } from 'moment'
 
 import { DateRange } from '@utils/DateRange'
@@ -15,4 +16,8 @@ export interface IStickChart {
 
     valueRange: ValueRange
     rowIntervalSize: number
+}
+
+export interface IRenderStickChart extends IStickChart {
+    viewport: Graphics
 }

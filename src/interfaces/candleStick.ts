@@ -1,7 +1,6 @@
 import { Duration } from 'moment'
 
-import { DateRange } from '../utils/DateRange'
-import { ValueRange } from '../utils/ValueRange'
+import { DateRange, ValueRange } from '@src/utils'
 export interface ICandleStick {
     low: number,
     high: number,

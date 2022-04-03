@@ -18,15 +18,20 @@ export class DateRange {
         return subRange.from.valueOf() - mainRange.from.valueOf()
     }
 
-    getIntervalsCount(interval: Duration): number {
+    public moveRangeInMilliseconds(from: number, to: number): void {
+        this.from.add(from, 'milliseconds')
+        this.to.add(to, 'milliseconds')
+    }
+
+    public getIntervalsCount(interval: Duration): number {
         return this.duration / interval.asMilliseconds()
     }
 
-    getPointByDate(date: Date): number {
+    public getPointByDate(date: Date): number {
         return (date.valueOf() - this.from.valueOf()) / this.duration
     }
 
-    toString(): string {
+    public toString(): string {
         return `Range(from: ${this.from}, to: ${this.to})`
     }
 }

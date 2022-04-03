@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./types",
     "outDir": "dist",
     "module": "commonjs",
     "target": "es2017",
@@ -16,10 +18,14 @@
       "@interfaces/*": [
         "src/interfaces/*"
       ],
+      "@middlewares/*": [
+        "src/middlewares/*"
+      ],
       "@utils/*": [
         "src/utils/*"
       ],
-    }
+    },
+    "jsx": "react"
   },
   "include": [
     "src/**/*",
