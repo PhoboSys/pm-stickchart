@@ -15,6 +15,10 @@ export class ValueRange {
         return (value - this.from) / this.value
     }
 
+    getIntervalsCount(interval: number): number {
+        return this.value / interval
+    }
+
     get value(): number {
         return this.to - this.from
     }

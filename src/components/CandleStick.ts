@@ -1,8 +1,10 @@
 import { Graphics } from '@pixi/graphics'
-import { Moment } from 'moment'
 
-import { ICandleStick, IStickChart } from '../types'
-import { IRenderStickChart } from '../types/stick-chart.interface'
+import { Duration } from 'moment'
+
+import { ValueRange, DateRange } from '../utils/'
+
+import { IRenderCandleStick } from '@interfaces/candleStick'
 
 export class CandleStick extends Graphics {
     private readonly low: number
@@ -13,42 +15,61 @@ export class CandleStick extends Graphics {
 
     private readonly close: number
 
-    private readonly time: Moment
+    private readonly date: Date
 
-    private stickChart: IStickChart
+    private readonly screenWidth: number
 
-    constructor({ low, high, open, close, time }: ICandleStick, stickChart: IRenderStickChart) {
+    private readonly screenHeight: number
+
+    private readonly renderDateRange: DateRange
+
+    private readonly stickIntervalWidth: Duration
+
+    private readonly valueRange: ValueRange
+
+    constructor({ low, high, open, close, date, width, height, renderDateRange, stickIntervalWidth, valueRange }: IRenderCandleStick) {
         super()
 
         this.low = low
         this.high = high
         this.open = open
         this.close = close
-        this.time = time
+        this.date = date
 
-        this.stickChart = stickChart
+        this.screenWidth = width
+        this.screenHeight = height
+
+        this.renderDateRange = renderDateRange
+
+        this.stickIntervalWidth = stickIntervalWidth
+
+        this.valueRange = valueRange
     }
 
     private get color(): number {
         return this.open < this.close ? 0x00FF00 : 0xFF0000
     }
 
-    private get stickWidth(): number {
-        const { renderDateRange, stickDateInterval: stickInterval, width: chartWidth } = this.stickChart
+    private get rectWidth(): number {
+        const { screenWidth, stickIntervalWidth, renderDateRange } = this
 
-        return chartWidth * (stickInterval.asMilliseconds() / renderDateRange.milliseconds)
+        return screenWidth * (stickIntervalWidth.asMilliseconds() / renderDateRange.duration)
     }
 
     private get rectHeight(): number {
-        return this.valueIntoHeight(Math.abs(this.open - this.close))
+        const { valueRange, screenHeight } = this
+
+        const valuePoint = valueRange.findValuePoint(Math.abs(this.open - this.close))
+
+        return valuePoint * screenHeight
     }
 
     private get centerX(): number {
-        return this.timeIntoX(this.time) + (this.stickWidth / 2)
+        return this.getPointX(this.date) + (this.rectWidth / 2)
     }
 
     private get rectTopY(): number {
-        return this.valueIntoY(Math.max(this.open, this.close))
+        return this.getPointY(Math.max(this.open, this.close))
     }
 
     build(): CandleStick {
@@ -63,8 +84,8 @@ export class CandleStick extends Graphics {
 
         line
             .lineStyle({ width: 1, color: this.color })
-            .moveTo(this.centerX, this.valueIntoY(this.high))
-            .lineTo(this.centerX, this.valueIntoY(this.low))
+            .moveTo(this.centerX, this.getPointY(this.high))
+            .lineTo(this.centerX, this.getPointY(this.low))
 
         super.addChild(line)
     }
@@ -72,8 +93,8 @@ export class CandleStick extends Graphics {
     private buildRectangle(): void {
         const rectangle = new Graphics()
 
-        const x = this.timeIntoX(this.time), y = this.rectTopY
-        const width = this.stickWidth, height = this.rectHeight
+        const x = this.getPointX(this.date), y = this.rectTopY
+        const width = this.rectWidth, height = this.rectHeight
 
         rectangle
             .beginFill(this.color)
@@ -83,27 +104,19 @@ export class CandleStick extends Graphics {
         super.addChild(rectangle)
     }
 
-    private valueIntoY(value: number): number {
-        const { valueRange, height } = this.stickChart
+    private getPointY(value: number): number {
+        const { valueRange, screenHeight } = this
 
         const valuePoint = 1 - valueRange.findValuePoint(value)
 
-        return valuePoint * height
+        return valuePoint * screenHeight
     }
 
-    private valueIntoHeight(value: number): number {
-        const { valueRange, height } = this.stickChart
+    private getPointX(date: Date): number {
+        const { renderDateRange, screenWidth } = this
 
-        const valuePoint = valueRange.findValuePoint(value)
+        const datePoint = renderDateRange.getPointByDate(date)
 
-        return valuePoint * height
-    }
-
-    private timeIntoX(time: Moment): number {
-        const { renderDateRange, width } = this.stickChart
-
-        const timePoint = renderDateRange.findTimePoint(time)
-
-        return timePoint * width
+        return datePoint * screenWidth
     }
 }

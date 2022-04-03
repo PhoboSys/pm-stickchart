@@ -6,13 +6,17 @@ class DateRange {
         this.from = from;
         this.to = to;
     }
-    get milliseconds() {
+    get duration() {
         return this.to.valueOf() - this.from.valueOf();
     }
-    findTimePoint(time) {
-        if (this.from.valueOf() > time.valueOf() || time.valueOf() > this.to.valueOf())
-            throw new Error(`TimePoint(${time}) should fit in the ${this.toString()}`);
-        return (time.valueOf() - this.from.valueOf()) / this.milliseconds;
+    static getBeginDistance(mainRange, subRange) {
+        return subRange.from.valueOf() - mainRange.from.valueOf();
+    }
+    getIntervalsCount(interval) {
+        return this.duration / interval.asMilliseconds();
+    }
+    getPointByDate(date) {
+        return (date.valueOf() - this.from.valueOf()) / this.duration;
     }
     toString() {
         return `Range(from: ${this.from}, to: ${this.to})`;
