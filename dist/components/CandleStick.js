@@ -3,18 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStick = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStick extends graphics_1.Graphics {
-    constructor({ low, high, open, close, date, width, height, renderDateRange, stickIntervalWidth, valueRange }) {
+    constructor(init) {
         super();
-        this.low = low;
-        this.high = high;
-        this.open = open;
-        this.close = close;
-        this.date = date;
+        Object.assign(this, init);
+    }
+    set width(width) {
         this.screenWidth = width;
+    }
+    set height(height) {
         this.screenHeight = height;
-        this.renderDateRange = renderDateRange;
-        this.stickIntervalWidth = stickIntervalWidth;
-        this.valueRange = valueRange;
     }
     get color() {
         return this.open < this.close ? 0x00FF00 : 0xFF0000;

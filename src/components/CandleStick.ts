@@ -17,9 +17,9 @@ export class CandleStick extends Graphics {
 
     private readonly date: Date
 
-    private readonly screenWidth: number
+    private screenWidth: number
 
-    private readonly screenHeight: number
+    private screenHeight: number
 
     private readonly renderDateRange: DateRange
 
@@ -27,23 +27,17 @@ export class CandleStick extends Graphics {
 
     private readonly valueRange: ValueRange
 
-    constructor({ low, high, open, close, date, width, height, renderDateRange, stickIntervalWidth, valueRange }: IRenderCandleStick) {
-        super()
-
-        this.low = low
-        this.high = high
-        this.open = open
-        this.close = close
-        this.date = date
-
+    public set width(width) {
         this.screenWidth = width
+    }
+
+    public set height(height) {
         this.screenHeight = height
+    }
 
-        this.renderDateRange = renderDateRange
-
-        this.stickIntervalWidth = stickIntervalWidth
-
-        this.valueRange = valueRange
+    constructor(init: IRenderCandleStick) {
+        super()
+        Object.assign(this, init)
     }
 
     private get color(): number {

@@ -12,6 +12,10 @@ class DateRange {
     static getBeginDistance(mainRange, subRange) {
         return subRange.from.valueOf() - mainRange.from.valueOf();
     }
+    moveRangeInMilliseconds(from, to) {
+        this.from.add(from, 'milliseconds');
+        this.to.add(to, 'milliseconds');
+    }
     getIntervalsCount(interval) {
         return this.duration / interval.asMilliseconds();
     }
