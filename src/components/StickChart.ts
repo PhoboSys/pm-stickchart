@@ -1,3 +1,4 @@
+import { Container } from '@pixi/display'
 import { Graphics } from '@pixi/graphics'
 import { Duration } from 'moment'
 
@@ -29,7 +30,9 @@ export class StickChart {
 
     protected buildedGrid: Graphics
 
-    protected candleSticks: Array<ICandleStick> = []
+    protected readonly buildedChart: Graphics = new Graphics()
+
+    protected readonly candleSticks: Array<ICandleStick> = []
 
     constructor({
         width,
@@ -55,6 +58,35 @@ export class StickChart {
         this.rowIntervalSize = rowIntervalSize
     }
 
+    public viewport(container: Container): void {
+        container.addChild(this.buildedChart)
+    }
+
+    public zoomEventHandler(event: WheelEvent): void {
+        event.preventDefault()
+
+        const { offsetX, deltaY } = event
+        const { renderDateRange } = this
+
+        const zoomValue = deltaY * (renderDateRange.duration * 0.001)
+
+        renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue)
+
+        const { columnIntervalSize } = this
+        const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize)
+        if (intervalCount > 15) {
+            columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
+        }
+
+        if (intervalCount < 7) {
+            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
+        }
+
+        console.log(intervalCount, columnIntervalSize.asMilliseconds())
+
+        this.cacheBuild()
+    }
+
     public cacheBuild(): Graphics {
         const grid = this.buildGrid()
         const sticks = this.buildSticks()
@@ -62,13 +94,13 @@ export class StickChart {
         this.buildedGrid = grid
         this.buildedSticks = sticks
 
-        const chart = new Graphics()
+        this.buildedChart.removeChildren()
 
-        chart
+        this.buildedChart
             .addChild(grid)
             .addChild(sticks)
 
-        return chart
+        return this.buildedChart
     }
 
     private buildGrid(): Graphics {
@@ -122,18 +154,22 @@ export class StickChart {
         return builded
     }
 
+    public clear(): void {
+        this.buildedChart.removeChildren()
+    }
+
     public rebuild(): Graphics {
         if (this.buildedGrid === undefined || this.buildedSticks === undefined) {
             throw Error('Expected to call this.cacheBuild() before')
         }
 
-        const chart = new Graphics()
+        this.buildedChart.removeChildren()
 
-        chart
+        this.buildedChart
             .addChild(this.buildedSticks)
             .addChild(this.buildedGrid)
 
-        return chart
+        return this.buildedChart
     }
 
     public addCandleStick(candleStick: ICandleStick): void {

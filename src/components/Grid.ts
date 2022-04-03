@@ -1,3 +1,4 @@
+import { Container } from '@pixi/display'
 import { Graphics } from '@pixi/graphics'
 import { Duration } from 'moment'
 

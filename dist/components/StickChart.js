@@ -6,6 +6,7 @@ const CandleStick_1 = require("./CandleStick");
 const Grid_1 = require("./Grid");
 class StickChart {
     constructor({ width, height, dateRange, renderDateRange, columnIntervalSize, stickIntervalWidth, valueRange, rowIntervalSize, }) {
+        this.buildedChart = new graphics_1.Graphics();
         this.candleSticks = [];
         this.width = width;
         this.height = height;
@@ -16,16 +17,36 @@ class StickChart {
         this.valueRange = valueRange;
         this.rowIntervalSize = rowIntervalSize;
     }
+    viewport(container) {
+        container.addChild(this.buildedChart);
+    }
+    zoomEventHandler(event) {
+        event.preventDefault();
+        const { offsetX, deltaY } = event;
+        const { renderDateRange } = this;
+        const zoomValue = deltaY * (renderDateRange.duration * 0.001);
+        renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
+        const { columnIntervalSize } = this;
+        const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize);
+        if (intervalCount > 15) {
+            columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds');
+        }
+        if (intervalCount < 7) {
+            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds');
+        }
+        console.log(intervalCount, columnIntervalSize.asMilliseconds());
+        this.cacheBuild();
+    }
     cacheBuild() {
         const grid = this.buildGrid();
         const sticks = this.buildSticks();
         this.buildedGrid = grid;
         this.buildedSticks = sticks;
-        const chart = new graphics_1.Graphics();
-        chart
+        this.buildedChart.removeChildren();
+        this.buildedChart
             .addChild(grid)
             .addChild(sticks);
-        return chart;
+        return this.buildedChart;
     }
     buildGrid() {
         const { width, height, dateRange, renderDateRange, columnIntervalSize, valueRange, rowIntervalSize, } = this;
@@ -53,15 +74,18 @@ class StickChart {
         }
         return builded;
     }
+    clear() {
+        this.buildedChart.removeChildren();
+    }
     rebuild() {
         if (this.buildedGrid === undefined || this.buildedSticks === undefined) {
             throw Error('Expected to call this.cacheBuild() before');
         }
-        const chart = new graphics_1.Graphics();
-        chart
+        this.buildedChart.removeChildren();
+        this.buildedChart
             .addChild(this.buildedSticks)
             .addChild(this.buildedGrid);
-        return chart;
+        return this.buildedChart;
     }
     addCandleStick(candleStick) {
         this.candleSticks.push(candleStick);
