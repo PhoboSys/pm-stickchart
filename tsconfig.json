@@ -18,6 +18,9 @@
       "@interfaces/*": [
         "src/interfaces/*"
       ],
+      "@middlewares/*": [
+        "src/middlewares/*"
+      ],
       "@utils/*": [
         "src/utils/*"
       ],
