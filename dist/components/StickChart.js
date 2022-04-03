@@ -5,17 +5,10 @@ const graphics_1 = require("@pixi/graphics");
 const CandleStick_1 = require("./CandleStick");
 const Grid_1 = require("./Grid");
 class StickChart {
-    constructor({ width, height, dateRange, renderDateRange, columnIntervalSize, stickIntervalWidth, valueRange, rowIntervalSize, }) {
+    constructor(init) {
         this.buildedChart = new graphics_1.Graphics();
         this.candleSticks = [];
-        this.width = width;
-        this.height = height;
-        this.dateRange = dateRange;
-        this.renderDateRange = renderDateRange;
-        this.columnIntervalSize = columnIntervalSize;
-        this.stickIntervalWidth = stickIntervalWidth;
-        this.valueRange = valueRange;
-        this.rowIntervalSize = rowIntervalSize;
+        Object.assign(this, init);
     }
     viewport(container) {
         container.addChild(this.buildedChart);

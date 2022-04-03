@@ -1,17 +1,17 @@
 {
   "name": "stickchart",
-  "version": "0.0.1",
   "description": "Chart",
-  "main": "dist/index.js",
-  "types": "index.d.ts",
+  "version": "0.0.1",
   "author": "Phobosys",
-  "license": "MIT",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
   "scripts": {
     "build": "rimraf dist/ && tsc",
-    "start": "yarn build && node dist/index.js",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
     "test": "jest --config ./tests/jest.config.ts",

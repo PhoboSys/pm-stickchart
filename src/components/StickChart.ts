@@ -34,28 +34,8 @@ export class StickChart {
 
     protected readonly candleSticks: Array<ICandleStick> = []
 
-    constructor({
-        width,
-        height,
-        dateRange,
-        renderDateRange,
-        columnIntervalSize,
-        stickIntervalWidth,
-        valueRange,
-        rowIntervalSize,
-    }: IStickChart) {
-        this.width = width
-        this.height = height
-
-        this.dateRange = dateRange
-        this.renderDateRange = renderDateRange
-
-        this.columnIntervalSize = columnIntervalSize
-
-        this.stickIntervalWidth = stickIntervalWidth
-
-        this.valueRange = valueRange
-        this.rowIntervalSize = rowIntervalSize
+    constructor(init: IStickChart) {
+        Object.assign(this, init)
     }
 
     public viewport(container: Container): void {
@@ -82,6 +62,7 @@ export class StickChart {
             columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
         }
 
+        // eslint-disable-next-line no-console
         console.log(intervalCount, columnIntervalSize.asMilliseconds())
 
         this.cacheBuild()
