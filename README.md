@@ -1,5 +1,7 @@
 # stickchart
 
+![](./doc/screen.gif)
+
 ### how to use
 
 `git clone git@github.com:boyko-pavlo/stickchart.git && yarn && yarn build`
