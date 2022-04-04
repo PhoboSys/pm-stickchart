@@ -13,9 +13,6 @@ class MiddlewareHandler {
         var _a;
         const { middlewares } = this;
         const next = middlewares.at(0);
-        console.log(options);
-        console.log(next);
-        console.log(middlewares.slice(0, 1));
         return (_a = next === null || next === void 0 ? void 0 : next.handle(options, new MiddlewareHandler(middlewares.slice(1), options))) !== null && _a !== void 0 ? _a : this;
     }
 }
