@@ -4,13 +4,13 @@
 
 ### how to use
 
-`git clone git@github.com:boyko-pavlo/stickchart.git && yarn && yarn build`
+`git clone git@github.com:boyko-pavlo/stickchart.git`
+
+`cd stickchart`
 
 `yarn install`
 
 `yarn build`
-
-`cd stickchart`
 
 `cd ..`
 
