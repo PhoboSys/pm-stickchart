@@ -1,40 +1,28 @@
 import { Graphics } from '@pixi/graphics'
-import { Duration } from 'moment'
 
-import { DateRange, ValueRange } from '..'
-import { IMiddleware, IRenderStickChart } from '../interfaces'
+import { Viewport } from '../../core/core.viewport'
+import { StickChartState } from '../../interfaces/interface.stickChart'
+import { IView } from '../../interfaces/interface.view'
+import { DateRange } from '../../utils'
 
-import { MiddlewareHandler } from './Handler'
+export class GridView implements IView<StickChartState> {
+    private readonly renderKey: string = 'grid_graphics'
 
-export class GridBuilderMiddleware implements IMiddleware<IRenderStickChart>, IRenderStickChart {
-    viewport: Graphics
+    private readonly buildedGrid: Graphics = new Graphics()
 
-    width: number
+    constructor(
+        public readonly state: StickChartState,
+        public readonly viewport: Viewport,
+    ) { }
 
-    height: number
-
-    dateRange: DateRange
-
-    renderDateRange: DateRange
-
-    columnIntervalSize: Duration
-
-    stickIntervalWidth: Duration
-
-    valueRange: ValueRange
-
-    rowIntervalSize: number
-
-    handle(options: IRenderStickChart, handler: MiddlewareHandler<IRenderStickChart>): MiddlewareHandler<IRenderStickChart> {
-        Object.assign(this, options)
-
+    render(): void {
         this.build()
 
-        return handler.next(options)
+        this.viewport.renderWithKey(this.buildedGrid, this.renderKey)
     }
 
     private get beginColumnWhitespace(): number {
-        const { renderDateRange, dateRange, columnIntervalSize } = this
+        const { renderDateRange, dateRange, columnIntervalSize } = this.state
 
         const distance = DateRange.getBeginDistance(dateRange, renderDateRange)
         const segment = columnIntervalSize.asMilliseconds()
@@ -44,32 +32,36 @@ export class GridBuilderMiddleware implements IMiddleware<IRenderStickChart>, IR
     }
 
     private get columnWhitespace(): number {
-        const { width, renderDateRange, columnIntervalSize } = this
+        const { width, renderDateRange, columnIntervalSize } = this.state
 
         return width / renderDateRange.getIntervalsCount(columnIntervalSize)
     }
 
     private get rowWhitespace(): number {
-        const { height, valueRange, rowIntervalSize } = this
+        const { height, valueRange, rowIntervalSize } = this.state
 
         return height / valueRange.getIntervalsCount(rowIntervalSize)
     }
 
     private get columnsCount(): number {
-        return this.renderDateRange.getIntervalsCount(this.columnIntervalSize)
+        const { renderDateRange, columnIntervalSize } = this.state
+
+        return renderDateRange.getIntervalsCount(columnIntervalSize)
     }
 
     private get rowsCount(): number {
-        return this.valueRange.getIntervalsCount(this.rowIntervalSize)
+        const { valueRange, rowIntervalSize } = this.state
+
+        return valueRange.getIntervalsCount(rowIntervalSize)
     }
 
-    public build(): void {
+    private build(): void {
         this.buildVerticalLines()
         this.buildHorizontalLines()
     }
 
     private buildVerticalLines(): void {
-        const { columnsCount, columnWhitespace, height, beginColumnWhitespace, viewport } = this
+        const { columnsCount, columnWhitespace, beginColumnWhitespace } = this
 
         const coords: Array<number> = [beginColumnWhitespace]
 
@@ -83,14 +75,14 @@ export class GridBuilderMiddleware implements IMiddleware<IRenderStickChart>, IR
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
-                .lineTo(pos, height)
+                .lineTo(pos, this.state.height)
 
-            viewport.addChild(line)
+            this.buildedGrid.addChild(line)
         }
     }
 
     private buildHorizontalLines(): void {
-        const { rowsCount, rowWhitespace, width, viewport } = this
+        const { rowsCount, rowWhitespace } = this
 
         for (let i = 0; i < rowsCount; i++) {
             const pos = i * rowWhitespace
@@ -100,10 +92,10 @@ export class GridBuilderMiddleware implements IMiddleware<IRenderStickChart>, IR
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
-                .lineTo(width, pos)
+                .lineTo(this.state.width, pos)
                 .endFill()
 
-            viewport.addChild(line)
+            this.buildedGrid.addChild(line)
         }
     }
 }

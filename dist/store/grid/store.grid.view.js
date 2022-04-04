@@ -1,41 +1,48 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GridBuilderMiddleware = void 0;
+exports.GridView = void 0;
 const graphics_1 = require("@pixi/graphics");
-const __1 = require("..");
-class GridBuilderMiddleware {
-    handle(options, handler) {
-        Object.assign(this, options);
+const utils_1 = require("../../utils");
+class GridView {
+    constructor(state, viewport) {
+        this.state = state;
+        this.viewport = viewport;
+        this.renderKey = 'grid_graphics';
+        this.buildedGrid = new graphics_1.Graphics();
+    }
+    render() {
         this.build();
-        return handler.next(options);
+        this.viewport.renderWithKey(this.buildedGrid, this.renderKey);
     }
     get beginColumnWhitespace() {
-        const { renderDateRange, dateRange, columnIntervalSize } = this;
-        const distance = __1.DateRange.getBeginDistance(dateRange, renderDateRange);
+        const { renderDateRange, dateRange, columnIntervalSize } = this.state;
+        const distance = utils_1.DateRange.getBeginDistance(dateRange, renderDateRange);
         const segment = columnIntervalSize.asMilliseconds();
         const point = 1 - (distance / segment % 1);
         return point * this.columnWhitespace;
     }
     get columnWhitespace() {
-        const { width, renderDateRange, columnIntervalSize } = this;
+        const { width, renderDateRange, columnIntervalSize } = this.state;
         return width / renderDateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowWhitespace() {
-        const { height, valueRange, rowIntervalSize } = this;
+        const { height, valueRange, rowIntervalSize } = this.state;
         return height / valueRange.getIntervalsCount(rowIntervalSize);
     }
     get columnsCount() {
-        return this.renderDateRange.getIntervalsCount(this.columnIntervalSize);
+        const { renderDateRange, columnIntervalSize } = this.state;
+        return renderDateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowsCount() {
-        return this.valueRange.getIntervalsCount(this.rowIntervalSize);
+        const { valueRange, rowIntervalSize } = this.state;
+        return valueRange.getIntervalsCount(rowIntervalSize);
     }
     build() {
         this.buildVerticalLines();
         this.buildHorizontalLines();
     }
     buildVerticalLines() {
-        const { columnsCount, columnWhitespace, height, beginColumnWhitespace, viewport } = this;
+        const { columnsCount, columnWhitespace, beginColumnWhitespace } = this;
         const coords = [beginColumnWhitespace];
         for (let i = 0; i < columnsCount; i++) {
             const pos = coords[i];
@@ -44,23 +51,23 @@ class GridBuilderMiddleware {
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(pos, 0)
-                .lineTo(pos, height);
-            viewport.addChild(line);
+                .lineTo(pos, this.state.height);
+            this.buildedGrid.addChild(line);
         }
     }
     buildHorizontalLines() {
-        const { rowsCount, rowWhitespace, width, viewport } = this;
+        const { rowsCount, rowWhitespace } = this;
         for (let i = 0; i < rowsCount; i++) {
             const pos = i * rowWhitespace;
             const line = new graphics_1.Graphics();
             line
                 .lineStyle({ width: 1, color: 0xffff })
                 .moveTo(0, pos)
-                .lineTo(width, pos)
+                .lineTo(this.state.width, pos)
                 .endFill();
-            viewport.addChild(line);
+            this.buildedGrid.addChild(line);
         }
     }
 }
-exports.GridBuilderMiddleware = GridBuilderMiddleware;
-//# sourceMappingURL=Grid.js.map
+exports.GridView = GridView;
+//# sourceMappingURL=store.grid.view.js.map

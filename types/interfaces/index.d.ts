@@ -1,4 +1,3 @@
 export * from './candleStick';
-export * from './stickChart';
+export * from './interface.stickChart';
 export * from './grid';
-export * from './middleware';
