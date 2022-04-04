@@ -27,8 +27,6 @@ class StickChart {
         if (intervalCount < 7) {
             columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds');
         }
-        // eslint-disable-next-line no-console
-        console.log(intervalCount, columnIntervalSize.asMilliseconds());
         this.cacheBuild();
     }
     cacheBuild() {
