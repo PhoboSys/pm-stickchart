@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Application = exports.ValueRange = exports.DateRange = exports.CandleStick = exports.Grid = exports.StickChart = void 0;
+exports.Application = exports.ValueRange = exports.DateRange = exports.StickChart = exports.generateSticks = void 0;
+var test_sticksMok_1 = require("./tests/test.sticksMok");
+Object.defineProperty(exports, "generateSticks", { enumerable: true, get: function () { return test_sticksMok_1.generateSticks; } });
 var core_1 = require("./core");
 Object.defineProperty(exports, "StickChart", { enumerable: true, get: function () { return core_1.StickChart; } });
-var components_1 = require("./components");
-Object.defineProperty(exports, "Grid", { enumerable: true, get: function () { return components_1.Grid; } });
-Object.defineProperty(exports, "CandleStick", { enumerable: true, get: function () { return components_1.CandleStick; } });
 var utils_1 = require("./utils");
 Object.defineProperty(exports, "DateRange", { enumerable: true, get: function () { return utils_1.DateRange; } });
 Object.defineProperty(exports, "ValueRange", { enumerable: true, get: function () { return utils_1.ValueRange; } });

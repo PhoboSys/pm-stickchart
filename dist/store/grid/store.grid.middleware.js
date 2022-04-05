@@ -8,6 +8,9 @@ class GridViewMiddleware {
         view.render();
         return handler.next(viewport, state);
     }
+    skip(state) {
+        return false;
+    }
 }
 exports.GridViewMiddleware = GridViewMiddleware;
 //# sourceMappingURL=store.grid.middleware.js.map

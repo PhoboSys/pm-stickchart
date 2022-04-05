@@ -1,5 +1,6 @@
 import { Container } from '@pixi/display';
 import { Duration } from 'moment';
+import { IStick } from '../interfaces/interface.stick';
 import { DateRange, ValueRange } from '../utils';
 export declare class StickChart {
     private width;
@@ -10,9 +11,17 @@ export declare class StickChart {
     private stickIntervalWidth;
     private valueRange;
     private rowIntervalSize;
-    private handler;
+    private renderSticks;
+    private middlewareRunner;
     private viewport;
-    constructor(width: number, height: number, dateRange: DateRange, renderDateRange: DateRange, columnIntervalSize: Duration, stickIntervalWidth: Duration, valueRange: ValueRange, rowIntervalSize: number);
-    set setViewport(container: Container);
+    private state;
+    constructor(width: number, height: number, dateRange: DateRange, renderDateRange: DateRange, columnIntervalSize: Duration, stickIntervalWidth: Duration, valueRange: ValueRange, rowIntervalSize: number, renderSticks?: IStick[]);
+    private set setZoomEvent(value);
+    private createState;
+    private createViewport;
+    create(container: Container): void;
     render(): void;
+    addStick(...stick: IStick[]): void;
+    zoomHandler(event: WheelEvent): void;
+    private throwIfNotCreatedState;
 }

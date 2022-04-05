@@ -6,9 +6,7 @@ class ValueRange {
         this.from = from;
         this.to = to;
     }
-    findValuePoint(value) {
-        if (this.from > value || this.to < value)
-            throw new Error(`ValuePoint(${value}) should fit in the ${this.toString()}`);
+    getPointByValue(value) {
         return (value - this.from) / this.value;
     }
     getIntervalsCount(interval) {

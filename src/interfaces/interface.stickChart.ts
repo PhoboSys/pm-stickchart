@@ -1,7 +1,8 @@
 import { Duration } from 'moment'
 
-import { DateRange } from '@utils/DateRange'
-import { ValueRange } from '@utils/ValueRange'
+import { DateRange, ValueRange } from '../utils'
+
+import { IStick } from './interface.stick'
 
 export interface IStickChart {
     width: number
@@ -18,5 +19,6 @@ export interface IStickChart {
 }
 
 export interface StickChartState extends IStickChart {
-    v: number
+    zoomEvent: WheelEvent | undefined
+    renderSticks: IStick[]
 }

@@ -1,17 +1,22 @@
 import { Container } from '@pixi/display'
 import { Duration } from 'moment'
 
-import { StickChartState } from '../interfaces/interface.stickChart'
+import { StickChartState } from '../interfaces'
+import { IStick } from '../interfaces/interface.stick'
+import { CandleStickMiddleware } from '../store/candlestick/store.candlestick.middleware'
 import { GridViewMiddleware } from '../store/grid/store.grid.middleware'
+import { ZoomHandleMiddleware } from '../store/zoom/store.zoom.middleware'
 import { DateRange, ValueRange } from '../utils'
 
-import { MiddlewareHandler } from './core.middlewareHandler'
+import { MiddlewareRunner } from './core.middlewareRunner'
 import { Viewport } from './core.viewport'
 
 export class StickChart {
-    private handler: MiddlewareHandler<StickChartState> = new MiddlewareHandler<StickChartState>()
+    private middlewareRunner: MiddlewareRunner<StickChartState> = new MiddlewareRunner<StickChartState>()
 
     private viewport: Viewport
+
+    private state: StickChartState
 
     constructor(
         private width: number,
@@ -25,18 +30,20 @@ export class StickChart {
 
         private valueRange: ValueRange,
         private rowIntervalSize: number,
+
+        private renderSticks: IStick[] = [],
     ) {
-        this.handler.add(new GridViewMiddleware())
-
+        this.middlewareRunner.add(new ZoomHandleMiddleware())
+        this.middlewareRunner.add(new GridViewMiddleware())
+        this.middlewareRunner.add(new CandleStickMiddleware())
     }
 
-    public set setViewport(container: Container) {
-        this.viewport = new Viewport(container)
+    private set setZoomEvent(event: WheelEvent) {
+        this.state.zoomEvent = event
     }
 
-    public render(): void {
+    private createState(): void {
         const state: StickChartState = {
-            v: 0,
             width: this.width,
             height: this.height,
             dateRange: this.dateRange,
@@ -45,8 +52,42 @@ export class StickChart {
             stickIntervalWidth: this.stickIntervalWidth,
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
+            renderSticks: this.renderSticks,
+            zoomEvent: undefined,
         }
 
-        this.handler.next(this.viewport, state)
+        this.state = state
+    }
+
+    private createViewport(container: Container): void {
+        this.viewport = new Viewport(container)
+    }
+
+    public create(container: Container): void {
+        this.createViewport(container)
+
+        this.createState()
+    }
+
+    public render(): void {
+        this.throwIfNotCreatedState()
+
+        this.middlewareRunner.run(this.viewport, this.state)
+    }
+
+    public addStick(...stick: IStick[]): void {
+        this.renderSticks.unshift(...stick)
+    }
+
+    public zoomHandler(event: WheelEvent): void {
+        this.setZoomEvent = event
+
+        this.render()
+    }
+
+    private throwIfNotCreatedState(): void {
+        if (this.state === undefined) {
+            throw new Error('Expected to call this.create() before')
+        }
     }
 }

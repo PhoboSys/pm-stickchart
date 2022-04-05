@@ -7,12 +7,11 @@ class GridView {
     constructor(state, viewport) {
         this.state = state;
         this.viewport = viewport;
-        this.renderKey = 'grid_graphics';
         this.buildedGrid = new graphics_1.Graphics();
     }
     render() {
         this.build();
-        this.viewport.renderWithKey(this.buildedGrid, this.renderKey);
+        this.viewport.keyRender(this.buildedGrid, GridView.renderKey);
     }
     get beginColumnWhitespace() {
         const { renderDateRange, dateRange, columnIntervalSize } = this.state;
@@ -70,4 +69,5 @@ class GridView {
     }
 }
 exports.GridView = GridView;
+GridView.renderKey = 'grid_graphics';
 //# sourceMappingURL=store.grid.view.js.map

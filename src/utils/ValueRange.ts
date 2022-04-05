@@ -8,10 +8,7 @@ export class ValueRange {
         this.to = to
     }
 
-    findValuePoint(value: number): number {
-        if (this.from > value || this.to < value)
-            throw new Error(`ValuePoint(${value}) should fit in the ${this.toString()}`)
-
+    getPointByValue(value: number): number {
         return (value - this.from) / this.value
     }
 

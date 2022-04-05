@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
+const store_candlestick_middleware_1 = require("../store/candlestick/store.candlestick.middleware");
 const store_grid_middleware_1 = require("../store/grid/store.grid.middleware");
-const core_middlewareHandler_1 = require("./core.middlewareHandler");
+const store_zoom_middleware_1 = require("../store/zoom/store.zoom.middleware");
+const core_middlewareRunner_1 = require("./core.middlewareRunner");
 const core_viewport_1 = require("./core.viewport");
 class StickChart {
-    constructor(width, height, dateRange, renderDateRange, columnIntervalSize, stickIntervalWidth, valueRange, rowIntervalSize) {
+    constructor(width, height, dateRange, renderDateRange, columnIntervalSize, stickIntervalWidth, valueRange, rowIntervalSize, renderSticks = []) {
         this.width = width;
         this.height = height;
         this.dateRange = dateRange;
@@ -14,15 +16,17 @@ class StickChart {
         this.stickIntervalWidth = stickIntervalWidth;
         this.valueRange = valueRange;
         this.rowIntervalSize = rowIntervalSize;
-        this.handler = new core_middlewareHandler_1.MiddlewareHandler();
-        this.handler.add(new store_grid_middleware_1.GridViewMiddleware());
+        this.renderSticks = renderSticks;
+        this.middlewareRunner = new core_middlewareRunner_1.MiddlewareRunner();
+        this.middlewareRunner.add(new store_zoom_middleware_1.ZoomHandleMiddleware());
+        this.middlewareRunner.add(new store_grid_middleware_1.GridViewMiddleware());
+        this.middlewareRunner.add(new store_candlestick_middleware_1.CandleStickMiddleware());
     }
-    set setViewport(container) {
-        this.viewport = new core_viewport_1.Viewport(container);
+    set setZoomEvent(event) {
+        this.state.zoomEvent = event;
     }
-    render() {
+    createState() {
         const state = {
-            v: 0,
             width: this.width,
             height: this.height,
             dateRange: this.dateRange,
@@ -31,8 +35,33 @@ class StickChart {
             stickIntervalWidth: this.stickIntervalWidth,
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
+            renderSticks: this.renderSticks,
+            zoomEvent: undefined,
         };
-        this.handler.next(this.viewport, state);
+        this.state = state;
+    }
+    createViewport(container) {
+        this.viewport = new core_viewport_1.Viewport(container);
+    }
+    create(container) {
+        this.createViewport(container);
+        this.createState();
+    }
+    render() {
+        this.throwIfNotCreatedState();
+        this.middlewareRunner.run(this.viewport, this.state);
+    }
+    addStick(...stick) {
+        this.renderSticks.unshift(...stick);
+    }
+    zoomHandler(event) {
+        this.setZoomEvent = event;
+        this.render();
+    }
+    throwIfNotCreatedState() {
+        if (this.state === undefined) {
+            throw new Error('Expected to call this.create() before');
+        }
     }
 }
 exports.StickChart = StickChart;

@@ -1,10 +1,9 @@
 import { Viewport } from '../../core/core.viewport';
-import { StickChartState } from '../../interfaces/interface.stickChart';
-import { IView } from '../../interfaces/interface.view';
+import { StickChartState, IView } from '../../interfaces';
 export declare class GridView implements IView<StickChartState> {
     readonly state: StickChartState;
     readonly viewport: Viewport;
-    private readonly renderKey;
+    static readonly renderKey: string;
     private readonly buildedGrid;
     constructor(state: StickChartState, viewport: Viewport);
     render(): void;

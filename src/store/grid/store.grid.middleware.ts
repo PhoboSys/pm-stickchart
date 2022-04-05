@@ -1,7 +1,6 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
-import { IMiddleware } from '../../interfaces/interface.middleware'
-import { StickChartState } from '../../interfaces/interface.stickChart'
+import { IMiddleware, StickChartState } from '../../interfaces'
 
 import { GridView } from './store.grid.view'
 
@@ -16,5 +15,9 @@ export class GridViewMiddleware implements IMiddleware<StickChartState> {
         view.render()
 
         return handler.next(viewport, state)
+    }
+
+    skip(state: StickChartState): boolean {
+        return false
     }
 }

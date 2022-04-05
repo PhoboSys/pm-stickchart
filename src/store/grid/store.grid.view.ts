@@ -1,12 +1,11 @@
 import { Graphics } from '@pixi/graphics'
 
 import { Viewport } from '../../core/core.viewport'
-import { StickChartState } from '../../interfaces/interface.stickChart'
-import { IView } from '../../interfaces/interface.view'
+import { StickChartState, IView } from '../../interfaces'
 import { DateRange } from '../../utils'
 
 export class GridView implements IView<StickChartState> {
-    private readonly renderKey: string = 'grid_graphics'
+    static readonly renderKey: string = 'grid_graphics'
 
     private readonly buildedGrid: Graphics = new Graphics()
 
@@ -18,7 +17,7 @@ export class GridView implements IView<StickChartState> {
     render(): void {
         this.build()
 
-        this.viewport.renderWithKey(this.buildedGrid, this.renderKey)
+        this.viewport.keyRender(this.buildedGrid, GridView.renderKey)
     }
 
     private get beginColumnWhitespace(): number {

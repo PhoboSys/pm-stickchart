@@ -1,26 +1,47 @@
 import { Container } from '@pixi/display'
 import { Graphics } from '@pixi/graphics'
 
-type RenderedIndexMap = { [key: string]: number }
-
 export class Viewport {
-    private renderIndexMap: RenderedIndexMap = {}
+    private renderedKeys: string[] = []
 
     constructor(
         public container: Container,
     ) { }
 
-    public render(graphics: Graphics): void {
+    private renderInexisted(graphics: Graphics, renderKey: string): void {
         this.container.addChild(graphics)
+
+        this.renderedKeys.push(renderKey)
     }
 
-    public renderWithKey(graphics: Graphics, renderKey: string): void {
-        this.renderIndexMap[renderKey] = this.container.children.length
+    private rerenderExisted(graphics: Graphics, renderIndex: number): void {
+        const key = this.renderedKeys[renderIndex]
 
-        this.render(graphics)
+        this.removeByIndex(renderIndex)
+        this.renderInexisted(graphics, key)
+    }
+
+    private findGraphicIndex(renderKey: string): number {
+        return this.renderedKeys.indexOf(renderKey)
+    }
+
+    public keyRender(graphics: Graphics, renderKey: string): void {
+        const index = this.findGraphicIndex(renderKey)
+
+        if (index === -1) {
+            return this.renderInexisted(graphics, renderKey)
+        }
+
+        this.rerenderExisted(graphics, index)
+    }
+
+    public removeByIndex(renderIndex: number): void {
+        this.container.removeChildAt(renderIndex)
+
+        this.renderedKeys.splice(renderIndex, 1)
     }
 
     public removeByKey(renderKey: string): void {
-        this.container.removeChildAt(this.renderIndexMap[renderKey])
+        this.removeByIndex(this.findGraphicIndex(renderKey))
     }
 }
