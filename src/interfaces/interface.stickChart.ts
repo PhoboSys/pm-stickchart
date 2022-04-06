@@ -2,6 +2,8 @@ import { Duration } from 'moment'
 
 import { DateRange, ValueRange } from '../utils'
 
+import { HandledEvent } from '../utils/utils.handledEvent'
+
 import { IStick } from './interface.stick'
 
 export interface IStickChart {
@@ -19,6 +21,7 @@ export interface IStickChart {
 }
 
 export interface StickChartState extends IStickChart {
-    zoomEvent: WheelEvent | undefined
+    emittedEvent?: Event | HandledEvent
+    emittedEventType?: keyof HTMLElementEventMap
     renderSticks: IStick[]
 }

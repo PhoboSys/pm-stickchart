@@ -16,12 +16,13 @@ export declare class StickChart {
     private viewport;
     private state;
     constructor(width: number, height: number, dateRange: DateRange, renderDateRange: DateRange, columnIntervalSize: Duration, stickIntervalWidth: Duration, valueRange: ValueRange, rowIntervalSize: number, renderSticks?: IStick[]);
-    private set setZoomEvent(value);
+    private set setEmittedEvent(value);
+    private set setEmittedEventType(value);
     private createState;
     private createViewport;
     create(container: Container): void;
     render(): void;
     addStick(...stick: IStick[]): void;
-    zoomHandler(event: WheelEvent): void;
+    addEventHandler(type: keyof HTMLElementEventMap): (event: Event) => void;
     private throwIfNotCreatedState;
 }

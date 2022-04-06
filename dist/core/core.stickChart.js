@@ -22,8 +22,11 @@ class StickChart {
         this.middlewareRunner.add(new store_grid_middleware_1.GridViewMiddleware());
         this.middlewareRunner.add(new store_candlestick_middleware_1.CandleStickMiddleware());
     }
-    set setZoomEvent(event) {
-        this.state.zoomEvent = event;
+    set setEmittedEvent(event) {
+        this.state.emittedEvent = event;
+    }
+    set setEmittedEventType(type) {
+        this.state.emittedEventType = type;
     }
     createState() {
         const state = {
@@ -36,7 +39,8 @@ class StickChart {
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
             renderSticks: this.renderSticks,
-            zoomEvent: undefined,
+            emittedEvent: undefined,
+            emittedEventType: undefined,
         };
         this.state = state;
     }
@@ -54,9 +58,12 @@ class StickChart {
     addStick(...stick) {
         this.renderSticks.unshift(...stick);
     }
-    zoomHandler(event) {
-        this.setZoomEvent = event;
-        this.render();
+    addEventHandler(type) {
+        return (event) => {
+            this.setEmittedEvent = event;
+            this.setEmittedEventType = type;
+            this.render();
+        };
     }
     throwIfNotCreatedState() {
         if (this.state === undefined) {

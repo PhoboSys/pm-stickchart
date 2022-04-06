@@ -17,7 +17,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./interface.builder"), exports);
 __exportStar(require("./interface.stick"), exports);
 __exportStar(require("./interface.middleware"), exports);
-__exportStar(require("./interface.mutator"), exports);
+__exportStar(require("./interface.reducer"), exports);
 __exportStar(require("./interface.stickChart"), exports);
 __exportStar(require("./interface.view"), exports);
+__exportStar(require("./interface.scrollEvent"), exports);
 //# sourceMappingURL=index.js.map

@@ -1,21 +1,21 @@
-import { IMutator, StickChartState } from '../../interfaces'
+import { IReducer, StickChartState } from '../../interfaces'
 
-export class ZoomStateMutator implements IMutator<StickChartState> {
+export class ZoomStateReducer implements IReducer<StickChartState> {
     constructor(
         readonly state: StickChartState,
     ) { }
 
-    public mutateState(): StickChartState {
+    public reduceState(): StickChartState {
         this.moveRenderDateRange()
+
+        this.state.emittedEvent = undefined
 
         return this.state
     }
 
     private moveRenderDateRange(): void {
-        const { zoomEvent, renderDateRange, columnIntervalSize } = this.state
-        const { deltaY } = zoomEvent!
-
-        console.log(zoomEvent)
+        const { emittedEvent: zoomEvent, renderDateRange, columnIntervalSize } = this.state
+        const { deltaY } = <WheelEvent>zoomEvent
 
         const zoomValue = deltaY * (renderDateRange.duration * 0.001)
 

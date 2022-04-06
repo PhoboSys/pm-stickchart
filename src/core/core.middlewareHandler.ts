@@ -19,6 +19,6 @@ export class MiddlewareHandler<T> {
 
         if (middleware.skip(state)) return handler.next(viewport, state)
 
-        return middleware?.handle(viewport, state, handler) ?? this
+        return middleware.handle(viewport, state, handler)
     }
 }

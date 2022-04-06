@@ -8,6 +8,16 @@ export class Viewport {
         public container: Container,
     ) { }
 
+    public keyRender(graphics: Graphics, renderKey: string): void {
+        const index = this.findGraphicIndex(renderKey)
+
+        if (index === -1) {
+            return this.renderInexisted(graphics, renderKey)
+        }
+
+        this.rerenderExisted(graphics, index)
+    }
+
     private renderInexisted(graphics: Graphics, renderKey: string): void {
         this.container.addChild(graphics)
 
@@ -23,16 +33,6 @@ export class Viewport {
 
     private findGraphicIndex(renderKey: string): number {
         return this.renderedKeys.indexOf(renderKey)
-    }
-
-    public keyRender(graphics: Graphics, renderKey: string): void {
-        const index = this.findGraphicIndex(renderKey)
-
-        if (index === -1) {
-            return this.renderInexisted(graphics, renderKey)
-        }
-
-        this.rerenderExisted(graphics, index)
     }
 
     public removeByIndex(renderIndex: number): void {

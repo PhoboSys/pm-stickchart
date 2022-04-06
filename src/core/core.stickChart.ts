@@ -38,8 +38,12 @@ export class StickChart {
         this.middlewareRunner.add(new CandleStickMiddleware())
     }
 
-    private set setZoomEvent(event: WheelEvent) {
-        this.state.zoomEvent = event
+    private set setEmittedEvent(event: Event) {
+        this.state.emittedEvent = event
+    }
+
+    private set setEmittedEventType(type: keyof HTMLElementEventMap) {
+        this.state.emittedEventType = type
     }
 
     private createState(): void {
@@ -53,7 +57,8 @@ export class StickChart {
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
             renderSticks: this.renderSticks,
-            zoomEvent: undefined,
+            emittedEvent: undefined,
+            emittedEventType: undefined,
         }
 
         this.state = state
@@ -79,10 +84,13 @@ export class StickChart {
         this.renderSticks.unshift(...stick)
     }
 
-    public zoomHandler(event: WheelEvent): void {
-        this.setZoomEvent = event
+    public addEventHandler(type: keyof HTMLElementEventMap): (event: Event) => void {
+        return (event: Event): void => {
+            this.setEmittedEvent = event
+            this.setEmittedEventType = type
 
-        this.render()
+            this.render()
+        }
     }
 
     private throwIfNotCreatedState(): void {

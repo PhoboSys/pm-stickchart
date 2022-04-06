@@ -1,5 +1,6 @@
 import { Duration } from 'moment';
 import { DateRange, ValueRange } from '../utils';
+import { HandledEvent } from '../utils/utils.handledEvent';
 import { IStick } from './interface.stick';
 export interface IStickChart {
     width: number;
@@ -12,6 +13,7 @@ export interface IStickChart {
     rowIntervalSize: number;
 }
 export interface StickChartState extends IStickChart {
-    zoomEvent: WheelEvent | undefined;
+    emittedEvent?: Event | HandledEvent;
+    emittedEventType?: keyof HTMLElementEventMap;
     renderSticks: IStick[];
 }

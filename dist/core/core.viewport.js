@@ -6,6 +6,13 @@ class Viewport {
         this.container = container;
         this.renderedKeys = [];
     }
+    keyRender(graphics, renderKey) {
+        const index = this.findGraphicIndex(renderKey);
+        if (index === -1) {
+            return this.renderInexisted(graphics, renderKey);
+        }
+        this.rerenderExisted(graphics, index);
+    }
     renderInexisted(graphics, renderKey) {
         this.container.addChild(graphics);
         this.renderedKeys.push(renderKey);
@@ -17,13 +24,6 @@ class Viewport {
     }
     findGraphicIndex(renderKey) {
         return this.renderedKeys.indexOf(renderKey);
-    }
-    keyRender(graphics, renderKey) {
-        const index = this.findGraphicIndex(renderKey);
-        if (index === -1) {
-            return this.renderInexisted(graphics, renderKey);
-        }
-        this.rerenderExisted(graphics, index);
     }
     removeByIndex(renderIndex) {
         this.container.removeChildAt(renderIndex);

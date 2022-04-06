@@ -2,20 +2,22 @@ import { Viewport, MiddlewareHandler } from '../../core'
 
 import { IMiddleware, StickChartState } from '../../interfaces'
 
-import { ZoomStateMutator } from './store.zoom.mutator'
+import { ZoomStateReducer } from './store.zoom.reducer'
 
 export class ZoomHandleMiddleware implements IMiddleware<StickChartState> {
     lastState: StickChartState | undefined
 
-    handle(viewport: Viewport, state: StickChartState, handler: MiddlewareHandler<StickChartState>): MiddlewareHandler<StickChartState> {
-        state.zoomEvent?.preventDefault()
+    public handle(
+        viewport: Viewport, state: StickChartState, handler: MiddlewareHandler<StickChartState>,
+    ): MiddlewareHandler<StickChartState> {
+        (<WheelEvent>state.emittedEvent)?.preventDefault()
 
-        const mutator = new ZoomStateMutator(state)
+        const reduce = new ZoomStateReducer(state)
 
-        return handler.next(viewport, mutator.mutateState())
+        return handler.next(viewport, reduce.reduceState())
     }
 
-    skip(state: StickChartState): boolean {
-        return state.zoomEvent === undefined
+    public skip(state: StickChartState): boolean {
+        return !(state.emittedEvent instanceof WheelEvent)
     }
 }

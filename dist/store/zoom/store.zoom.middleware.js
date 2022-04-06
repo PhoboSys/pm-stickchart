@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZoomHandleMiddleware = void 0;
-const store_zoom_mutator_1 = require("./store.zoom.mutator");
+const store_zoom_reducer_1 = require("./store.zoom.reducer");
 class ZoomHandleMiddleware {
     handle(viewport, state, handler) {
         var _a;
-        (_a = state.zoomEvent) === null || _a === void 0 ? void 0 : _a.preventDefault();
-        const mutator = new store_zoom_mutator_1.ZoomStateMutator(state);
-        return handler.next(viewport, mutator.mutateState());
+        (_a = state.emittedEvent) === null || _a === void 0 ? void 0 : _a.preventDefault();
+        const reduce = new store_zoom_reducer_1.ZoomStateReducer(state);
+        return handler.next(viewport, reduce.reduceState());
     }
     skip(state) {
-        return state.zoomEvent === undefined;
+        return !(state.emittedEvent instanceof WheelEvent);
     }
 }
 exports.ZoomHandleMiddleware = ZoomHandleMiddleware;

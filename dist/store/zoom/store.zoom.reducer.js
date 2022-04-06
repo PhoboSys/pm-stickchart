@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ZoomStateMutator = void 0;
-class ZoomStateMutator {
+exports.ZoomStateReducer = void 0;
+class ZoomStateReducer {
     constructor(state) {
         this.state = state;
     }
-    mutateState() {
+    reduceState() {
         this.moveRenderDateRange();
+        this.state.emittedEvent = undefined;
         return this.state;
     }
     moveRenderDateRange() {
-        const { zoomEvent, renderDateRange, columnIntervalSize } = this.state;
+        const { emittedEvent: zoomEvent, renderDateRange, columnIntervalSize } = this.state;
         const { deltaY } = zoomEvent;
-        console.log(zoomEvent);
         const zoomValue = deltaY * (renderDateRange.duration * 0.001);
         renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
         // const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize)
@@ -24,5 +24,5 @@ class ZoomStateMutator {
         // }
     }
 }
-exports.ZoomStateMutator = ZoomStateMutator;
-//# sourceMappingURL=store.zoom.mutator.js.map
+exports.ZoomStateReducer = ZoomStateReducer;
+//# sourceMappingURL=store.zoom.reducer.js.map
