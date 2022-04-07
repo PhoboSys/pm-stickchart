@@ -1,19 +1,28 @@
-import { ScrollEvent } from '@src/interfaces/interface.scrollEvent'
+import { EmittedEvent } from '../aliases/alias.emittedEvent'
 
-let isMouseDown = false
+import { ScrollEvent } from './utils.scrollEvent'
 
-export const addScrollEvent = (element: HTMLElement, handler: (event: ScrollEvent) => void): void => {
-    element.onmousedown = (): void => {
-        isMouseDown = true
+const isMouseDown = false
+let mouseDownEvent: MouseEvent | null = null
+
+export const addScrollEvent = (element: HTMLElement, handler: (EmittedEvent) => void): void => {
+    element.onmousedown = (ev: MouseEvent): void => {
+        mouseDownEvent = ev
     }
 
     element.onmouseup = (): void => {
-        isMouseDown = false
+        mouseDownEvent = null
+    }
+
+    element.onmouseleave = (): void => {
+        mouseDownEvent = null
     }
 
     element.onmousemove = (ev): void => {
-        if (!isMouseDown) return
+        if (mouseDownEvent === null) return
 
-        handler(<ScrollEvent>ev)
+        const scrollEvent = new ScrollEvent(mouseDownEvent!.clientX, mouseDownEvent!.clientY, ev!.clientX, ev!.clientX)
+
+        handler(scrollEvent)
     }
 }

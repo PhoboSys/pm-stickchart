@@ -18,8 +18,17 @@
       "@interfaces/*": [
         "src/interfaces/*"
       ],
-      "@middlewares/*": [
-        "src/middlewares/*"
+      "@builders/*": [
+        "src/builders/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@types/*": [
+        "src/aliases/*"
       ],
       "@utils/*": [
         "src/utils/*"

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
 const store_candlestick_middleware_1 = require("../store/candlestick/store.candlestick.middleware");
 const store_grid_middleware_1 = require("../store/grid/store.grid.middleware");
+const store_scroll_middleware_1 = require("../store/scroll/store.scroll.middleware");
 const store_zoom_middleware_1 = require("../store/zoom/store.zoom.middleware");
 const core_middlewareRunner_1 = require("./core.middlewareRunner");
 const core_viewport_1 = require("./core.viewport");
@@ -19,6 +20,7 @@ class StickChart {
         this.renderSticks = renderSticks;
         this.middlewareRunner = new core_middlewareRunner_1.MiddlewareRunner();
         this.middlewareRunner.add(new store_zoom_middleware_1.ZoomHandleMiddleware());
+        this.middlewareRunner.add(new store_scroll_middleware_1.ScrollHandleMiddleware());
         this.middlewareRunner.add(new store_grid_middleware_1.GridViewMiddleware());
         this.middlewareRunner.add(new store_candlestick_middleware_1.CandleStickMiddleware());
     }
@@ -39,8 +41,8 @@ class StickChart {
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
             renderSticks: this.renderSticks,
-            emittedEvent: undefined,
-            emittedEventType: undefined,
+            emittedEvent: null,
+            emittedEventType: null,
         };
         this.state = state;
     }

@@ -1,8 +1,7 @@
 import { Duration } from 'moment'
 
+import { EmittedEvent } from '../aliases/alias.emittedEvent'
 import { DateRange, ValueRange } from '../utils'
-
-import { HandledEvent } from '../utils/utils.handledEvent'
 
 import { IStick } from './interface.stick'
 
@@ -21,7 +20,7 @@ export interface IStickChart {
 }
 
 export interface StickChartState extends IStickChart {
-    emittedEvent?: Event | HandledEvent
-    emittedEventType?: keyof HTMLElementEventMap
+    emittedEvent: EmittedEvent
+    emittedEventType: keyof HTMLElementEventMap | null
     renderSticks: IStick[]
 }

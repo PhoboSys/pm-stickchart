@@ -1,5 +1,6 @@
 import { Container } from '@pixi/display';
 import { Duration } from 'moment';
+import { EmittedEvent } from '../aliases/alias.emittedEvent';
 import { IStick } from '../interfaces/interface.stick';
 import { DateRange, ValueRange } from '../utils';
 export declare class StickChart {
@@ -23,6 +24,6 @@ export declare class StickChart {
     create(container: Container): void;
     render(): void;
     addStick(...stick: IStick[]): void;
-    addEventHandler(type: keyof HTMLElementEventMap): (event: Event) => void;
+    addEventHandler(type: keyof HTMLElementEventMap): (event: EmittedEvent) => void;
     private throwIfNotCreatedState;
 }

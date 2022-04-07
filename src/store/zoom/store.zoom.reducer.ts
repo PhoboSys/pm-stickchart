@@ -1,4 +1,5 @@
 import { IReducer, StickChartState } from '../../interfaces'
+import { HandledEvent } from '../../utils/utils.handledEvent'
 
 export class ZoomStateReducer implements IReducer<StickChartState> {
     constructor(
@@ -8,7 +9,7 @@ export class ZoomStateReducer implements IReducer<StickChartState> {
     public reduceState(): StickChartState {
         this.moveRenderDateRange()
 
-        this.state.emittedEvent = undefined
+        this.state.emittedEvent = new HandledEvent()
 
         return this.state
     }

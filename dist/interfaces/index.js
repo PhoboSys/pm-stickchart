@@ -20,5 +20,4 @@ __exportStar(require("./interface.middleware"), exports);
 __exportStar(require("./interface.reducer"), exports);
 __exportStar(require("./interface.stickChart"), exports);
 __exportStar(require("./interface.view"), exports);
-__exportStar(require("./interface.scrollEvent"), exports);
 //# sourceMappingURL=index.js.map

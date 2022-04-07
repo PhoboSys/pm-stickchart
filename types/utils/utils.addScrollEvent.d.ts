@@ -1,2 +1,1 @@
-import { ScrollEvent } from '@src/interfaces/interface.scrollEvent';
-export declare const addScrollEvent: (element: HTMLElement, handler: (event: ScrollEvent) => void) => void;
+export declare const addScrollEvent: (element: HTMLElement, handler: (EmittedEvent: any) => void) => void;

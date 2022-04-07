@@ -1,10 +1,12 @@
 import { Container } from '@pixi/display'
 import { Duration } from 'moment'
 
+import { EmittedEvent } from '../aliases/alias.emittedEvent'
 import { StickChartState } from '../interfaces'
 import { IStick } from '../interfaces/interface.stick'
 import { CandleStickMiddleware } from '../store/candlestick/store.candlestick.middleware'
 import { GridViewMiddleware } from '../store/grid/store.grid.middleware'
+import { ScrollHandleMiddleware } from '../store/scroll/store.scroll.middleware'
 import { ZoomHandleMiddleware } from '../store/zoom/store.zoom.middleware'
 import { DateRange, ValueRange } from '../utils'
 
@@ -34,11 +36,12 @@ export class StickChart {
         private renderSticks: IStick[] = [],
     ) {
         this.middlewareRunner.add(new ZoomHandleMiddleware())
+        this.middlewareRunner.add(new ScrollHandleMiddleware())
         this.middlewareRunner.add(new GridViewMiddleware())
         this.middlewareRunner.add(new CandleStickMiddleware())
     }
 
-    private set setEmittedEvent(event: Event) {
+    private set setEmittedEvent(event: EmittedEvent) {
         this.state.emittedEvent = event
     }
 
@@ -57,8 +60,8 @@ export class StickChart {
             valueRange: this.valueRange,
             rowIntervalSize: this.rowIntervalSize,
             renderSticks: this.renderSticks,
-            emittedEvent: undefined,
-            emittedEventType: undefined,
+            emittedEvent: null,
+            emittedEventType: null,
         }
 
         this.state = state
@@ -84,8 +87,8 @@ export class StickChart {
         this.renderSticks.unshift(...stick)
     }
 
-    public addEventHandler(type: keyof HTMLElementEventMap): (event: Event) => void {
-        return (event: Event): void => {
+    public addEventHandler(type: keyof HTMLElementEventMap): (event: EmittedEvent) => void {
+        return (event: EmittedEvent): void => {
             this.setEmittedEvent = event
             this.setEmittedEventType = type
 

@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZoomStateReducer = void 0;
+const utils_handledEvent_1 = require("../../utils/utils.handledEvent");
 class ZoomStateReducer {
     constructor(state) {
         this.state = state;
     }
     reduceState() {
         this.moveRenderDateRange();
-        this.state.emittedEvent = undefined;
+        this.state.emittedEvent = new utils_handledEvent_1.HandledEvent();
         return this.state;
     }
     moveRenderDateRange() {
