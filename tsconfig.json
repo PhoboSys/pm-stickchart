@@ -16,7 +16,7 @@
         "src/*"
       ],
       "@interfaces/*": [
-        "src/interfaces/*"
+        "src/data/interfaces/*"
       ],
       "@builders/*": [
         "src/builders/*"
@@ -28,7 +28,7 @@
         "src/core/*"
       ],
       "@types/*": [
-        "src/aliases/*"
+        "src/data/aliases/*"
       ],
       "@utils/*": [
         "src/utils/*"

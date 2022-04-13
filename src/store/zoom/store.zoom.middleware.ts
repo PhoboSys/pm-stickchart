@@ -1,23 +1,26 @@
 import { Viewport, MiddlewareHandler } from '../../core'
 
-import { IMiddleware, StickChartState } from '../../interfaces'
+import { InputEventTypes } from '../../data/enums'
+import { IMiddleware, IStickChartState } from '../../data/interfaces'
 
 import { ZoomStateReducer } from './store.zoom.reducer'
 
-export class ZoomHandleMiddleware implements IMiddleware<StickChartState> {
-    lastState: StickChartState | undefined
-
+export class ZoomHandleMiddleware implements IMiddleware<IStickChartState> {
     public handle(
-        viewport: Viewport, state: StickChartState, handler: MiddlewareHandler<StickChartState>,
-    ): MiddlewareHandler<StickChartState> {
-        (<WheelEvent>state.emittedEvent)?.preventDefault()
+        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
+    ): MiddlewareHandler<IStickChartState> {
+        const reducer = new ZoomStateReducer(state)
 
-        const reduce = new ZoomStateReducer(state)
+        reducer.reduceState()
 
-        return handler.next(viewport, reduce.reduceState())
+        return handler.next(viewport, state)
     }
 
-    public skip(state: StickChartState): boolean {
-        return !(state.emittedEvent instanceof WheelEvent)
+    public shouldSkip(state: IStickChartState): boolean {
+        return state.inputEvent.type !== InputEventTypes.zoom
+    }
+
+    public save(state: IStickChartState): void {
+
     }
 }

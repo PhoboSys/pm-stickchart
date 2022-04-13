@@ -1,7 +1,7 @@
 import { Viewport, MiddlewareHandler } from '../../core';
-import { IMiddleware, StickChartState } from '../../interfaces';
-export declare class ZoomHandleMiddleware implements IMiddleware<StickChartState> {
-    lastState: StickChartState | undefined;
-    handle(viewport: Viewport, state: StickChartState, handler: MiddlewareHandler<StickChartState>): MiddlewareHandler<StickChartState>;
-    skip(state: StickChartState): boolean;
+import { IMiddleware, IStickChartState } from '../../data/interfaces';
+export declare class ZoomHandleMiddleware implements IMiddleware<IStickChartState> {
+    handle(viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>): MiddlewareHandler<IStickChartState>;
+    shouldSkip(state: IStickChartState): boolean;
+    save(state: IStickChartState): void;
 }

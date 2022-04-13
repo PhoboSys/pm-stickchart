@@ -1,28 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZoomStateReducer = void 0;
-const utils_handledEvent_1 = require("../../utils/utils.handledEvent");
 class ZoomStateReducer {
     constructor(state) {
         this.state = state;
     }
     reduceState() {
         this.moveRenderDateRange();
-        this.state.emittedEvent = new utils_handledEvent_1.HandledEvent();
+        this.roundColumnIntervalSize();
+        this.state.inputEvent.preventDefault();
+        this.state.inputEvent.markAsHandled();
         return this.state;
     }
     moveRenderDateRange() {
-        const { emittedEvent: zoomEvent, renderDateRange, columnIntervalSize } = this.state;
-        const { deltaY } = zoomEvent;
-        const zoomValue = deltaY * (renderDateRange.duration * 0.001);
-        renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
-        // const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize)
-        // if (intervalCount > 15) {
-        //     columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
-        // }
-        // if (intervalCount < 7) {
-        //     columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
-        // }
+        const { inputEvent: { event }, renderConfig: { dateRange }, } = this.state;
+        const { deltaY } = event;
+        const zoomValue = deltaY * (dateRange.duration * 0.001);
+        dateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
+    }
+    roundColumnIntervalSize() {
+        const { renderConfig: { dateRange, columnIntervalSize }, } = this.state;
+        const duration = columnIntervalSize.asMilliseconds() * 7;
+        if (dateRange.duration < duration) {
+            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds');
+            return;
+        }
+        if (dateRange.getIntervalsCount(duration) < 2)
+            return;
+        columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds');
     }
 }
 exports.ZoomStateReducer = ZoomStateReducer;

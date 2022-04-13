@@ -1,7 +1,7 @@
 {
   "name": "stickchart",
   "description": "Chart",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "author": "Phobosys",
   "private": true,
   "license": "UNLICENSED",
@@ -52,11 +52,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boyko-pavlo/stickchart.git"
+    "url": "git+https://github.com/PhoboSys/pm-stickchart.git"
   },
   "keywords": [],
   "bugs": {
-    "url": "https://github.com/boyko-pavlo/stickchart/issues"
+    "url": "https://github.com/PhoboSys/pm-stickchart/issues"
   },
-  "homepage": "https://github.com/boyko-pavlo/stickchart#readme"
+  "homepage": "https://github.com/PhoboSys/pm-stickchart#readme"
 }

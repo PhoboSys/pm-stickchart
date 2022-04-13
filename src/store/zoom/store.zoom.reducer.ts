@@ -1,34 +1,48 @@
-import { IReducer, StickChartState } from '../../interfaces'
-import { HandledEvent } from '../../utils/utils.handledEvent'
+import { IReducer, IStickChartState } from '../../data/interfaces'
 
-export class ZoomStateReducer implements IReducer<StickChartState> {
+export class ZoomStateReducer implements IReducer<IStickChartState> {
     constructor(
-        readonly state: StickChartState,
+        readonly state: IStickChartState,
     ) { }
 
-    public reduceState(): StickChartState {
+    public reduceState(): IStickChartState {
         this.moveRenderDateRange()
+        this.roundColumnIntervalSize()
 
-        this.state.emittedEvent = new HandledEvent()
+        this.state.inputEvent.preventDefault()
+        this.state.inputEvent.markAsHandled()
 
         return this.state
     }
 
     private moveRenderDateRange(): void {
-        const { emittedEvent: zoomEvent, renderDateRange, columnIntervalSize } = this.state
-        const { deltaY } = <WheelEvent>zoomEvent
+        const {
+            inputEvent: { event },
+            renderConfig: { dateRange },
+        } = this.state
 
-        const zoomValue = deltaY * (renderDateRange.duration * 0.001)
+        const { deltaY } = <WheelEvent>event
 
-        renderDateRange.moveRangeInMilliseconds(-zoomValue, zoomValue)
+        const zoomValue = deltaY * (dateRange.duration * 0.001)
 
-        // const intervalCount = renderDateRange.getIntervalsCount(columnIntervalSize)
-        // if (intervalCount > 15) {
-        //     columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
-        // }
+        dateRange.moveRangeInMilliseconds(-zoomValue, zoomValue)
+    }
 
-        // if (intervalCount < 7) {
-        //     columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
-        // }
+    private roundColumnIntervalSize(): void {
+        const {
+            renderConfig: { dateRange, columnIntervalSize },
+        } = this.state
+
+        const duration = columnIntervalSize.asMilliseconds() * 7
+
+        if (dateRange.duration < duration) {
+            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
+
+            return
+        }
+
+        if (dateRange.getIntervalsCount(duration) < 2) return
+
+        columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
     }
 }

@@ -6,31 +6,32 @@ class Viewport {
         this.container = container;
         this.renderedKeys = [];
     }
-    keyRender(graphics, renderKey) {
+    render(graphics, renderKey) {
+        // console.log('rendered graphics count: ', this.container.children.length)
         const index = this.findGraphicIndex(renderKey);
         if (index === -1) {
-            return this.renderInexisted(graphics, renderKey);
+            return this.renderNew(graphics, renderKey);
         }
         this.rerenderExisted(graphics, index);
     }
-    renderInexisted(graphics, renderKey) {
+    renderNew(graphics, renderKey) {
         this.container.addChild(graphics);
         this.renderedKeys.push(renderKey);
     }
     rerenderExisted(graphics, renderIndex) {
         const key = this.renderedKeys[renderIndex];
-        this.removeByIndex(renderIndex);
-        this.renderInexisted(graphics, key);
+        this.destroy(renderIndex);
+        this.renderNew(graphics, key);
     }
     findGraphicIndex(renderKey) {
         return this.renderedKeys.indexOf(renderKey);
     }
-    removeByIndex(renderIndex) {
-        this.container.removeChildAt(renderIndex);
+    destroy(renderIndex) {
+        this.container.removeChildAt(renderIndex).destroy();
         this.renderedKeys.splice(renderIndex, 1);
     }
-    removeByKey(renderKey) {
-        this.removeByIndex(this.findGraphicIndex(renderKey));
+    destroyByKey(renderKey) {
+        this.destroy(this.findGraphicIndex(renderKey));
     }
 }
 exports.Viewport = Viewport;

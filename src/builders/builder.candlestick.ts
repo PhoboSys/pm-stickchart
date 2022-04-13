@@ -1,41 +1,44 @@
 import { Graphics } from '@pixi/graphics'
 
-import { IBuilder, IStick } from '../interfaces'
+import { IBuilder, IStick, IStickChartStyle } from '../data/interfaces'
 import { ValueRange } from '../utils'
-import { DateRange } from '../utils/DateRange'
+import { DateRange } from '../utils/utils.dateRange'
 
 export class CandleStickBuilder extends Graphics implements IBuilder {
 
     constructor(
-        private stick: IStick,
+        private data: IStick,
+        private style: IStickChartStyle,
         private screenWidth: number,
         private screenHeight: number,
         private stickWidth: number,
-        private renderValueRange: ValueRange,
-        private renderDateRange: DateRange,
+        private valueRange: ValueRange,
+        private dateRange: DateRange,
     ) {
         super()
     }
 
     private get color(): number {
-        return this.stick.open < this.stick.close ? 0x00FF00 : 0xFF0000
+        const { increaseColor, decreaseColor } = this.style
+
+        return this.data.open < this.data.close ? increaseColor : decreaseColor
     }
 
     private get rectHeight(): number {
-        const { renderValueRange, screenHeight, stick } = this
+        const { valueRange, screenHeight, data } = this
 
-        const distance = Math.abs(stick.open - stick.close)
-        const point = renderValueRange.getPointByValue(distance)
+        const distance = Math.abs(data.open - data.close)
+        const point = valueRange.getPointByValue(distance)
 
         return point * screenHeight
     }
 
     private get centerX(): number {
-        return this.getPointX(this.stick.date) + (this.stickWidth / 2)
+        return this.getPointX(this.data.date) + (this.stickWidth / 2)
     }
 
     private get rectTopY(): number {
-        return this.getPointY(Math.max(this.stick.open, this.stick.close))
+        return this.getPointY(Math.max(this.data.open, this.data.close))
     }
 
     public build(): Graphics {
@@ -46,9 +49,11 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private buildLine(): void {
-        const { centerX, stick: { high, low } } = this
+        const { centerX, data: { high, low } } = this
 
         const line = new Graphics()
+
+        console.log(this.rectTopY, Math.max(this.data.open, this.data.close))
 
         line
             .lineStyle({ width: 1, color: this.color })
@@ -59,7 +64,7 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private buildRectangle(): void {
-        const { stick: { date }, rectTopY, rectHeight, stickWidth } = this
+        const { data: { date }, rectTopY, rectHeight, stickWidth, style: { stickRound } } = this
         const rectangle = new Graphics()
 
         const x = this.getPointX(date), y = rectTopY
@@ -67,24 +72,24 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
 
         rectangle
             .beginFill(this.color)
-            .drawRect(x, y, width, height)
+            .drawRoundedRect(x, y, width, height, stickRound)
             .endFill()
 
         super.addChild(rectangle)
     }
 
     private getPointY(value: number): number {
-        const { renderValueRange, screenHeight } = this
+        const { valueRange, screenHeight } = this
 
-        const point = 1 - renderValueRange.getPointByValue(value)
+        const point = 1 - valueRange.getPointByValue(value)
 
         return point * screenHeight
     }
 
     private getPointX(date: Date): number {
-        const { renderDateRange, screenWidth } = this
+        const { dateRange, screenWidth } = this
 
-        const datePoint = renderDateRange.getPointByDate(date)
+        const datePoint = dateRange.getPointByDate(date)
 
         return datePoint * screenWidth
     }

@@ -17,4 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./core.stickChart"), exports);
 __exportStar(require("./core.middlewareHandler"), exports);
 __exportStar(require("./core.viewport"), exports);
+__exportStar(require("./core.middlewareRunner"), exports);
+__exportStar(require("./core.inputEvent"), exports);
+// export * from './core.dataManager'
 //# sourceMappingURL=index.js.map

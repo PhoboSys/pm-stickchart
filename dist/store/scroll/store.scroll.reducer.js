@@ -8,16 +8,17 @@ class ScrollStateReducer {
     }
     reduceState() {
         this.moveRenderDateRange();
+        this.state.inputEvent.preventDefault();
         return this.state;
     }
     moveRenderDateRange() {
-        const { xShift, state: { renderDateRange } } = this;
-        const scrollValue = xShift * (renderDateRange.duration * 0.001);
-        renderDateRange.moveRangeInMilliseconds(scrollValue, scrollValue);
+        const { xShift, state: { renderConfig: { dateRange } } } = this;
+        const scrollValue = xShift * (dateRange.duration * 0.001);
+        dateRange.moveRangeInMilliseconds(scrollValue, scrollValue);
     }
     get xShift() {
         const { previousEvent, state } = this;
-        const event = state.emittedEvent;
+        const event = state.inputEvent.event;
         if (previousEvent === null || previousEvent.mouseX !== event.mouseX) {
             return event.mouseX - event.dragX;
         }

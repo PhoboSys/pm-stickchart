@@ -1,50 +1,50 @@
 import { Graphics } from '@pixi/graphics'
 
 import { CandleStickBuilder } from '../../builders/builder.candlestick'
-import { Viewport } from '../../core/core.viewport'
-import { StickChartState, IView } from '../../interfaces'
-import { IStick } from '../../interfaces/interface.stick'
+import { Viewport } from '../../core'
+import { IStick, IView, IStickChartState } from '../../data/interfaces'
 
-export class CandleStickView implements IView<StickChartState> {
+export class CandleStickView implements IView<IStickChartState> {
     static readonly renderKey: string = 'candle_sticks_graphics'
 
     private readonly builded: Graphics = new Graphics()
 
     constructor(
-        public readonly state: StickChartState,
+        public readonly state: IStickChartState,
         public readonly viewport: Viewport,
     ) { }
 
     private get stickWidth(): number {
-        const { width, stickIntervalWidth, renderDateRange } = this.state
+        const { viewConfig: { width }, renderConfig: { dateRange, stickIntervalSize } } = this.state
 
-        return width * (stickIntervalWidth.asMilliseconds() / renderDateRange.duration)
+        return width * (stickIntervalSize!.asMilliseconds() / dateRange.duration)
     }
 
     public render(): void {
         this.buildSticks()
 
-        this.viewport.keyRender(this.builded, CandleStickView.renderKey)
+        this.viewport.render(this.builded, CandleStickView.renderKey)
     }
 
     private buildSticks(): Graphics {
-        const { stickWidth, state: { width, height, valueRange, renderDateRange, renderSticks } } = this
+        const { style, viewConfig: { width, height }, renderConfig: { valueRange, dateRange, dataManager } } = this.state
 
         const build = (stick: IStick): Graphics => {
             const builder = new CandleStickBuilder(
                 stick,
+                style,
                 width,
                 height,
-                stickWidth,
+                this.stickWidth,
                 valueRange,
-                renderDateRange,
+                dateRange,
             )
 
             return builder.build()
         }
 
-        for (const stick of renderSticks) {
-            this.builded.addChild(build(stick))
+        for (const stick of dataManager!.data) {
+            this.builded.addChild(build(<IStick>stick))
         }
 
         return this.builded

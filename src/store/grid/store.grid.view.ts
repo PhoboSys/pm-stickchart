@@ -1,55 +1,66 @@
 import { Graphics } from '@pixi/graphics'
 
 import { Viewport } from '../../core/core.viewport'
-import { StickChartState, IView } from '../../interfaces'
+import { IStickChartState, IView } from '../../data/interfaces'
 import { DateRange } from '../../utils'
 
-export class GridView implements IView<StickChartState> {
+export class GridView implements IView<IStickChartState> {
     static readonly renderKey: string = 'grid_graphics'
 
     private readonly buildedGrid: Graphics = new Graphics()
 
     constructor(
-        public readonly state: StickChartState,
+        public readonly state: IStickChartState,
         public readonly viewport: Viewport,
     ) { }
 
     render(): void {
         this.build()
 
-        this.viewport.keyRender(this.buildedGrid, GridView.renderKey)
+        this.viewport.render(this.buildedGrid, GridView.renderKey)
     }
 
     private get beginColumnWhitespace(): number {
-        const { renderDateRange, dateRange, columnIntervalSize } = this.state
+        const {
+            viewConfig: { dateRange },
+            renderConfig: { dateRange: renderDateRange, columnIntervalSize },
+        } = this.state
 
         const distance = DateRange.getBeginDistance(dateRange, renderDateRange)
-        const segment = columnIntervalSize.asMilliseconds()
-        const point = 1 - (distance / segment % 1)
 
-        return point * this.columnWhitespace
+        const segment = columnIntervalSize.asMilliseconds()
+        const point = (Math.abs(distance) / segment % 1)
+        const absolutePoint = distance < 0 ? point : 1 - point
+
+        return absolutePoint * this.columnWhitespace
     }
 
     private get columnWhitespace(): number {
-        const { width, renderDateRange, columnIntervalSize } = this.state
+        const {
+            viewConfig: { width },
+            renderConfig: { dateRange, columnIntervalSize },
+        } = this.state
 
-        return width / renderDateRange.getIntervalsCount(columnIntervalSize)
+        return width / dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds())
     }
 
     private get rowWhitespace(): number {
-        const { height, valueRange, rowIntervalSize } = this.state
+        const {
+            viewConfig: { height },
+            renderConfig: { valueRange, rowIntervalSize },
+        } = this.state
 
         return height / valueRange.getIntervalsCount(rowIntervalSize)
     }
 
     private get columnsCount(): number {
-        const { renderDateRange, columnIntervalSize } = this.state
+        const { dateRange, columnIntervalSize } = this.state.renderConfig
 
-        return renderDateRange.getIntervalsCount(columnIntervalSize)
+        return dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds())
     }
 
     private get rowsCount(): number {
-        const { valueRange, rowIntervalSize } = this.state
+        const { valueRange, rowIntervalSize } = this.state.renderConfig
 
         return valueRange.getIntervalsCount(rowIntervalSize)
     }
@@ -60,41 +71,37 @@ export class GridView implements IView<StickChartState> {
     }
 
     private buildVerticalLines(): void {
-        const { columnsCount, columnWhitespace, beginColumnWhitespace } = this
+        const { columnsCount, columnWhitespace, beginColumnWhitespace, state: { viewConfig: { height } } } = this
 
         const coords: Array<number> = [beginColumnWhitespace]
 
         for (let i = 0; i < columnsCount; i++) {
-            const pos = coords[i]
+            const x = coords[i]
 
-            coords[i + 1] = pos + columnWhitespace
+            coords[i + 1] = x + columnWhitespace
 
-            const line = new Graphics()
-
-            line
-                .lineStyle({ width: 1, color: 0xffff })
-                .moveTo(pos, 0)
-                .lineTo(pos, this.state.height)
-
-            this.buildedGrid.addChild(line)
+            this.buildLine([x, 0], [x, height])
         }
     }
 
     private buildHorizontalLines(): void {
-        const { rowsCount, rowWhitespace } = this
+        const { rowsCount, rowWhitespace, state: { viewConfig: { width } } } = this
 
         for (let i = 0; i < rowsCount; i++) {
-            const pos = i * rowWhitespace
+            const y = i * rowWhitespace
 
-            const line = new Graphics()
-
-            line
-                .lineStyle({ width: 1, color: 0xffff })
-                .moveTo(0, pos)
-                .lineTo(this.state.width, pos)
-                .endFill()
-
-            this.buildedGrid.addChild(line)
+            this.buildLine([0, y], [width, y])
         }
+    }
+
+    private buildLine([x1, y1], [x2, y2]): void {
+        const { gridColor, gridOpacity, gridWidth } = this.state.style
+
+        const line = (new Graphics())
+            .lineStyle({ width: gridWidth, color: gridColor, alpha: gridOpacity })
+            .moveTo(x1, y1)
+            .lineTo(x2, y2)
+
+        this.buildedGrid.addChild(line)
     }
 }

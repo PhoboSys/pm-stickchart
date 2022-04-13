@@ -8,17 +8,18 @@ export class Viewport {
         public container: Container,
     ) { }
 
-    public keyRender(graphics: Graphics, renderKey: string): void {
+    public render(graphics: Graphics, renderKey: string): void {
+        // console.log('rendered graphics count: ', this.container.children.length)
         const index = this.findGraphicIndex(renderKey)
 
         if (index === -1) {
-            return this.renderInexisted(graphics, renderKey)
+            return this.renderNew(graphics, renderKey)
         }
 
         this.rerenderExisted(graphics, index)
     }
 
-    private renderInexisted(graphics: Graphics, renderKey: string): void {
+    private renderNew(graphics: Graphics, renderKey: string): void {
         this.container.addChild(graphics)
 
         this.renderedKeys.push(renderKey)
@@ -27,21 +28,21 @@ export class Viewport {
     private rerenderExisted(graphics: Graphics, renderIndex: number): void {
         const key = this.renderedKeys[renderIndex]
 
-        this.removeByIndex(renderIndex)
-        this.renderInexisted(graphics, key)
+        this.destroy(renderIndex)
+        this.renderNew(graphics, key)
     }
 
     private findGraphicIndex(renderKey: string): number {
         return this.renderedKeys.indexOf(renderKey)
     }
 
-    public removeByIndex(renderIndex: number): void {
-        this.container.removeChildAt(renderIndex)
+    public destroy(renderIndex: number): void {
+        this.container.removeChildAt(renderIndex).destroy()
 
         this.renderedKeys.splice(renderIndex, 1)
     }
 
-    public removeByKey(renderKey: string): void {
-        this.removeByIndex(this.findGraphicIndex(renderKey))
+    public destroyByKey(renderKey: string): void {
+        this.destroy(this.findGraphicIndex(renderKey))
     }
 }

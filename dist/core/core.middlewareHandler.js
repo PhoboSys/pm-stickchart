@@ -11,10 +11,12 @@ class MiddlewareHandler {
         const middleware = middlewares.at(0);
         if (middleware === undefined)
             return this;
-        const handler = new MiddlewareHandler(middlewares.slice(1), state);
-        if (middleware.skip(state))
-            return handler.next(viewport, state);
-        return middleware.handle(viewport, state, handler);
+        const nextHandler = new MiddlewareHandler(middlewares.slice(1), state);
+        if (middleware.shouldSkip(state))
+            return nextHandler.next(viewport, state);
+        const handled = middleware.handle(viewport, state, nextHandler);
+        middleware.save(state);
+        return handled;
     }
 }
 exports.MiddlewareHandler = MiddlewareHandler;

@@ -1,19 +1,36 @@
 import { Duration } from 'moment';
-import { EmittedEvent } from '../aliases/alias.emittedEvent';
+import { ChartInputEvent } from '../core';
+import { ChartTypes } from '../enums';
 import { DateRange, ValueRange } from '../utils';
-import { IStick } from './interface.stick';
-export interface IStickChart {
+export interface IStickChartStyle {
+    backgroundColor: number;
+    backgroundOpacity: number;
+    gridColor: number;
+    gridOpacity: number;
+    gridWidth: number;
+    increaseColor: number;
+    decreaseColor: number;
+    stickRound: number;
+    lineColor: number;
+}
+export interface IStickChartViewConfig {
     width: number;
     height: number;
+    chartType?: ChartTypes;
+    columnIntervalSize?: Duration;
     dateRange: DateRange;
-    renderDateRange: DateRange;
-    columnIntervalSize: Duration;
-    stickIntervalWidth: Duration;
+}
+export interface IStickChartOptions {
+    style: IStickChartStyle;
+    viewConfig: IStickChartViewConfig;
+}
+export interface IStickChartRenderConfig {
+    dateRange: DateRange;
     valueRange: ValueRange;
+    columnIntervalSize: Duration;
     rowIntervalSize: number;
 }
-export interface StickChartState extends IStickChart {
-    emittedEvent: EmittedEvent;
-    emittedEventType: keyof HTMLElementEventMap | null;
-    renderSticks: IStick[];
+export interface IStickChartState extends IStickChartOptions {
+    renderConfig: IStickChartRenderConfig;
+    inputEvent: ChartInputEvent;
 }

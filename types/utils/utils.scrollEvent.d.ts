@@ -1,4 +1,4 @@
-export declare class ScrollEvent {
+export declare class ScrollEvent extends Event {
     readonly mouseX: number;
     readonly mouseY: number;
     readonly dragX: number;

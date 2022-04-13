@@ -1,5 +1,4 @@
 export { addScrollEvent } from './utils/utils.addScrollEvent';
-export { generateSticks } from './tests/test.sticksMok';
 export { StickChart } from './core';
+export { InputEventTypes, ChartTypes } from './data/enums';
 export { DateRange, ValueRange } from './utils';
-export { Application } from '@pixi/app';

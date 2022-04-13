@@ -4,10 +4,10 @@ export declare class Viewport {
     container: Container;
     private renderedKeys;
     constructor(container: Container);
-    keyRender(graphics: Graphics, renderKey: string): void;
-    private renderInexisted;
+    render(graphics: Graphics, renderKey: string): void;
+    private renderNew;
     private rerenderExisted;
     private findGraphicIndex;
-    removeByIndex(renderIndex: number): void;
-    removeByKey(renderKey: string): void;
+    destroy(renderIndex: number): void;
+    destroyByKey(renderKey: string): void;
 }

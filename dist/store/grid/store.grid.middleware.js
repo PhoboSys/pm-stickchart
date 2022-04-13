@@ -8,8 +8,10 @@ class GridViewMiddleware {
         view.render();
         return handler.next(viewport, state);
     }
-    skip(state) {
+    shouldSkip(state) {
         return false;
+    }
+    save(state) {
     }
 }
 exports.GridViewMiddleware = GridViewMiddleware;

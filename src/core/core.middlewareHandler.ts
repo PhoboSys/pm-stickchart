@@ -1,4 +1,4 @@
-import { IMiddleware } from '../interfaces'
+import { IMiddleware } from '../data/interfaces'
 
 import { Viewport } from '.'
 
@@ -15,10 +15,14 @@ export class MiddlewareHandler<T> {
 
         if (middleware === undefined) return this
 
-        const handler = new MiddlewareHandler<T>(middlewares.slice(1), state)
+        const nextHandler = new MiddlewareHandler<T>(middlewares.slice(1), state)
 
-        if (middleware.skip(state)) return handler.next(viewport, state)
+        if (middleware.shouldSkip(state)) return nextHandler.next(viewport, state)
 
-        return middleware.handle(viewport, state, handler)
+        const handled = middleware.handle(viewport, state, nextHandler)
+
+        middleware.save(state)
+
+        return handled
     }
 }

@@ -1,5 +1,3 @@
-import { EmittedEvent } from '../aliases/alias.emittedEvent'
-
 import { ScrollEvent } from './utils.scrollEvent'
 
 const isMouseDown = false

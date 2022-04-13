@@ -1,4 +1,4 @@
-import { IMiddleware } from '../interfaces'
+import { IMiddleware } from '../data/interfaces'
 
 import { MiddlewareHandler } from './core.middlewareHandler'
 

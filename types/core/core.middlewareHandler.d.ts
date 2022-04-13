@@ -1,4 +1,4 @@
-import { IMiddleware } from '../interfaces';
+import { IMiddleware } from '../data/interfaces';
 import { Viewport } from '.';
 export declare class MiddlewareHandler<T> {
     middlewares: IMiddleware<T>[];

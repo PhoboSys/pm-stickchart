@@ -1,30 +1,32 @@
-import { IReducer, StickChartState } from '../../interfaces'
+import { IReducer, IStickChartState } from '../../data/interfaces'
 import { HandledEvent } from '../../utils/utils.handledEvent'
 import { ScrollEvent } from '../../utils/utils.scrollEvent'
 
-export class ScrollStateReducer implements IReducer<StickChartState> {
+export class ScrollStateReducer implements IReducer<IStickChartState> {
     constructor(
-        readonly state: StickChartState,
+        readonly state: IStickChartState,
         private readonly previousEvent: ScrollEvent | null,
     ) { }
 
-    public reduceState(): StickChartState {
+    public reduceState(): IStickChartState {
         this.moveRenderDateRange()
+
+        this.state.inputEvent.preventDefault()
 
         return this.state
     }
 
     private moveRenderDateRange(): void {
-        const { xShift, state: { renderDateRange } } = this
+        const { xShift, state: { renderConfig: { dateRange } } } = this
 
-        const scrollValue = xShift * (renderDateRange.duration * 0.001)
+        const scrollValue = xShift * (dateRange.duration * 0.001)
 
-        renderDateRange.moveRangeInMilliseconds(scrollValue, scrollValue)
+        dateRange.moveRangeInMilliseconds(scrollValue, scrollValue)
     }
 
     private get xShift(): number {
         const { previousEvent, state } = this
-        const event = <ScrollEvent>state.emittedEvent
+        const event = <ScrollEvent>state.inputEvent.event
 
         if (previousEvent === null || previousEvent.mouseX !== event.mouseX) {
             return event.mouseX - event.dragX

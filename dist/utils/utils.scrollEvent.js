@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScrollEvent = void 0;
-class ScrollEvent {
+class ScrollEvent extends Event {
     constructor(mouseX, mouseY, dragX, dragY) {
+        super('scroll');
         this.mouseX = mouseX;
         this.mouseY = mouseY;
         this.dragX = dragX;
