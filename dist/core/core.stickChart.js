@@ -76,6 +76,7 @@ class StickChart {
     }
     setChartType(type) {
         this.state.viewConfig.chartType = type;
+        console.log('setChartType', type);
         this.state.renderConfig.dataManager = this.createDataManager();
         this.render();
     }

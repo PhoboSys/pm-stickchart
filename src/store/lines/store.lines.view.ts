@@ -4,7 +4,7 @@ import { Viewport } from '../../core/core.viewport'
 import { IStickChartState, IPricePoint, IView } from '../../data/interfaces'
 
 export class LinesView implements IView<IStickChartState> {
-    static readonly renderKey: string = 'lines_graphics'
+    static readonly renderKey: string = 'chart_data_graphics'
 
     private readonly builded: Graphics = new Graphics()
 

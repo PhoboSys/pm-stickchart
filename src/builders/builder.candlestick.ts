@@ -7,7 +7,7 @@ import { DateRange } from '../utils/utils.dateRange'
 export class CandleStickBuilder extends Graphics implements IBuilder {
 
     constructor(
-        private data: IStick,
+        private stick: IStick,
         private style: IStickChartStyle,
         private screenWidth: number,
         private screenHeight: number,
@@ -21,24 +21,19 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     private get color(): number {
         const { increaseColor, decreaseColor } = this.style
 
-        return this.data.open < this.data.close ? increaseColor : decreaseColor
-    }
-
-    private get rectHeight(): number {
-        const { valueRange, screenHeight, data } = this
-
-        const distance = Math.abs(data.open - data.close)
-        const point = valueRange.getPointByValue(distance)
-
-        return point * screenHeight
+        return this.stick.open < this.stick.close ? increaseColor : decreaseColor
     }
 
     private get centerX(): number {
-        return this.getPointX(this.data.date) + (this.stickWidth / 2)
+        return this.getPointX(this.stick.date) + (this.stickWidth / 2)
     }
 
     private get rectTopY(): number {
-        return this.getPointY(Math.max(this.data.open, this.data.close))
+        return this.getPointY(Math.max(this.stick.open, this.stick.close))
+    }
+
+    private get rectBottomY(): number {
+        return this.getPointY(Math.min(this.stick.open, this.stick.close))
     }
 
     public build(): Graphics {
@@ -49,11 +44,11 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private buildLine(): void {
-        const { centerX, data: { high, low } } = this
+        const { centerX, stick: { high, low } } = this
 
         const line = new Graphics()
 
-        console.log(this.rectTopY, Math.max(this.data.open, this.data.close))
+        console.log(this.rectTopY, Math.max(this.stick.open, this.stick.close))
 
         line
             .lineStyle({ width: 1, color: this.color })
@@ -64,11 +59,13 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private buildRectangle(): void {
-        const { data: { date }, rectTopY, rectHeight, stickWidth, style: { stickRound } } = this
+        const { stick: { date }, stickWidth, rectTopY, rectBottomY, style: { stickRound } } = this
         const rectangle = new Graphics()
 
         const x = this.getPointX(date), y = rectTopY
-        const width = stickWidth, height = rectHeight
+        const width = stickWidth, height = rectBottomY - rectTopY
+
+        console.log(y, height)
 
         rectangle
             .beginFill(this.color)

@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStickBuilder = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStickBuilder extends graphics_1.Graphics {
-    constructor(data, style, screenWidth, screenHeight, stickWidth, valueRange, dateRange) {
+    constructor(stick, style, screenWidth, screenHeight, stickWidth, valueRange, dateRange) {
         super();
-        this.data = data;
+        this.stick = stick;
         this.style = style;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -15,19 +15,16 @@ class CandleStickBuilder extends graphics_1.Graphics {
     }
     get color() {
         const { increaseColor, decreaseColor } = this.style;
-        return this.data.open < this.data.close ? increaseColor : decreaseColor;
-    }
-    get rectHeight() {
-        const { valueRange, screenHeight, data } = this;
-        const distance = Math.abs(data.open - data.close);
-        const point = valueRange.getPointByValue(distance);
-        return point * screenHeight;
+        return this.stick.open < this.stick.close ? increaseColor : decreaseColor;
     }
     get centerX() {
-        return this.getPointX(this.data.date) + (this.stickWidth / 2);
+        return this.getPointX(this.stick.date) + (this.stickWidth / 2);
     }
     get rectTopY() {
-        return this.getPointY(Math.max(this.data.open, this.data.close));
+        return this.getPointY(Math.max(this.stick.open, this.stick.close));
+    }
+    get rectBottomY() {
+        return this.getPointY(Math.min(this.stick.open, this.stick.close));
     }
     build() {
         this.buildLine();
@@ -35,9 +32,9 @@ class CandleStickBuilder extends graphics_1.Graphics {
         return this;
     }
     buildLine() {
-        const { centerX, data: { high, low } } = this;
+        const { centerX, stick: { high, low } } = this;
         const line = new graphics_1.Graphics();
-        console.log(this.rectTopY, Math.max(this.data.open, this.data.close));
+        console.log(this.rectTopY, Math.max(this.stick.open, this.stick.close));
         line
             .lineStyle({ width: 1, color: this.color })
             .moveTo(centerX, this.getPointY(high))
@@ -45,10 +42,11 @@ class CandleStickBuilder extends graphics_1.Graphics {
         super.addChild(line);
     }
     buildRectangle() {
-        const { data: { date }, rectTopY, rectHeight, stickWidth, style: { stickRound } } = this;
+        const { stick: { date }, stickWidth, rectTopY, rectBottomY, style: { stickRound } } = this;
         const rectangle = new graphics_1.Graphics();
         const x = this.getPointX(date), y = rectTopY;
-        const width = stickWidth, height = rectHeight;
+        const width = stickWidth, height = rectBottomY - rectTopY;
+        console.log(y, height);
         rectangle
             .beginFill(this.color)
             .drawRoundedRect(x, y, width, height, stickRound)

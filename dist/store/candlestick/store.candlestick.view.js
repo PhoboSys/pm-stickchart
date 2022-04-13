@@ -30,5 +30,5 @@ class CandleStickView {
     }
 }
 exports.CandleStickView = CandleStickView;
-CandleStickView.renderKey = 'candle_sticks_graphics';
+CandleStickView.renderKey = 'chart_data_graphics';
 //# sourceMappingURL=store.candlestick.view.js.map

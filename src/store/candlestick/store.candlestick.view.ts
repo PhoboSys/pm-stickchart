@@ -5,7 +5,7 @@ import { Viewport } from '../../core'
 import { IStick, IView, IStickChartState } from '../../data/interfaces'
 
 export class CandleStickView implements IView<IStickChartState> {
-    static readonly renderKey: string = 'candle_sticks_graphics'
+    static readonly renderKey: string = 'chart_data_graphics'
 
     private readonly builded: Graphics = new Graphics()
 

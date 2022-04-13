@@ -44,5 +44,5 @@ class LinesView {
     }
 }
 exports.LinesView = LinesView;
-LinesView.renderKey = 'lines_graphics';
+LinesView.renderKey = 'chart_data_graphics';
 //# sourceMappingURL=store.lines.view.js.map

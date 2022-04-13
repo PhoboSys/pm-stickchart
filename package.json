@@ -1,5 +1,5 @@
 {
-  "name": "stickchart",
+  "name": "pm-stickchart",
   "description": "Chart",
   "version": "0.0.5",
   "author": "Phobosys",
@@ -15,7 +15,7 @@
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
     "test": "jest --config ./tests/jest.config.ts",
-    "autolink": "npm link && cd ../pari-market-web-trader && npm link stickchart"
+    "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },
   "pre-commit": [
     "lint"
@@ -32,7 +32,7 @@
     "@pixi/settings": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
-    "moment": "2.29.2",
+    "moment": "2.29.1",
     "rimraf": "3.0.2"
   },
   "devDependencies": {
