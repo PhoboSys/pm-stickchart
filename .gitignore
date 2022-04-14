@@ -484,3 +484,5 @@ ASALocalRun/
 *.binlog
 
 .vscode
+yarn.lock
+package-lock.json

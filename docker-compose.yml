@@ -1,0 +1,13 @@
+---
+version: "3.0"
+services:
+  parimarket:
+    image: node:17.6.0
+    user: "${UID:-node}:${GID:-node}"
+    working_dir: /build
+    volumes:
+      - ./:/build
+    command: sh -c "
+      npm install -d &&
+      npm audit fix || true &&
+      npm run build:lde"
