@@ -18,7 +18,7 @@ class DataManager {
     createValueRange() {
         const { values } = this;
         if (values.length < 1)
-            return new utils_range_1.ValueRange(0, 0);
+            return new utils_range_1.ValueRange(Infinity, 0);
         const min = Math.min(...values);
         const max = Math.max(...values);
         return new utils_range_1.ValueRange(min, max);

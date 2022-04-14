@@ -15,6 +15,9 @@ class ValueRange extends Range {
     get width() {
         return this.to - this.from;
     }
+    isNull() {
+        return this.from === Infinity;
+    }
     updateIf(value) {
         this.from = Math.min(this.from, value);
         this.to = Math.max(this.to, value);

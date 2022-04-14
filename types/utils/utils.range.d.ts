@@ -12,6 +12,7 @@ export declare abstract class Range<T, ValueType, IntervalType> {
 }
 export declare class ValueRange extends Range<number, number, number> {
     get width(): number;
+    isNull(): boolean;
     updateIf(value: number): ValueRange;
     expandFor(left: number, right: number): ValueRange;
     getPointByValue(value: number): number;

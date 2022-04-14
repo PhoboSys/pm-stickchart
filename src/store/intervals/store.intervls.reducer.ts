@@ -22,7 +22,7 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
 
         const range = dataManager.valueRange
 
-        if (range === undefined) return
+        if (range.isNull()) return
         const valueRange = new ValueRange(range.range.from - range.width * .2, range.range.to + range.width * .2)
 
         this.state.renderConfig.valueRange = valueRange
@@ -33,7 +33,9 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
             renderConfig: { valueRange, rowIntervalSize },
         } = this.state
 
-        const minInterval = rowIntervalSize * 6
+        if (valueRange.width <= 0) return
+
+        const minInterval = rowIntervalSize * 7
 
         if (valueRange.width < minInterval) {
             this.state.renderConfig.rowIntervalSize = rowIntervalSize / 2

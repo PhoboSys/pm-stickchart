@@ -1,7 +1,5 @@
 import { Duration } from 'moment';
-import { ChartInputEvent } from '../../core';
-import { DateRange, ValueRange } from '../../utils';
-import { DataManager } from '../../utils/utils.dataManager';
+import { DateRange, ValueRange, ChartInputEvent, DataManager } from '../../utils';
 import { ChartTypes } from '../enums';
 import { IRawPricePoint, IStick, IPricePoint } from '.';
 export interface IStickChartStyle {

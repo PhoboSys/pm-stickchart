@@ -26,6 +26,10 @@ export class ValueRange extends Range<number, number, number> {
         return this.to - this.from
     }
 
+    public isNull(): boolean {
+        return this.from === Infinity
+    }
+
     public updateIf(value: number): ValueRange {
         this.from = Math.min(this.from, value)
         this.to = Math.max(this.to, value)

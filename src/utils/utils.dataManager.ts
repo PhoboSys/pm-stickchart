@@ -25,7 +25,7 @@ export class DataManager<T, RawDataType> {
     private createValueRange(): ValueRange {
         const { values } = this
 
-        if (values.length < 1) return new ValueRange(0, 0)
+        if (values.length < 1) return new ValueRange(Infinity, 0)
 
         const min = Math.min(...values)
         const max = Math.max(...values)

@@ -20,4 +20,5 @@ __exportStar(require("./utils.scrollEvent"), exports);
 __exportStar(require("./utils.range"), exports);
 __exportStar(require("./utils.dataManager"), exports);
 __exportStar(require("./utils.date"), exports);
+__exportStar(require("./utils.inputEvent"), exports);
 //# sourceMappingURL=index.js.map
