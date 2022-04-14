@@ -17,9 +17,9 @@ export class ScrollStateReducer implements IReducer<IStickChartState> {
     }
 
     private moveRenderDateRange(): void {
-        const { xShift, state: { renderConfig: { dateRange } } } = this
+        const { xShift, state: { renderConfig: { dateRange }, viewConfig: { width } } } = this
 
-        const scrollValue = xShift * (dateRange.duration * 0.001)
+        const scrollValue = (xShift / width * dateRange.duration)
 
         dateRange.moveRangeInMilliseconds(scrollValue, scrollValue)
     }

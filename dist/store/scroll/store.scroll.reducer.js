@@ -12,8 +12,8 @@ class ScrollStateReducer {
         return this.state;
     }
     moveRenderDateRange() {
-        const { xShift, state: { renderConfig: { dateRange } } } = this;
-        const scrollValue = xShift * (dateRange.duration * 0.001);
+        const { xShift, state: { renderConfig: { dateRange }, viewConfig: { width } } } = this;
+        const scrollValue = (xShift / width * dateRange.duration);
         dateRange.moveRangeInMilliseconds(scrollValue, scrollValue);
     }
     get xShift() {
