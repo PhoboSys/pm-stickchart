@@ -10,15 +10,15 @@ class CandleStickView {
         this.builded = new graphics_1.Graphics();
     }
     get stickWidth() {
-        const { viewConfig: { width }, renderConfig: { dateRange, stickIntervalSize } } = this.state;
-        return width * (stickIntervalSize.asMilliseconds() / dateRange.duration);
+        const { viewConfig: { width, stickIntervalSize }, renderConfig: { dateRange } } = this.state;
+        return width * (stickIntervalSize.asMilliseconds() / dateRange.width);
     }
     render() {
         this.buildSticks();
         this.viewport.render(this.builded, CandleStickView.renderKey);
     }
     buildSticks() {
-        const { style, viewConfig: { width, height }, renderConfig: { valueRange, dateRange, dataManager } } = this.state;
+        const { style, dataManager, viewConfig: { width, height }, renderConfig: { valueRange, dateRange } } = this.state;
         const build = (stick) => {
             const builder = new builder_candlestick_1.CandleStickBuilder(stick, style, width, height, this.stickWidth, valueRange, dateRange);
             return builder.build();

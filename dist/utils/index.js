@@ -15,9 +15,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./utils.addScrollEvent"), exports);
-__exportStar(require("./utils.dateRange"), exports);
 __exportStar(require("./utils.handledEvent"), exports);
 __exportStar(require("./utils.scrollEvent"), exports);
-__exportStar(require("./utils.valueRange"), exports);
-__exportStar(require("./utils.peek"), exports);
+__exportStar(require("./utils.range"), exports);
+__exportStar(require("./utils.dataManager"), exports);
+__exportStar(require("./utils.date"), exports);
 //# sourceMappingURL=index.js.map

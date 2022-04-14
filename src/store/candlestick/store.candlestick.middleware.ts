@@ -17,7 +17,9 @@ export class CandleStickMiddleware implements IMiddleware<IStickChartState> {
     }
 
     shouldSkip(state: IStickChartState): boolean {
-        return state.data.length < 1 || state.viewConfig.chartType !== ChartTypes.candleSticks
+        const { chartType, dataManager } = state
+
+        return dataManager.data.length < 1 || chartType !== ChartTypes.candleSticks
     }
 
     save(state: IStickChartState): void {

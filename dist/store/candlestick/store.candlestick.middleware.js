@@ -10,7 +10,8 @@ class CandleStickMiddleware {
         return handler.next(viewport, state);
     }
     shouldSkip(state) {
-        return state.data.length < 1 || state.viewConfig.chartType !== enums_1.ChartTypes.candleSticks;
+        const { chartType, dataManager } = state;
+        return dataManager.data.length < 1 || chartType !== enums_1.ChartTypes.candleSticks;
     }
     save(state) {
     }

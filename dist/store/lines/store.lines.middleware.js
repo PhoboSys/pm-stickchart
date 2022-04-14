@@ -10,8 +10,8 @@ class LinesViewMiddleware {
         return handler.next(viewport, state);
     }
     shouldSkip(state) {
-        var _a, _b, _c;
-        return ((_c = (_b = (_a = state.renderConfig.dataManager) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.length) !== null && _c !== void 0 ? _c : 0) < 1 || state.viewConfig.chartType !== enums_1.ChartTypes.lines;
+        const { chartType, dataManager } = state;
+        return dataManager.data.length < 1 || chartType !== enums_1.ChartTypes.lines;
     }
     save(state) {
     }

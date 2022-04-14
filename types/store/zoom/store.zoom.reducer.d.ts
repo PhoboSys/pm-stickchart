@@ -4,5 +4,4 @@ export declare class ZoomStateReducer implements IReducer<IStickChartState> {
     constructor(state: IStickChartState);
     reduceState(): IStickChartState;
     private moveRenderDateRange;
-    private roundColumnIntervalSize;
 }

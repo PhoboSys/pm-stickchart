@@ -23,7 +23,7 @@ class GridView {
     }
     get columnWhitespace() {
         const { viewConfig: { width }, renderConfig: { dateRange, columnIntervalSize }, } = this.state;
-        return width / dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds());
+        return width / dateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowWhitespace() {
         const { viewConfig: { height }, renderConfig: { valueRange, rowIntervalSize }, } = this.state;
@@ -31,7 +31,7 @@ class GridView {
     }
     get columnsCount() {
         const { dateRange, columnIntervalSize } = this.state.renderConfig;
-        return dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds());
+        return dateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowsCount() {
         const { valueRange, rowIntervalSize } = this.state.renderConfig;
