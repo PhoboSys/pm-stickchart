@@ -1,8 +1,7 @@
-import { DataManager } from '../../core/core.dataManager'
-import { IReducer, IStickChartState, IPricePoint, IStick } from '../../data/interfaces'
-import { dataToValueMappersMap } from '../../data/maps/map.dataToValueMappers'
-import { rawDataMappersMap } from '../../data/maps/map.rawDataMappers'
-import { ValueRange } from '../../utils/utils.valueRange'
+import { duration } from 'moment'
+
+import { IReducer, IStickChartState } from '../../data/interfaces'
+import { ValueRange } from '../../utils/utils.range'
 
 export class IntervalsStateReducer implements IReducer<IStickChartState> {
     constructor(
@@ -13,28 +12,20 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
         this.setValueRange()
 
         this.roundColumnIntervalSize()
-        // this.roundRowIntervalSize()
+        this.roundRowIntervalSize()
 
         return this.state
     }
 
     private setValueRange(): void {
-        const rawDataMapper = rawDataMappersMap[this.state.viewConfig.chartType]
-        const columnIntervalSize = this.state.renderConfig.columnIntervalSize
-        const data = rawDataMapper(this.state.data, columnIntervalSize)
+        const { dataManager } = this.state
 
-        const dataManager = new DataManager<IPricePoint | IStick>(
-            data,
-            dataToValueMappersMap[this.state.viewConfig.chartType],
-        )
-        const valuePeek = dataManager.valuePeek
+        const range = dataManager.valueRange
 
-        if (valuePeek === undefined) return
-        const dist = valuePeek.max - valuePeek.min
-        const valueRange = new ValueRange(valuePeek.min - dist * .2, valuePeek.max + dist * .2)
+        if (range.isNull()) return
+        const valueRange = new ValueRange(range.range.from - range.width * .2, range.range.to + range.width * .2)
 
         this.state.renderConfig.valueRange = valueRange
-        console.log(valueRange)
     }
 
     private roundRowIntervalSize(): void {
@@ -42,17 +33,21 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
             renderConfig: { valueRange, rowIntervalSize },
         } = this.state
 
-        const minInterval = rowIntervalSize * 3
+        if (valueRange.width <= 0) return
 
-        if (valueRange.value < minInterval) {
+        const minInterval = rowIntervalSize * 7
+
+        if (valueRange.width < minInterval) {
             this.state.renderConfig.rowIntervalSize = rowIntervalSize / 2
 
-            return
+            return this.roundRowIntervalSize()
         }
 
         if (valueRange.getIntervalsCount(minInterval) < 2) return
 
         this.state.renderConfig.rowIntervalSize += rowIntervalSize
+
+        this.roundRowIntervalSize()
     }
 
     private roundColumnIntervalSize(): void {
@@ -60,15 +55,15 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
             renderConfig: { dateRange, columnIntervalSize },
         } = this.state
 
-        const duration = columnIntervalSize.asMilliseconds() * 3
+        const intervalsDuration = duration(columnIntervalSize.asMilliseconds() * 7, 'milliseconds')
 
-        if (dateRange.duration < duration) {
+        if (dateRange.width < intervalsDuration.asMilliseconds()) {
             columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
 
             return
         }
 
-        if (dateRange.getIntervalsCount(duration) < 2) return
+        if (dateRange.getIntervalsCount(intervalsDuration) < 2) return
 
         columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
     }

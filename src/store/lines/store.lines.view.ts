@@ -20,7 +20,7 @@ export class LinesView implements IView<IStickChartState> {
     }
 
     private buildLines(): void {
-        const { renderConfig: { dataManager }, style: { lineColor } } = this.state
+        const { dataManager, style: { lineColor } } = this.state
         const firstPricePointPoint = this.getPricePointPoint(<IPricePoint>dataManager!.data.at(0)!)
 
         const line = new Graphics()
@@ -44,8 +44,8 @@ export class LinesView implements IView<IStickChartState> {
         line.lineTo(...point)
     }
 
-    private getPricePointPoint(PricePoint: IPricePoint): [number, number] {
-        return [this.getPointX(PricePoint.date), this.getPointY(PricePoint.price)]
+    private getPricePointPoint(pricePoint: IPricePoint): [number, number] {
+        return [this.getPointX(pricePoint.date), this.getPointY(pricePoint.price)]
     }
 
     private getPointY(value: number): number {
@@ -56,10 +56,10 @@ export class LinesView implements IView<IStickChartState> {
         return point * height
     }
 
-    private getPointX(timestamp: Date): number {
+    private getPointX(date: Date): number {
         const { renderConfig: { dateRange }, viewConfig: { width } } = this.state
 
-        const datePoint = dateRange.getPointByDate(timestamp)
+        const datePoint = dateRange.getPointByValue(date)
 
         return datePoint * width
     }

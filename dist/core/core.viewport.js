@@ -7,7 +7,6 @@ class Viewport {
         this.renderedKeys = [];
     }
     render(graphics, renderKey) {
-        // console.log('rendered graphics count: ', this.container.children.length)
         const index = this.findGraphicIndex(renderKey);
         if (index === -1) {
             return this.renderNew(graphics, renderKey);

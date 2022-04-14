@@ -1,8 +1,7 @@
 import { Graphics } from '@pixi/graphics'
 
 import { IBuilder, IStick, IStickChartStyle } from '../data/interfaces'
-import { ValueRange } from '../utils'
-import { DateRange } from '../utils/utils.dateRange'
+import { ValueRange, DateRange } from '../utils'
 
 export class CandleStickBuilder extends Graphics implements IBuilder {
 
@@ -48,8 +47,6 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
 
         const line = new Graphics()
 
-        console.log(this.rectTopY, Math.max(this.stick.open, this.stick.close))
-
         line
             .lineStyle({ width: 1, color: this.color })
             .moveTo(centerX, this.getPointY(high))
@@ -64,8 +61,6 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
 
         const x = this.getPointX(date), y = rectTopY
         const width = stickWidth, height = rectBottomY - rectTopY
-
-        console.log(y, height)
 
         rectangle
             .beginFill(this.color)
@@ -86,7 +81,7 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     private getPointX(date: Date): number {
         const { dateRange, screenWidth } = this
 
-        const datePoint = dateRange.getPointByDate(date)
+        const datePoint = dateRange.getPointByValue(date)
 
         return datePoint * screenWidth
     }

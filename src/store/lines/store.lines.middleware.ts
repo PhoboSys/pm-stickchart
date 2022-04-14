@@ -17,7 +17,9 @@ export class LinesViewMiddleware implements IMiddleware<IStickChartState> {
     }
 
     shouldSkip(state: IStickChartState): boolean {
-        return (state.renderConfig.dataManager?.data?.length ?? 0) < 1 || state.viewConfig.chartType !== ChartTypes.lines
+        const { chartType, dataManager } = state
+
+        return dataManager.data.length < 1 || chartType !== ChartTypes.lines
     }
 
     save(state: IStickChartState): void {

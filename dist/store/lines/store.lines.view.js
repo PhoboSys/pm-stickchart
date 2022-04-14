@@ -13,7 +13,7 @@ class LinesView {
         this.viewport.render(this.builded, LinesView.renderKey);
     }
     buildLines() {
-        const { renderConfig: { dataManager }, style: { lineColor } } = this.state;
+        const { dataManager, style: { lineColor } } = this.state;
         const firstPricePointPoint = this.getPricePointPoint(dataManager.data.at(0));
         const line = new graphics_1.Graphics();
         line
@@ -29,17 +29,17 @@ class LinesView {
         const point = this.getPricePointPoint(pricePoint);
         line.lineTo(...point);
     }
-    getPricePointPoint(PricePoint) {
-        return [this.getPointX(PricePoint.date), this.getPointY(PricePoint.price)];
+    getPricePointPoint(pricePoint) {
+        return [this.getPointX(pricePoint.date), this.getPointY(pricePoint.price)];
     }
     getPointY(value) {
         const { renderConfig: { valueRange }, viewConfig: { height } } = this.state;
         const point = 1 - valueRange.getPointByValue(value);
         return point * height;
     }
-    getPointX(timestamp) {
+    getPointX(date) {
         const { renderConfig: { dateRange }, viewConfig: { width } } = this.state;
-        const datePoint = dateRange.getPointByDate(timestamp);
+        const datePoint = dateRange.getPointByValue(date);
         return datePoint * width;
     }
 }

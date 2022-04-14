@@ -1,9 +1,9 @@
 import moment, { duration } from 'moment'
 
-import { ChartInputEvent } from './core/core.inputEvent'
 import { InputEventTypes } from './data/enums/enum.inputEventTypes'
 import { IStickChartStyle, IRawPricePoint } from './data/interfaces'
-import { DateRange, ValueRange } from './utils'
+import { ChartInputEvent } from './utils/utils.inputEvent'
+import { ValueRange, DateRange } from './utils/utils.range'
 
 export const defaultStickChartStyle: IStickChartStyle = {
     backgroundColor: 0x303134,

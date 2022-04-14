@@ -41,7 +41,7 @@ export class GridView implements IView<IStickChartState> {
             renderConfig: { dateRange, columnIntervalSize },
         } = this.state
 
-        return width / dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds())
+        return width / dateRange.getIntervalsCount(columnIntervalSize)
     }
 
     private get rowWhitespace(): number {
@@ -56,7 +56,7 @@ export class GridView implements IView<IStickChartState> {
     private get columnsCount(): number {
         const { dateRange, columnIntervalSize } = this.state.renderConfig
 
-        return dateRange.getIntervalsCount(columnIntervalSize.asMilliseconds())
+        return dateRange.getIntervalsCount(columnIntervalSize)
     }
 
     private get rowsCount(): number {

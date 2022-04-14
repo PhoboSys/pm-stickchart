@@ -25,9 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.defaultIntervalRowSize = exports.defaultChartValueRange = exports.defaultStickIntervalSize = exports.defaultColumnIntervalSize = exports.defaultChartDateRange = exports.defaultStickChartData = exports.defaultInputEvent = exports.defaultStickChartStyle = void 0;
 const moment_1 = __importStar(require("moment"));
-const core_inputEvent_1 = require("./core/core.inputEvent");
 const enum_inputEventTypes_1 = require("./data/enums/enum.inputEventTypes");
-const utils_1 = require("./utils");
+const utils_inputEvent_1 = require("./utils/utils.inputEvent");
+const utils_range_1 = require("./utils/utils.range");
 exports.defaultStickChartStyle = {
     backgroundColor: 0x303134,
     backgroundOpacity: 1,
@@ -39,12 +39,12 @@ exports.defaultStickChartStyle = {
     stickRound: 20,
     lineColor: 0x4CAF50,
 };
-exports.defaultInputEvent = new core_inputEvent_1.ChartInputEvent(null, enum_inputEventTypes_1.InputEventTypes.none);
+exports.defaultInputEvent = new utils_inputEvent_1.ChartInputEvent(null, enum_inputEventTypes_1.InputEventTypes.none);
 exports.defaultStickChartData = [];
-const defaultChartDateRange = () => new utils_1.DateRange((0, moment_1.default)().subtract(10, 'minutes'), (0, moment_1.default)().add(10, 'minutes'));
+const defaultChartDateRange = () => new utils_range_1.DateRange((0, moment_1.default)().subtract(10, 'minutes'), (0, moment_1.default)().add(10, 'minutes'));
 exports.defaultChartDateRange = defaultChartDateRange;
 exports.defaultColumnIntervalSize = (0, moment_1.duration)(1, 'minute');
 exports.defaultStickIntervalSize = (0, moment_1.duration)(20, 'seconds');
-exports.defaultChartValueRange = new utils_1.ValueRange(0, 10);
+exports.defaultChartValueRange = new utils_range_1.ValueRange(0, 10);
 exports.defaultIntervalRowSize = 1;
 //# sourceMappingURL=defaults.js.map

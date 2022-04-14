@@ -7,7 +7,6 @@ class ZoomStateReducer {
     }
     reduceState() {
         this.moveRenderDateRange();
-        this.roundColumnIntervalSize();
         this.state.inputEvent.preventDefault();
         this.state.inputEvent.markAsHandled();
         return this.state;
@@ -15,19 +14,8 @@ class ZoomStateReducer {
     moveRenderDateRange() {
         const { inputEvent: { event }, renderConfig: { dateRange }, } = this.state;
         const { deltaY } = event;
-        const zoomValue = deltaY * (dateRange.duration * 0.001);
-        dateRange.moveRangeInMilliseconds(-zoomValue, zoomValue);
-    }
-    roundColumnIntervalSize() {
-        const { renderConfig: { dateRange, columnIntervalSize }, } = this.state;
-        const duration = columnIntervalSize.asMilliseconds() * 7;
-        if (dateRange.duration < duration) {
-            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds');
-            return;
-        }
-        if (dateRange.getIntervalsCount(duration) < 2)
-            return;
-        columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds');
+        const zoomValue = deltaY * (dateRange.width * 0.001);
+        dateRange.expandInMilliseconds(-zoomValue, zoomValue);
     }
 }
 exports.ZoomStateReducer = ZoomStateReducer;

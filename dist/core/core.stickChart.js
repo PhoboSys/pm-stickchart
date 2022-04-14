@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
-const map_dataToValueMappers_1 = require("../data/maps/map.dataToValueMappers");
-const map_rawDataMappers_1 = require("../data/maps/map.rawDataMappers");
+const maps_1 = require("../data/maps");
 const defaults_1 = require("../defaults");
 const pixi_1 = require("../libs/pixi");
 const store_candlestick_middleware_1 = require("../store/candlestick/store.candlestick.middleware");
@@ -11,19 +10,19 @@ const store_intervals_middleware_1 = require("../store/intervals/store.intervals
 const store_lines_middleware_1 = require("../store/lines/store.lines.middleware");
 const store_scroll_middleware_1 = require("../store/scroll/store.scroll.middleware");
 const store_zoom_middleware_1 = require("../store/zoom/store.zoom.middleware");
-const core_dataManager_1 = require("./core.dataManager");
-const core_inputEvent_1 = require("./core.inputEvent");
+const utils_1 = require("../utils");
+const utils_inputEvent_1 = require("../utils/utils.inputEvent");
 const core_middlewareRunner_1 = require("./core.middlewareRunner");
 const core_viewport_1 = require("./core.viewport");
 class StickChart {
-    constructor(width, height, chartType, stickIntervalSize, columnIntervalSize = defaults_1.defaultColumnIntervalSize, dateRange = (0, defaults_1.defaultChartDateRange)(), style = defaults_1.defaultStickChartStyle, data = defaults_1.defaultStickChartData) {
+    constructor(width, height, chartType, stickIntervalSize, columnIntervalSize = defaults_1.defaultColumnIntervalSize, style = defaults_1.defaultStickChartStyle, dateRange = (0, defaults_1.defaultChartDateRange)(), data = defaults_1.defaultStickChartData) {
         this.width = width;
         this.height = height;
         this.chartType = chartType;
         this.stickIntervalSize = stickIntervalSize;
         this.columnIntervalSize = columnIntervalSize;
-        this.dateRange = dateRange;
         this.style = style;
+        this.dateRange = dateRange;
         this.data = data;
         this.middlewareRunner = new core_middlewareRunner_1.MiddlewareRunner();
         this.application = new pixi_1.Application(Object.assign(Object.assign({ width, height }, style), { antialias: true }));
@@ -42,23 +41,26 @@ class StickChart {
         return {
             width: this.width,
             height: this.height,
-            chartType: this.chartType,
             stickIntervalSize: this.stickIntervalSize,
             columnIntervalSize: this.columnIntervalSize,
             dateRange: this.dateRange,
         };
     }
     createDataManager() {
-        const rawDataMapper = map_rawDataMappers_1.rawDataMappersMap[this.viewConfig.chartType];
-        const data = rawDataMapper(this.data, this.viewConfig.stickIntervalSize);
-        return new core_dataManager_1.DataManager(data, map_dataToValueMappers_1.dataToValueMappersMap[this.viewConfig.chartType]);
+        var _a, _b;
+        const chartType = (_b = (_a = this.state) === null || _a === void 0 ? void 0 : _a.chartType) !== null && _b !== void 0 ? _b : this.chartType;
+        const rawDataMapper = maps_1.rawDataMappersMap[chartType];
+        const valuesDataMapper = maps_1.dataToValueMappersMap[chartType];
+        const rawNewDataMapper = maps_1.rawNewDataMappersMap[chartType];
+        return new utils_1.DataManager(this.data, (raw) => rawDataMapper(raw, this.viewConfig.stickIntervalSize), (data, raw) => rawNewDataMapper(data, raw, this.viewConfig.stickIntervalSize), valuesDataMapper);
     }
     createState() {
         return {
             viewConfig: this.viewConfig,
+            chartType: this.chartType,
             style: this.style,
-            data: this.data,
-            renderConfig: Object.assign(Object.assign({ valueRange: defaults_1.defaultChartValueRange, rowIntervalSize: defaults_1.defaultIntervalRowSize, dataManager: this.createDataManager() }, this.viewConfig), { columnIntervalSize: this.viewConfig.columnIntervalSize.clone(), dateRange: this.viewConfig.dateRange.clone() }),
+            dataManager: this.createDataManager(),
+            renderConfig: Object.assign(Object.assign({ valueRange: defaults_1.defaultChartValueRange, rowIntervalSize: defaults_1.defaultIntervalRowSize }, this.viewConfig), { columnIntervalSize: this.viewConfig.columnIntervalSize.clone(), dateRange: this.viewConfig.dateRange.clone() }),
             inputEvent: defaults_1.defaultInputEvent,
         };
     }
@@ -73,19 +75,20 @@ class StickChart {
     render() {
         this.throwIfNotCreatedState();
         this.middlewareRunner.run(this.viewport, this.state);
+        return this;
     }
     setChartType(type) {
-        this.state.viewConfig.chartType = type;
-        console.log('setChartType', type);
-        this.state.renderConfig.dataManager = this.createDataManager();
-        this.render();
+        this.state.chartType = type;
+        this.state.dataManager = this.createDataManager();
+        return this;
     }
-    inputData(rawPricePoint) {
-        this.state.data.push(rawPricePoint);
-        this.state.renderConfig.dataManager = this.createDataManager();
+    addData(rawPricePoint) {
+        this.data.push(rawPricePoint);
+        this.state.dataManager.addData(rawPricePoint);
+        return this;
     }
     addInputEventHandler(event, type) {
-        this.state.inputEvent = new core_inputEvent_1.ChartInputEvent(event, type);
+        this.state.inputEvent = new utils_inputEvent_1.ChartInputEvent(event, type);
         this.render();
     }
     throwIfNotCreatedState() {

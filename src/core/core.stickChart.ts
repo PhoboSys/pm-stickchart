@@ -3,8 +3,7 @@ import { Duration } from 'moment'
 import { EmittedEvent } from '../data/aliases/aliases.emittedEvent'
 import { ChartTypes, InputEventTypes } from '../data/enums'
 import { IStickChartState, IStickChartStyle, IStickChartViewConfig, IRawPricePoint, IPricePoint, IStick } from '../data/interfaces'
-import { dataToValueMappersMap } from '../data/maps/map.dataToValueMappers'
-import { rawDataMappersMap } from '../data/maps/map.rawDataMappers'
+import { dataToValueMappersMap, rawDataMappersMap, rawNewDataMappersMap } from '../data/maps'
 import {
     defaultStickChartStyle,
     defaultInputEvent,
@@ -13,8 +12,8 @@ import {
     defaultChartValueRange,
     defaultColumnIntervalSize,
     defaultIntervalRowSize,
-    defaultStickIntervalSize,
 } from '../defaults'
+
 import { Application } from '../libs/pixi'
 import { CandleStickMiddleware } from '../store/candlestick/store.candlestick.middleware'
 import { GridViewMiddleware } from '../store/grid/store.grid.middleware'
@@ -23,10 +22,11 @@ import { LinesViewMiddleware } from '../store/lines/store.lines.middleware'
 import { ScrollHandleMiddleware } from '../store/scroll/store.scroll.middleware'
 import { ZoomHandleMiddleware } from '../store/zoom/store.zoom.middleware'
 
-import { DateRange } from '../utils'
+import { DataManager } from '../utils'
+import { ChartInputEvent } from '../utils/utils.inputEvent'
 
-import { DataManager } from './core.dataManager'
-import { ChartInputEvent } from './core.inputEvent'
+import { DateRange } from '../utils/utils.range'
+
 import { MiddlewareRunner } from './core.middlewareRunner'
 import { Viewport } from './core.viewport'
 
@@ -49,9 +49,11 @@ export class StickChart {
         private stickIntervalSize: Duration,
 
         private columnIntervalSize: Duration = defaultColumnIntervalSize,
-        private dateRange: DateRange = defaultChartDateRange(),
 
         private style: IStickChartStyle = defaultStickChartStyle,
+
+        private dateRange: DateRange = defaultChartDateRange(),
+
         private data: IRawPricePoint[] = defaultStickChartData,
     ) {
         this.application = new Application({ width, height, ...style, antialias: true })
@@ -74,7 +76,6 @@ export class StickChart {
             width: this.width,
             height: this.height,
 
-            chartType: this.chartType,
             stickIntervalSize: this.stickIntervalSize,
 
             columnIntervalSize: this.columnIntervalSize,
@@ -82,25 +83,30 @@ export class StickChart {
         }
     }
 
-    private createDataManager(): DataManager<IPricePoint | IStick> {
-        const rawDataMapper = rawDataMappersMap[this.viewConfig.chartType]
-        const data = rawDataMapper(this.data, this.viewConfig.stickIntervalSize)
+    private createDataManager(): DataManager<IPricePoint | IStick, IRawPricePoint> {
+        const chartType = this.state?.chartType ?? this.chartType
 
-        return new DataManager<IPricePoint | IStick>(
-            data,
-            dataToValueMappersMap[this.viewConfig.chartType],
+        const rawDataMapper = rawDataMappersMap[chartType]
+        const valuesDataMapper = dataToValueMappersMap[chartType]
+        const rawNewDataMapper = rawNewDataMappersMap[chartType]
+
+        return new DataManager<IPricePoint | IStick, IRawPricePoint>(
+            this.data,
+            (raw) => rawDataMapper(raw, this.viewConfig.stickIntervalSize),
+            (data, raw) => rawNewDataMapper(<IPricePoint[] | IStick[]>data, raw, this.viewConfig.stickIntervalSize),
+            valuesDataMapper,
         )
     }
 
     private createState(): IStickChartState {
         return {
             viewConfig: this.viewConfig,
+            chartType: this.chartType,
             style: this.style,
-            data: this.data,
+            dataManager: this.createDataManager(),
             renderConfig: {
                 valueRange: defaultChartValueRange,
                 rowIntervalSize: defaultIntervalRowSize,
-                dataManager: this.createDataManager(),
                 ...this.viewConfig,
                 columnIntervalSize: this.viewConfig.columnIntervalSize.clone(),
                 dateRange: this.viewConfig.dateRange.clone(),
@@ -117,28 +123,30 @@ export class StickChart {
         this.viewport = this.createViewport()
 
         this.viewConfig = this.createViewConfig()
+
         this.state = this.createState()
     }
 
-    public render(): void {
+    public render(): StickChart {
         this.throwIfNotCreatedState()
 
         this.middlewareRunner.run(this.viewport, this.state)
+
+        return this
     }
 
-    public setChartType(type: ChartTypes): void {
-        this.state.viewConfig.chartType = type
-        console.log('setChartType', type)
+    public setChartType(type: ChartTypes): StickChart {
+        this.state.chartType = type
+        this.state.dataManager = this.createDataManager()
 
-        this.state.renderConfig.dataManager = this.createDataManager()
-
-        this.render()
+        return this
     }
 
-    public inputData(rawPricePoint: IRawPricePoint): void {
-        this.state.data.push(rawPricePoint)
+    public addData(rawPricePoint: IRawPricePoint): StickChart {
+        this.data.push(rawPricePoint)
+        this.state.dataManager.addData(rawPricePoint)
 
-        this.state.renderConfig.dataManager = this.createDataManager()
+        return this
     }
 
     public addInputEventHandler(event: EmittedEvent, type: InputEventTypes): void {
