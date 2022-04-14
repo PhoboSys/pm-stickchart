@@ -10,16 +10,17 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "bin": {
+    "lde-link-stickchart": "./bin/stickchart-link.sh"
+  },
   "scripts": {
-    "build": "rimraf dist/ && tsc",
+    "build": "tsc",
+    "build:lde": "tsc --watch",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
     "test": "jest --config ./tests/jest.config.ts",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "dependencies": {
     "@pixi/app": "6.3.0",
     "@pixi/canvas-display": "6.3.0",
@@ -32,9 +33,12 @@
     "@pixi/settings": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
-    "moment": "2.29.1",
-    "rimraf": "3.0.2"
+    "moment": "2.29.2"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "devDependencies": {
     "@types/amqplib": "0.8.2",
     "@types/node": "17.0.23",
