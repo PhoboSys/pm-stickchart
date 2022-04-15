@@ -1,3 +1,3 @@
 export * from './map.rawDataMappers';
-export * from './map.dataToValueMappers';
+export * from './map.dataToPriceMappers';
 export * from './map.rawNewDataMappers';

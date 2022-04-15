@@ -15,6 +15,7 @@ export const defaultStickChartStyle: IStickChartStyle = {
     decreaseColor: 0xF05350,
     stickRound: 20,
     lineColor: 0x4CAF50,
+    lineWidth: 3,
 }
 
 export const defaultInputEvent = new ChartInputEvent(null, InputEventTypes.none)
@@ -23,12 +24,12 @@ export const defaultStickChartData: IRawPricePoint[] = []
 
 export const defaultChartDateRange = (): DateRange =>
     new DateRange(
-        moment().subtract(10, 'minutes'),
-        moment().add(10, 'minutes'),
+        moment().subtract(10, 'minutes').toDate(),
+        moment().add(10, 'minutes').toDate(),
     )
 
-export const defaultColumnIntervalSize = duration(1, 'minute')
-export const defaultStickIntervalSize = duration(20, 'seconds')
+export const defaultColumnIntervalSize = duration(1, 'minute').asMilliseconds()
+export const defaultStickIntervalSize = duration(20, 'seconds').asMilliseconds()
 
-export const defaultChartPriceRange = new PriceRange(0, 10)
+export const defaultChartPriceRange = new PriceRange(0, 7)
 export const defaultIntervalRowSize = 1

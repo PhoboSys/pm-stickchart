@@ -10,7 +10,8 @@ class ZoomHandleMiddleware {
         return handler.next(viewport, state);
     }
     shouldSkip(state) {
-        return state.inputEvent.type !== enums_1.InputEventTypes.zoom;
+        var _a;
+        return ((_a = state.inputEvent) === null || _a === void 0 ? void 0 : _a.type) !== enums_1.InputEventTypes.zoom;
     }
     save(state) {
     }

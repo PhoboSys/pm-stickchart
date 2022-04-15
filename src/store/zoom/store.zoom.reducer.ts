@@ -10,22 +10,22 @@ export class ZoomStateReducer implements IReducer<IStickChartState> {
     public reduceState(): IStickChartState {
         this.moveRenderDateRange()
 
-        this.state.inputEvent.preventDefault()
-        this.state.inputEvent.markAsHandled()
+        this.state.inputEvent?.preventDefault()
+        this.state.inputEvent?.markAsHandled()
 
         return this.state
     }
 
     private moveRenderDateRange(): void {
         const {
-            inputEvent: { event },
+            inputEvent,
             renderConfig: { dateRange },
         } = this.state
 
-        const { deltaY } = <WheelEvent>event
+        const { deltaY } = <WheelEvent>inputEvent?.event
 
         const zoomValue = deltaY * (dateRange.length * 0.001)
 
-        dateRange.expandInMilliseconds(-zoomValue, zoomValue)
+        dateRange.moveInMilliseconds(-zoomValue, zoomValue)
     }
 }

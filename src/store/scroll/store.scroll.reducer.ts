@@ -11,7 +11,7 @@ export class ScrollStateReducer implements IReducer<IStickChartState> {
     public reduceState(): IStickChartState {
         this.moveRenderDateRange()
 
-        this.state.inputEvent.preventDefault()
+        this.state.inputEvent?.preventDefault()
 
         return this.state
     }
@@ -21,12 +21,12 @@ export class ScrollStateReducer implements IReducer<IStickChartState> {
 
         const scrollValue = (xShift / width * dateRange.length)
 
-        dateRange.expandInMilliseconds(scrollValue, scrollValue)
+        dateRange.moveInMilliseconds(scrollValue, scrollValue)
     }
 
     private get xShift(): number {
         const { previousEvent, state } = this
-        const event = <ScrollEvent>state.inputEvent.event
+        const event = <ScrollEvent>state.inputEvent?.event
 
         if (previousEvent === null || previousEvent.mouseX !== event.mouseX) {
             return event.mouseX - event.dragX

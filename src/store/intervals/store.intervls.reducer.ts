@@ -1,5 +1,3 @@
-import { duration } from 'moment'
-
 import { IReducer, IStickChartState } from '../../data/interfaces'
 import { PriceRange } from '../../utils/utils.range'
 
@@ -9,7 +7,7 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
     ) { }
 
     public reduceState(): IStickChartState {
-        this.setValueRange()
+        this.setPriceRange()
 
         this.roundColumnIntervalSize()
         this.roundRowIntervalSize()
@@ -17,12 +15,10 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
         return this.state
     }
 
-    private setValueRange(): void {
-        const { dataManager } = this.state
+    private setPriceRange(): void {
+        const { renderConfig: { dataPriceRange: range } } = this.state
 
-        const range = dataManager.valueRange
-
-        if (range.isNull()) return
+        if (!range?.length) return
         const valueRange = new PriceRange(range.range.from - range.length * .2, range.range.to + range.length * .2)
 
         this.state.renderConfig.priceRange = valueRange
@@ -38,14 +34,14 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
         const minInterval = rowIntervalSize * 7
 
         if (valueRange.length < minInterval) {
-            this.state.renderConfig.rowIntervalSize = rowIntervalSize / 2
+            this.state.renderConfig.rowIntervalSize /= 2
 
             return this.roundRowIntervalSize()
         }
 
         if (valueRange.getIntervalsCount(minInterval) < 2) return
 
-        this.state.renderConfig.rowIntervalSize += rowIntervalSize
+        this.state.renderConfig.rowIntervalSize *= 2
 
         this.roundRowIntervalSize()
     }
@@ -55,16 +51,17 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
             renderConfig: { dateRange, columnIntervalSize },
         } = this.state
 
-        const intervalsDuration = duration(columnIntervalSize.asMilliseconds() * 7, 'milliseconds')
+        const intervalsDuration = columnIntervalSize * 7
 
-        if (dateRange.length < intervalsDuration.asMilliseconds()) {
-            columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
+        if (dateRange.length < intervalsDuration) {
+            this.state.renderConfig.columnIntervalSize /= 2
 
-            return
+            return this.roundColumnIntervalSize()
         }
 
         if (dateRange.getIntervalsCount(intervalsDuration) < 2) return
 
-        columnIntervalSize.add(columnIntervalSize.asMilliseconds(), 'milliseconds')
+        this.state.renderConfig.columnIntervalSize *= 2
+        this.roundColumnIntervalSize()
     }
 }

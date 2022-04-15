@@ -15,15 +15,16 @@ export interface IStickChartStyle {
     decreaseColor: number,
     stickRound: number,
     lineColor: number,
+    lineWidth: number,
 }
 
 export interface IStickChartViewConfig {
     width: number
     height: number
 
-    stickIntervalSize: Duration,
+    stickIntervalSize: number,
 
-    columnIntervalSize: Duration
+    columnIntervalSize: number
     dateRange: DateRange
 }
 
@@ -41,12 +42,14 @@ export interface IStickChartRenderConfig {
     dateRange: DateRange
     priceRange: PriceRange
 
-    columnIntervalSize: Duration
+    columnIntervalSize: number
     rowIntervalSize: number
+
+    dataPriceRange?: PriceRange
 }
 
 export interface IStickChartState extends IStickChartOptions {
     renderConfig: IStickChartRenderConfig,
 
-    inputEvent: ChartInputEvent,
+    inputEvent?: ChartInputEvent,
 }

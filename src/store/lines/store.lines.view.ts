@@ -20,13 +20,13 @@ export class LinesView implements IView<IStickChartState> {
     }
 
     private buildLines(): void {
-        const { dataManager, style: { lineColor } } = this.state
+        const { dataManager, style: { lineColor, lineWidth } } = this.state
         const firstPricePointPoint = this.getPricePointPoint(<IPricePoint>dataManager!.data.at(0)!)
 
         const line = new Graphics()
 
         line
-            .lineStyle({ width: 1, color: lineColor })
+            .lineStyle({ width: lineWidth, color: lineColor })
             .moveTo(...firstPricePointPoint)
 
         for (let i = 1; i < dataManager!.data.length; i++) {

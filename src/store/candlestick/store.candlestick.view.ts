@@ -17,7 +17,7 @@ export class CandleStickView implements IView<IStickChartState> {
     private get stickWidth(): number {
         const { viewConfig: { width, stickIntervalSize }, renderConfig: { dateRange } } = this.state
 
-        return width * (stickIntervalSize!.asMilliseconds() / dateRange.length)
+        return width * (stickIntervalSize / dateRange.length)
     }
 
     public render(): void {
@@ -43,7 +43,7 @@ export class CandleStickView implements IView<IStickChartState> {
             return builder.build()
         }
 
-        for (const stick of dataManager!.data) {
+        for (const stick of dataManager.data) {
             this.builded.addChild(build(<IStick>stick))
         }
 

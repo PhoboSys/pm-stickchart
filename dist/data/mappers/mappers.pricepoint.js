@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rawToPricePointsDataMapper = exports.rawNewToPricePointsDataMapper = exports.singleRawToPricePointDataMapper = exports.pricePointsToValuesDataMapper = void 0;
-const pricePointsToValuesDataMapper = (pricePoints) => {
+exports.rawToPricePointsDataMapper = exports.rawNewToPricePointsDataMapper = exports.singleRawToPricePointDataMapper = exports.pricePointsToPricesDataMapper = void 0;
+const pricePointsToPricesDataMapper = (pricePoints) => {
     return [pricePoints.price];
 };
-exports.pricePointsToValuesDataMapper = pricePointsToValuesDataMapper;
+exports.pricePointsToPricesDataMapper = pricePointsToPricesDataMapper;
 const singleRawToPricePointDataMapper = (data) => {
-    const { blockTimestamp, answer, aggrigator, } = data;
+    const { blockTimestamp, answer, } = data;
     return {
         date: new Date(blockTimestamp * 1000),
         price: answer,
-        aggrigator,
     };
 };
 exports.singleRawToPricePointDataMapper = singleRawToPricePointDataMapper;

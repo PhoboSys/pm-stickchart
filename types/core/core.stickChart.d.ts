@@ -1,4 +1,3 @@
-import { Duration } from 'moment';
 import { EmittedEvent } from '../data/aliases/aliases.emittedEvent';
 import { ChartTypes, InputEventTypes } from '../data/enums';
 import { IStickChartStyle, IRawPricePoint } from '../data/interfaces';
@@ -17,7 +16,7 @@ export declare class StickChart {
     private state;
     private viewConfig;
     private application;
-    constructor(width: number, height: number, chartType: ChartTypes, stickIntervalSize: Duration, columnIntervalSize?: Duration, style?: IStickChartStyle, dateRange?: DateRange, data?: IRawPricePoint[]);
+    constructor(width: number, height: number, chartType: ChartTypes, stickIntervalSize: number, columnIntervalSize?: number, style?: IStickChartStyle, dateRange?: DateRange, data?: IRawPricePoint[]);
     get view(): HTMLCanvasElement;
     private createViewConfig;
     private createDataManager;

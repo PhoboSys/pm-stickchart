@@ -1,5 +1,3 @@
-import { Duration, Moment } from 'moment'
-
 import { IRange } from '../data/interfaces/'
 
 export abstract class Range<T> {
@@ -74,9 +72,9 @@ export class DateRange extends Range<Date> {
         return this
     }
 
-    public expandInMilliseconds(left: number, right: number): DateRange {
+    public moveInMilliseconds(left: number, right: number): DateRange {
         this.from = new Date(this.from.valueOf() + left)
-        this.to = new Date(this.from.valueOf() + right)
+        this.to = new Date(this.to.valueOf() + right)
 
         return this
     }

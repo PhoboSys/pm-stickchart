@@ -10,5 +10,5 @@ Object.defineProperty(exports, "InputEventTypes", { enumerable: true, get: funct
 Object.defineProperty(exports, "ChartTypes", { enumerable: true, get: function () { return enums_1.ChartTypes; } });
 var utils_1 = require("./utils");
 Object.defineProperty(exports, "DateRange", { enumerable: true, get: function () { return utils_1.DateRange; } });
-Object.defineProperty(exports, "ValueRange", { enumerable: true, get: function () { return utils_1.ValueRange; } });
+Object.defineProperty(exports, "ValueRange", { enumerable: true, get: function () { return utils_1.PriceRange; } });
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DateRange = exports.ValueRange = exports.Range = void 0;
+exports.DateRange = exports.PriceRange = exports.Range = void 0;
 class Range {
     constructor(from, to) {
         this.from = from;
@@ -11,42 +11,39 @@ class Range {
     }
 }
 exports.Range = Range;
-class ValueRange extends Range {
-    get width() {
+class PriceRange extends Range {
+    get length() {
         return this.to - this.from;
     }
-    isNull() {
-        return this.from === Infinity;
-    }
-    updateIf(value) {
+    update(value) {
         this.from = Math.min(this.from, value);
         this.to = Math.max(this.to, value);
         return this;
     }
-    expandFor(left, right) {
+    move(left, right) {
         this.from += left;
         this.to += right;
         return this;
     }
     getPointByValue(value) {
-        return (value - this.from) / this.width;
+        return (value - this.from) / this.length;
     }
     getIntervalsCount(interval) {
-        return this.width / interval;
+        return this.length / interval;
     }
     clone() {
-        return new ValueRange(this.from, this.to);
+        return new PriceRange(this.from, this.to);
     }
 }
-exports.ValueRange = ValueRange;
+exports.PriceRange = PriceRange;
 class DateRange extends Range {
     static getBeginDistance(mainRange, subRange) {
         return subRange.from.valueOf() - mainRange.from.valueOf();
     }
-    get width() {
+    get length() {
         return this.to.valueOf() - this.from.valueOf();
     }
-    updateIf(value) {
+    update(value) {
         if (this.from.valueOf() > value.valueOf()) {
             this.from = value;
         }
@@ -55,19 +52,19 @@ class DateRange extends Range {
         }
         return this;
     }
-    expandInMilliseconds(left, right) {
-        this.from.add(left, 'milliseconds');
-        this.to.add(right, 'milliseconds');
+    moveInMilliseconds(left, right) {
+        this.from = new Date(this.from.valueOf() + left);
+        this.to = new Date(this.to.valueOf() + right);
         return this;
     }
     getIntervalsCount(interval) {
-        return this.width / interval.asMilliseconds();
+        return this.length / interval;
     }
     getPointByValue(value) {
-        return (value.valueOf() - this.from.valueOf()) / this.width;
+        return (value.valueOf() - this.from.valueOf()) / this.length;
     }
     clone() {
-        return new DateRange(this.from.clone(), this.to.clone());
+        return new DateRange(this.from, this.to);
     }
 }
 exports.DateRange = DateRange;

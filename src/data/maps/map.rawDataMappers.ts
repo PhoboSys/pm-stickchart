@@ -7,7 +7,7 @@ import { IRawPricePoint } from '../interfaces/interface.rawPricePoint'
 import { rawToPricePointsDataMapper, rawToSticksDataMapper } from '../mappers'
 
 type PricePointMapper = (data: IRawPricePoint[]) => IPricePoint[]
-type StickMapper = (data: IRawPricePoint[], interval: Duration) => IStick[]
+type StickMapper = (data: IRawPricePoint[], interval: number) => IStick[]
 
 export const rawDataMappersMap: { [key in ChartTypes]: PricePointMapper | StickMapper } = {
     [ChartTypes.lines]: rawToPricePointsDataMapper,

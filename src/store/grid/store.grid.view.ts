@@ -28,8 +28,7 @@ export class GridView implements IView<IStickChartState> {
 
         const distance = DateRange.getBeginDistance(dateRange, renderDateRange)
 
-        const segment = columnIntervalSize.asMilliseconds()
-        const point = (Math.abs(distance) / segment % 1)
+        const point = (Math.abs(distance) / columnIntervalSize % 1)
         const absolutePoint = distance < 0 ? point : 1 - point
 
         return absolutePoint * this.columnWhitespace

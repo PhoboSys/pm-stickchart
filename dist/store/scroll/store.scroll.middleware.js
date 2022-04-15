@@ -13,10 +13,12 @@ class ScrollHandleMiddleware {
         return handler.next(viewport, state);
     }
     shouldSkip(state) {
-        return state.inputEvent.type !== enums_1.InputEventTypes.scroll;
+        var _a;
+        return ((_a = state.inputEvent) === null || _a === void 0 ? void 0 : _a.type) !== enums_1.InputEventTypes.scroll;
     }
     save(state) {
-        this.lastEvent = Object.assign({}, state.inputEvent.event);
+        var _a;
+        this.lastEvent = Object.assign({}, (_a = state.inputEvent) === null || _a === void 0 ? void 0 : _a.event);
     }
 }
 exports.ScrollHandleMiddleware = ScrollHandleMiddleware;

@@ -20,10 +20,10 @@ export class ScrollHandleMiddleware implements IMiddleware<IStickChartState> {
     }
 
     public shouldSkip(state: IStickChartState): boolean {
-        return state.inputEvent.type !== InputEventTypes.scroll
+        return state.inputEvent?.type !== InputEventTypes.scroll
     }
 
     public save(state: IStickChartState): void {
-        this.lastEvent = { ...<ScrollEvent>state.inputEvent.event }
+        this.lastEvent = { ...<ScrollEvent>state.inputEvent?.event }
     }
 }

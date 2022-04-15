@@ -1,6 +1,6 @@
 import { IRawPricePoint, IPricePoint } from '../interfaces'
 
-export const pricePointsToValuesDataMapper = (pricePoints: IPricePoint): number[] => {
+export const pricePointsToPricesDataMapper = (pricePoints: IPricePoint): number[] => {
     return [pricePoints.price]
 }
 

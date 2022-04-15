@@ -17,7 +17,7 @@ export class ZoomHandleMiddleware implements IMiddleware<IStickChartState> {
     }
 
     public shouldSkip(state: IStickChartState): boolean {
-        return state.inputEvent.type !== InputEventTypes.zoom
+        return state.inputEvent?.type !== InputEventTypes.zoom
     }
 
     public save(state: IStickChartState): void {

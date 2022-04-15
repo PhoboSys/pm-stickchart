@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultIntervalRowSize = exports.defaultChartValueRange = exports.defaultStickIntervalSize = exports.defaultColumnIntervalSize = exports.defaultChartDateRange = exports.defaultStickChartData = exports.defaultInputEvent = exports.defaultStickChartStyle = void 0;
+exports.defaultIntervalRowSize = exports.defaultChartPriceRange = exports.defaultStickIntervalSize = exports.defaultColumnIntervalSize = exports.defaultChartDateRange = exports.defaultStickChartData = exports.defaultInputEvent = exports.defaultStickChartStyle = void 0;
 const moment_1 = __importStar(require("moment"));
 const enum_inputEventTypes_1 = require("./data/enums/enum.inputEventTypes");
 const utils_inputEvent_1 = require("./utils/utils.inputEvent");
@@ -38,13 +38,14 @@ exports.defaultStickChartStyle = {
     decreaseColor: 0xF05350,
     stickRound: 20,
     lineColor: 0x4CAF50,
+    lineWidth: 3,
 };
 exports.defaultInputEvent = new utils_inputEvent_1.ChartInputEvent(null, enum_inputEventTypes_1.InputEventTypes.none);
 exports.defaultStickChartData = [];
-const defaultChartDateRange = () => new utils_range_1.DateRange((0, moment_1.default)().subtract(10, 'minutes'), (0, moment_1.default)().add(10, 'minutes'));
+const defaultChartDateRange = () => new utils_range_1.DateRange((0, moment_1.default)().subtract(10, 'minutes').toDate(), (0, moment_1.default)().add(10, 'minutes').toDate());
 exports.defaultChartDateRange = defaultChartDateRange;
-exports.defaultColumnIntervalSize = (0, moment_1.duration)(1, 'minute');
-exports.defaultStickIntervalSize = (0, moment_1.duration)(20, 'seconds');
-exports.defaultChartValueRange = new utils_range_1.ValueRange(0, 10);
+exports.defaultColumnIntervalSize = (0, moment_1.duration)(1, 'minute').asMilliseconds();
+exports.defaultStickIntervalSize = (0, moment_1.duration)(20, 'seconds').asMilliseconds();
+exports.defaultChartPriceRange = new utils_range_1.PriceRange(0, 7);
 exports.defaultIntervalRowSize = 1;
 //# sourceMappingURL=defaults.js.map

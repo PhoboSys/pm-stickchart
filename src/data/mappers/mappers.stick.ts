@@ -3,7 +3,7 @@ import { Duration } from 'moment'
 import { unixTimestampToDate, unixTimestampToMilliseconds } from '../../utils'
 import { IRawPricePoint, IStick } from '../interfaces'
 
-export const rawToSticksDataMapper = (data: IRawPricePoint[], interval: Duration): IStick[] => {
+export const rawToSticksDataMapper = (data: IRawPricePoint[], interval: number): IStick[] => {
     const candleSticks: IStick[] = []
 
     for (let i = 0; i < data.length; i++) {
@@ -18,7 +18,7 @@ export const rawToSticksDataMapper = (data: IRawPricePoint[], interval: Duration
 
             const currentInterval = current.blockTimestamp * 1000 - point.blockTimestamp * 1000
 
-            if (currentInterval > interval.asMilliseconds()) break
+            if (currentInterval > interval) break
 
             high = Math.max(current.answer, high)
             low = Math.min(current.answer, low)
@@ -42,7 +42,7 @@ export const rawToSticksDataMapper = (data: IRawPricePoint[], interval: Duration
     return candleSticks
 }
 
-export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, interval: Duration): IStick[] => {
+export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, interval: number): IStick[] => {
     if (!sticks.length) return rawToSticksDataMapper([raw], interval)
 
     const { blockTimestamp, answer } = raw
@@ -50,7 +50,7 @@ export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, 
 
     const millSinceLastStick = unixTimestampToMilliseconds(blockTimestamp) - lastStick.date.valueOf()
 
-    if (millSinceLastStick > interval.asMilliseconds()) {
+    if (millSinceLastStick > interval) {
         const stick: IStick = {
             low: answer,
             high: answer,
@@ -69,6 +69,6 @@ export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, 
     return sticks
 }
 
-export const sticksToValuesDataMapper = (stick: IStick): number[] => {
+export const sticksToPricesDataMapper = (stick: IStick): number[] => {
     return [stick.high, stick.low]
 }

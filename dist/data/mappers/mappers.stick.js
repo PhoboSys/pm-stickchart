@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sticksToValuesDataMapper = exports.rawNewToSticksDataMapper = exports.rawToSticksDataMapper = void 0;
+exports.sticksToPricesDataMapper = exports.rawNewToSticksDataMapper = exports.rawToSticksDataMapper = void 0;
 const utils_1 = require("../../utils");
 const rawToSticksDataMapper = (data, interval) => {
     const candleSticks = [];
@@ -12,7 +12,7 @@ const rawToSticksDataMapper = (data, interval) => {
         while (i < data.length) {
             const current = data[i];
             const currentInterval = current.blockTimestamp * 1000 - point.blockTimestamp * 1000;
-            if (currentInterval > interval.asMilliseconds())
+            if (currentInterval > interval)
                 break;
             high = Math.max(current.answer, high);
             low = Math.min(current.answer, low);
@@ -32,12 +32,12 @@ const rawToSticksDataMapper = (data, interval) => {
 };
 exports.rawToSticksDataMapper = rawToSticksDataMapper;
 const rawNewToSticksDataMapper = (sticks, raw, interval) => {
-    if (sticks.length < 1)
+    if (!sticks.length)
         return (0, exports.rawToSticksDataMapper)([raw], interval);
     const { blockTimestamp, answer } = raw;
     const lastStick = sticks.at(-1);
     const millSinceLastStick = (0, utils_1.unixTimestampToMilliseconds)(blockTimestamp) - lastStick.date.valueOf();
-    if (millSinceLastStick > interval.asMilliseconds()) {
+    if (millSinceLastStick > interval) {
         const stick = {
             low: answer,
             high: answer,
@@ -53,8 +53,8 @@ const rawNewToSticksDataMapper = (sticks, raw, interval) => {
     return sticks;
 };
 exports.rawNewToSticksDataMapper = rawNewToSticksDataMapper;
-const sticksToValuesDataMapper = (stick) => {
+const sticksToPricesDataMapper = (stick) => {
     return [stick.high, stick.low];
 };
-exports.sticksToValuesDataMapper = sticksToValuesDataMapper;
+exports.sticksToPricesDataMapper = sticksToPricesDataMapper;
 //# sourceMappingURL=mappers.stick.js.map

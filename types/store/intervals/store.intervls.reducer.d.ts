@@ -3,7 +3,7 @@ export declare class IntervalsStateReducer implements IReducer<IStickChartState>
     readonly state: IStickChartState;
     constructor(state: IStickChartState);
     reduceState(): IStickChartState;
-    private setValueRange;
+    private setPriceRange;
     private roundRowIntervalSize;
     private roundColumnIntervalSize;
 }

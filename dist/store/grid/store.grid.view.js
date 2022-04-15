@@ -16,8 +16,7 @@ class GridView {
     get beginColumnWhitespace() {
         const { viewConfig: { dateRange }, renderConfig: { dateRange: renderDateRange, columnIntervalSize }, } = this.state;
         const distance = utils_1.DateRange.getBeginDistance(dateRange, renderDateRange);
-        const segment = columnIntervalSize.asMilliseconds();
-        const point = (Math.abs(distance) / segment % 1);
+        const point = (Math.abs(distance) / columnIntervalSize % 1);
         const absolutePoint = distance < 0 ? point : 1 - point;
         return absolutePoint * this.columnWhitespace;
     }
@@ -26,7 +25,7 @@ class GridView {
         return width / dateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowWhitespace() {
-        const { viewConfig: { height }, renderConfig: { valueRange, rowIntervalSize }, } = this.state;
+        const { viewConfig: { height }, renderConfig: { priceRange: valueRange, rowIntervalSize }, } = this.state;
         return height / valueRange.getIntervalsCount(rowIntervalSize);
     }
     get columnsCount() {
@@ -34,7 +33,7 @@ class GridView {
         return dateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowsCount() {
-        const { valueRange, rowIntervalSize } = this.state.renderConfig;
+        const { priceRange: valueRange, rowIntervalSize } = this.state.renderConfig;
         return valueRange.getIntervalsCount(rowIntervalSize);
     }
     build() {
