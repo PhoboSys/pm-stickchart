@@ -3,7 +3,7 @@ import moment, { duration } from 'moment'
 import { InputEventTypes } from './data/enums/enum.inputEventTypes'
 import { IStickChartStyle, IRawPricePoint } from './data/interfaces'
 import { ChartInputEvent } from './utils/utils.inputEvent'
-import { ValueRange, DateRange } from './utils/utils.range'
+import { PriceRange, DateRange } from './utils/utils.range'
 
 export const defaultStickChartStyle: IStickChartStyle = {
     backgroundColor: 0x303134,
@@ -30,5 +30,5 @@ export const defaultChartDateRange = (): DateRange =>
 export const defaultColumnIntervalSize = duration(1, 'minute')
 export const defaultStickIntervalSize = duration(20, 'seconds')
 
-export const defaultChartValueRange = new ValueRange(0, 10)
+export const defaultChartPriceRange = new PriceRange(0, 10)
 export const defaultIntervalRowSize = 1

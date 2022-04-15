@@ -9,7 +9,7 @@ import {
     defaultInputEvent,
     defaultStickChartData,
     defaultChartDateRange,
-    defaultChartValueRange,
+    defaultChartPriceRange,
     defaultColumnIntervalSize,
     defaultIntervalRowSize,
 } from '../defaults'
@@ -105,7 +105,7 @@ export class StickChart {
             style: this.style,
             dataManager: this.createDataManager(),
             renderConfig: {
-                valueRange: defaultChartValueRange,
+                priceRange: defaultChartPriceRange,
                 rowIntervalSize: defaultIntervalRowSize,
                 ...this.viewConfig,
                 columnIntervalSize: this.viewConfig.columnIntervalSize.clone(),

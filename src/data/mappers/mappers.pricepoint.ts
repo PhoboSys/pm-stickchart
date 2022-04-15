@@ -8,13 +8,11 @@ export const singleRawToPricePointDataMapper = (data: IRawPricePoint): IPricePoi
     const {
         blockTimestamp,
         answer,
-        aggrigator,
     } = data
 
     return {
         date: new Date(blockTimestamp * 1000),
         price: answer,
-        aggrigator,
     }
 }
 

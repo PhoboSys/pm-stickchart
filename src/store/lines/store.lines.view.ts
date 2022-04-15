@@ -49,7 +49,7 @@ export class LinesView implements IView<IStickChartState> {
     }
 
     private getPointY(value: number): number {
-        const { renderConfig: { valueRange }, viewConfig: { height } } = this.state
+        const { renderConfig: { priceRange: valueRange }, viewConfig: { height } } = this.state
 
         const point = 1 - valueRange.getPointByValue(value)
 

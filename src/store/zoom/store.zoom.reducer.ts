@@ -24,7 +24,7 @@ export class ZoomStateReducer implements IReducer<IStickChartState> {
 
         const { deltaY } = <WheelEvent>event
 
-        const zoomValue = deltaY * (dateRange.width * 0.001)
+        const zoomValue = deltaY * (dateRange.length * 0.001)
 
         dateRange.expandInMilliseconds(-zoomValue, zoomValue)
     }

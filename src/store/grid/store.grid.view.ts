@@ -47,7 +47,7 @@ export class GridView implements IView<IStickChartState> {
     private get rowWhitespace(): number {
         const {
             viewConfig: { height },
-            renderConfig: { valueRange, rowIntervalSize },
+            renderConfig: { priceRange: valueRange, rowIntervalSize },
         } = this.state
 
         return height / valueRange.getIntervalsCount(rowIntervalSize)
@@ -60,7 +60,7 @@ export class GridView implements IView<IStickChartState> {
     }
 
     private get rowsCount(): number {
-        const { valueRange, rowIntervalSize } = this.state.renderConfig
+        const { priceRange: valueRange, rowIntervalSize } = this.state.renderConfig
 
         return valueRange.getIntervalsCount(rowIntervalSize)
     }

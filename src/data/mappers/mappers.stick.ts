@@ -43,7 +43,7 @@ export const rawToSticksDataMapper = (data: IRawPricePoint[], interval: Duration
 }
 
 export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, interval: Duration): IStick[] => {
-    if (sticks.length < 1) return rawToSticksDataMapper([raw], interval)
+    if (!sticks.length) return rawToSticksDataMapper([raw], interval)
 
     const { blockTimestamp, answer } = raw
     const lastStick = sticks.at(-1)!

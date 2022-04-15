@@ -1,7 +1,7 @@
 import { duration } from 'moment'
 
 import { IReducer, IStickChartState } from '../../data/interfaces'
-import { ValueRange } from '../../utils/utils.range'
+import { PriceRange } from '../../utils/utils.range'
 
 export class IntervalsStateReducer implements IReducer<IStickChartState> {
     constructor(
@@ -23,21 +23,21 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
         const range = dataManager.valueRange
 
         if (range.isNull()) return
-        const valueRange = new ValueRange(range.range.from - range.width * .2, range.range.to + range.width * .2)
+        const valueRange = new PriceRange(range.range.from - range.length * .2, range.range.to + range.length * .2)
 
-        this.state.renderConfig.valueRange = valueRange
+        this.state.renderConfig.priceRange = valueRange
     }
 
     private roundRowIntervalSize(): void {
         const {
-            renderConfig: { valueRange, rowIntervalSize },
+            renderConfig: { priceRange: valueRange, rowIntervalSize },
         } = this.state
 
-        if (valueRange.width <= 0) return
+        if (valueRange.length <= 0) return
 
         const minInterval = rowIntervalSize * 7
 
-        if (valueRange.width < minInterval) {
+        if (valueRange.length < minInterval) {
             this.state.renderConfig.rowIntervalSize = rowIntervalSize / 2
 
             return this.roundRowIntervalSize()
@@ -57,7 +57,7 @@ export class IntervalsStateReducer implements IReducer<IStickChartState> {
 
         const intervalsDuration = duration(columnIntervalSize.asMilliseconds() * 7, 'milliseconds')
 
-        if (dateRange.width < intervalsDuration.asMilliseconds()) {
+        if (dateRange.length < intervalsDuration.asMilliseconds()) {
             columnIntervalSize.subtract(columnIntervalSize.asMilliseconds() / 2, 'milliseconds')
 
             return

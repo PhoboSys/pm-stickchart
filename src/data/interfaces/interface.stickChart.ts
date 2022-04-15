@@ -1,6 +1,6 @@
 import { Duration } from 'moment'
 
-import { DateRange, ValueRange, ChartInputEvent, DataManager } from '../../utils'
+import { DateRange, PriceRange, ChartInputEvent, DataManager } from '../../utils'
 import { ChartTypes } from '../enums'
 
 import { IRawPricePoint, IStick, IPricePoint } from '.'
@@ -39,7 +39,7 @@ export interface IStickChartOptions {
 
 export interface IStickChartRenderConfig {
     dateRange: DateRange
-    valueRange: ValueRange
+    priceRange: PriceRange
 
     columnIntervalSize: Duration
     rowIntervalSize: number
