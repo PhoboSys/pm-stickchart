@@ -4,34 +4,36 @@ exports.Viewport = void 0;
 class Viewport {
     constructor(container) {
         this.container = container;
-        this.renderedKeys = [];
+        this.rendered = [];
     }
     render(graphics, renderKey) {
-        // console.log('rendered graphics count: ', this.container.children.length)
-        const index = this.findGraphicIndex(renderKey);
-        if (index === -1) {
-            return this.renderNew(graphics, renderKey);
+        console.log('rendered graphics count: ', this.container.children.length);
+        console.log('renderKey: ', renderKey);
+        if (this.exists(renderKey)) {
+            this.update(renderKey, graphics);
         }
-        this.rerenderExisted(graphics, index);
+        else {
+            this.add(renderKey, graphics);
+        }
     }
-    renderNew(graphics, renderKey) {
+    add(renderKey, graphics) {
         this.container.addChild(graphics);
-        this.renderedKeys.push(renderKey);
+        this.rendered.push(renderKey);
     }
-    rerenderExisted(graphics, renderIndex) {
-        const key = this.renderedKeys[renderIndex];
-        this.destroy(renderIndex);
-        this.renderNew(graphics, key);
+    update(renderKey, graphics) {
+        this.destroy(renderKey);
+        this.add(renderKey, graphics);
     }
-    findGraphicIndex(renderKey) {
-        return this.renderedKeys.indexOf(renderKey);
+    destroy(renderKey) {
+        const index = this.indexOf(renderKey);
+        this.container.removeChildAt(index).destroy();
+        this.rendered.splice(index, 1);
     }
-    destroy(renderIndex) {
-        this.container.removeChildAt(renderIndex).destroy();
-        this.renderedKeys.splice(renderIndex, 1);
+    exists(renderKey) {
+        return this.indexOf(renderKey) !== -1;
     }
-    destroyByKey(renderKey) {
-        this.destroy(this.findGraphicIndex(renderKey));
+    indexOf(renderKey) {
+        return this.rendered.indexOf(renderKey);
     }
 }
 exports.Viewport = Viewport;

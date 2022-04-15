@@ -4,6 +4,7 @@ services:
   parimarket:
     image: node:17.6.0
     user: "${UID:-node}:${GID:-node}"
+    tty: "${TTY:-true}"
     working_dir: /build
     volumes:
       - ./:/build

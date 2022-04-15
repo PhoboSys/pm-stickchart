@@ -2,47 +2,59 @@ import { Container } from '@pixi/display'
 import { Graphics } from '@pixi/graphics'
 
 export class Viewport {
-    private renderedKeys: string[] = []
+
+    private rendered: string[] = []
 
     constructor(
-        public container: Container,
+        private readonly container: Container,
     ) { }
 
-    public render(graphics: Graphics, renderKey: string): void {
-        // console.log('rendered graphics count: ', this.container.children.length)
-        const index = this.findGraphicIndex(renderKey)
+    public render(
+        graphics: Graphics,
+        renderKey: string
+    ): void {
 
-        if (index === -1) {
-            return this.renderNew(graphics, renderKey)
+        if (this.exists(renderKey)) {
+
+            this.update(renderKey, graphics)
+
+        } else {
+
+            this.add(renderKey, graphics)
+
         }
 
-        this.rerenderExisted(graphics, index)
     }
 
-    private renderNew(graphics: Graphics, renderKey: string): void {
+    private add(renderKey: string, graphics: Graphics): void {
+
         this.container.addChild(graphics)
+        this.rendered.push(renderKey)
 
-        this.renderedKeys.push(renderKey)
     }
 
-    private rerenderExisted(graphics: Graphics, renderIndex: number): void {
-        const key = this.renderedKeys[renderIndex]
+    private update(renderKey: string, graphics: Graphics): void {
 
-        this.destroy(renderIndex)
-        this.renderNew(graphics, key)
+        this.destroy(renderKey)
+        this.add(renderKey, graphics)
+
     }
 
-    private findGraphicIndex(renderKey: string): number {
-        return this.renderedKeys.indexOf(renderKey)
+    private destroy(renderKey: string): void {
+
+        const index = this.indexOf(renderKey)
+
+        this.container.removeChildAt(index).destroy()
+        this.rendered.splice(index, 1)
+
     }
 
-    public destroy(renderIndex: number): void {
-        this.container.removeChildAt(renderIndex).destroy()
-
-        this.renderedKeys.splice(renderIndex, 1)
+    private exists(renderKey: string): boolean {
+        return this.indexOf(renderKey) !== -1
     }
 
-    public destroyByKey(renderKey: string): void {
-        this.destroy(this.findGraphicIndex(renderKey))
+    private indexOf(renderKey: string): number {
+        return this.rendered.indexOf(renderKey)
     }
+
 }
