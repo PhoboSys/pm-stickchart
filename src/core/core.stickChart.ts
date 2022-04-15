@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash'
+
 import { Duration } from 'moment'
 
 import { EmittedEvent } from '../data/aliases/aliases.emittedEvent'
@@ -30,8 +32,13 @@ import { ChartInputEvent } from './core.inputEvent'
 import { MiddlewareRunner } from './core.middlewareRunner'
 import { Viewport } from './core.viewport'
 
+import { Logger } from '../infra'
+
 export class StickChart {
+
     private middlewareRunner = new MiddlewareRunner<IStickChartState>()
+
+    private logger = new Logger('pm')
 
     private viewport: Viewport
 
@@ -104,6 +111,7 @@ export class StickChart {
                 ...this.viewConfig,
                 columnIntervalSize: this.viewConfig.columnIntervalSize.clone(),
                 dateRange: this.viewConfig.dateRange.clone(),
+                backgroundAlpha: 0,
             },
             inputEvent: defaultInputEvent,
         }
@@ -120,15 +128,14 @@ export class StickChart {
         this.state = this.createState()
     }
 
-    public render(): void {
-        this.throwIfNotCreatedState()
+    public render(state?: any): void {
+        if (isEmpty(state)) this.logger.error('state object is not provided to render')
 
         this.middlewareRunner.run(this.viewport, this.state)
     }
 
     public setChartType(type: ChartTypes): void {
         this.state.viewConfig.chartType = type
-        console.log('setChartType', type)
 
         this.state.renderConfig.dataManager = this.createDataManager()
 
@@ -145,11 +152,5 @@ export class StickChart {
         this.state.inputEvent = new ChartInputEvent(event, type)
 
         this.render()
-    }
-
-    private throwIfNotCreatedState(): void {
-        if (this.state === undefined) {
-            throw new Error('Expected to call this.create() before')
-        }
     }
 }

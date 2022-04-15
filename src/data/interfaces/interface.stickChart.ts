@@ -48,6 +48,8 @@ export interface IStickChartRenderConfig {
     stickIntervalSize?: Duration,
 
     dataManager?: DataManager<IPricePoint | IStick>
+
+    backgroundAlpha: 0
 }
 
 export interface IStickChartState extends IStickChartOptions {

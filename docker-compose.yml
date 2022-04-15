@@ -11,3 +11,12 @@ services:
       npm install -d &&
       npm audit fix || true &&
       npm run build:lde"
+    environment:
+      WATCH_FILES: '${WATCH_FILES:-true}'
+      DEBUG_BOOTING: '${DEBUG_BOOTING:-false}'
+
+      DEBUG_COLORS: '${DEBUG_COLORS:-true}'
+      NODE_ENV: '${NODE_ENV:-lde}'
+
+      DEBUG: 'pm:*'
+      SHELL: '/bin/sh'

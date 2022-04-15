@@ -10,8 +10,11 @@ export class ScrollHandleMiddleware implements IMiddleware<IStickChartState> {
     private lastEvent: ScrollEvent | null = null
 
     public handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
+        viewport: Viewport,
+        state: IStickChartState,
+        handler: MiddlewareHandler<IStickChartState>,
     ): MiddlewareHandler<IStickChartState> {
+
         const reduce = new ScrollStateReducer(state, this.lastEvent)
 
         reduce.reduceState()

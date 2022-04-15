@@ -19,3 +19,4 @@ yarn.lock
 *.log
 .prettierrc
 settings.json
+dist/

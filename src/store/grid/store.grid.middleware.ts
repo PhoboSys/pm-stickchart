@@ -7,7 +7,12 @@ import { GridView } from './store.grid.view'
 export class GridViewMiddleware implements IMiddleware<IStickChartState> {
     state: IStickChartState
 
-    handle(viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>): MiddlewareHandler<IStickChartState> {
+    handle(
+        viewport: Viewport,
+        state: IStickChartState,
+        handler: MiddlewareHandler<IStickChartState>
+    ): MiddlewareHandler<IStickChartState> {
+
         const view = new GridView(state, viewport)
 
         view.render()

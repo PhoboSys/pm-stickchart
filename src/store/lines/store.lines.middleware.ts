@@ -7,7 +7,9 @@ import { LinesView } from './store.lines.view'
 
 export class LinesViewMiddleware implements IMiddleware<IStickChartState> {
     handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
+        viewport: Viewport,
+        state: IStickChartState,
+        handler: MiddlewareHandler<IStickChartState>,
     ): MiddlewareHandler<IStickChartState> {
         const view = new LinesView(state, viewport)
 

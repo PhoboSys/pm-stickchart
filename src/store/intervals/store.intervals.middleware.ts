@@ -6,8 +6,11 @@ import { IntervalsStateReducer } from './store.intervls.reducer'
 
 export class IntervalsHandlerMiddleware implements IMiddleware<IStickChartState> {
     public handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
+        viewport: Viewport,
+        state: IStickChartState,
+        handler: MiddlewareHandler<IStickChartState>,
     ): MiddlewareHandler<IStickChartState> {
+
         const reducer = new IntervalsStateReducer(state)
 
         reducer.reduceState()

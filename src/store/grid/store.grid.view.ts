@@ -85,7 +85,11 @@ export class GridView implements IView<IStickChartState> {
     }
 
     private buildHorizontalLines(): void {
-        const { rowsCount, rowWhitespace, state: { viewConfig: { width } } } = this
+        const {
+            rowsCount,
+            rowWhitespace,
+            state: { viewConfig: { width } }
+        } = this
 
         for (let i = 0; i < rowsCount; i++) {
             const y = i * rowWhitespace

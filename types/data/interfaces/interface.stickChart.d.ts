@@ -35,6 +35,7 @@ export interface IStickChartRenderConfig {
     rowIntervalSize: number;
     stickIntervalSize?: Duration;
     dataManager?: DataManager<IPricePoint | IStick>;
+    backgroundAlpha: 0;
 }
 export interface IStickChartState extends IStickChartOptions {
     renderConfig: IStickChartRenderConfig;

@@ -13,6 +13,7 @@ export declare class StickChart {
     private style;
     private data;
     private middlewareRunner;
+    private logger;
     private viewport;
     private state;
     private viewConfig;
@@ -24,9 +25,8 @@ export declare class StickChart {
     private createState;
     private createViewport;
     create(): void;
-    render(): void;
+    render(state?: any): void;
     setChartType(type: ChartTypes): void;
     inputData(rawPricePoint: IRawPricePoint): void;
     addInputEventHandler(event: EmittedEvent, type: InputEventTypes): void;
-    private throwIfNotCreatedState;
 }

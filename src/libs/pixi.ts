@@ -10,7 +10,7 @@ export * as utils from '@pixi/utils'
 
 import { Application } from '@pixi/app'
 import { Renderer, BatchRenderer } from '@pixi/core'
-Renderer.registerPlugin('batch', BatchRenderer)
-
 import { TickerPlugin } from '@pixi/ticker'
+
+Renderer.registerPlugin('batch', BatchRenderer)
 Application.registerPlugin(TickerPlugin)

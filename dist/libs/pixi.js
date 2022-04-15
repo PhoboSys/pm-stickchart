@@ -38,7 +38,7 @@ __exportStar(require("@pixi/graphics"), exports);
 exports.utils = __importStar(require("@pixi/utils"));
 const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");
-core_1.Renderer.registerPlugin('batch', core_1.BatchRenderer);
 const ticker_1 = require("@pixi/ticker");
+core_1.Renderer.registerPlugin('batch', core_1.BatchRenderer);
 app_1.Application.registerPlugin(ticker_1.TickerPlugin);
 //# sourceMappingURL=pixi.js.map
