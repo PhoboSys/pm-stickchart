@@ -1,13 +1,13 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { GridView } from './store.grid.view'
 
-export class GridViewMiddleware implements IMiddleware<IStickChartState> {
-    state: IStickChartState
+export class GridViewMiddleware implements IMiddleware<IState> {
+    state: IState
 
-    handle(viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>): MiddlewareHandler<IStickChartState> {
+    handle(viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>): MiddlewareHandler<IState> {
         const view = new GridView(state, viewport)
 
         view.render()
@@ -15,11 +15,11 @@ export class GridViewMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    shouldSkip(state: IStickChartState): boolean {
+    shouldSkip(state: IState): boolean {
         return false
     }
 
-    save(state: IStickChartState): void {
+    save(state: IState): void {
     }
 
 }

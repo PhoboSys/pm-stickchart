@@ -1,13 +1,13 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { IntervalsStateReducer } from './store.intervls.reducer'
 
-export class IntervalsHandlerMiddleware implements IMiddleware<IStickChartState> {
+export class IntervalsHandlerMiddleware implements IMiddleware<IState> {
     public handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const reducer = new IntervalsStateReducer(state)
 
         reducer.reduceState()
@@ -15,11 +15,11 @@ export class IntervalsHandlerMiddleware implements IMiddleware<IStickChartState>
         return handler.next(viewport, state)
     }
 
-    public shouldSkip(state: IStickChartState): boolean {
+    public shouldSkip(state: IState): boolean {
         return false
     }
 
-    public save(state: IStickChartState): void {
+    public save(state: IState): void {
 
     }
 }

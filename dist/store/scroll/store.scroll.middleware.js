@@ -4,9 +4,6 @@ exports.ScrollHandleMiddleware = void 0;
 const enums_1 = require("../../data/enums");
 const store_scroll_reducer_1 = require("./store.scroll.reducer");
 class ScrollHandleMiddleware {
-    constructor() {
-        this.lastEvent = null;
-    }
     handle(viewport, state, handler) {
         const reduce = new store_scroll_reducer_1.ScrollStateReducer(state, this.lastEvent);
         reduce.reduceState();

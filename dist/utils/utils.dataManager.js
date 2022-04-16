@@ -8,8 +8,15 @@ class DataManager {
         this.newRawDataMapper = newRawDataMapper;
         this.data = dataMapper(rawData);
     }
+    get length() {
+        return this.data.length;
+    }
     get isEmpty() {
         return !this.data.length;
+    }
+    at(index) {
+        const { data } = this;
+        return data.at(index);
     }
     addData(raw) {
         this.data = this.newRawDataMapper(this.data, raw);

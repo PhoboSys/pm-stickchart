@@ -1,14 +1,14 @@
 import { Viewport, MiddlewareHandler } from '../../core'
 
 import { InputEventTypes } from '../../data/enums'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { ZoomStateReducer } from './store.zoom.reducer'
 
-export class ZoomHandleMiddleware implements IMiddleware<IStickChartState> {
+export class ZoomHandleMiddleware implements IMiddleware<IState> {
     public handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const reducer = new ZoomStateReducer(state)
 
         reducer.reduceState()
@@ -16,11 +16,11 @@ export class ZoomHandleMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    public shouldSkip(state: IStickChartState): boolean {
+    public shouldSkip(state: IState): boolean {
         return state.inputEvent?.type !== InputEventTypes.zoom
     }
 
-    public save(state: IStickChartState): void {
+    public save(state: IState): void {
 
     }
 }

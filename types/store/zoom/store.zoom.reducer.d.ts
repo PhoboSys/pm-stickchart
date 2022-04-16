@@ -1,7 +1,7 @@
-import { IReducer, IStickChartState } from '../../data/interfaces';
-export declare class ZoomStateReducer implements IReducer<IStickChartState> {
-    readonly state: IStickChartState;
-    constructor(state: IStickChartState);
-    reduceState(): IStickChartState;
+import { IReducer, IState } from '../../data/interfaces';
+export declare class ZoomStateReducer implements IReducer<IState> {
+    readonly state: IState;
+    constructor(state: IState);
+    reduceState(): IState;
     private moveRenderDateRange;
 }

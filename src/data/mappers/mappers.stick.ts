@@ -1,5 +1,3 @@
-import { Duration } from 'moment'
-
 import { unixTimestampToDate, unixTimestampToMilliseconds } from '../../utils'
 import { IRawPricePoint, IStick } from '../interfaces'
 

@@ -3,19 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CandleStickBuilder = void 0;
 const graphics_1 = require("@pixi/graphics");
 class CandleStickBuilder extends graphics_1.Graphics {
-    constructor(stick, style, screenWidth, screenHeight, stickWidth, valueRange, dateRange) {
+    constructor(stick, style, screenWidth, screenHeight, stickWidth, priceRange, dateRange) {
         super();
         this.stick = stick;
         this.style = style;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.stickWidth = stickWidth;
-        this.valueRange = valueRange;
+        this.priceRange = priceRange;
         this.dateRange = dateRange;
     }
     get color() {
-        const { increaseColor, decreaseColor } = this.style;
-        return this.stick.open < this.stick.close ? increaseColor : decreaseColor;
+        const { stickIncreaseColor, stickDecreaseColor } = this.style;
+        return this.stick.open < this.stick.close ? stickIncreaseColor : stickDecreaseColor;
     }
     get centerX() {
         return this.getPointX(this.stick.date) + (this.stickWidth / 2);
@@ -32,10 +32,10 @@ class CandleStickBuilder extends graphics_1.Graphics {
         return this;
     }
     buildLine() {
-        const { centerX, stick: { high, low } } = this;
+        const { centerX, stick: { high, low }, style: { stickLineWidth } } = this;
         const line = new graphics_1.Graphics();
         line
-            .lineStyle({ width: 1, color: this.color })
+            .lineStyle({ width: stickLineWidth, color: this.color })
             .moveTo(centerX, this.getPointY(high))
             .lineTo(centerX, this.getPointY(low));
         super.addChild(line);
@@ -44,7 +44,7 @@ class CandleStickBuilder extends graphics_1.Graphics {
         const { stick: { date }, stickWidth, rectTopY, rectBottomY, style: { stickRound } } = this;
         const rectangle = new graphics_1.Graphics();
         const x = this.getPointX(date), y = rectTopY;
-        const width = stickWidth, height = rectBottomY - rectTopY;
+        const width = stickWidth, height = (rectBottomY - rectTopY);
         rectangle
             .beginFill(this.color)
             .drawRoundedRect(x, y, width, height, stickRound)
@@ -52,8 +52,8 @@ class CandleStickBuilder extends graphics_1.Graphics {
         super.addChild(rectangle);
     }
     getPointY(value) {
-        const { valueRange, screenHeight } = this;
-        const point = 1 - valueRange.getPointByValue(value);
+        const { priceRange, screenHeight } = this;
+        const point = 1 - priceRange.getPointByValue(value);
         return point * screenHeight;
     }
     getPointX(date) {

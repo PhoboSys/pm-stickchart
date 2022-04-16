@@ -1,25 +1,31 @@
-import { IReducer, IStickChartState } from '../../data/interfaces'
-import { HandledEvent } from '../../utils/utils.handledEvent'
+import { IReducer, IState } from '../../data/interfaces'
 import { ScrollEvent } from '../../utils/utils.scrollEvent'
 
-export class ScrollStateReducer implements IReducer<IStickChartState> {
+export class ScrollStateReducer implements IReducer<IState> {
     constructor(
-        readonly state: IStickChartState,
-        private readonly previousEvent: ScrollEvent | null,
+        readonly state: IState,
+        private readonly previousEvent?: ScrollEvent,
     ) { }
 
-    public reduceState(): IStickChartState {
+    public reduceState(): IState {
         this.moveRenderDateRange()
 
         this.state.inputEvent?.preventDefault()
+        this.state.inputEvent?.markAsHandled()
 
         return this.state
     }
 
     private moveRenderDateRange(): void {
-        const { xShift, state: { renderConfig: { dateRange }, viewConfig: { width } } } = this
+        const {
+            xShift,
+            state: {
+                renderConfig: { dateRange },
+                basicConfig: { width, style: { scrollVelocity } },
+            },
+        } = this
 
-        const scrollValue = (xShift / width * dateRange.length)
+        const scrollValue = xShift / width * dateRange.length * scrollVelocity
 
         dateRange.moveInMilliseconds(scrollValue, scrollValue)
     }
@@ -28,7 +34,7 @@ export class ScrollStateReducer implements IReducer<IStickChartState> {
         const { previousEvent, state } = this
         const event = <ScrollEvent>state.inputEvent?.event
 
-        if (previousEvent === null || previousEvent.mouseX !== event.mouseX) {
+        if (!previousEvent || previousEvent.mouseX !== event.mouseX) {
             return event.mouseX - event.dragX
         }
 

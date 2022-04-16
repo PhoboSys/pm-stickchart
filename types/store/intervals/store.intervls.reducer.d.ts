@@ -1,8 +1,8 @@
-import { IReducer, IStickChartState } from '../../data/interfaces';
-export declare class IntervalsStateReducer implements IReducer<IStickChartState> {
-    readonly state: IStickChartState;
-    constructor(state: IStickChartState);
-    reduceState(): IStickChartState;
+import { IReducer, IState } from '../../data/interfaces';
+export declare class IntervalsStateReducer implements IReducer<IState> {
+    readonly state: IState;
+    constructor(state: IState);
+    reduceState(): IState;
     private setPriceRange;
     private roundRowIntervalSize;
     private roundColumnIntervalSize;

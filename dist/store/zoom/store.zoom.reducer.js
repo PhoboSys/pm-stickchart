@@ -13,9 +13,9 @@ class ZoomStateReducer {
         return this.state;
     }
     moveRenderDateRange() {
-        const { inputEvent, renderConfig: { dateRange }, } = this.state;
+        const { inputEvent, basicConfig: { width, style: { zoomVelocity } }, renderConfig: { dateRange }, } = this.state;
         const { deltaY } = inputEvent === null || inputEvent === void 0 ? void 0 : inputEvent.event;
-        const zoomValue = deltaY * (dateRange.length * 0.001);
+        const zoomValue = deltaY / width * dateRange.length * zoomVelocity;
         dateRange.moveInMilliseconds(-zoomValue, zoomValue);
     }
 }

@@ -5,7 +5,7 @@ export class Viewport {
     private renderedKeys: string[] = []
 
     constructor(
-        public container: Container,
+        private container: Container,
     ) { }
 
     public render(graphics: Graphics, renderKey: string): void {

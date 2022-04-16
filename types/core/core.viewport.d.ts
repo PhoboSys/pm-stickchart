@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 export declare class Viewport {
-    container: Container;
+    private container;
     private renderedKeys;
     constructor(container: Container);
     render(graphics: Graphics, renderKey: string): void;

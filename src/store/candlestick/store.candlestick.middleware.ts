@@ -1,14 +1,14 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
 import { ChartTypes } from '../../data/enums'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { CandleStickView } from './store.candlestick.view'
 
-export class CandleStickMiddleware implements IMiddleware<IStickChartState> {
+export class CandleStickMiddleware implements IMiddleware<IState> {
     handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const view = new CandleStickView(state, viewport)
 
         view.render()
@@ -16,13 +16,13 @@ export class CandleStickMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    shouldSkip(state: IStickChartState): boolean {
+    shouldSkip(state: IState): boolean {
         const { chartType, dataManager } = state
 
         return dataManager.data.length < 1 || chartType !== ChartTypes.candleSticks
     }
 
-    save(state: IStickChartState): void {
+    save(state: IState): void {
 
     }
 }

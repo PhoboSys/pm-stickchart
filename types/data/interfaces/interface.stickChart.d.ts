@@ -7,33 +7,53 @@ export interface IStickChartStyle {
     gridColor: number;
     gridOpacity: number;
     gridWidth: number;
-    increaseColor: number;
-    decreaseColor: number;
+    stickIncreaseColor: number;
+    stickDecreaseColor: number;
     stickRound: number;
+    stickLineWidth: number;
     lineColor: number;
     lineWidth: number;
+    zoomVelocity: number;
+    scrollVelocity: number;
 }
-export interface IStickChartViewConfig {
+export interface IStickChartOptions {
     width: number;
     height: number;
+    style?: IStickChartStyle;
+    stickIntervalSize?: number;
+    columnIntervalSize?: number;
+    dateRange?: DateRange;
+    chartType?: ChartTypes;
+    data?: IRawPricePoint[];
+}
+export interface IStickChartConfig {
+    width: number;
+    height: number;
+    style: IStickChartStyle;
     stickIntervalSize: number;
     columnIntervalSize: number;
     dateRange: DateRange;
-}
-export interface IStickChartOptions {
-    style: IStickChartStyle;
-    viewConfig: IStickChartViewConfig;
     chartType: ChartTypes;
-    dataManager: DataManager<IPricePoint | IStick, IRawPricePoint>;
+    data: IRawPricePoint[];
 }
-export interface IStickChartRenderConfig {
+export interface IRenderConfig {
     dateRange: DateRange;
     priceRange: PriceRange;
     columnIntervalSize: number;
     rowIntervalSize: number;
     dataPriceRange?: PriceRange;
 }
-export interface IStickChartState extends IStickChartOptions {
-    renderConfig: IStickChartRenderConfig;
+export interface IBasicConfig {
+    width: number;
+    height: number;
+    style: IStickChartStyle;
+    stickIntervalSize: number;
+    dateRange: DateRange;
+}
+export interface IState {
+    basicConfig: IBasicConfig;
+    renderConfig: IRenderConfig;
+    chartType: ChartTypes;
+    dataManager: DataManager<IPricePoint | IStick, IRawPricePoint>;
     inputEvent?: ChartInputEvent;
 }

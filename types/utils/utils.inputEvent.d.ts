@@ -6,5 +6,4 @@ export declare class ChartInputEvent {
     constructor(event: EmittedEvent, type: InputEventTypes);
     markAsHandled(): void;
     preventDefault(): void;
-    clone(): ChartInputEvent;
 }

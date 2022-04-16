@@ -14,18 +14,18 @@ class GridView {
         this.viewport.render(this.buildedGrid, GridView.renderKey);
     }
     get beginColumnWhitespace() {
-        const { viewConfig: { dateRange }, renderConfig: { dateRange: renderDateRange, columnIntervalSize }, } = this.state;
+        const { basicConfig: { dateRange }, renderConfig: { dateRange: renderDateRange, columnIntervalSize }, } = this.state;
         const distance = utils_1.DateRange.getBeginDistance(dateRange, renderDateRange);
-        const point = (Math.abs(distance) / columnIntervalSize % 1);
+        const point = Math.abs(distance) / columnIntervalSize % 1;
         const absolutePoint = distance < 0 ? point : 1 - point;
         return absolutePoint * this.columnWhitespace;
     }
     get columnWhitespace() {
-        const { viewConfig: { width }, renderConfig: { dateRange, columnIntervalSize }, } = this.state;
+        const { basicConfig: { width }, renderConfig: { dateRange, columnIntervalSize }, } = this.state;
         return width / dateRange.getIntervalsCount(columnIntervalSize);
     }
     get rowWhitespace() {
-        const { viewConfig: { height }, renderConfig: { priceRange: valueRange, rowIntervalSize }, } = this.state;
+        const { basicConfig: { height }, renderConfig: { priceRange: valueRange, rowIntervalSize }, } = this.state;
         return height / valueRange.getIntervalsCount(rowIntervalSize);
     }
     get columnsCount() {
@@ -41,7 +41,7 @@ class GridView {
         this.buildHorizontalLines();
     }
     buildVerticalLines() {
-        const { columnsCount, columnWhitespace, beginColumnWhitespace, state: { viewConfig: { height } } } = this;
+        const { columnsCount, columnWhitespace, beginColumnWhitespace, state: { basicConfig: { height } } } = this;
         const coords = [beginColumnWhitespace];
         for (let i = 0; i < columnsCount; i++) {
             const x = coords[i];
@@ -50,14 +50,14 @@ class GridView {
         }
     }
     buildHorizontalLines() {
-        const { rowsCount, rowWhitespace, state: { viewConfig: { width } } } = this;
+        const { rowsCount, rowWhitespace, state: { basicConfig: { width } } } = this;
         for (let i = 0; i < rowsCount; i++) {
             const y = i * rowWhitespace;
             this.buildLine([0, y], [width, y]);
         }
     }
     buildLine([x1, y1], [x2, y2]) {
-        const { gridColor, gridOpacity, gridWidth } = this.state.style;
+        const { gridColor, gridOpacity, gridWidth } = this.state.basicConfig.style;
         const line = (new graphics_1.Graphics())
             .lineStyle({ width: gridWidth, color: gridColor, alpha: gridOpacity })
             .moveTo(x1, y1)

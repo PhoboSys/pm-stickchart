@@ -9,8 +9,18 @@ export class DataManager<T, RawDataType> {
         this.data = dataMapper(rawData)
     }
 
+    public get length(): number {
+        return this.data.length
+    }
+
     public get isEmpty(): boolean {
         return !this.data.length
+    }
+
+    public at<CurrentType>(index: number): CurrentType | undefined {
+        const { data } = this
+
+        return <CurrentType | undefined>data.at(index)
     }
 
     public addData(raw: RawDataType): void {

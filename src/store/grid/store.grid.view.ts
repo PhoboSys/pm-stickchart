@@ -1,16 +1,16 @@
 import { Graphics } from '@pixi/graphics'
 
 import { Viewport } from '../../core/core.viewport'
-import { IStickChartState, IView } from '../../data/interfaces'
+import { IState, IView } from '../../data/interfaces'
 import { DateRange } from '../../utils'
 
-export class GridView implements IView<IStickChartState> {
+export class GridView implements IView<IState> {
     static readonly renderKey: string = 'grid_graphics'
 
     private readonly buildedGrid: Graphics = new Graphics()
 
     constructor(
-        public readonly state: IStickChartState,
+        public readonly state: IState,
         public readonly viewport: Viewport,
     ) { }
 
@@ -22,13 +22,13 @@ export class GridView implements IView<IStickChartState> {
 
     private get beginColumnWhitespace(): number {
         const {
-            viewConfig: { dateRange },
+            basicConfig: { dateRange },
             renderConfig: { dateRange: renderDateRange, columnIntervalSize },
         } = this.state
 
         const distance = DateRange.getBeginDistance(dateRange, renderDateRange)
 
-        const point = (Math.abs(distance) / columnIntervalSize % 1)
+        const point = Math.abs(distance) / columnIntervalSize % 1
         const absolutePoint = distance < 0 ? point : 1 - point
 
         return absolutePoint * this.columnWhitespace
@@ -36,7 +36,7 @@ export class GridView implements IView<IStickChartState> {
 
     private get columnWhitespace(): number {
         const {
-            viewConfig: { width },
+            basicConfig: { width },
             renderConfig: { dateRange, columnIntervalSize },
         } = this.state
 
@@ -45,7 +45,7 @@ export class GridView implements IView<IStickChartState> {
 
     private get rowWhitespace(): number {
         const {
-            viewConfig: { height },
+            basicConfig: { height },
             renderConfig: { priceRange: valueRange, rowIntervalSize },
         } = this.state
 
@@ -70,7 +70,7 @@ export class GridView implements IView<IStickChartState> {
     }
 
     private buildVerticalLines(): void {
-        const { columnsCount, columnWhitespace, beginColumnWhitespace, state: { viewConfig: { height } } } = this
+        const { columnsCount, columnWhitespace, beginColumnWhitespace, state: { basicConfig: { height } } } = this
 
         const coords: Array<number> = [beginColumnWhitespace]
 
@@ -84,7 +84,7 @@ export class GridView implements IView<IStickChartState> {
     }
 
     private buildHorizontalLines(): void {
-        const { rowsCount, rowWhitespace, state: { viewConfig: { width } } } = this
+        const { rowsCount, rowWhitespace, state: { basicConfig: { width } } } = this
 
         for (let i = 0; i < rowsCount; i++) {
             const y = i * rowWhitespace
@@ -94,9 +94,9 @@ export class GridView implements IView<IStickChartState> {
     }
 
     private buildLine([x1, y1], [x2, y2]): void {
-        const { gridColor, gridOpacity, gridWidth } = this.state.style
+        const { gridColor, gridOpacity, gridWidth } = this.state.basicConfig.style
 
-        const line = (new Graphics())
+        const line = new Graphics()
             .lineStyle({ width: gridWidth, color: gridColor, alpha: gridOpacity })
             .moveTo(x1, y1)
             .lineTo(x2, y2)

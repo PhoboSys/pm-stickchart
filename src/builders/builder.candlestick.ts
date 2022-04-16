@@ -11,16 +11,16 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
         private screenWidth: number,
         private screenHeight: number,
         private stickWidth: number,
-        private valueRange: PriceRange,
+        private priceRange: PriceRange,
         private dateRange: DateRange,
     ) {
         super()
     }
 
     private get color(): number {
-        const { increaseColor, decreaseColor } = this.style
+        const { stickIncreaseColor, stickDecreaseColor } = this.style
 
-        return this.stick.open < this.stick.close ? increaseColor : decreaseColor
+        return this.stick.open < this.stick.close ? stickIncreaseColor : stickDecreaseColor
     }
 
     private get centerX(): number {
@@ -43,12 +43,10 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private buildLine(): void {
-        const { centerX, stick: { high, low } } = this
+        const { centerX, stick: { high, low }, style: { stickLineWidth } } = this
 
         const line = new Graphics()
-
-        line
-            .lineStyle({ width: 1, color: this.color })
+            .lineStyle({ width: stickLineWidth, color: this.color })
             .moveTo(centerX, this.getPointY(high))
             .lineTo(centerX, this.getPointY(low))
 
@@ -57,12 +55,11 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
 
     private buildRectangle(): void {
         const { stick: { date }, stickWidth, rectTopY, rectBottomY, style: { stickRound } } = this
-        const rectangle = new Graphics()
 
         const x = this.getPointX(date), y = rectTopY
-        const width = stickWidth, height = rectBottomY - rectTopY
+        const width = stickWidth, height = (rectBottomY - rectTopY)
 
-        rectangle
+        const rectangle = new Graphics()
             .beginFill(this.color)
             .drawRoundedRect(x, y, width, height, stickRound)
             .endFill()
@@ -71,9 +68,9 @@ export class CandleStickBuilder extends Graphics implements IBuilder {
     }
 
     private getPointY(value: number): number {
-        const { valueRange, screenHeight } = this
+        const { priceRange, screenHeight } = this
 
-        const point = 1 - valueRange.getPointByValue(value)
+        const point = 1 - priceRange.getPointByValue(value)
 
         return point * screenHeight
     }

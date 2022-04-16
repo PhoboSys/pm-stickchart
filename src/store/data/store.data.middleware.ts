@@ -1,13 +1,13 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { DataStateReducer } from './store.data.reducer'
 
-export class DataMiddleware implements IMiddleware<IStickChartState> {
+export class DataMiddleware implements IMiddleware<IState> {
     handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const reducer = new DataStateReducer(state)
 
         reducer.reduceState()
@@ -15,11 +15,11 @@ export class DataMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    shouldSkip(state: IStickChartState): boolean {
+    shouldSkip(state: IState): boolean {
         return state.dataManager.isEmpty
     }
 
-    save(state: IStickChartState): void {
+    save(state: IState): void {
 
     }
 }

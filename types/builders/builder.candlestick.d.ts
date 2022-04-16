@@ -7,9 +7,9 @@ export declare class CandleStickBuilder extends Graphics implements IBuilder {
     private screenWidth;
     private screenHeight;
     private stickWidth;
-    private valueRange;
+    private priceRange;
     private dateRange;
-    constructor(stick: IStick, style: IStickChartStyle, screenWidth: number, screenHeight: number, stickWidth: number, valueRange: PriceRange, dateRange: DateRange);
+    constructor(stick: IStick, style: IStickChartStyle, screenWidth: number, screenHeight: number, stickWidth: number, priceRange: PriceRange, dateRange: DateRange);
     private get color();
     private get centerX();
     private get rectTopY();

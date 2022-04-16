@@ -1,13 +1,13 @@
-import { IReducer, IStickChartState, IPricePoint, IStick } from '../../data/interfaces'
+import { IReducer, IState, IPricePoint, IStick } from '../../data/interfaces'
 import { dataToPriceMappersMap } from '../../data/maps/map.dataToPriceMappers'
 import { PriceRange } from '../../utils/utils.range'
 
-export class DataStateReducer implements IReducer<IStickChartState> {
+export class DataStateReducer implements IReducer<IState> {
     constructor(
-        readonly state: IStickChartState,
+        readonly state: IState,
     ) { }
 
-    public reduceState(): IStickChartState {
+    public reduceState(): IState {
         this.setDataPriceRange()
 
         return this.state

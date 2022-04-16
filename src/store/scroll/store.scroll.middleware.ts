@@ -1,17 +1,17 @@
 import { Viewport, MiddlewareHandler } from '../../core'
 import { InputEventTypes } from '../../data/enums'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { ScrollEvent } from '../../utils/utils.scrollEvent'
 
 import { ScrollStateReducer } from './store.scroll.reducer'
 
-export class ScrollHandleMiddleware implements IMiddleware<IStickChartState> {
-    private lastEvent: ScrollEvent | null = null
+export class ScrollHandleMiddleware implements IMiddleware<IState> {
+    private lastEvent?: ScrollEvent
 
     public handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const reduce = new ScrollStateReducer(state, this.lastEvent)
 
         reduce.reduceState()
@@ -19,11 +19,11 @@ export class ScrollHandleMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    public shouldSkip(state: IStickChartState): boolean {
+    public shouldSkip(state: IState): boolean {
         return state.inputEvent?.type !== InputEventTypes.scroll
     }
 
-    public save(state: IStickChartState): void {
+    public save(state: IState): void {
         this.lastEvent = { ...<ScrollEvent>state.inputEvent?.event }
     }
 }

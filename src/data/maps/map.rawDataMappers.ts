@@ -1,5 +1,3 @@
-import { Duration } from 'moment'
-
 import { ChartTypes } from '../enums/enum.chartTypes'
 import { IStick } from '../interfaces'
 import { IPricePoint } from '../interfaces/interface.pricePoint'

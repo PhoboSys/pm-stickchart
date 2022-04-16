@@ -1,13 +1,11 @@
-import { duration } from 'moment'
+import { IReducer, IState } from '../../data/interfaces'
 
-import { IReducer, IStickChartState } from '../../data/interfaces'
-
-export class ZoomStateReducer implements IReducer<IStickChartState> {
+export class ZoomStateReducer implements IReducer<IState> {
     constructor(
-        readonly state: IStickChartState,
+        readonly state: IState,
     ) { }
 
-    public reduceState(): IStickChartState {
+    public reduceState(): IState {
         this.moveRenderDateRange()
 
         this.state.inputEvent?.preventDefault()
@@ -19,12 +17,13 @@ export class ZoomStateReducer implements IReducer<IStickChartState> {
     private moveRenderDateRange(): void {
         const {
             inputEvent,
+            basicConfig: { width, style: { zoomVelocity } },
             renderConfig: { dateRange },
         } = this.state
 
         const { deltaY } = <WheelEvent>inputEvent?.event
 
-        const zoomValue = deltaY * (dateRange.length * 0.001)
+        const zoomValue = deltaY / width * dateRange.length * zoomVelocity
 
         dateRange.moveInMilliseconds(-zoomValue, zoomValue)
     }

@@ -1,15 +1,15 @@
 import { Graphics } from '@pixi/graphics'
 
 import { Viewport } from '../../core/core.viewport'
-import { IStickChartState, IPricePoint, IView } from '../../data/interfaces'
+import { IState, IPricePoint, IView } from '../../data/interfaces'
 
-export class LinesView implements IView<IStickChartState> {
+export class LinesView implements IView<IState> {
     static readonly renderKey: string = 'chart_data_graphics'
 
     private readonly builded: Graphics = new Graphics()
 
     constructor(
-        public readonly state: IStickChartState,
+        public readonly state: IState,
         public readonly viewport: Viewport,
     ) { }
 
@@ -20,36 +20,42 @@ export class LinesView implements IView<IStickChartState> {
     }
 
     private buildLines(): void {
-        const { dataManager, style: { lineColor, lineWidth } } = this.state
-        const firstPricePointPoint = this.getPricePointPoint(<IPricePoint>dataManager!.data.at(0)!)
+        const { dataManager } = this.state
 
-        const line = new Graphics()
+        const line = this.createLine()
 
-        line
-            .lineStyle({ width: lineWidth, color: lineColor })
-            .moveTo(...firstPricePointPoint)
+        for (let i = 1; i < dataManager.length; i++) {
+            const pricePoint = dataManager.at<IPricePoint>(i)!
 
-        for (let i = 1; i < dataManager!.data.length; i++) {
-            const pricePoint = <IPricePoint>dataManager!.data[i]
-
-            this.moveByPricePoint(line, pricePoint)
+            this.lineToPricePoint(line, pricePoint)
         }
 
         this.builded.addChild(line)
     }
 
-    private moveByPricePoint(line: Graphics, pricePoint: IPricePoint): void {
-        const point = this.getPricePointPoint(pricePoint)
+    private createLine(): Graphics {
+        const { dataManager, basicConfig: { style: { lineColor, lineWidth } } } = this.state
+        const firstPricePoint = dataManager.at<IPricePoint>(0)!
+
+        const line = new Graphics()
+            .lineStyle({ width: lineWidth, color: lineColor })
+            .moveTo(...this.getPointByPricePoint(firstPricePoint))
+
+        return line
+    }
+
+    private lineToPricePoint(line: Graphics, pricePoint: IPricePoint): void {
+        const point = this.getPointByPricePoint(pricePoint)
 
         line.lineTo(...point)
     }
 
-    private getPricePointPoint(pricePoint: IPricePoint): [number, number] {
+    private getPointByPricePoint(pricePoint: IPricePoint): [number, number] {
         return [this.getPointX(pricePoint.date), this.getPointY(pricePoint.price)]
     }
 
     private getPointY(value: number): number {
-        const { renderConfig: { priceRange: valueRange }, viewConfig: { height } } = this.state
+        const { renderConfig: { priceRange: valueRange }, basicConfig: { height } } = this.state
 
         const point = 1 - valueRange.getPointByValue(value)
 
@@ -57,7 +63,7 @@ export class LinesView implements IView<IStickChartState> {
     }
 
     private getPointX(date: Date): number {
-        const { renderConfig: { dateRange }, viewConfig: { width } } = this.state
+        const { renderConfig: { dateRange }, basicConfig: { width } } = this.state
 
         const datePoint = dateRange.getPointByValue(date)
 

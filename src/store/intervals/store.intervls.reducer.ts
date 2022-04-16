@@ -1,12 +1,12 @@
-import { IReducer, IStickChartState } from '../../data/interfaces'
+import { IReducer, IState } from '../../data/interfaces'
 import { PriceRange } from '../../utils/utils.range'
 
-export class IntervalsStateReducer implements IReducer<IStickChartState> {
+export class IntervalsStateReducer implements IReducer<IState> {
     constructor(
-        readonly state: IStickChartState,
+        readonly state: IState,
     ) { }
 
-    public reduceState(): IStickChartState {
+    public reduceState(): IState {
         this.setPriceRange()
 
         this.roundColumnIntervalSize()

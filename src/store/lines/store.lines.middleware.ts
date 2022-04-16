@@ -1,14 +1,14 @@
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
 import { ChartTypes } from '../../data/enums'
-import { IMiddleware, IStickChartState } from '../../data/interfaces'
+import { IMiddleware, IState } from '../../data/interfaces'
 
 import { LinesView } from './store.lines.view'
 
-export class LinesViewMiddleware implements IMiddleware<IStickChartState> {
+export class LinesViewMiddleware implements IMiddleware<IState> {
     handle(
-        viewport: Viewport, state: IStickChartState, handler: MiddlewareHandler<IStickChartState>,
-    ): MiddlewareHandler<IStickChartState> {
+        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
+    ): MiddlewareHandler<IState> {
         const view = new LinesView(state, viewport)
 
         view.render()
@@ -16,13 +16,13 @@ export class LinesViewMiddleware implements IMiddleware<IStickChartState> {
         return handler.next(viewport, state)
     }
 
-    shouldSkip(state: IStickChartState): boolean {
+    shouldSkip(state: IState): boolean {
         const { chartType, dataManager } = state
 
         return dataManager.data.length < 1 || chartType !== ChartTypes.lines
     }
 
-    save(state: IStickChartState): void {
+    save(state: IState): void {
 
     }
 }
