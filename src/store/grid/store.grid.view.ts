@@ -9,18 +9,30 @@ export class GridView implements IView<IState> {
 
     private readonly buildedGrid: Graphics = new Graphics()
 
+    private beginColumnWhitespace: number
+
+    private columnWhitespace: number
+
+    private rowWhitespace: number
+
+    private columnsCount: number
+
+    private rowsCount: number
+
     constructor(
         public readonly state: IState,
         public readonly viewport: Viewport,
-    ) { }
+    ) {
+        this.columnsCount = this.getColumnsCount()
+        this.rowsCount = this.getRowsCount()
 
-    render(): void {
-        this.build()
+        this.columnWhitespace = this.getColumnWhitespace()
+        this.rowWhitespace = this.getRowWhitespace()
 
-        this.viewport.render(this.buildedGrid, GridView.renderKey)
+        this.beginColumnWhitespace = this.getBeginColumnWhitespace()
     }
 
-    private get beginColumnWhitespace(): number {
+    private getBeginColumnWhitespace(): number {
         const {
             basicConfig: { dateRange },
             renderConfig: { dateRange: renderDateRange, columnIntervalSize },
@@ -34,34 +46,30 @@ export class GridView implements IView<IState> {
         return absolutePoint * this.columnWhitespace
     }
 
-    private get columnWhitespace(): number {
-        const {
-            basicConfig: { width },
-            renderConfig: { dateRange, columnIntervalSize },
-        } = this.state
-
-        return width / dateRange.getIntervalsCount(columnIntervalSize)
+    private getColumnWhitespace(): number {
+        return this.state.basicConfig.width / this.columnsCount
     }
 
-    private get rowWhitespace(): number {
-        const {
-            basicConfig: { height },
-            renderConfig: { priceRange: valueRange, rowIntervalSize },
-        } = this.state
-
-        return height / valueRange.getIntervalsCount(rowIntervalSize)
+    private getRowWhitespace(): number {
+        return this.state.basicConfig.height / this.rowsCount
     }
 
-    private get columnsCount(): number {
+    private getColumnsCount(): number {
         const { dateRange, columnIntervalSize } = this.state.renderConfig
 
         return dateRange.getIntervalsCount(columnIntervalSize)
     }
 
-    private get rowsCount(): number {
+    private getRowsCount(): number {
         const { priceRange: valueRange, rowIntervalSize } = this.state.renderConfig
 
         return valueRange.getIntervalsCount(rowIntervalSize)
+    }
+
+    public render(): void {
+        this.build()
+
+        this.viewport.render(this.buildedGrid, GridView.renderKey)
     }
 
     private build(): void {

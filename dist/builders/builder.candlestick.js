@@ -33,8 +33,7 @@ class CandleStickBuilder extends graphics_1.Graphics {
     }
     buildLine() {
         const { centerX, stick: { high, low }, style: { stickLineWidth } } = this;
-        const line = new graphics_1.Graphics();
-        line
+        const line = new graphics_1.Graphics()
             .lineStyle({ width: stickLineWidth, color: this.color })
             .moveTo(centerX, this.getPointY(high))
             .lineTo(centerX, this.getPointY(low));
@@ -42,10 +41,9 @@ class CandleStickBuilder extends graphics_1.Graphics {
     }
     buildRectangle() {
         const { stick: { date }, stickWidth, rectTopY, rectBottomY, style: { stickRound } } = this;
-        const rectangle = new graphics_1.Graphics();
         const x = this.getPointX(date), y = rectTopY;
         const width = stickWidth, height = (rectBottomY - rectTopY);
-        rectangle
+        const rectangle = new graphics_1.Graphics()
             .beginFill(this.color)
             .drawRoundedRect(x, y, width, height, stickRound)
             .endFill();

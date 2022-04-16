@@ -23,9 +23,8 @@ class LinesView {
     }
     createLine() {
         const { dataManager, basicConfig: { style: { lineColor, lineWidth } } } = this.state;
-        const line = new graphics_1.Graphics();
         const firstPricePoint = dataManager.at(0);
-        line
+        const line = new graphics_1.Graphics()
             .lineStyle({ width: lineWidth, color: lineColor })
             .moveTo(...this.getPointByPricePoint(firstPricePoint));
         return line;
