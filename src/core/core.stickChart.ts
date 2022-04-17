@@ -1,17 +1,12 @@
 import { EmittedEvent } from '../data/aliases/aliases.emittedEvent'
 import { ChartTypes, InputEventTypes } from '../data/enums'
 import { IState, IRawPricePoint, IPricePoint, IStick } from '../data/interfaces'
-import { IStickChartOptions, IRenderConfig, IBasicConfig, IStickChartConfig } from '../data/interfaces/interface.stickChart'
+import { IStickChartOptions, IRenderConfig, IBasicConfig } from '../data/interfaces/interface.stickChart'
 import { rawDataMappersMap, newRawDataMappersMap } from '../data/maps'
 import {
     defaultChartPriceRange,
     defaultRowIntervalSize,
-    defaultChartDateRange,
-    defaultStickChartStyle,
-    defaultStickChartType,
-    defaultStickChartData,
-    defaultStickIntervalSize,
-    defaultColumnIntervalSize,
+    defaultStickChartOptions,
 } from '../defaults'
 import { Application } from '../libs/pixi'
 import { CandleStickMiddleware } from '../store/candlestick/store.candlestick.middleware'
@@ -37,12 +32,12 @@ export class StickChart {
 
     private state: IState
 
-    private initConfig: IStickChartConfig
+    private options: IStickChartOptions
 
     constructor(
-        options: IStickChartOptions,
+        options: Partial<IStickChartOptions>,
     ) {
-        this.registerInitConfig(options)
+        this.options = Object.assign(defaultStickChartOptions(), options)
 
         this.application = this.createApplication()
         this.application.start()
@@ -51,41 +46,24 @@ export class StickChart {
         this.middlewareRunner.add(new ZoomHandleMiddleware())
         this.middlewareRunner.add(new ScrollHandleMiddleware())
         this.middlewareRunner.add(new IntervalsHandlerMiddleware())
-        this.middlewareRunner.add(new GridViewMiddleware())
         this.middlewareRunner.add(new LinesViewMiddleware())
         this.middlewareRunner.add(new CandleStickMiddleware())
+        this.middlewareRunner.add(new GridViewMiddleware())
     }
 
     public get view(): HTMLCanvasElement {
         return this.application.view
     }
 
-    private registerInitConfig(options: IStickChartOptions): void {
-        const { width, height, style, stickIntervalSize, columnIntervalSize, dateRange, chartType, data } = options
-
-        const config: IStickChartConfig = {
-            width,
-            height,
-            style: style ?? defaultStickChartStyle,
-            stickIntervalSize: stickIntervalSize ?? defaultStickIntervalSize,
-            columnIntervalSize: columnIntervalSize ?? defaultColumnIntervalSize,
-            dateRange: dateRange ?? defaultChartDateRange(),
-            chartType: chartType ?? defaultStickChartType,
-            data: data ?? defaultStickChartData,
-        }
-
-        this.initConfig = config
-    }
-
     private createApplication(): Application {
-        const { initConfig: config } = this
+        const { options } = this
 
-        return new Application({ ...config, ...config.style, antialias: true })
+        return new Application({ ...options, ...options.style, antialias: true })
     }
 
     private createState(): IState {
         const state: IState = {
-            chartType: this.initConfig.chartType,
+            chartType: this.options.chartType,
             basicConfig: this.createBasicConfig(),
             renderConfig: this.createRenderConfig(),
             dataManager: this.createDataManager(),
@@ -95,7 +73,7 @@ export class StickChart {
     }
 
     private createBasicConfig(): IBasicConfig {
-        const { width, height, style, stickIntervalSize, dateRange } = this.initConfig
+        const { width, height, style, stickIntervalSize, dateRange } = this.options
 
         const basicConfig: IBasicConfig = {
             width,
@@ -109,7 +87,7 @@ export class StickChart {
     }
 
     private createRenderConfig(): IRenderConfig {
-        const { dateRange, columnIntervalSize } = this.initConfig
+        const { dateRange, columnIntervalSize } = this.options
 
         const renderConfig: IRenderConfig = {
             columnIntervalSize,
@@ -122,8 +100,8 @@ export class StickChart {
     }
 
     private createDataManager(): DataManager<IPricePoint | IStick, IRawPricePoint> {
-        const { stickIntervalSize, data } = this.initConfig
-        const chartType = this.state?.chartType ?? this.initConfig.chartType
+        const { stickIntervalSize, data } = this.options
+        const chartType = this.state?.chartType ?? this.options.chartType
 
         const rawDataMapper = rawDataMappersMap[chartType]
         const newRawDataMapper = newRawDataMappersMap[chartType]
@@ -163,7 +141,7 @@ export class StickChart {
     }
 
     public addData(rawPricePoint: IRawPricePoint): StickChart {
-        this.initConfig.data.push(rawPricePoint)
+        this.options.data.push(rawPricePoint)
         this.state.dataManager.addData(rawPricePoint)
 
         return this

@@ -23,4 +23,5 @@ __exportStar(require("./interface.pricePoint"), exports);
 __exportStar(require("./interface.rawPricePoint"), exports);
 __exportStar(require("./interface.stick"), exports);
 __exportStar(require("./interface.range"), exports);
+__exportStar(require("./interface.markStyle"), exports);
 //# sourceMappingURL=index.js.map

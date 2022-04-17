@@ -11,6 +11,7 @@ export declare class GridView implements IView<IState> {
     private columnsCount;
     private rowsCount;
     constructor(state: IState, viewport: Viewport);
+    private get realHeight();
     private getBeginColumnWhitespace;
     private getColumnWhitespace;
     private getRowWhitespace;
@@ -21,4 +22,6 @@ export declare class GridView implements IView<IState> {
     private buildVerticalLines;
     private buildHorizontalLines;
     private buildLine;
+    private buildPriceMarks;
+    private buildDateMarks;
 }

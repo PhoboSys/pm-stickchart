@@ -23,7 +23,7 @@ class IntervalsStateReducer {
         const { renderConfig: { priceRange: valueRange, rowIntervalSize }, } = this.state;
         if (valueRange.length <= 0)
             return;
-        const minInterval = rowIntervalSize * 7;
+        const minInterval = rowIntervalSize * 3;
         if (valueRange.length < minInterval) {
             this.state.renderConfig.rowIntervalSize /= 2;
             return this.roundRowIntervalSize();

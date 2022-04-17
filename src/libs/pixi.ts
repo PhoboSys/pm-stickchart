@@ -6,6 +6,7 @@ export * from '@pixi/ticker'
 export * from '@pixi/core'
 export * from '@pixi/app'
 export * from '@pixi/graphics'
+export * from '@pixi/text'
 export * as utils from '@pixi/utils'
 
 import { Application } from '@pixi/app'

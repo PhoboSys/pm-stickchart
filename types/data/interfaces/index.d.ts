@@ -7,3 +7,4 @@ export * from './interface.pricePoint';
 export * from './interface.rawPricePoint';
 export * from './interface.stick';
 export * from './interface.range';
+export * from './interface.markStyle';

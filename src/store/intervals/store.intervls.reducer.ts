@@ -31,7 +31,7 @@ export class IntervalsStateReducer implements IReducer<IState> {
 
         if (valueRange.length <= 0) return
 
-        const minInterval = rowIntervalSize * 7
+        const minInterval = rowIntervalSize * 3
 
         if (valueRange.length < minInterval) {
             this.state.renderConfig.rowIntervalSize /= 2

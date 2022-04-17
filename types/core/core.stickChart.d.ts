@@ -7,10 +7,9 @@ export declare class StickChart {
     private viewport;
     private application;
     private state;
-    private initConfig;
-    constructor(options: IStickChartOptions);
+    private options;
+    constructor(options: Partial<IStickChartOptions>);
     get view(): HTMLCanvasElement;
-    private registerInitConfig;
     private createApplication;
     private createState;
     private createBasicConfig;

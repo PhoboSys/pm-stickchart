@@ -1,5 +1,6 @@
 import { ChartTypes } from './data/enums/enum.chartTypes';
 import { IStickChartStyle, IRawPricePoint } from './data/interfaces';
+import { IStickChartOptions } from './data/interfaces/interface.stickChart';
 import { ChartInputEvent } from './utils/utils.inputEvent';
 import { PriceRange, DateRange } from './utils/utils.range';
 export declare const defaultStickChartStyle: IStickChartStyle;
@@ -11,3 +12,4 @@ export declare const defaultColumnIntervalSize: number;
 export declare const defaultStickIntervalSize: number;
 export declare const defaultChartPriceRange: PriceRange;
 export declare const defaultRowIntervalSize = 1;
+export declare const defaultStickChartOptions: () => IStickChartOptions;

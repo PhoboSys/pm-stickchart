@@ -35,6 +35,7 @@ __exportStar(require("@pixi/ticker"), exports);
 __exportStar(require("@pixi/core"), exports);
 __exportStar(require("@pixi/app"), exports);
 __exportStar(require("@pixi/graphics"), exports);
+__exportStar(require("@pixi/text"), exports);
 exports.utils = __importStar(require("@pixi/utils"));
 const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");

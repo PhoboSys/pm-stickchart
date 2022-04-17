@@ -1,7 +1,7 @@
 import { DateRange, PriceRange, ChartInputEvent, DataManager } from '../../utils'
 import { ChartTypes } from '../enums'
 
-import { IRawPricePoint, IStick, IPricePoint } from '.'
+import { IRawPricePoint, IStick, IPricePoint, IMarkStyle } from '.'
 
 export interface IStickChartStyle {
     backgroundColor: number,
@@ -10,6 +10,7 @@ export interface IStickChartStyle {
     gridColor: number,
     gridOpacity: number,
     gridWidth: number,
+    gridBottomPadding: number,
 
     stickIncreaseColor: number,
     stickDecreaseColor: number,
@@ -19,27 +20,16 @@ export interface IStickChartStyle {
     lineColor: number,
     lineWidth: number,
 
+    markHorSpace: number,
+    markStyle: Partial<IMarkStyle>
+
     zoomVelocity: number,
     scrollVelocity: number,
+
+    resolution: number
 }
 
 export interface IStickChartOptions {
-    width: number
-    height: number
-
-    style?: IStickChartStyle
-
-    stickIntervalSize?: number
-    columnIntervalSize?: number
-
-    dateRange?: DateRange,
-
-    chartType?: ChartTypes
-
-    data?: IRawPricePoint[]
-}
-
-export interface IStickChartConfig {
     width: number
     height: number
 
@@ -63,6 +53,9 @@ export interface IRenderConfig {
     rowIntervalSize: number
 
     dataPriceRange?: PriceRange
+
+    // gridVerticalLines: number[],
+    // gridHorizontalLines: number[],
 }
 
 export interface IBasicConfig {
