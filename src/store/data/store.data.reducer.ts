@@ -27,9 +27,9 @@ export class DataStateReducer implements IReducer<IState> {
     }
 
     private get prices(): number[] {
-        const { data } = this.state.dataManager
+        const { dataManager } = this.state
 
-        return data
+        return dataManager.data
             .map(this.priceMapper)
             .reduce((acum, v) => (acum.push(...v), acum), [])
     }

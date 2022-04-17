@@ -3,3 +3,4 @@ export declare const pricePointsToPricesDataMapper: (pricePoints: IPricePoint) =
 export declare const singleRawToPricePointDataMapper: (data: IRawPricePoint) => IPricePoint;
 export declare const rawNewToPricePointsDataMapper: (pricePoints: IPricePoint[], raw: IRawPricePoint) => IPricePoint[];
 export declare const rawToPricePointsDataMapper: (data: IRawPricePoint[]) => IPricePoint[];
+export declare const pricePointToDateMapper: (pricePoint: IPricePoint) => number;

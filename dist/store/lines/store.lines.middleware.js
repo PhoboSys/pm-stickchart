@@ -11,7 +11,7 @@ class LinesViewMiddleware {
     }
     shouldSkip(state) {
         const { chartType, dataManager } = state;
-        return dataManager.data.length < 1 || chartType !== enums_1.ChartTypes.lines;
+        return dataManager.length === 0 || chartType !== enums_1.ChartTypes.lines;
     }
     save(state) {
     }

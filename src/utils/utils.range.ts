@@ -60,6 +60,10 @@ export class DateRange extends Range<Date> {
         return this.to.valueOf() - this.from.valueOf()
     }
 
+    public isContain(date: number): boolean {
+        return this.from.valueOf() < date && date < this.to.valueOf()
+    }
+
     public update(value: Date): DateRange {
         if (this.from.valueOf() > value.valueOf()) {
             this.from = value

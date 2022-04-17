@@ -70,3 +70,7 @@ export const rawNewToSticksDataMapper = (sticks: IStick[], raw: IRawPricePoint, 
 export const sticksToPricesDataMapper = (stick: IStick): number[] => {
     return [stick.high, stick.low]
 }
+
+export const stickToDateMapper = (stick: IStick): number => {
+    return stick.date.valueOf()
+}

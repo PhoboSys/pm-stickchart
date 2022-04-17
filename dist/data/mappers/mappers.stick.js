@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sticksToPricesDataMapper = exports.rawNewToSticksDataMapper = exports.rawToSticksDataMapper = void 0;
+exports.stickToDateMapper = exports.sticksToPricesDataMapper = exports.rawNewToSticksDataMapper = exports.rawToSticksDataMapper = void 0;
 const utils_1 = require("../../utils");
 const rawToSticksDataMapper = (data, interval) => {
     const candleSticks = [];
@@ -57,4 +57,8 @@ const sticksToPricesDataMapper = (stick) => {
     return [stick.high, stick.low];
 };
 exports.sticksToPricesDataMapper = sticksToPricesDataMapper;
+const stickToDateMapper = (stick) => {
+    return stick.date.valueOf();
+};
+exports.stickToDateMapper = stickToDateMapper;
 //# sourceMappingURL=mappers.stick.js.map

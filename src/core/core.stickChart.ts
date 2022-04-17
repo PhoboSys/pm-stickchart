@@ -3,13 +3,14 @@ import { ChartTypes, InputEventTypes } from '../data/enums'
 import { IState, IRawPricePoint, IPricePoint, IStick } from '../data/interfaces'
 import { IStickChartOptions, IRenderConfig, IBasicConfig } from '../data/interfaces/interface.stickChart'
 import { rawDataMappersMap, newRawDataMappersMap } from '../data/maps'
+import { dataToDateMappersMap } from '../data/maps/map.dataToDateMappers'
 import {
     defaultChartPriceRange,
     defaultRowIntervalSize,
     defaultStickChartOptions,
 } from '../defaults'
 import { Application } from '../libs/pixi'
-import { CandleStickMiddleware } from '../store/candlestick/store.candlestick.middleware'
+import { CandleStickViewMiddleware } from '../store/candlestick/store.candlestick.middleware'
 import { DataMiddleware } from '../store/data/store.data.middleware'
 import { GridViewMiddleware } from '../store/grid/store.grid.middleware'
 import { IntervalsHandlerMiddleware } from '../store/intervals/store.intervals.middleware'
@@ -47,7 +48,7 @@ export class StickChart {
         this.middlewareRunner.add(new ScrollHandleMiddleware())
         this.middlewareRunner.add(new IntervalsHandlerMiddleware())
         this.middlewareRunner.add(new LinesViewMiddleware())
-        this.middlewareRunner.add(new CandleStickMiddleware())
+        this.middlewareRunner.add(new CandleStickViewMiddleware())
         this.middlewareRunner.add(new GridViewMiddleware())
     }
 
@@ -105,11 +106,13 @@ export class StickChart {
 
         const rawDataMapper = rawDataMappersMap[chartType]
         const newRawDataMapper = newRawDataMappersMap[chartType]
+        const dateMapper = dataToDateMappersMap[chartType]
 
         return new DataManager<IPricePoint | IStick, IRawPricePoint>(
             data,
             (raw) => rawDataMapper(raw, stickIntervalSize),
             (prevData, raw) => newRawDataMapper(<IPricePoint[] | IStick[]>prevData, raw, stickIntervalSize),
+            dateMapper,
         )
     }
 

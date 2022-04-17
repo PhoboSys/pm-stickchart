@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rawToPricePointsDataMapper = exports.rawNewToPricePointsDataMapper = exports.singleRawToPricePointDataMapper = exports.pricePointsToPricesDataMapper = void 0;
+exports.pricePointToDateMapper = exports.rawToPricePointsDataMapper = exports.rawNewToPricePointsDataMapper = exports.singleRawToPricePointDataMapper = exports.pricePointsToPricesDataMapper = void 0;
 const pricePointsToPricesDataMapper = (pricePoints) => {
     return [pricePoints.price];
 };
@@ -22,4 +22,8 @@ const rawToPricePointsDataMapper = (data) => {
     return data.map(exports.singleRawToPricePointDataMapper);
 };
 exports.rawToPricePointsDataMapper = rawToPricePointsDataMapper;
+const pricePointToDateMapper = (pricePoint) => {
+    return pricePoint.date.valueOf();
+};
+exports.pricePointToDateMapper = pricePointToDateMapper;
 //# sourceMappingURL=mappers.pricepoint.js.map

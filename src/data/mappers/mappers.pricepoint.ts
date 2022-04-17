@@ -25,3 +25,7 @@ export const rawNewToPricePointsDataMapper = (pricePoints: IPricePoint[], raw: I
 export const rawToPricePointsDataMapper = (data: IRawPricePoint[]): IPricePoint[] => {
     return data.map(singleRawToPricePointDataMapper)
 }
+
+export const pricePointToDateMapper = (pricePoint: IPricePoint): number => {
+    return pricePoint.date.valueOf()
+}

@@ -20,6 +20,7 @@ export declare class PriceRange extends Range<number> {
 export declare class DateRange extends Range<Date> {
     static getBeginDistance(mainRange: DateRange, subRange: DateRange): number;
     get length(): number;
+    isContain(date: number): boolean;
     update(value: Date): DateRange;
     moveInMilliseconds(left: number, right: number): DateRange;
     getIntervalsCount(interval: number): number;

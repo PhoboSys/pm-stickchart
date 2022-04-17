@@ -43,6 +43,9 @@ class DateRange extends Range {
     get length() {
         return this.to.valueOf() - this.from.valueOf();
     }
+    isContain(date) {
+        return this.from.valueOf() < date && date < this.to.valueOf();
+    }
     update(value) {
         if (this.from.valueOf() > value.valueOf()) {
             this.from = value;

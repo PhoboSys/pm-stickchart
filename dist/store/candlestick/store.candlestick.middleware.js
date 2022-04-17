@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CandleStickMiddleware = void 0;
+exports.CandleStickViewMiddleware = void 0;
 const enums_1 = require("../../data/enums");
 const store_candlestick_view_1 = require("./store.candlestick.view");
-class CandleStickMiddleware {
+class CandleStickViewMiddleware {
     handle(viewport, state, handler) {
         const view = new store_candlestick_view_1.CandleStickView(state, viewport);
         view.render();
@@ -16,5 +16,5 @@ class CandleStickMiddleware {
     save(state) {
     }
 }
-exports.CandleStickMiddleware = CandleStickMiddleware;
+exports.CandleStickViewMiddleware = CandleStickViewMiddleware;
 //# sourceMappingURL=store.candlestick.middleware.js.map

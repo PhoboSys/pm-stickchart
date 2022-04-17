@@ -19,7 +19,7 @@ export class LinesViewMiddleware implements IMiddleware<IState> {
     shouldSkip(state: IState): boolean {
         const { chartType, dataManager } = state
 
-        return dataManager.data.length < 1 || chartType !== ChartTypes.lines
+        return dataManager.length === 0 || chartType !== ChartTypes.lines
     }
 
     save(state: IState): void {

@@ -5,7 +5,7 @@ import { IMiddleware, IState } from '../../data/interfaces'
 
 import { CandleStickView } from './store.candlestick.view'
 
-export class CandleStickMiddleware implements IMiddleware<IState> {
+export class CandleStickViewMiddleware implements IMiddleware<IState> {
     handle(
         viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
     ): MiddlewareHandler<IState> {
