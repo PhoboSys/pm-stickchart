@@ -1,19 +1,21 @@
+import { EventEmitter } from '../../core/core.eventEmitter'
 import { MiddlewareHandler } from '../../core/core.middlewareHandler'
 import { Viewport } from '../../core/core.viewport'
 import { ChartTypes } from '../../data/enums'
+import { OutputEventTypes } from '../../data/enums/enum.outputEventTypes'
 import { IMiddleware, IState } from '../../data/interfaces'
 
 import { CandleStickView } from './store.candlestick.view'
 
-export class CandleStickViewMiddleware implements IMiddleware<IState> {
+export class CandleStickViewMiddleware implements IMiddleware {
     handle(
-        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
-    ): MiddlewareHandler<IState> {
+        viewport: Viewport, eventEmitter: EventEmitter<OutputEventTypes>, state: IState, handler: MiddlewareHandler,
+    ): MiddlewareHandler {
         const view = new CandleStickView(state, viewport)
 
         view.render()
 
-        return handler.next(viewport, state)
+        return handler.next(viewport, eventEmitter, state)
     }
 
     shouldSkip(state: IState): boolean {

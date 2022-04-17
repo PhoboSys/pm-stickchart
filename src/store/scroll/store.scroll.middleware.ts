@@ -1,22 +1,26 @@
 import { Viewport, MiddlewareHandler } from '../../core'
+import { EventEmitter } from '../../core/core.eventEmitter'
 import { InputEventTypes } from '../../data/enums'
+import { OutputEventTypes } from '../../data/enums/enum.outputEventTypes'
 import { IMiddleware, IState } from '../../data/interfaces'
 
 import { ScrollEvent } from '../../utils/utils.scrollEvent'
 
 import { ScrollStateReducer } from './store.scroll.reducer'
 
-export class ScrollHandleMiddleware implements IMiddleware<IState> {
+export class ScrollHandleMiddleware implements IMiddleware {
     private lastEvent?: ScrollEvent
 
     public handle(
-        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
-    ): MiddlewareHandler<IState> {
+        viewport: Viewport, eventEmitter: EventEmitter<OutputEventTypes>, state: IState, handler: MiddlewareHandler,
+    ): MiddlewareHandler {
         const reduce = new ScrollStateReducer(state, this.lastEvent)
 
         reduce.reduceState()
 
-        return handler.next(viewport, state)
+        eventEmitter.emit(OutputEventTypes.scroll, 'scrollEvent')
+
+        return handler.next(viewport, eventEmitter, state)
     }
 
     public shouldSkip(state: IState): boolean {

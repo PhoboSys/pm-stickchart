@@ -14,10 +14,12 @@ const store_scroll_middleware_1 = require("../store/scroll/store.scroll.middlewa
 const store_zoom_middleware_1 = require("../store/zoom/store.zoom.middleware");
 const utils_1 = require("../utils");
 const utils_inputEvent_1 = require("../utils/utils.inputEvent");
+const core_eventEmitter_1 = require("./core.eventEmitter");
 const core_middlewareRunner_1 = require("./core.middlewareRunner");
 const core_viewport_1 = require("./core.viewport");
-class StickChart {
+class StickChart extends core_eventEmitter_1.EventEmitter {
     constructor(options) {
+        super();
         this.middlewareRunner = new core_middlewareRunner_1.MiddlewareRunner();
         this.options = Object.assign((0, defaults_1.defaultStickChartOptions)(), options);
         this.application = this.createApplication();
@@ -86,7 +88,7 @@ class StickChart {
     }
     render() {
         this.throwIfStateNotCreated();
-        this.middlewareRunner.run(this.viewport, this.state);
+        this.middlewareRunner.run(this.viewport, this, this.state);
         return this;
     }
     setChartType(type) {

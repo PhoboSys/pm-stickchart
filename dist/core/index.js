@@ -18,4 +18,5 @@ __exportStar(require("./core.stickChart"), exports);
 __exportStar(require("./core.middlewareHandler"), exports);
 __exportStar(require("./core.viewport"), exports);
 __exportStar(require("./core.middlewareRunner"), exports);
+__exportStar(require("./core.eventEmitter"), exports);
 //# sourceMappingURL=index.js.map

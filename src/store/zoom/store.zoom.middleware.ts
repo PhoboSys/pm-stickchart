@@ -1,19 +1,21 @@
 import { Viewport, MiddlewareHandler } from '../../core'
 
+import { EventEmitter } from '../../core/core.eventEmitter'
 import { InputEventTypes } from '../../data/enums'
+import { OutputEventTypes } from '../../data/enums/enum.outputEventTypes'
 import { IMiddleware, IState } from '../../data/interfaces'
 
 import { ZoomStateReducer } from './store.zoom.reducer'
 
-export class ZoomHandleMiddleware implements IMiddleware<IState> {
+export class ZoomHandleMiddleware implements IMiddleware {
     public handle(
-        viewport: Viewport, state: IState, handler: MiddlewareHandler<IState>,
-    ): MiddlewareHandler<IState> {
+        viewport: Viewport, eventEmitter: EventEmitter<OutputEventTypes>, state: IState, handler: MiddlewareHandler,
+    ): MiddlewareHandler {
         const reducer = new ZoomStateReducer(state)
 
         reducer.reduceState()
 
-        return handler.next(viewport, state)
+        return handler.next(viewport, eventEmitter, state)
     }
 
     public shouldSkip(state: IState): boolean {

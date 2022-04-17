@@ -4,10 +4,10 @@ exports.ZoomHandleMiddleware = void 0;
 const enums_1 = require("../../data/enums");
 const store_zoom_reducer_1 = require("./store.zoom.reducer");
 class ZoomHandleMiddleware {
-    handle(viewport, state, handler) {
+    handle(viewport, eventEmitter, state, handler) {
         const reducer = new store_zoom_reducer_1.ZoomStateReducer(state);
         reducer.reduceState();
-        return handler.next(viewport, state);
+        return handler.next(viewport, eventEmitter, state);
     }
     shouldSkip(state) {
         var _a;

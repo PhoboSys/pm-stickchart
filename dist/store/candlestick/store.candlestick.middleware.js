@@ -4,10 +4,10 @@ exports.CandleStickViewMiddleware = void 0;
 const enums_1 = require("../../data/enums");
 const store_candlestick_view_1 = require("./store.candlestick.view");
 class CandleStickViewMiddleware {
-    handle(viewport, state, handler) {
+    handle(viewport, eventEmitter, state, handler) {
         const view = new store_candlestick_view_1.CandleStickView(state, viewport);
         view.render();
-        return handler.next(viewport, state);
+        return handler.next(viewport, eventEmitter, state);
     }
     shouldSkip(state) {
         const { chartType, dataManager } = state;

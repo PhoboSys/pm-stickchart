@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.IntervalsHandlerMiddleware = void 0;
 const store_intervls_reducer_1 = require("./store.intervls.reducer");
 class IntervalsHandlerMiddleware {
-    handle(viewport, state, handler) {
+    handle(viewport, eventEmitter, state, handler) {
         const reducer = new store_intervls_reducer_1.IntervalsStateReducer(state);
         reducer.reduceState();
-        return handler.next(viewport, state);
+        return handler.next(viewport, eventEmitter, state);
     }
     shouldSkip(state) {
         return false;

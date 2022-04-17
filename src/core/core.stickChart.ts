@@ -1,5 +1,6 @@
 import { EmittedEvent } from '../data/aliases/aliases.emittedEvent'
 import { ChartTypes, InputEventTypes } from '../data/enums'
+import { OutputEventTypes } from '../data/enums/enum.outputEventTypes'
 import { IState, IRawPricePoint, IPricePoint, IStick } from '../data/interfaces'
 import { IStickChartOptions, IRenderConfig, IBasicConfig } from '../data/interfaces/interface.stickChart'
 import { rawDataMappersMap, newRawDataMappersMap } from '../data/maps'
@@ -21,11 +22,12 @@ import { ZoomHandleMiddleware } from '../store/zoom/store.zoom.middleware'
 import { DataManager } from '../utils'
 import { ChartInputEvent } from '../utils/utils.inputEvent'
 
+import { EventEmitter } from './core.eventEmitter'
 import { MiddlewareRunner } from './core.middlewareRunner'
 import { Viewport } from './core.viewport'
 
-export class StickChart {
-    private middlewareRunner = new MiddlewareRunner<IState>()
+export class StickChart extends EventEmitter<OutputEventTypes> {
+    private middlewareRunner = new MiddlewareRunner()
 
     private viewport: Viewport
 
@@ -38,6 +40,8 @@ export class StickChart {
     constructor(
         options: Partial<IStickChartOptions>,
     ) {
+        super()
+
         this.options = Object.assign(defaultStickChartOptions(), options)
 
         this.application = this.createApplication()
@@ -131,7 +135,7 @@ export class StickChart {
     public render(): StickChart {
         this.throwIfStateNotCreated()
 
-        this.middlewareRunner.run(this.viewport, this.state)
+        this.middlewareRunner.run(this.viewport, this, this.state)
 
         return this
     }

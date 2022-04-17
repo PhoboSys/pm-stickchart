@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScrollHandleMiddleware = void 0;
 const enums_1 = require("../../data/enums");
+const enum_outputEventTypes_1 = require("../../data/enums/enum.outputEventTypes");
 const store_scroll_reducer_1 = require("./store.scroll.reducer");
 class ScrollHandleMiddleware {
-    handle(viewport, state, handler) {
+    handle(viewport, eventEmitter, state, handler) {
         const reduce = new store_scroll_reducer_1.ScrollStateReducer(state, this.lastEvent);
         reduce.reduceState();
-        return handler.next(viewport, state);
+        eventEmitter.emit(enum_outputEventTypes_1.OutputEventTypes.scroll, 'scrollEvent');
+        return handler.next(viewport, eventEmitter, state);
     }
     shouldSkip(state) {
         var _a;

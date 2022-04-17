@@ -4,10 +4,10 @@ exports.LinesViewMiddleware = void 0;
 const enums_1 = require("../../data/enums");
 const store_lines_view_1 = require("./store.lines.view");
 class LinesViewMiddleware {
-    handle(viewport, state, handler) {
+    handle(viewport, eventEmitter, state, handler) {
         const view = new store_lines_view_1.LinesView(state, viewport);
         view.render();
-        return handler.next(viewport, state);
+        return handler.next(viewport, eventEmitter, state);
     }
     shouldSkip(state) {
         const { chartType, dataManager } = state;

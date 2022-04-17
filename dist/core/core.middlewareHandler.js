@@ -6,15 +6,15 @@ class MiddlewareHandler {
         this.middlewares = middlewares;
         this.state = state;
     }
-    next(viewport, state) {
+    next(viewport, eventEmitter, state) {
         const { middlewares } = this;
         const middleware = middlewares.at(0);
         if (middleware === undefined)
             return this;
         const nextHandler = new MiddlewareHandler(middlewares.slice(1), state);
         if (middleware.shouldSkip(state))
-            return nextHandler.next(viewport, state);
-        const handled = middleware.handle(viewport, state, nextHandler);
+            return nextHandler.next(viewport, eventEmitter, state);
+        const handled = middleware.handle(viewport, eventEmitter, state, nextHandler);
         middleware.save(state);
         return handled;
     }

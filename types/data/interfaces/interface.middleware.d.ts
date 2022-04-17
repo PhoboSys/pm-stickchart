@@ -1,7 +1,8 @@
-import { MiddlewareHandler } from '../../core/core.middlewareHandler';
-import { Viewport } from '../../core/core.viewport';
-export interface IMiddleware<T> {
-    handle(viewport: Viewport, state: T, handler: MiddlewareHandler<T>): MiddlewareHandler<T>;
-    shouldSkip(state: T): boolean;
-    save(state: T): void;
+import { MiddlewareHandler, EventEmitter, Viewport } from '../../core';
+import { OutputEventTypes } from '../enums/enum.outputEventTypes';
+import { IState } from '.';
+export interface IMiddleware {
+    handle(viewport: Viewport, eventEmitter: EventEmitter<OutputEventTypes>, state: IState, handler: MiddlewareHandler): MiddlewareHandler;
+    shouldSkip(state: IState): boolean;
+    save(state: IState): void;
 }

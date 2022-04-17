@@ -1,9 +1,10 @@
-import { IMiddleware } from '../data/interfaces';
+import { OutputEventTypes } from '../data/enums/enum.outputEventTypes';
+import { IMiddleware, IState } from '../data/interfaces';
 import { MiddlewareHandler } from './core.middlewareHandler';
-import { Viewport } from '.';
-export declare class MiddlewareRunner<T> {
-    middlewares: IMiddleware<T>[];
-    constructor(middlewares?: IMiddleware<T>[]);
-    add(middleware: IMiddleware<T>): void;
-    run(viewport: Viewport, state: T): MiddlewareHandler<T>;
+import { Viewport, EventEmitter } from '.';
+export declare class MiddlewareRunner {
+    middlewares: IMiddleware[];
+    constructor(middlewares?: IMiddleware[]);
+    add(middleware: IMiddleware): void;
+    run(viewport: Viewport, eventEmitter: EventEmitter<OutputEventTypes>, state: IState): MiddlewareHandler;
 }
