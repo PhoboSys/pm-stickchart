@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 [ "$DEBUG_BOOTING" == 'true' ] && set -x
 
 SCRIPTS_DIR="`dirname "$(realpath "$0")"`"
@@ -9,7 +9,7 @@ START_SCRIPT='
       -n "Lint,Node"             \
       -c "cyan.bold,green.bold"  \
       "npm run lint"             \
-      "npm run build"
+      "rm -rf dist/ && npm run build"
   '
 
 if [ "$WATCH_FILES" = "true" ]; then
@@ -19,7 +19,7 @@ if [ "$WATCH_FILES" = "true" ]; then
   chokidar                       \
     src/**                       \
     -c "$START_SCRIPT"           \
-    --debounce 500               \
+    --debounce 100               \
     --initial                    \
     --silent
 

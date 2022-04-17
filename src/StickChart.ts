@@ -1,0 +1,60 @@
+import { EChartType } from './enums'
+import { Application } from './lib/pixi'
+
+import { Logger } from './infra'
+import { RenderingPipelineFactory, GraphicRenderer, ChartData } from './rendering'
+
+export class StickChart {
+
+    private logger = new Logger('pm')
+
+    private renderer: GraphicRenderer
+
+    private application: Application
+
+    constructor(
+        private stageElement: HTMLInputElement,
+        private chartType: EChartType
+    ) {
+        this.application = new Application({
+            resizeTo: stageElement,
+            antialias: true,
+            resolution: window.devicePixelRatio,
+            autoDensity: true,
+            autoStart: false,
+
+            backgroundColor: 0x202124,
+            backgroundAlpha: 1,
+        })
+
+        this.renderer = new GraphicRenderer(this.application.stage)
+
+        // stageElement.onwheel = (ev) => this.addInputEventHandler(ev, EInputEvent.zoom)
+        // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
+    }
+
+    public get canvas(): HTMLCanvasElement {
+        return this.application.view
+    }
+
+    public render(
+        chartdata: ChartData,
+        charttype: EChartType
+    ): void {
+        const pipelineFactory = new RenderingPipelineFactory(this.renderer)
+        const pipeline = pipelineFactory.get(charttype)
+        const context = {
+            chartdata,
+            screen: this.application.screen
+        }
+        pipeline.render(
+            context,
+            () => this.application.render()
+        )
+    }
+
+    public destroy() {
+        this.application.destroy()
+        this.logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
+    }
+}
