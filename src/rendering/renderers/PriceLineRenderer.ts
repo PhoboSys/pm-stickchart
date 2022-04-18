@@ -1,4 +1,5 @@
-import { config } from '../../config'
+import config from '../../config'
+
 import { Graphics } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
 
@@ -39,7 +40,7 @@ export class PriceLineRenderer extends BaseRenderer {
 
         const xdata = Object.keys(context.chartdata).map(k => Number(k))
         const ydata = Object.values(context.chartdata)
-        const xrange = datamath.range(xdata, 0)
+        const xrange = datamath.range(xdata, -0.1)
         const yrange = datamath.range(ydata)
         const xpercent = datamath.percent(xdata, xrange)
         const ypercent = datamath.percent(ydata, yrange)
@@ -47,6 +48,7 @@ export class PriceLineRenderer extends BaseRenderer {
         let result: any = null
         const { width, height } = context.screen
         for (const idx in xpercent) {
+
             const xp = xpercent[idx]
             const yp = ypercent[idx]
 

@@ -1,22 +1,11 @@
+import config from './config'
+
 import { EChartType } from './enums'
+import { ZoomEvent } from './events'
 import { Application } from './lib/pixi'
 
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer, ChartData } from './rendering'
-
-class ZoomEvent extends Event {
-
-    public inner: WheelEvent
-    public zoom: number
-
-    constructor(name, inner: WheelEvent) {
-        super(name)
-
-        this.inner = inner
-        this.zoom = 0.01 * Math.sign(inner.deltaY)
-    }
-
-}
 
 export class StickChart extends EventTarget {
 
@@ -31,10 +20,11 @@ export class StickChart extends EventTarget {
         super()
         this.application = new Application({
             resizeTo: stageElement,
-            antialias: true,
-            resolution: window.devicePixelRatio,
-            autoDensity: true,
-            autoStart: false,
+            antialias: config.antialias,
+            resolution: config.resolution,
+            autoDensity: config.autoDensity,
+            autoStart: config.autoStart,
+            forceCanvas: config.forceCanvas,
 
             backgroundColor: 0x202124,
             backgroundAlpha: 1,
@@ -42,7 +32,7 @@ export class StickChart extends EventTarget {
 
         this.renderer = new PixiGraphicRenderer(this.application.stage)
 
-        stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent('zoom', e))
+        stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent(e))
         // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
     }
 

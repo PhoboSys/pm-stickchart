@@ -1,4 +1,9 @@
-export const config = {
+export default {
     debugtime: false,
-    debugprice: true
+    debugprice: true,
+    forceCanvas: true,
+    autoStart: false,
+    autoDensity: true,
+    antialias: true,
+    resolution: window.devicePixelRatio,
 }

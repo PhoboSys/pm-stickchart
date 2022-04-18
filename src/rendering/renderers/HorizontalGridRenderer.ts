@@ -35,16 +35,18 @@ export class HorizontalGridRenderer extends BaseRenderer {
     ): Graphics {
         const result = new Graphics()
 
-        const data = Object.values(context.chartdata)
-        const range = datamath.range(data, 0, 0)
-        const datasteps = datamath.steps(range)
-        const percentsteps = datamath.percent(datasteps, range)
+        const ydata = Object.values(context.chartdata)
+        const yrange = datamath.range(ydata)
+        const ysteps = datamath.steps(yrange)
+        const ypercent = datamath.percent(ysteps, yrange)
 
         const { width, height } = context.screen
-        for (const idx in percentsteps) {
-            const percent = percentsteps[idx]
-            const value = datasteps[idx]
-            const y = (1 - percent) * height
+        for (const idx in ypercent) {
+
+            const yp = ypercent[idx]
+
+            const y = (1 - yp) * height
+
             result.addChild(
                 GraphicUtils.createLine(
                     [0, y],
@@ -52,7 +54,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                     this.lineStyle
                 ),
                 GraphicUtils.createText(
-                    value,
+                    ysteps[idx],
                     [width, y],
                     this.textStyle,
                     1.1
