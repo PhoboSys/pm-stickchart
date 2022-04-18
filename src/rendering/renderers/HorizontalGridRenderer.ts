@@ -1,4 +1,4 @@
-import { Graphics, LineStyle } from '../../lib/pixi'
+import { Graphics } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
@@ -15,7 +15,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
         super(renderer)
         this.lineStyle = {
             width: 1,
-            color: 0xFFFFFF,
+            color: 0x303550,
             alpha: 1,
         }
         this.textStyle = {
@@ -55,7 +55,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                         value,
                         [width, y],
                         this.textStyle,
-                        1
+                        1.1
                     )
                 )
             }
