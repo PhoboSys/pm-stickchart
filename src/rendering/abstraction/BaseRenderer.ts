@@ -22,6 +22,6 @@ export abstract class BaseRenderer implements IRenderer {
         done()
     }
 
-    public abstract get rendererId(): string
+    public abstract get rendererId(): symbol
     protected abstract create(context: RenderingContext): Graphics
 }

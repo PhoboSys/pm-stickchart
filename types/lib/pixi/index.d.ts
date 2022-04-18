@@ -7,6 +7,5 @@ export * from '@pixi/core';
 export * from '@pixi/app';
 export * from '@pixi/graphics';
 export * from '@pixi/display';
-import { Text, TextStyle } from '@pixi/text';
+export { Text, TextStyle } from '@pixi/text';
 export * as utils from '@pixi/utils';
-export { Text, TextStyle };

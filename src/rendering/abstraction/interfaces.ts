@@ -9,7 +9,7 @@ export interface IRenderer {
 export interface IGraphicRenderer {
     render(
         graphics: Graphics,
-        renderKey: string
+        renderKey: symbol
     ): void
 }
 

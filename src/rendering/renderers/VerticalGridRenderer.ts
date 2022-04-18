@@ -5,7 +5,7 @@ import { BaseRenderer, GraphicUtils } from '..'
 
 export class VerticalGridRenderer extends BaseRenderer {
 
-    static readonly VERTICAL_GRID_ID: string = 'VERTICAL_GRID_ID'
+    static readonly VERTICAL_GRID_ID: symbol = Symbol('VERTICAL_GRID_ID')
 
     private readonly lineStyle: any
 

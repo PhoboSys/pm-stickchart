@@ -7,7 +7,7 @@ export * from '@pixi/core'
 export * from '@pixi/app'
 export * from '@pixi/graphics'
 export * from '@pixi/display'
-import { Text, TextStyle } from '@pixi/text'
+export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 
 import { Application } from '@pixi/app'
@@ -16,5 +16,3 @@ import { TickerPlugin } from '@pixi/ticker'
 
 Renderer.registerPlugin('batch', BatchRenderer)
 Application.registerPlugin(TickerPlugin)
-
-export { Text, TextStyle }

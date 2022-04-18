@@ -5,7 +5,7 @@ import { BaseRenderer, GraphicUtils } from '..'
 
 export class PriceLineRenderer extends BaseRenderer {
 
-    static readonly PRICE_LINE_ID: string = 'PRICE_LINE_ID'
+    static readonly PRICE_LINE_ID: symbol = Symbol('PRICE_LINE_ID')
 
     private readonly lineStyle: any
 

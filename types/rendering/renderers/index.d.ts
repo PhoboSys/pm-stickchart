@@ -1,4 +1,3 @@
-export * from './GraphicRenderer';
 export * from './PriceLineRenderer';
 export * from './VerticalGridRenderer';
 export * from './HorizontalGridRenderer';

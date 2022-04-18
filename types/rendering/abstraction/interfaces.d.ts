@@ -4,5 +4,5 @@ export interface IRenderer {
     render(context: RenderingContext, done: DoneFunction): void;
 }
 export interface IGraphicRenderer {
-    render(graphics: Graphics, renderKey: string): void;
+    render(graphics: Graphics, renderKey: symbol): void;
 }

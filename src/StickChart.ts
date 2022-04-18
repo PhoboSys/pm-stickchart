@@ -2,13 +2,13 @@ import { EChartType } from './enums'
 import { Application } from './lib/pixi'
 
 import { Logger } from './infra'
-import { RenderingPipelineFactory, GraphicRenderer, ChartData } from './rendering'
+import { RenderingPipelineFactory, PixiGraphicRenderer, ChartData } from './rendering'
 
 export class StickChart {
 
     private logger = new Logger('pm')
 
-    private renderer: GraphicRenderer
+    private renderer: PixiGraphicRenderer
 
     private application: Application
 
@@ -27,7 +27,7 @@ export class StickChart {
             backgroundAlpha: 1,
         })
 
-        this.renderer = new GraphicRenderer(this.application.stage)
+        this.renderer = new PixiGraphicRenderer(this.application.stage)
 
         // stageElement.onwheel = (ev) => this.addInputEventHandler(ev, EInputEvent.zoom)
         // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
