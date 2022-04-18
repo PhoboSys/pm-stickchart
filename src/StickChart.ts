@@ -6,8 +6,6 @@ import { RenderingPipelineFactory, PixiGraphicRenderer, ChartData } from './rend
 
 export class StickChart {
 
-    private logger = new Logger('pm')
-
     private renderer: PixiGraphicRenderer
 
     private application: Application
@@ -29,7 +27,7 @@ export class StickChart {
 
         this.renderer = new PixiGraphicRenderer(this.application.stage)
 
-        // stageElement.onwheel = (ev) => this.addInputEventHandler(ev, EInputEvent.zoom)
+        // stageElement.onwheel = (e) => this.dispatchEvent(new Event('zoom', e))
         // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
     }
 
@@ -55,6 +53,6 @@ export class StickChart {
 
     public destroy() {
         this.application.destroy()
-        this.logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
+        Logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
     }
 }

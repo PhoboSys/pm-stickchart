@@ -45,7 +45,7 @@ export class VerticalGridRenderer extends BaseRenderer {
             const percent = percentsteps[idx]
             const value = datasteps[idx]
             if (percent > 0 && percent < 1) {
-                const x = (1 - percent) * width
+                const x = percent * width
                 result.addChild(
                     GraphicUtils.createLine(
                         [x, 0],
@@ -53,7 +53,7 @@ export class VerticalGridRenderer extends BaseRenderer {
                         this.lineStyle
                     ),
                     GraphicUtils.createText(
-                        new Date(value * 1000).toLocaleDateString("en-US"),
+                        value,
                         [x, height],
                         this.textStyle,
                         1.1

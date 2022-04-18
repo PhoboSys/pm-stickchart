@@ -2,29 +2,22 @@ import factory from 'debug'
 
 export class Logger {
 
-    private ns
-    private debuginfo
-    private debugwarn
-    private debugerror
+    private static readonly ns = 'pm:'
+    private static readonly debuginfo = factory(Logger.ns + ':info')
+    private static readonly debugwarn = factory(Logger.ns + ':error')
+    private static readonly debugerror = factory(Logger.ns + ':warn')
 
-    constructor (namespace: string) {
-        this.ns = namespace
-        this.debuginfo = factory(this.ns + ':info')
-        this.debugwarn = factory(this.ns + ':warn')
-        this.debugerror = factory(this.ns + ':error')
+    public static info(...args: any[]) {
+        Logger.debuginfo(...args)
     }
 
-    public info(...args: any[]) {
-        this.debuginfo(...args)
-    }
-
-    public error(...args: any[]) {
-        this.debugerror(...args)
+    public static error(...args: any[]) {
+        Logger.debugerror(...args)
         console.error(...args) // eslint-disable-line
     }
 
-    public warn(...args: any[]) {
-        this.debugwarn(...args)
+    public static warn(...args: any[]) {
+        Logger.debugwarn(...args)
     }
 
 }

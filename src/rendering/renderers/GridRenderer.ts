@@ -10,8 +10,8 @@ export class GridRenderer implements IRenderer {
        private readonly renderer: IGraphicRenderer
     ) {
         this.compositor = new RenderingCompositor([
-            new HorizontalGridRenderer(renderer),
             new VerticalGridRenderer(renderer),
+            new HorizontalGridRenderer(renderer),
         ])
     }
 

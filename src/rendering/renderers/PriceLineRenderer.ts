@@ -1,4 +1,6 @@
-import { Graphics, LineStyle } from '../../lib/pixi'
+import { config } from '../../config'
+import { Graphics } from '../../lib/pixi'
+import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
@@ -8,6 +10,7 @@ export class PriceLineRenderer extends BaseRenderer {
     static readonly PRICE_LINE_ID: symbol = Symbol('PRICE_LINE_ID')
 
     private readonly lineStyle: any
+    private readonly textStyle: any
 
     constructor(renderer: IGraphicRenderer) {
         super(renderer)
@@ -18,36 +21,61 @@ export class PriceLineRenderer extends BaseRenderer {
             join: 'round',
             cap: 'round',
         }
+        this.textStyle = {
+            fill: 0xB7BDD7,
+            fontWeight: 500,
+            fontFamily: 'Gilroy',
+            fontSize: 12,
+        }
     }
 
     public get rendererId() {
         return PriceLineRenderer.PRICE_LINE_ID
     }
 
-    private convert(
-        pricepoint: number,
-        timestamp: number,
-        context: RenderingContext,
-    ): [number, number] {
-
-        return [
-            1000*Math.random(),
-            1000*Math.random()
-        ]
-
-    }
-
     protected create(
         context: RenderingContext,
     ): Graphics {
-        let result = GraphicUtils.startLine([0, 0], this.lineStyle)
 
-        const { chartdata } = context
-        for (const timestamp in chartdata) {
-            const pricepoint = chartdata[timestamp]
+        const xdata = Object.keys(context.chartdata).map(k => Number(k))
+        const ydata = Object.values(context.chartdata)
+        const xrange = datamath.range(xdata)
+        const yrange = datamath.range(ydata)
+        const xpercent = datamath.percent(xdata, xrange)
+        const ypercent = datamath.percent(ydata, yrange)
 
-            const point = this.convert(pricepoint, +timestamp, context)
-            result = GraphicUtils.lineTo(result, point, this.lineStyle)
+        let result: any = null
+        const { width, height } = context.screen
+        for (const idx in xpercent) {
+            const xp = xpercent[idx]
+            const yp = ypercent[idx]
+
+            const x = xp * width
+            const y = (1 - yp) * height
+
+            if (!result) result = GraphicUtils.startLine([x, y], this.lineStyle)
+            else         result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+
+            if (config.debugtime) {
+                result.addChild(
+                    GraphicUtils.createText(
+                        xdata[idx],
+                        [x, y],
+                        this.textStyle,
+                        1
+                    )
+                )
+            }
+            if (config.debugprice) {
+                result.addChild(
+                    GraphicUtils.createText(
+                        ydata[idx],
+                        [x, y],
+                        this.textStyle,
+                        0
+                    )
+                )
+            }
         }
 
         return result
