@@ -39,7 +39,7 @@ export class PriceLineRenderer extends BaseRenderer {
 
         const xdata = Object.keys(context.chartdata).map(k => Number(k))
         const ydata = Object.values(context.chartdata)
-        const xrange = datamath.range(xdata)
+        const xrange = datamath.range(xdata, 0)
         const yrange = datamath.range(ydata)
         const xpercent = datamath.percent(xdata, xrange)
         const ypercent = datamath.percent(ydata, yrange)

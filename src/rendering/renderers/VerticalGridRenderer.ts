@@ -36,7 +36,7 @@ export class VerticalGridRenderer extends BaseRenderer {
         const result = new Graphics()
 
         const data = Object.keys(context.chartdata).map(k => Number(k))
-        const range = datamath.range(data)
+        const range = datamath.range(data, 0, 0)
         const datasteps = datamath.steps(range)
         const percentsteps = datamath.percent(datasteps, range)
 
@@ -44,22 +44,20 @@ export class VerticalGridRenderer extends BaseRenderer {
         for (const idx in percentsteps) {
             const percent = percentsteps[idx]
             const value = datasteps[idx]
-            if (percent > 0 && percent < 1) {
-                const x = percent * width
-                result.addChild(
-                    GraphicUtils.createLine(
-                        [x, 0],
-                        [x, height],
-                        this.lineStyle
-                    ),
-                    GraphicUtils.createText(
-                        value,
-                        [x, height],
-                        this.textStyle,
-                        1.1
-                    )
+            const x = percent * width
+            result.addChild(
+                GraphicUtils.createLine(
+                    [x, 0],
+                    [x, height],
+                    this.lineStyle
+                ),
+                GraphicUtils.createText(
+                    value,
+                    [x, height],
+                    this.textStyle,
+                    1.1
                 )
-            }
+            )
         }
 
         return result

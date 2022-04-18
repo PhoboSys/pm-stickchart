@@ -4,7 +4,21 @@ import { Application } from './lib/pixi'
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer, ChartData } from './rendering'
 
-export class StickChart {
+class ZoomEvent extends Event {
+
+    public inner: WheelEvent
+    public zoom: number
+
+    constructor(name, inner: WheelEvent) {
+        super(name)
+
+        this.inner = inner
+        this.zoom = 0.01 * Math.sign(inner.deltaY)
+    }
+
+}
+
+export class StickChart extends EventTarget {
 
     private renderer: PixiGraphicRenderer
 
@@ -14,6 +28,7 @@ export class StickChart {
         private stageElement: HTMLInputElement,
         private chartType: EChartType
     ) {
+        super()
         this.application = new Application({
             resizeTo: stageElement,
             antialias: true,
@@ -27,7 +42,7 @@ export class StickChart {
 
         this.renderer = new PixiGraphicRenderer(this.application.stage)
 
-        // stageElement.onwheel = (e) => this.dispatchEvent(new Event('zoom', e))
+        stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent('zoom', e))
         // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
     }
 

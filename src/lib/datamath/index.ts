@@ -41,17 +41,23 @@ export default class datamath {
         return result
     }
 
-    static range(data: number[], padding: number = 0.1): [number, number] {
+    static range(
+        data: number[],
+        minpadd: number = 0.1,
+        maxpadd: number = 0.1
+    ): [number, number] {
+
         const [minv, maxv] = datamath.minmax(data)
 
         const min = new Big(minv)
         const max = new Big(maxv)
         const diff = max.minus(min)
-        const padd = diff.times(padding)
+        const mipadd = diff.times(minpadd)
+        const mapadd = diff.times(maxpadd)
 
         return [
-            min.minus(padd).toNumber(),
-            max.plus(padd).toNumber()
+            min.minus(mipadd).toNumber(),
+            max.plus(mapadd).toNumber()
         ]
     }
 
@@ -62,6 +68,8 @@ export default class datamath {
         const min = new Big(minv)
         const max = new Big(maxv)
         const diff = max.minus(min)
+
+        if (diff.eq(0)) return [minv]
 
         const step = diff.round(-diff.e, Big.roundUp).div(10)
         const startMin = min.minus(min.mod(step))
