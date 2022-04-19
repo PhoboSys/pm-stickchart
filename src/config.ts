@@ -2,6 +2,7 @@ export default {
     //debug
     debugtime: false,
     debugprice: false,
+    debuglatest: true,
 
     //events
     zoomspeed: 100,

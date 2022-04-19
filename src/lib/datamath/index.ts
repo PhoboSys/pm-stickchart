@@ -61,17 +61,31 @@ export default class datamath {
         ]
     }
 
-    static steps(
+    static datastep(
         [minv, maxv]: [number, number]
-    ): number[] {
-
+    ): number {
         const min = new Big(minv)
         const max = new Big(maxv)
         const diff = max.minus(min)
 
-        if (diff.eq(0)) return [minv]
+        if (diff.eq(0)) return 0
 
         const step = diff.round(-diff.e, Big.roundUp).div(10)
+
+        return step
+    }
+
+    static steps(
+        [minv, maxv]: [number, number],
+        step?: number
+    ): number[] {
+
+        step = step || datamath.datastep([minv, maxv])
+        if (!step) return [minv]
+
+        const min = new Big(minv)
+        const max = new Big(maxv)
+
         const startMin = min.minus(min.mod(step))
 
         const result: number[] = []
@@ -85,4 +99,5 @@ export default class datamath {
 
         return result
     }
+
 }

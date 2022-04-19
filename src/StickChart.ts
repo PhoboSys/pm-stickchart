@@ -40,18 +40,21 @@ export class StickChart extends EventTarget {
         return this.application.view
     }
 
-    public render(
+    public render(context: {
         chartdata: ChartData,
-        charttype: EChartType
-    ): void {
+        charttype: EChartType,
+        pari: any,
+        pool: any
+    }): void {
         const pipelineFactory = new RenderingPipelineFactory(this.renderer)
-        const pipeline = pipelineFactory.get(charttype)
-        const context = {
-            chartdata,
+        const pipeline = pipelineFactory.get(context.charttype)
+        const ctx = {
+            pool: context.pool,
+            chartdata: context.chartdata,
             screen: this.application.screen
         }
         pipeline.render(
-            context,
+            ctx,
             () => this.application.render()
         )
     }

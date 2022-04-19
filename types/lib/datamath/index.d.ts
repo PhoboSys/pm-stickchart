@@ -4,5 +4,6 @@ export default class datamath {
     static minmax(data: number[]): [number, number];
     static percent(data: number[], [minv, maxv]: [number, number]): number[];
     static range(data: number[], minpadd?: number, maxpadd?: number): [number, number];
-    static steps([minv, maxv]: [number, number]): number[];
+    static datastep([minv, maxv]: [number, number]): number;
+    static steps([minv, maxv]: [number, number], step?: number): number[];
 }
