@@ -1,4 +1,5 @@
 import Big from 'big.js'
+import { off } from 'process'
 
 export default class datamath {
 
@@ -28,17 +29,33 @@ export default class datamath {
         return [minimum, maximum]
     }
 
+    static singlePercent(
+        data: number,
+        [minv, maxv]: [number, number]
+    ) {
+        const scalesize = this.rangeSize([minv, maxv])
+
+        const offset = data - minv
+        return offset / scalesize
+    }
+
     static percent(
         data: number[],
         [minv, maxv]: [number, number]
     ): number[] {
-        const scalesize = maxv - minv
+        const scalesize = this.rangeSize([minv, maxv])
+
         const result: number[] = []
         for (const item of data) {
             const offset = item - minv
             result.push(offset / scalesize)
         }
+
         return result
+    }
+
+    static rangeSize([minv, maxv]: [number, number]) {
+        return Math.abs(maxv - minv)
     }
 
     static range(
