@@ -1,6 +1,7 @@
 declare const _default: {
     debugtime: boolean;
     debugprice: boolean;
+    zoomspeed: number;
     forceCanvas: boolean;
     autoStart: boolean;
     autoDensity: boolean;
