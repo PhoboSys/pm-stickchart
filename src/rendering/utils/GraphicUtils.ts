@@ -81,6 +81,8 @@ export class GraphicUtils {
         const style = new TextStyle(textstyle)
         const text = new Text(String(value), style)
         text.position.set(x, y)
+        text.roundPixels = true
+        text.resolution = Math.ceil(window.devicePixelRatio)
         text.anchor.set(...castArray(anchor))
 
         return text
