@@ -63,8 +63,8 @@ export class ActualPriceRenderer extends BaseRenderer {
         const lastXData = Number(Object.keys(context.chartdata).at(-1))
         const lastYData = context.chartdata[lastXData]
 
-        const xpercent = datamath.singlePercent(lastXData, xrange)
-        const ypercent = datamath.singlePercent(lastYData, yrange)
+        const [xpercent] = datamath.percent([lastXData], xrange)
+        const [ypercent] = datamath.percent([lastYData], yrange)
 
         const { width, height } = context.screen
         const y = height * (1 - ypercent)
