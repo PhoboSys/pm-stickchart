@@ -76,6 +76,17 @@ export default class datamath {
         return step
     }
 
+    static roundpow2(value: number) {
+        value--
+        value |= value >> 1
+        value |= value >> 2
+        value |= value >> 4
+        value |= value >> 8
+        value |= value >> 16
+        value++
+        return value
+    }
+
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
