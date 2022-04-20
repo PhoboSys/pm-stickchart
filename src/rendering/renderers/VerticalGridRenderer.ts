@@ -35,17 +35,15 @@ export class VerticalGridRenderer extends BaseRenderer {
     ): Graphics {
         const result = new Graphics()
 
-        const xdata = Object.keys(context.chartdata).map(k => Number(k))
-        const xrange = datamath.range(xdata, -0.1)
-        const xsteps = datamath.steps(xrange, context.pool.period)
-        const xpercent = datamath.percent(xsteps, xrange)
-
         const { width, height } = context.screen
-        for (const idx in xpercent) {
+        const { xdata, xrange } = context.plotdata
 
-            const xp = xpercent[idx]
+        const xsteps = datamath.steps(xrange, context.pool?.period)
+        const xs = datamath.scale(xsteps, xrange, width)
 
-            const x = xp * width
+        for (const idx in xs) {
+
+            const x = xs[idx]
 
             result.addChild(
                 GraphicUtils.createLine(

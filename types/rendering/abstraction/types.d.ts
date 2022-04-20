@@ -1,10 +1,9 @@
 import { Rectangle } from '../../lib/pixi';
-export declare type ChartData = {
-    [key: number]: number;
-};
+import { ChartData, PlotData } from '../../chartdata';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
     chartdata: ChartData;
+    plotdata: PlotData;
     screen: Rectangle;
 };

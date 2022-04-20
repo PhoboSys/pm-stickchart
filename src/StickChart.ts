@@ -3,9 +3,10 @@ import config from './config'
 import { EChartType } from './enums'
 import { ZoomEvent } from './events'
 import { Application } from './lib/pixi'
+import { DataConverter, ChartData } from './chartdata'
 
 import { Logger } from './infra'
-import { RenderingPipelineFactory, PixiGraphicRenderer, ChartData } from './rendering'
+import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
 
 export class StickChart extends EventTarget {
 
@@ -51,6 +52,7 @@ export class StickChart extends EventTarget {
         const ctx = {
             pool: context.pool,
             chartdata: context.chartdata,
+            plotdata: DataConverter.convert(context.chartdata),
             screen: this.application.screen
         }
         pipeline.render(

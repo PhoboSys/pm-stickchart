@@ -28,23 +28,24 @@ export default class datamath {
         return [minimum, maximum]
     }
 
-    static percent(
+    static scale(
         data: number[],
-        [minv, maxv]: [number, number]
+        [min, max]: [number, number],
+        factor: number = 1
     ): number[] {
-        const scalesize = maxv - minv
+        const scalesize = max - min
         const result: number[] = []
         for (const item of data) {
-            const offset = item - minv
-            result.push(offset / scalesize)
+            const offset = item - min
+            result.push(offset / scalesize * factor)
         }
         return result
     }
 
     static range(
         data: number[],
-        minpadd: number = 0.1,
-        maxpadd: number = 0.1
+        minpadd: number = 0,
+        maxpadd: number = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)

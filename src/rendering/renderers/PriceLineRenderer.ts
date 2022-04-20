@@ -38,23 +38,18 @@ export class PriceLineRenderer extends BaseRenderer {
         context: RenderingContext,
     ): Graphics {
 
-        const xdata = Object.keys(context.chartdata).map(k => Number(k))
-        const ydata = Object.values(context.chartdata)
-        const xrange = datamath.range(xdata, -0.1)
-        const yrange = datamath.range(ydata)
-        const xpercent = datamath.percent(xdata, xrange)
-        const ypercent = datamath.percent(ydata, yrange)
+        const { width, height } = context.screen
+        const { xdata, xrange, ydata, yrange } = context.plotdata
+
+        const xs = datamath.scale(xdata, xrange, width)
+        const ys = datamath.scale(ydata, yrange, height)
 
         let result: any = null
         let prevY: any = null
-        const { width, height } = context.screen
-        for (const idx in xpercent) {
+        for (const idx in xs) {
 
-            const xp = xpercent[idx]
-            const yp = ypercent[idx]
-
-            const x = xp * width
-            const y = (1 - yp) * height
+            const x = xs[idx]
+            const y = height - ys[idx]
 
             if (!result) {
                 result = GraphicUtils.startLine([x, y], this.lineStyle)
@@ -65,7 +60,7 @@ export class PriceLineRenderer extends BaseRenderer {
                 prevY = y
             }
 
-            if (config.debuglatest && +idx+1 === xpercent.length) {
+            if (config.debuglatest && +idx+1 === xs.length) {
                 result.addChild(
                     GraphicUtils.createText(
                         xdata[idx],

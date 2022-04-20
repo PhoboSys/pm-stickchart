@@ -8,5 +8,11 @@ declare const _default: {
     autoDensity: boolean;
     antialias: boolean;
     resolution: number;
+    padding: {
+        left: number;
+        right: number;
+        top: number;
+        bottom: number;
+    };
 };
 export default _default;
