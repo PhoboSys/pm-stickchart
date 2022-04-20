@@ -1,12 +1,3 @@
-import moment from 'moment';
-import { IStickChartStyle, IRawPricePoint } from './data/interfaces';
-import { ChartInputEvent } from './utils/utils.inputEvent';
-import { ValueRange, DateRange } from './utils/utils.range';
-export declare const defaultStickChartStyle: IStickChartStyle;
-export declare const defaultInputEvent: ChartInputEvent;
-export declare const defaultStickChartData: IRawPricePoint[];
-export declare const defaultChartDateRange: () => DateRange;
-export declare const defaultColumnIntervalSize: moment.Duration;
-export declare const defaultStickIntervalSize: moment.Duration;
-export declare const defaultChartValueRange: ValueRange;
-export declare const defaultIntervalRowSize = 1;
+export declare const config: {
+    debugchart: boolean;
+};

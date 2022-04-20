@@ -1,2 +1,2 @@
-export * from './mappers.pricepoint';
-export * from './mappers.stick';
+export * from './pricepoint/';
+export * from './stick/';

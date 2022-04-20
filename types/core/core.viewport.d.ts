@@ -1,13 +1,13 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 export declare class Viewport {
-    container: Container;
-    private renderedKeys;
+    private readonly container;
+    private rendered;
     constructor(container: Container);
     render(graphics: Graphics, renderKey: string): void;
-    private renderNew;
-    private rerenderExisted;
-    private findGraphicIndex;
-    destroy(renderIndex: number): void;
-    destroyByKey(renderKey: string): void;
+    private add;
+    private update;
+    private destroy;
+    private exists;
+    private indexOf;
 }

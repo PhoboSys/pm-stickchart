@@ -1,5 +1,7 @@
 import { Duration } from 'moment';
-import { DateRange, ValueRange, ChartInputEvent, DataManager } from '../../utils';
+import { ChartInputEvent } from '../../core';
+import { DataManager } from '../../core/core.dataManager';
+import { DateRange, ValueRange } from '../../utils';
 import { ChartTypes } from '../enums';
 import { IRawPricePoint, IStick, IPricePoint } from '.';
 export interface IStickChartStyle {
@@ -16,6 +18,7 @@ export interface IStickChartStyle {
 export interface IStickChartViewConfig {
     width: number;
     height: number;
+    chartType: ChartTypes;
     stickIntervalSize: Duration;
     columnIntervalSize: Duration;
     dateRange: DateRange;
@@ -23,14 +26,16 @@ export interface IStickChartViewConfig {
 export interface IStickChartOptions {
     style: IStickChartStyle;
     viewConfig: IStickChartViewConfig;
-    chartType: ChartTypes;
-    dataManager: DataManager<IPricePoint | IStick, IRawPricePoint>;
+    data: IRawPricePoint[];
 }
 export interface IStickChartRenderConfig {
     dateRange: DateRange;
     valueRange: ValueRange;
     columnIntervalSize: Duration;
     rowIntervalSize: number;
+    stickIntervalSize?: Duration;
+    dataManager?: DataManager<IPricePoint | IStick>;
+    backgroundAlpha: 0;
 }
 export interface IStickChartState extends IStickChartOptions {
     renderConfig: IStickChartRenderConfig;

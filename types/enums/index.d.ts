@@ -1,2 +1,1 @@
-export * from './enum.inputEventTypes';
-export * from './enum.chartTypes';
+export * from './EChartType';

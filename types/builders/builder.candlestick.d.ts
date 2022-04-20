@@ -1,6 +1,7 @@
 import { Graphics } from '@pixi/graphics';
 import { IBuilder, IStick, IStickChartStyle } from '../data/interfaces';
-import { ValueRange, DateRange } from '../utils';
+import { ValueRange } from '../utils';
+import { DateRange } from '../utils/utils.dateRange';
 export declare class CandleStickBuilder extends Graphics implements IBuilder {
     private stick;
     private style;
