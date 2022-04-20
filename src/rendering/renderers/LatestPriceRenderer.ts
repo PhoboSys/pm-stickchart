@@ -72,7 +72,7 @@ export class LatestPriceRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const lastXData = Number(ydata.at(-1))
+        const lastXData = Number(xdata.at(-1))
         const lastYData = Number(ydata.at(-1))
         const [x] = datamath.scale([lastXData], xrange, width)
         const [yr] = datamath.scale([lastYData], yrange, height)
