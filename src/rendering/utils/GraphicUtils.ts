@@ -1,3 +1,4 @@
+import { ITextStyle } from '@pixi/text'
 import { castArray } from 'lodash'
 
 import { Graphics, LineStyle, Text, TextStyle } from '../../lib/pixi'
@@ -12,27 +13,63 @@ export class GraphicUtils {
 
         const cirl = new Graphics()
             .beginFill(backgroundColor)
-            .drawCircle(x, y, radius)
+            .drawCircle(0, 0, radius)
             .endFill()
 
+        cirl.position.set(x, y)
         return cirl
     }
 
     static createRoundedRect(
-        [x1, y1]: [number, number],
+        [x, y]: [number, number],
         [width, height]: [number, number],
-        backgroundColor: number,
-        radius: number,
+        { color, radius }
     ): Graphics {
-
         const rect = new Graphics()
-            .beginFill(backgroundColor)
-            .drawRoundedRect(x1, y1, width, height, radius)
+            .beginFill(color)
+            .drawRoundedRect(0, 0, width, height, radius)
             .endFill()
 
+        rect.position.set(x, y)
         return rect
     }
 
+    static createCoveredText(
+        value: any,
+        [x, y]: [number, number],
+        textstyle,
+        style: { paddingx, paddingy, color, radius, anchorx, anchory },
+    ) {
+        const { anchorx, anchory } = style
+
+        const text = GraphicUtils.createText(
+            value,
+            [0, 0],
+            textstyle,
+            [anchorx, anchory]
+        )
+
+        const textx = -text.width * anchorx
+        const texty = -text.height * anchory
+
+        const { paddingx, paddingy } = style
+        const coverx = textx - paddingx
+        const covery = texty - paddingy
+
+        const coverwidth = text.width + paddingx * 2
+        const coverheight = text.height + paddingy * 2
+
+        const cover = GraphicUtils.createRoundedRect(
+            [coverx, covery,],
+            [coverwidth, coverheight,],
+            style,
+        )
+
+        const coveredText = new Graphics()
+        coveredText.addChild(cover, text)
+        coveredText.position.set(x, y)
+        return coveredText
+    }
     static createLine(
         [x1, y1]: [number, number],
         [x2, y2]: [number, number],
