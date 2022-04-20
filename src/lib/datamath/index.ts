@@ -87,10 +87,17 @@ export default class datamath {
         return value
     }
 
+    static stepsize(
+        [minv, maxv]: [number, number],
+        stepscount: number
+    ) {
+        return (maxv - minv) / stepscount
+    }
+
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
-        maxsteps: number = 20,
+        maxsteps?: number,
     ): number[] {
 
         if (!stepsize) return [minv]
@@ -106,7 +113,7 @@ export default class datamath {
         const amount = diff.div(stepsize)
 
         let sample = 1
-        if (amount.gt(maxsteps)) {
+        if (maxsteps && amount.gt(maxsteps)) {
             sample = amount.div(maxsteps).round(0, Big.roundUp)
         }
 

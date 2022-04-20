@@ -10,42 +10,108 @@ export class PoolRenderer extends BaseRenderer {
 
     static readonly POOL_ID: symbol = Symbol('POOL_ID')
 
-    private readonly lineStyle: any
-    private readonly textStyle: any
-    private readonly textCoverStyle: any
-    private readonly pointStyle: any
+    private readonly openPoolStyle: any
+    private readonly lockPoolStyle: any
+    private readonly resolutionPoolStyle: any
 
     constructor(renderer: IGraphicRenderer) {
         super(renderer)
-        this.lineStyle = {
+
+        const basicLineStyle = {
             width: 2,
-            color: 0x00A573,
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 6,
+            torusPadding: 5,
         }
 
-        this.textStyle = {
-            fill: 0xFFFFFF,
+        const basicTorusStyle = {
+            innerr: 2.5,
+            outterr: 5,
+        }
+
+        const basicTextNameStyle = {
             fontWeight: 600,
             fontFamily: 'Gilroy',
-            fontSize: 13,
+            fontSize: 12,
         }
 
-        this.textCoverStyle = {
-            color: 0x00A573,
-            childPadding: 10,
+        const basicCoveredTextStyle = {
+            radius: 20,
             paddingx: 10,
             paddingy: 5,
-            anchorx: 1.5,
-            anchory: 0.5,
-            radius: 30,
+            linePadding: 5,
         }
 
-        this.pointStyle = {
-            color: 0xFFFFFF,
-            radius: 5
+        this.openPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 20,
+            linestyle: {
+                ...basicLineStyle,
+                color: 0xB7BDD7,
+            },
+            torusstyle: {
+                ...basicTorusStyle,
+                color: 0xB7BDD7,
+
+            },
+            coveredNameStyle: {
+                ...basicCoveredTextStyle,
+                textstyle: {
+                    ...basicTextNameStyle,
+                    fill: 0x303550,
+                },
+                linePadding: -5,
+                color: 0xB7BDD7,
+                anchorx: 1,
+                anchory: 0,
+            }
+        }
+
+        this.lockPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 20,
+            linestyle: {
+                ...basicLineStyle,
+                color: 0x00A573,
+            },
+            torusstyle: {
+                ...basicTorusStyle,
+                color: 0x00A573
+            },
+            coveredNameStyle: {
+                ...basicCoveredTextStyle,
+                textstyle: {
+                    ...basicTextNameStyle,
+                    fill: 0xFFFFFF,
+                },
+                color: 0x00A573,
+                anchorx: 0,
+                anchory: 0,
+            }
+        }
+
+        this.resolutionPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 20,
+            linestyle: {
+                ...basicLineStyle,
+                color: 0xF05350,
+            },
+            torusstyle: {
+                ...basicTorusStyle,
+                color: 0xF05350
+            },
+            coveredNameStyle: {
+                ...basicCoveredTextStyle,
+                textstyle: {
+                    ...basicTextNameStyle,
+                    fill: 0xFFFFFF,
+                },
+                color: 0xF05350,
+                anchorx: 0,
+                anchory: 0,
+            }
         }
     }
 
@@ -56,13 +122,26 @@ export class PoolRenderer extends BaseRenderer {
     protected create(
         context: RenderingContext,
     ): Graphics {
+        if (!context.pool) return new Graphics()
 
         const {
-            xdata,
-            ydata,
+            lockDate,
+            openDate,
+            resolutionDate,
+        } = context.pool
 
+        const openPool = this.createPool(context, 'Open', openDate - 1000, this.openPoolStyle)
+        const lockPool = this.createPool(context, 'Lock', lockDate - 500, this.lockPoolStyle)
+        const resolutionPool = this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle)
+
+        const result = new Graphics()
+        result.addChild(openPool, lockPool, resolutionPool)
+        return result
+    }
+
+    private createPool(context: RenderingContext, name: string, poolDate, style): Graphics {
+        const {
             xrange,
-            yrange,
         } = context.plotdata
 
         const {
@@ -70,9 +149,36 @@ export class PoolRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const result = new Graphics()
-        return result
+        const { paddingTop, paddingBottom } = style
+        const [x] = datamath.scale([poolDate], xrange, width)
+
+        const { coveredNameStyle } = style
+        const { linePadding: coverpadding } = coveredNameStyle
+        const coveredName = GraphicUtils.createCoveredText(
+            name,
+            [x + coverpadding, paddingTop],
+            coveredNameStyle
+        )
+
+        const covery = coveredName.y + coveredName.height
+        const { torusstyle } = style
+        const torus = GraphicUtils.createTorus(
+            [x, covery],
+            [torusstyle.innerr, torusstyle.outterr],
+            torusstyle,
+        )
+
+        const torusy = torus.y + torusstyle.outterr
+        const { linestyle } = style
+        const { torusPadding } = linestyle
+        const line = GraphicUtils.createLine( // TODO: dash-line
+            [x, torusy + torusPadding],
+            [x, height - paddingBottom],
+            style.linestyle
+        )
+
+        const pool = new Graphics()
+        pool.addChild(coveredName, torus, line)
+        return pool
     }
-
-
 }

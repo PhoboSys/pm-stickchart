@@ -10,6 +10,8 @@ export * from '@pixi/display'
 export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 
+import '@pixi/graphics-extras';
+
 import { Application } from '@pixi/app'
 import { Renderer, BatchRenderer } from '@pixi/core'
 import { TickerPlugin } from '@pixi/ticker'

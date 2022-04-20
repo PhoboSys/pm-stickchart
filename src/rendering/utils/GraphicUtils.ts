@@ -1,18 +1,20 @@
-import { ITextStyle } from '@pixi/text'
+import datamath from '../../lib/datamath'
+
 import { castArray } from 'lodash'
 
 import { Graphics, LineStyle, Text, TextStyle } from '../../lib/pixi'
+
 
 export class GraphicUtils {
 
     static createCircle(
         [x, y]: [number, number],
         radius: number,
-        backgroundColor: number,
+        style: { color },
     ): Graphics {
 
         const cirl = new Graphics()
-            .beginFill(backgroundColor)
+            .beginFill(style.color)
             .drawCircle(0, 0, radius)
             .endFill()
 
@@ -20,13 +22,30 @@ export class GraphicUtils {
         return cirl
     }
 
+    static createTorus(
+        [x, y]: [number, number],
+        [innerr, outerr]: [number, number],
+        style: { color, }
+    ) {
+        const torus = new Graphics()
+
+        torus
+            .beginFill(style.color)
+            .drawTorus?.(0, 0, innerr, outerr)
+            .endFill()
+
+        torus.position.set(x, y)
+        return torus
+    }
+
     static createRoundedRect(
         [x, y]: [number, number],
         [width, height]: [number, number],
-        { color, radius }
+        radius: number,
+        style: { color }
     ): Graphics {
         const rect = new Graphics()
-            .beginFill(color)
+            .beginFill(style.color)
             .drawRoundedRect(0, 0, width, height, radius)
             .endFill()
 
@@ -37,39 +56,59 @@ export class GraphicUtils {
     static createCoveredText(
         value: any,
         [x, y]: [number, number],
-        textstyle,
-        style: { paddingx, paddingy, color, radius, anchorx, anchory },
+        style: { textstyle, paddingx, paddingy, color, radius, anchorx, anchory },
     ) {
-        const { anchorx, anchory } = style
+        const { paddingx, paddingy } = style
 
         const text = GraphicUtils.createText(
             value,
-            [0, 0],
-            textstyle,
-            [anchorx, anchory]
+            [paddingx, paddingy],
+            style.textstyle,
+            [0, 0]
         )
-
-        const textx = -text.width * anchorx
-        const texty = -text.height * anchory
-
-        const { paddingx, paddingy } = style
-        const coverx = textx - paddingx
-        const covery = texty - paddingy
 
         const coverwidth = text.width + paddingx * 2
         const coverheight = text.height + paddingy * 2
 
         const cover = GraphicUtils.createRoundedRect(
-            [coverx, covery,],
+            [0, 0],
             [coverwidth, coverheight,],
+            style.radius,
             style,
         )
 
         const coveredText = new Graphics()
         coveredText.addChild(cover, text)
-        coveredText.position.set(x, y)
+
+        const { anchorx, anchory } = style
+        coveredText.position.set(
+            x - cover.width * (anchorx ?? 0),
+            y - cover.height * (anchory ?? 0)
+        )
+
         return coveredText
     }
+
+    static createDashLine( // TODO
+        [x1, y1]: [number, number],
+        [x2, y2]: [number, number],
+        linestyle: LineStyle & { gap, dash }
+    ) {
+        const dashLine = GraphicUtils.startLine([x1, y2], linestyle)
+
+        const ysteps = datamath.steps([y1, y2], linestyle.dash + linestyle.gap)
+        const xsteps = datamath.steps([x1, x2], linestyle.dash + linestyle.gap)
+
+        let xstep = x1
+        for (const ystep of ysteps) {
+            if (ystep !== y1) continue
+
+            dashLine.lineTo(xstep, ystep - linestyle.gap)
+        }
+
+        return dashLine
+    }
+
     static createLine(
         [x1, y1]: [number, number],
         [x2, y2]: [number, number],

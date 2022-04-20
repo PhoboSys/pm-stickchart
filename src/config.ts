@@ -2,7 +2,7 @@ export default {
     //debug
     debugtime: false,
     debugprice: false,
-    debuglatest: true,
+    debuglatest: false,
 
     //events
     zoomspeed: 100,
@@ -11,7 +11,7 @@ export default {
     forceCanvas: true,
     autoStart: false,
     autoDensity: true,
-    antialias: false,
+    antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
 
     //chart
