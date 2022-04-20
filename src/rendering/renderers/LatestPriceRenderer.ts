@@ -23,19 +23,24 @@ export class LatestPriceRenderer extends BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
+            paddingx: 6,
         }
 
         this.textStyle = {
             fill: 0xFFFFFF,
-            fontWeight: 500,
+            fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 13,
-            padding: 20
+            padding: 20,
+            anchorx: 1.5,
+            anchory: 0.5,
         }
 
         this.textCoverStyle = {
             color: 0x00A573,
             childPadding: 10,
+            paddingx: 10,
+            paddingy: 5,
             radius: 30,
         }
 
@@ -79,30 +84,42 @@ export class LatestPriceRenderer extends BaseRenderer {
             this.pointStyle.color,
         )
 
+        const { anchorx, anchory } = this.textStyle
         const text = GraphicUtils.createText(
-            lastYData.toFixed(2),
+            lastYData.toFixed(3),
             [width, y],
             this.textStyle,
-            [1.1, 0.5]
+            [anchorx, anchory]
         )
 
-        const textx = width - text.width * 1.1
+        const textx = width - text.width * anchorx
+        const texty = y - text.height * anchory
 
-        const line = GraphicUtils.createLine(
-            [0, y],
-            [textx, y],
-            this.lineStyle
-        )
-
-        const { childPadding } = this.textCoverStyle
+        const { paddingx, paddingy } = this.textCoverStyle
+        const coverx = textx - paddingx
+        const covery = texty- paddingy
         const textCover = GraphicUtils.createRoundedRect(
-            [textx - childPadding / 2, y - text.height / 2],
-            [text.width + childPadding, text.height],
+            [
+                coverx,
+                covery,
+            ],
+            [
+                text.width + paddingx * 2,
+                text.height + paddingy * 2,
+            ],
             this.textCoverStyle.color,
             this.textCoverStyle.radius,
         )
 
+        const line = GraphicUtils.createLine(
+            [0, y],
+            [coverx - this.lineStyle.paddingx, y],
+            this.lineStyle
+        )
+
+
         const result = new Graphics()
+
         result.addChild(line, textCover, text, point)
 
         return result
