@@ -38,7 +38,8 @@ export class HorizontalGridRenderer extends BaseRenderer {
         const { width, height } = context.screen
         const { ydata, yrange } = context.plotdata
 
-        const ysteps = datamath.steps(yrange)
+        const stepsize = datamath.datastep(yrange)
+        const ysteps = datamath.steps(yrange, stepsize)
         const ys = datamath.scale(ysteps, yrange, height)
 
         for (const idx in ys) {

@@ -38,7 +38,8 @@ export class VerticalGridRenderer extends BaseRenderer {
         const { width, height } = context.screen
         const { xdata, xrange } = context.plotdata
 
-        const xsteps = datamath.steps(xrange, context.pool?.period)
+        const stepsize = context.pool.period
+        const xsteps = datamath.steps(xrange, stepsize)
         const xs = datamath.scale(xsteps, xrange, width)
 
         for (const idx in xs) {
