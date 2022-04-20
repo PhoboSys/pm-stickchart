@@ -46,6 +46,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const ypercent = datamath.percent(ydata, yrange)
 
         let result: any = null
+        let prevY: any = null
         const { width, height } = context.screen
         for (const idx in xpercent) {
 
@@ -55,9 +56,31 @@ export class PriceLineRenderer extends BaseRenderer {
             const x = xp * width
             const y = (1 - yp) * height
 
-            if (!result) result = GraphicUtils.startLine([x, y], this.lineStyle)
-            else         result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+            if (!result) {
+                result = GraphicUtils.startLine([x, y], this.lineStyle)
+                prevY = y
+            } else {
+                result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                prevY = y
+            }
 
+            if (config.debuglatest && +idx+1 === xpercent.length) {
+                result.addChild(
+                    GraphicUtils.createText(
+                        xdata[idx],
+                        [x, y],
+                        this.textStyle,
+                        1
+                    ),
+                    GraphicUtils.createText(
+                        ydata[idx],
+                        [x, y],
+                        this.textStyle,
+                        0
+                    )
+                )
+            }
             if (config.debugtime) {
                 result.addChild(
                     GraphicUtils.createText(

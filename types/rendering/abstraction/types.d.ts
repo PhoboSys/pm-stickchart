@@ -4,6 +4,7 @@ export declare type ChartData = {
 };
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
+    pool: any;
     chartdata: ChartData;
     screen: Rectangle;
 };

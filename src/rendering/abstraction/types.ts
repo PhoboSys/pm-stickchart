@@ -7,7 +7,7 @@ export type ChartData = {
 export type DoneFunction = () => void
 
 export type RenderingContext = {
+    pool: any,
     chartdata: ChartData,
     screen: Rectangle
 }
-
