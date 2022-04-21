@@ -18,8 +18,8 @@ export declare class GraphicUtils {
         anchorx: any;
         anchory: any;
     }): Graphics;
-    static createDashLine(// TODO
-    [x1, y1]: [number, number], [x2, y2]: [number, number], linestyle: LineStyle & {
+    static createVerticalDashLine(// TODO: implement point to point
+    x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
         gap: any;
         dash: any;
     }): Graphics;

@@ -3,6 +3,7 @@ import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+import { DateUtils } from '../utils/DateUtils';
 
 export class VerticalGridRenderer extends BaseRenderer {
 
@@ -53,7 +54,7 @@ export class VerticalGridRenderer extends BaseRenderer {
                     this.lineStyle
                 ),
                 GraphicUtils.createText(
-                    xsteps[idx],
+                    DateUtils.formatUnixTSToHHmm(xsteps[idx]),
                     [x, height],
                     this.textStyle,
                     1.1
