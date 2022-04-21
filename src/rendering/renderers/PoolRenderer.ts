@@ -23,6 +23,8 @@ export class PoolRenderer extends BaseRenderer {
             join: 'round',
             cap: 'round',
             torusPadding: 5,
+            gap: 10,
+            dash: 15,
         }
 
         const basicTorusStyle = {
@@ -171,9 +173,9 @@ export class PoolRenderer extends BaseRenderer {
         const torusy = torus.y + torusstyle.outterr
         const { linestyle } = style
         const { torusPadding } = linestyle
-        const line = GraphicUtils.createLine( // TODO: dash-line
-            [x, torusy + torusPadding],
-            [x, height - paddingBottom],
+        const line = GraphicUtils.createVerticalDashLine( // TODO: dash-line
+            x,
+            [torusy + torusPadding, height - paddingBottom],
             style.linestyle
         )
 

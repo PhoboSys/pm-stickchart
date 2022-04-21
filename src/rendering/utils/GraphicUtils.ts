@@ -89,21 +89,21 @@ export class GraphicUtils {
         return coveredText
     }
 
-    static createDashLine( // TODO
-        [x1, y1]: [number, number],
-        [x2, y2]: [number, number],
+    static createVerticalDashLine( // TODO: implement point to point
+        x: number,
+        [y1, y2]: [number, number],
         linestyle: LineStyle & { gap, dash }
     ) {
-        const dashLine = GraphicUtils.startLine([x1, y2], linestyle)
+        const dashLine = GraphicUtils.startLine([x, y1], linestyle)
 
         const ysteps = datamath.steps([y1, y2], linestyle.dash + linestyle.gap)
-        const xsteps = datamath.steps([x1, x2], linestyle.dash + linestyle.gap)
 
-        let xstep = x1
         for (const ystep of ysteps) {
-            if (ystep !== y1) continue
+            if (ystep === y1) continue
 
-            dashLine.lineTo(xstep, ystep - linestyle.gap)
+            dashLine
+                .lineTo(x, ystep - linestyle.gap)
+                .moveTo(x, ystep)
         }
 
         return dashLine

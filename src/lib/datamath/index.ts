@@ -106,7 +106,7 @@ export default class datamath {
         const max = new Big(maxv)
         const diff = max.minus(min)
 
-        const startMin = min.minus(min.mod(stepsize))
+        // const startMin = min.minus(min.mod(stepsize))
 
         const result: number[] = []
 
@@ -117,9 +117,9 @@ export default class datamath {
             sample = amount.div(maxsteps).round(0, Big.roundUp)
         }
 
-        let cur = startMin
+        let cur = min
         let idx = 0
-        result.push(startMin.toNumber())
+        result.push(min.toNumber())
         while (max.gt(cur)) {
             cur = cur.plus(stepsize)
             if (!(idx % sample)) result.push(cur.toNumber())

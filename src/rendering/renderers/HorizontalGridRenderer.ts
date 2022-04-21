@@ -53,7 +53,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                     this.lineStyle
                 ),
                 GraphicUtils.createText(
-                    ysteps[idx],
+                    ysteps[idx].toFixed(0),
                     [width, y],
                     this.textStyle,
                     1.1
