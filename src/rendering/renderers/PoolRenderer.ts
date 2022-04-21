@@ -130,8 +130,8 @@ export class PoolRenderer extends BaseRenderer {
             resolutionDate,
         } = context.pool
 
-        const openPool = this.createPool(context, 'Open', openDate - 1000, this.openPoolStyle)
-        const lockPool = this.createPool(context, 'Lock', lockDate - 500, this.lockPoolStyle)
+        const openPool = this.createPool(context, 'Open', openDate, this.openPoolStyle)
+        const lockPool = this.createPool(context, 'Lock', lockDate, this.lockPoolStyle)
         const resolutionPool = this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle)
 
         const result = new Graphics()
