@@ -47,7 +47,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.openPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 0,
+            paddingBottom: 5,
             linestyle: {
                 ...basicLineStyle,
                 color: 0xB7BDD7,
@@ -72,7 +72,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.lockPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 0,
+            paddingBottom: 5,
             linestyle: {
                 ...basicLineStyle,
                 color: 0x00A573,
@@ -95,7 +95,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.resolutionPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 0,
+            paddingBottom: 5,
             linestyle: {
                 ...basicLineStyle,
                 color: 0xF05350,
