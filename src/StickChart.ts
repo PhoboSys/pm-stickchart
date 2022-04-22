@@ -27,7 +27,7 @@ export class StickChart extends EventTarget {
             autoStart: config.autoStart,
             forceCanvas: config.forceCanvas,
 
-            backgroundColor: 0x202124,
+            backgroundColor: config.style.background,
             backgroundAlpha: 1,
         })
 
