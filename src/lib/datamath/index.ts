@@ -119,11 +119,10 @@ export default class datamath {
 
         let cur = min
         let idx = 0
-        result.push(min.toNumber())
         while (max.gt(cur)) {
-            cur = cur.plus(stepsize)
             if (!(idx % sample)) result.push(cur.toNumber())
             idx++
+            cur = cur.plus(stepsize)
         }
 
         return result
