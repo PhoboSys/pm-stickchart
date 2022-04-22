@@ -34,8 +34,6 @@ export class StickChart extends EventTarget {
 
         this.renderer = new PixiGraphicRenderer(this.application.stage)
 
-        this.application.stage.interactive = true
-
         stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent(e))
         stageElement.onmousemove = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent(e))
         stageElement.onmouseleave = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent())

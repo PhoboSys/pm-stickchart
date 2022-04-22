@@ -6,16 +6,16 @@ import datamath from '../../lib/datamath'
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
-export class LatestPriceRenderer extends BaseRenderer {
+export class LatestPriceLineRenderer extends BaseRenderer {
 
-    static readonly LATEST_PRICE_ID: symbol = Symbol('LATEST_PRICE_ID')
+    static readonly LATEST_PRICE_LINE_ID: symbol = Symbol('LATEST_PRICE_LINE_ID')
 
     private readonly lineStyle: any
     private readonly textCoverStyle: any
-    private readonly pointStyle: any
 
     constructor(renderer: IGraphicRenderer) {
         super(renderer)
+
         this.lineStyle = {
             width: 2,
             color: 0x00A573,
@@ -40,15 +40,10 @@ export class LatestPriceRenderer extends BaseRenderer {
                 fontSize: 13,
             }
         }
-
-        this.pointStyle = {
-            color: 0xFFFFFF,
-            radius: 5
-        }
     }
 
     public get rendererId() {
-        return LatestPriceRenderer.LATEST_PRICE_ID
+        return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID
     }
 
     protected create(
@@ -57,10 +52,8 @@ export class LatestPriceRenderer extends BaseRenderer {
 
 
         const {
-            xdata,
             ydata,
 
-            xrange,
             yrange,
         } = context.plotdata
 
@@ -69,17 +62,9 @@ export class LatestPriceRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const lastXData = Number(xdata.at(-1))
         const lastYData = Number(ydata.at(-1))
-        const [x] = datamath.scale([lastXData], xrange, width)
         const [yr] = datamath.scale([lastYData], yrange, height)
         const y = height - yr
-
-        const point = GraphicUtils.createCircle(
-            [x, y],
-            this.pointStyle.radius,
-            this.pointStyle,
-        )
 
         const coveredText = GraphicUtils.createCoveredText(
             lastYData.toFixed(3),
@@ -95,9 +80,7 @@ export class LatestPriceRenderer extends BaseRenderer {
         )
 
         const result = new Graphics()
-
-        result.addChild(line, coveredText, point)
-
+        result.addChild(line, coveredText)
         return result
     }
 
