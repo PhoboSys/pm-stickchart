@@ -87,17 +87,10 @@ export default class datamath {
         return value
     }
 
-    static stepsize(
-        [minv, maxv]: [number, number],
-        stepscount: number
-    ) {
-        return (maxv - minv) / stepscount
-    }
-
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
-        maxsteps?: number,
+        maxsteps: number = 20,
     ): number[] {
 
         if (!stepsize) return [minv]
@@ -106,23 +99,24 @@ export default class datamath {
         const max = new Big(maxv)
         const diff = max.minus(min)
 
-        // const startMin = min.minus(min.mod(stepsize))
+        const startMin = min.minus(min.mod(stepsize))
 
         const result: number[] = []
 
         const amount = diff.div(stepsize)
 
         let sample = 1
-        if (maxsteps && amount.gt(maxsteps)) {
+        if (amount.gt(maxsteps)) {
             sample = amount.div(maxsteps).round(0, Big.roundUp)
         }
 
-        let cur = min
+        let cur = startMin
         let idx = 0
+        result.push(startMin.toNumber())
         while (max.gt(cur)) {
+            cur = cur.plus(stepsize)
             if (!(idx % sample)) result.push(cur.toNumber())
             idx++
-            cur = cur.plus(stepsize)
         }
 
         return result

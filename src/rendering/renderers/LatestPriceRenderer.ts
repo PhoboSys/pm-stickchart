@@ -1,10 +1,10 @@
 import { IGraphicRenderer } from '..'
 import { DoneFunction, RenderingContext, IRenderer } from '..'
-import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
-import { PoolRenderer } from '..';
-import { LatestPriceRenderer } from '..';
+import { RenderingCompositor } from '..'
+import { LatestPriceLineRenderer } from './LatestPriceLineRenderer'
+import { LatestPricePointRenderer } from './LatestPricePointRenderer';
 
-export class LineChartRenderer implements IRenderer {
+export class LatestPriceRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
@@ -12,10 +12,8 @@ export class LineChartRenderer implements IRenderer {
        private readonly renderer: IGraphicRenderer
     ) {
         this.compositor = new RenderingCompositor([
-            new GridRenderer(renderer),
-            new PriceLineRenderer(renderer),
-            new PoolRenderer(renderer),
-            new LatestPriceRenderer(renderer),
+            new LatestPriceLineRenderer(renderer),
+            new LatestPricePointRenderer(renderer),
         ])
     }
 
@@ -27,4 +25,5 @@ export class LineChartRenderer implements IRenderer {
     }
 
 }
+
 

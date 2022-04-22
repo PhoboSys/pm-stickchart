@@ -53,7 +53,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         const {
             ydata,
-
             yrange,
         } = context.plotdata
 

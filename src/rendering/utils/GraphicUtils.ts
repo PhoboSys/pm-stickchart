@@ -95,8 +95,14 @@ export class GraphicUtils {
         linestyle: LineStyle & { gap, dash }
     ) {
         const dashLine = GraphicUtils.startLine([x, y1], linestyle)
+        const maxsteps = 100
+        const stepsize = linestyle.dash + linestyle.gap
 
-        const ysteps = datamath.steps([y1, y2], linestyle.dash + linestyle.gap)
+        const ysteps = datamath.steps(
+            [y1+stepsize, y2-stepsize],
+            stepsize,
+            maxsteps
+        )
 
         for (const ystep of ysteps) {
             if (ystep === y1) continue

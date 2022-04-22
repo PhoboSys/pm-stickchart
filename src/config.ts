@@ -11,7 +11,7 @@ export default {
     forceCanvas: true,
     autoStart: false,
     autoDensity: true,
-    antialias: true,
+    antialias: false,
     resolution: Math.ceil(window.devicePixelRatio),
 
     //chart

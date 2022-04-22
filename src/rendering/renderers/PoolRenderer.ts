@@ -19,12 +19,12 @@ export class PoolRenderer extends BaseRenderer {
 
         const basicLineStyle = {
             width: 2,
-            alpha: 1,
+            alpha: 0.7,
             join: 'round',
             cap: 'round',
             torusPadding: 5,
             gap: 10,
-            dash: 15,
+            dash: 10,
         }
 
         const basicTorusStyle = {
@@ -47,7 +47,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.openPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 20,
+            paddingBottom: 0,
             linestyle: {
                 ...basicLineStyle,
                 color: 0xB7BDD7,
@@ -72,7 +72,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.lockPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 20,
+            paddingBottom: 0,
             linestyle: {
                 ...basicLineStyle,
                 color: 0x00A573,
@@ -95,7 +95,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.resolutionPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 20,
+            paddingBottom: 0,
             linestyle: {
                 ...basicLineStyle,
                 color: 0xF05350,
