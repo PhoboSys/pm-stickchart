@@ -7,6 +7,7 @@ import { DataConverter, ChartData } from './chartdata'
 
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
+import { MousemoveEvent } from './events/MousemoveEvent';
 
 export class StickChart extends EventTarget {
 
@@ -27,14 +28,15 @@ export class StickChart extends EventTarget {
             autoStart: config.autoStart,
             forceCanvas: config.forceCanvas,
 
-            backgroundColor: 0x202124,
+            backgroundColor: config.style.background,
             backgroundAlpha: 1,
         })
 
         this.renderer = new PixiGraphicRenderer(this.application.stage)
 
         stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent(e))
-        // addScrollEvent(stageElement, (ev) => this.addInputEventHandler(ev, EInputEvent.scroll))
+        stageElement.onmousemove = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent(e))
+        stageElement.onmouseleave = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent())
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -45,7 +47,8 @@ export class StickChart extends EventTarget {
         chartdata: ChartData,
         charttype: EChartType,
         pari: any,
-        pool: any
+        pool: any,
+        mousepos: any,
     }): void {
         const pipelineFactory = new RenderingPipelineFactory(this.renderer)
         const pipeline = pipelineFactory.get(context.charttype)
@@ -53,8 +56,10 @@ export class StickChart extends EventTarget {
             pool: context.pool,
             chartdata: context.chartdata,
             plotdata: DataConverter.convert(context.chartdata),
-            screen: this.application.screen
+            mousepos: context.mousepos,
+            screen: this.application.screen,
         }
+
         pipeline.render(
             ctx,
             () => this.application.render()

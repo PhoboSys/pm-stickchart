@@ -7,5 +7,6 @@ export type RenderingContext = {
     pool: any,
     chartdata: ChartData,
     plotdata: PlotData,
-    screen: Rectangle
+    screen: Rectangle,
+    mousepos?: { x: number, y: number, }
 }

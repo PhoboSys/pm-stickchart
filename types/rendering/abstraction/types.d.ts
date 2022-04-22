@@ -6,4 +6,8 @@ export declare type RenderingContext = {
     chartdata: ChartData;
     plotdata: PlotData;
     screen: Rectangle;
+    mousepos?: {
+        x: number;
+        y: number;
+    };
 };

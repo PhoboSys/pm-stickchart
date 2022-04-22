@@ -1,7 +1,8 @@
 import { IGraphicRenderer } from '..'
 import { DoneFunction, RenderingContext, IRenderer } from '..'
 import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
-import { LatestPriceRenderer } from '..'
+import { PoolRenderer } from '..';
+import { LatestPriceRenderer } from '..';
 
 export class LineChartRenderer implements IRenderer {
 
@@ -13,6 +14,7 @@ export class LineChartRenderer implements IRenderer {
         this.compositor = new RenderingCompositor([
             new GridRenderer(renderer),
             new PriceLineRenderer(renderer),
+            new PoolRenderer(renderer),
             new LatestPriceRenderer(renderer),
         ])
     }

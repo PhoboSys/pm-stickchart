@@ -2,3 +2,4 @@ export * from './GraphicUtils';
 export * from './RenderingCompositor';
 export * from './RenderingPipelineFactory';
 export * from './PixiGraphicRenderer';
+export * from './DateUtils';

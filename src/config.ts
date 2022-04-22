@@ -2,7 +2,7 @@ export default {
     //debug
     debugtime: false,
     debugprice: false,
-    debuglatest: true,
+    debuglatest: false,
 
     //events
     zoomspeed: 100,
@@ -15,6 +15,9 @@ export default {
     resolution: Math.ceil(window.devicePixelRatio),
 
     //chart
+    style: {
+        background: 0x22273F,
+    },
     padding: {
         left: -0.1, // %
         right: 0.3819, // % golden

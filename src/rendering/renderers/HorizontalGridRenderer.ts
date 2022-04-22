@@ -39,7 +39,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
         const { ydata, yrange } = context.plotdata
 
         const stepsize = datamath.datastep(yrange)
-        const ysteps = datamath.steps(yrange, stepsize)
+        const ysteps = datamath.steps(yrange, stepsize, 20)
         const ys = datamath.scale(ysteps, yrange, height)
 
         for (const idx in ys) {
@@ -53,7 +53,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                     this.lineStyle
                 ),
                 GraphicUtils.createText(
-                    ysteps[idx],
+                    ysteps[idx].toFixed(0),
                     [width, y],
                     this.textStyle,
                     1.1
