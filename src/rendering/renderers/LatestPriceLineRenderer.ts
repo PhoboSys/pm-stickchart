@@ -27,7 +27,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         this.textCoverStyle = {
             color: 0x00A573,
-            childPadding: 10,
             paddingx: 10,
             paddingy: 5,
             anchorx: 1.1,

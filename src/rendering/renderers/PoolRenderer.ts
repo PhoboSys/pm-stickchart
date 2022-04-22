@@ -13,6 +13,8 @@ export class PoolRenderer extends BaseRenderer {
     private readonly openPoolStyle: any
     private readonly lockPoolStyle: any
     private readonly resolutionPoolStyle: any
+    private readonly openPricePointStyle: any
+    private readonly resolutionPricePointStyle: any
 
     constructor(renderer: IGraphicRenderer) {
         super(renderer)
@@ -115,6 +117,40 @@ export class PoolRenderer extends BaseRenderer {
                 anchory: 0,
             }
         }
+
+        this.openPricePointStyle = {
+            circlstyle: {
+                inner: {
+                    color: 0x303550,
+                    radius: 3,
+                    alpha: 1,
+                },
+                outer: {
+                    radius: 6,
+                    color: 0xB7BDD7,
+                    alpha: 1,
+                }
+            },
+            linestyle: {
+                color: 0xB7BDD7,
+                width: 1,
+                alpha: 0.7,
+            },
+            textCoverStyle: {
+                color: 0xB7BDD7,
+                paddingx: 10,
+                paddingy: 2,
+                anchorx: 1.1,
+                anchory: 0.5,
+                radius: 10,
+                textstyle: {
+                    fill: 0x303550,
+                    fontWeight: 600,
+                    fontFamily: 'Gilroy',
+                    fontSize: 13,
+                }
+            }
+        }
     }
 
     public get rendererId() {
@@ -130,15 +166,70 @@ export class PoolRenderer extends BaseRenderer {
             lockDate,
             openDate,
             resolutionDate,
+            openPrice,
         } = context.pool
 
-        const openPool = this.createPool(context, 'Open', openDate, this.openPoolStyle)
-        const lockPool = this.createPool(context, 'Lock', lockDate, this.lockPoolStyle)
-        const resolutionPool = this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle)
-
         const result = new Graphics()
-        result.addChild(openPool, lockPool, resolutionPool)
+        result.addChild(
+            this.createPool(context, 'Open', openDate, this.openPoolStyle),
+            this.createPool(context, 'Lock', lockDate, this.lockPoolStyle),
+            this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle),
+
+        )
+        if (openPrice) {
+            result.addChild(
+                this.createPrice(context, openPrice, this.openPricePointStyle)
+            )
+        }
+
         return result
+    }
+
+    private createPrice(
+        context: RenderingContext,
+        pricePoint,
+        { circlstyle, linestyle, textCoverStyle }
+    ) {
+
+        const {
+            xrange,
+            yrange,
+        } = context.plotdata
+
+        const {
+            width,
+            height,
+        } = context.screen
+
+        const [x] = datamath.scale([pricePoint.timestamp], xrange, width)
+        const [yr] = datamath.scale([pricePoint.value], yrange, height)
+        const y = height - yr
+
+        const outer = GraphicUtils.createCircle(
+            [x, y],
+            circlstyle.outer.radius,
+            circlstyle.outer,
+        )
+        const inner = GraphicUtils.createCircle(
+            [x, y],
+            circlstyle.inner.radius,
+            circlstyle.inner,
+        )
+        const line = GraphicUtils.createLine(
+            [0, y],
+            [width, y],
+            linestyle,
+        )
+
+        const coveredText = GraphicUtils.createCoveredText(
+            pricePoint.value.toFixed(3),
+            [width, y],
+            textCoverStyle,
+        )
+
+        const price = new Graphics()
+        price.addChild(line, outer, inner, coveredText)
+        return price
     }
 
     private createPool(context: RenderingContext, name: string, poolDate, style): Graphics {
@@ -180,7 +271,7 @@ export class PoolRenderer extends BaseRenderer {
         )
 
         const pool = new Graphics()
-        pool.addChild(coveredName, torus, line)
+        pool.addChild(line, torus, coveredName)
         return pool
     }
 }
