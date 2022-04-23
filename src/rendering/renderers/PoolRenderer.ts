@@ -222,7 +222,7 @@ export class PoolRenderer extends BaseRenderer {
         )
 
         const coveredText = GraphicUtils.createCoveredText(
-            pricePoint.value.toFixed(3),
+            datamath.toFixedPrecisionisionisionisionisionision(pricePoint.value, 8),
             [width, y],
             textCoverStyle,
         )

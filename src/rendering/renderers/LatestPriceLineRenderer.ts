@@ -65,7 +65,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const y = height - yr
 
         const coveredText = GraphicUtils.createCoveredText(
-            lastYData.toFixed(3),
+            datamath.toFixedPrecisionisionisionisionisionision(lastYData, 8),
             [width, y],
             this.textCoverStyle,
         )
