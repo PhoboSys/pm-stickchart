@@ -87,6 +87,35 @@ export default class datamath {
         return value
     }
 
+    static precision(value: number, significant: number) {
+
+        const v = new Big(value)
+
+        return v.prec(significant).toNumber()
+    }
+
+    static toFixedPrecision(value: number, significant: number) {
+
+        const v = datamath.precision(value, significant)
+        return (v % 1)
+            ? v.toString().padEnd(significant+1, 0)
+            : v.toFixed(0)
+    }
+
+    static toFixedScaled(value: number, stepsize: number) {
+
+        const step = new Big(stepsize)
+
+        return datamath.toFixed(value, -step.e)
+    }
+
+    static toFixed(value: number, dp: number) {
+
+        const v = new Big(value)
+
+        return v.toFixed(Math.max(dp, 0))
+    }
+
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
