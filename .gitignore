@@ -1,10 +1,7 @@
 **/.DS_Store
 /node_modules
-/dist
 .lde-compose.yml
 .DS_Store
-node_modules/
-dist/
 *.deb
 tmp/
 .rvm

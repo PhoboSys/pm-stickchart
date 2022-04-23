@@ -1,0 +1,143 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PoolRenderer = void 0;
+const pixi_1 = require("../../lib/pixi");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const __1 = require("..");
+class PoolRenderer extends __1.BaseRenderer {
+    constructor(renderer) {
+        super(renderer);
+        const basicLineStyle = {
+            width: 2,
+            alpha: 0.7,
+            join: 'round',
+            cap: 'round',
+            torusPadding: 5,
+            gap: 10,
+            dash: 10,
+        };
+        const basicTorusStyle = {
+            innerr: 2.5,
+            outterr: 5,
+        };
+        const basicTextNameStyle = {
+            fontWeight: 600,
+            fontFamily: 'Gilroy',
+            fontSize: 12,
+        };
+        const basicCoveredTextStyle = {
+            radius: 20,
+            paddingx: 10,
+            paddingy: 5,
+            linePadding: 5,
+        };
+        this.openPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 5,
+            linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xB7BDD7 }),
+            torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xB7BDD7 }),
+            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0x303550 }), linePadding: -5, color: 0xB7BDD7, anchorx: 1, anchory: 0 })
+        };
+        this.lockPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 5,
+            linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0x00A573 }),
+            torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0x00A573 }),
+            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xFFFFFF }), color: 0x00A573, anchorx: 0, anchory: 0 })
+        };
+        this.resolutionPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 5,
+            linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xF05350 }),
+            torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xF05350 }),
+            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xFFFFFF }), color: 0xF05350, anchorx: 0, anchory: 0 })
+        };
+        this.openPricePointStyle = {
+            circlstyle: {
+                inner: {
+                    color: 0x303550,
+                    radius: 3,
+                    alpha: 1,
+                },
+                outer: {
+                    radius: 6,
+                    color: 0xB7BDD7,
+                    alpha: 1,
+                }
+            },
+            linestyle: {
+                color: 0xB7BDD7,
+                width: 1,
+                alpha: 0.7,
+            },
+            textCoverStyle: {
+                color: 0xB7BDD7,
+                paddingx: 10,
+                paddingy: 2,
+                anchorx: 1.1,
+                anchory: 0.5,
+                radius: 10,
+                textstyle: {
+                    fill: 0x303550,
+                    fontWeight: 600,
+                    fontFamily: 'Gilroy',
+                    fontSize: 13,
+                }
+            }
+        };
+    }
+    get rendererId() {
+        return PoolRenderer.POOL_ID;
+    }
+    create(context) {
+        if (!context.pool)
+            return new pixi_1.Graphics();
+        const { lockDate, openDate, resolutionDate, openPrice, } = context.pool;
+        const result = new pixi_1.Graphics();
+        result.addChild(this.createPool(context, 'Open', openDate, this.openPoolStyle), this.createPool(context, 'Lock', lockDate, this.lockPoolStyle), this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle));
+        if (openPrice) {
+            result.addChild(this.createPrice(context, openPrice, this.openPricePointStyle));
+        }
+        return result;
+    }
+    createPrice(context, pricePoint, { circlstyle, linestyle, textCoverStyle }) {
+        const { xrange, yrange, } = context.plotdata;
+        const { width, height, } = context.screen;
+        const [x] = datamath_1.default.scale([pricePoint.timestamp], xrange, width);
+        const [yr] = datamath_1.default.scale([pricePoint.value], yrange, height);
+        const y = height - yr;
+        const outer = __1.GraphicUtils.createCircle([x, y], circlstyle.outer.radius, circlstyle.outer);
+        const inner = __1.GraphicUtils.createCircle([x, y], circlstyle.inner.radius, circlstyle.inner);
+        const line = __1.GraphicUtils.createLine([0, y], [width, y], linestyle);
+        const coveredText = __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(pricePoint.value, 8), [width, y], textCoverStyle);
+        const price = new pixi_1.Graphics();
+        price.addChild(line, outer, inner, coveredText);
+        return price;
+    }
+    createPool(context, name, poolDate, style) {
+        const { xrange, } = context.plotdata;
+        const { width, height, } = context.screen;
+        const { paddingTop, paddingBottom } = style;
+        const [x] = datamath_1.default.scale([poolDate], xrange, width);
+        const { coveredNameStyle } = style;
+        const { linePadding: coverpadding } = coveredNameStyle;
+        const coveredName = __1.GraphicUtils.createCoveredText(name, [x + coverpadding, paddingTop], coveredNameStyle);
+        const covery = coveredName.y + coveredName.height;
+        const { torusstyle } = style;
+        const torus = __1.GraphicUtils.createTorus([x, covery], [torusstyle.innerr, torusstyle.outterr], torusstyle);
+        const torusy = torus.y + torusstyle.outterr;
+        const { linestyle } = style;
+        const { torusPadding } = linestyle;
+        const line = __1.GraphicUtils.createVerticalDashLine(// TODO: dash-line
+        x, [torusy + torusPadding, height - paddingBottom], style.linestyle);
+        const pool = new pixi_1.Graphics();
+        pool.addChild(line, torus, coveredName);
+        return pool;
+    }
+}
+exports.PoolRenderer = PoolRenderer;
+PoolRenderer.POOL_ID = Symbol('POOL_ID');
+//# sourceMappingURL=PoolRenderer.js.map
