@@ -164,7 +164,6 @@ export default class datamath {
         const result: number[] = []
 
         const sample = amount.div(density).round(0, Big.roundUp).toNumber()
-        console.log('Sampling', sample)
         let idx = 0
         let lastIdx = data.length-1
         while (idx <= lastIdx) {

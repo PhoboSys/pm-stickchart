@@ -120,7 +120,6 @@ class datamath {
             return data;
         const result = [];
         const sample = amount.div(density).round(0, big_js_1.default.roundUp).toNumber();
-        console.log('Sampling', sample);
         let idx = 0;
         let lastIdx = data.length - 1;
         while (idx <= lastIdx) {

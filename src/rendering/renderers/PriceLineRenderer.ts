@@ -55,7 +55,9 @@ export class PriceLineRenderer extends BaseRenderer {
                 result = GraphicUtils.startLine([x, y], this.lineStyle)
                 prevY = y
             } else {
-                result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                if (config.style.rectunged) {
+                    result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                }
                 result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
                 prevY = y
             }
