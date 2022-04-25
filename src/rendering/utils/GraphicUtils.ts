@@ -3,6 +3,8 @@ import datamath from '../../lib/datamath'
 import { castArray } from 'lodash'
 
 import { Graphics, LineStyle, Text, TextStyle } from '../../lib/pixi'
+import { Texture, GradientFactory, RenderTexture } from '../../lib/pixi'
+import { Renderer, AbstractRenderer } from '../../lib/pixi'
 
 
 export class GraphicUtils {

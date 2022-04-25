@@ -1,4 +1,4 @@
-import { Rectangle } from '../../lib/pixi'
+import { Rectangle, RenderTexture } from '../../lib/pixi'
 import { ChartData, PlotData } from '../../chartdata'
 
 export type DoneFunction = () => void
@@ -8,5 +8,7 @@ export type RenderingContext = {
     chartdata: ChartData,
     plotdata: PlotData,
     screen: Rectangle,
+    gradient: RenderTexture,
+
     mousepos?: { x: number, y: number, }
 }

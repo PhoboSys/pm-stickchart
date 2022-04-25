@@ -40,6 +40,7 @@ var text_1 = require("@pixi/text");
 Object.defineProperty(exports, "Text", { enumerable: true, get: function () { return text_1.Text; } });
 Object.defineProperty(exports, "TextStyle", { enumerable: true, get: function () { return text_1.TextStyle; } });
 exports.utils = __importStar(require("@pixi/utils"));
+__exportStar(require("@pixi-essentials/gradients"), exports);
 require("@pixi/graphics-extras");
 const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");

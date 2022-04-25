@@ -10,6 +10,7 @@ const pixi_1 = require("./lib/pixi");
 const chartdata_1 = require("./chartdata");
 const infra_1 = require("./infra");
 const rendering_1 = require("./rendering");
+const rendering_2 = require("./rendering");
 class StickChart extends EventTarget {
     constructor(stageElement, chartType) {
         super();
@@ -27,6 +28,7 @@ class StickChart extends EventTarget {
         });
         this.renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
+        this.textureStorage = new rendering_2.TextureStorage(this.application);
     }
     get canvas() {
         return this.application.view;
@@ -40,6 +42,7 @@ class StickChart extends EventTarget {
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
+            gradient: this.textureStorage.getPriceLineGradient(),
         };
         pipeline.render(ctx, () => this.application.render());
     }

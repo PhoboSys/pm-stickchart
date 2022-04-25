@@ -44,21 +44,27 @@ export class PriceLineRenderer extends BaseRenderer {
         const xs = datamath.scale(xdata, xrange, width)
         const ys = datamath.scale(ydata, yrange, height)
 
-        let result: any = null
+        let result: Graphics = new Graphics()
+        let shape: number[] = []
         let prevY: any = null
-        for (const idx in xs) {
+        let prevX: any = null
 
+        for (const idx in xs) {
             const x = xs[idx]
             const y = height - ys[idx]
 
-            if (!result) {
+            if (+idx === 0) {
                 result = GraphicUtils.startLine([x, y], this.lineStyle)
                 prevY = y
+                shape.push(x, height)
+                shape.push(x, y)
             } else {
                 if (config.style.rectunged) {
                     result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                    shape.push(x, prevY)
                 }
                 result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                shape.push(x, y)
                 prevY = y
             }
 
@@ -98,7 +104,20 @@ export class PriceLineRenderer extends BaseRenderer {
                     )
                 )
             }
+            prevY = y
+            prevX = x
         }
+
+
+        shape.push(prevX, height)
+
+        const gradient = new Graphics()
+        gradient.beginTextureFill({ texture: context.gradient, alpha: 0.5 })
+        gradient.drawPolygon(shape)
+        gradient.closePath()
+        gradient.endFill()
+
+        result.addChild(gradient)
 
         return result
     }
