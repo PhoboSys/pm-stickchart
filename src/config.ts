@@ -20,7 +20,8 @@ export default {
     //chart
     style: {
         background: 0x22273F,
-        linesize: 1,
+        linesize: 2,
+        rectunged: false,
     },
     padding: {
         left: -0.1, // %

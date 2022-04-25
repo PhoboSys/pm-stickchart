@@ -42,7 +42,9 @@ class PriceLineRenderer extends __1.BaseRenderer {
                 prevY = y;
             }
             else {
-                result = __1.GraphicUtils.lineTo(result, [x, prevY], this.lineStyle);
+                if (config_1.default.style.rectunged) {
+                    result = __1.GraphicUtils.lineTo(result, [x, prevY], this.lineStyle);
+                }
                 result = __1.GraphicUtils.lineTo(result, [x, y], this.lineStyle);
                 prevY = y;
             }
