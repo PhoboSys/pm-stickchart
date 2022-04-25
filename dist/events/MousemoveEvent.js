@@ -4,11 +4,8 @@ exports.MousemoveEvent = void 0;
 class MousemoveEvent extends Event {
     constructor(inner) {
         super(MousemoveEvent.NAME);
-        if (!inner)
-            return;
         this.inner = inner;
-        const { offsetX, offsetY } = inner;
-        this.pos = { x: offsetX, y: offsetY };
+        this.position = { x: inner.offsetX, y: inner.offsetY };
     }
 }
 exports.MousemoveEvent = MousemoveEvent;

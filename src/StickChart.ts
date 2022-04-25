@@ -1,22 +1,21 @@
 import config from './config'
 
 import { EChartType } from './enums'
-import { ZoomEvent } from './events'
+import { EventsProducer } from './events'
 import { Application } from './lib/pixi'
 import { DataConverter, ChartData } from './chartdata'
 
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
-import { MousemoveEvent } from './events/MousemoveEvent';
 
 export class StickChart extends EventTarget {
 
     private renderer: PixiGraphicRenderer
-
     private application: Application
+    private eventsProducer: EventsProducer
 
     constructor(
-        private stageElement: HTMLInputElement,
+        private stageElement: HTMLElement,
         private chartType: EChartType
     ) {
         super()
@@ -32,11 +31,8 @@ export class StickChart extends EventTarget {
             backgroundAlpha: 1,
         })
 
-        this.renderer = new PixiGraphicRenderer(this.application.stage)
-
-        stageElement.onwheel = (e: WheelEvent) => this.dispatchEvent(new ZoomEvent(e))
-        stageElement.onmousemove = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent(e))
-        stageElement.onmouseleave = (e: MouseEvent) => this.dispatchEvent(new MousemoveEvent())
+		this.renderer = new PixiGraphicRenderer(this.application.stage)
+		this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -68,6 +64,7 @@ export class StickChart extends EventTarget {
 
     public destroy() {
         this.application.destroy()
+		this.eventsProducer.destroy()
         Logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
     }
 }

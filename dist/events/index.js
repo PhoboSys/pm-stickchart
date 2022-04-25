@@ -16,4 +16,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./ZoomEvent"), exports);
 __exportStar(require("./MousemoveEvent"), exports);
+__exportStar(require("./CanvasErrorEvent"), exports);
+__exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map

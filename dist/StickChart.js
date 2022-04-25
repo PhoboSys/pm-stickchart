@@ -10,7 +10,6 @@ const pixi_1 = require("./lib/pixi");
 const chartdata_1 = require("./chartdata");
 const infra_1 = require("./infra");
 const rendering_1 = require("./rendering");
-const MousemoveEvent_1 = require("./events/MousemoveEvent");
 class StickChart extends EventTarget {
     constructor(stageElement, chartType) {
         super();
@@ -27,9 +26,7 @@ class StickChart extends EventTarget {
             backgroundAlpha: 1,
         });
         this.renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
-        stageElement.onwheel = (e) => this.dispatchEvent(new events_1.ZoomEvent(e));
-        stageElement.onmousemove = (e) => this.dispatchEvent(new MousemoveEvent_1.MousemoveEvent(e));
-        stageElement.onmouseleave = (e) => this.dispatchEvent(new MousemoveEvent_1.MousemoveEvent());
+        this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
     }
     get canvas() {
         return this.application.view;
@@ -48,6 +45,7 @@ class StickChart extends EventTarget {
     }
     destroy() {
         this.application.destroy();
+        this.eventsProducer.destroy();
         infra_1.Logger.warn('Applicaiont get destoryed!!!!!!!!!!!');
     }
 }
