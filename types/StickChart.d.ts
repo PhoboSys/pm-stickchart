@@ -6,6 +6,7 @@ export declare class StickChart extends EventTarget {
     private renderer;
     private application;
     private eventsProducer;
+    private textureStorage;
     constructor(stageElement: HTMLElement, chartType: EChartType);
     get canvas(): HTMLCanvasElement;
     render(context: {

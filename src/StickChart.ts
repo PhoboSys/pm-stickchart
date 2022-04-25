@@ -7,12 +7,14 @@ import { DataConverter, ChartData } from './chartdata'
 
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
+import { TextureStorage, GraphicUtils } from './rendering'
 
 export class StickChart extends EventTarget {
 
     private renderer: PixiGraphicRenderer
     private application: Application
     private eventsProducer: EventsProducer
+    private textureStorage: TextureStorage
 
     constructor(
         private stageElement: HTMLElement,
@@ -31,8 +33,9 @@ export class StickChart extends EventTarget {
             backgroundAlpha: 1,
         })
 
-		this.renderer = new PixiGraphicRenderer(this.application.stage)
-		this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
+        this.renderer = new PixiGraphicRenderer(this.application.stage)
+        this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
+        this.textureStorage = new TextureStorage(this.application)
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -54,6 +57,7 @@ export class StickChart extends EventTarget {
             plotdata: DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
+            gradient: this.textureStorage.getPriceLineGradient(),
         }
 
         pipeline.render(
@@ -64,7 +68,7 @@ export class StickChart extends EventTarget {
 
     public destroy() {
         this.application.destroy()
-		this.eventsProducer.destroy()
+        this.eventsProducer.destroy()
         Logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
     }
 }
