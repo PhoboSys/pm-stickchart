@@ -29,6 +29,12 @@ class DataConverter {
         const ylast = Number(yorig.at(-1));
         const xdata = datamath_1.default.sample(xorig, config_1.default.maxdensity);
         const ydata = datamath_1.default.sample(yorig, config_1.default.maxdensity);
+        // return latest price if sampled out
+        if (xdata.at(-1) !== xorig.at(-1) ||
+            ydata.at(-1) !== yorig.at(-1)) {
+            xdata.push(xlast);
+            ydata.push(ylast);
+        }
         const xrange = datamath_1.default.range(xdata, DataConverter.xpadding.min, DataConverter.xpadding.max);
         const yrange = datamath_1.default.range(ydata, DataConverter.ypadding.min, DataConverter.ypadding.max);
         return {
