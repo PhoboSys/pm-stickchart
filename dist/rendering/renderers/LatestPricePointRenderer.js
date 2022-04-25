@@ -23,12 +23,10 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
     create(context) {
-        const { xdata, ydata, xrange, yrange, } = context.plotdata;
+        const { xlast, ylast, xrange, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
-        const lastXData = Number(xdata.at(-1));
-        const lastYData = Number(ydata.at(-1));
-        const [x] = datamath_1.default.scale([lastXData], xrange, width);
-        const [yr] = datamath_1.default.scale([lastYData], yrange, height);
+        const [x] = datamath_1.default.scale([xlast], xrange, width);
+        const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
         const outerpoint = __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle);
         const innerpoint = __1.GraphicUtils.createCircle([x, y], this.innerPointStyle.radius, this.innerPointStyle);

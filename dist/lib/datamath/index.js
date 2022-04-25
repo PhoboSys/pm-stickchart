@@ -90,7 +90,7 @@ class datamath {
         const v = new big_js_1.default(value);
         return v.toFixed(Math.max(dp, 0));
     }
-    static steps([minv, maxv], stepsize, maxsteps = 20) {
+    static steps([minv, maxv], stepsize, maxsteps) {
         if (!stepsize)
             return [minv];
         const min = new big_js_1.default(minv);
@@ -110,6 +110,22 @@ class datamath {
             cur = cur.plus(stepsize);
             if (!(idx % sample))
                 result.push(cur.toNumber());
+            idx++;
+        }
+        return result;
+    }
+    static sample(data, density) {
+        const amount = new big_js_1.default(data.length);
+        if (amount.lte(density))
+            return data;
+        const result = [];
+        const sample = amount.div(density).round(0, big_js_1.default.roundUp).toNumber();
+        console.log('Sampling', sample);
+        let idx = 0;
+        let lastIdx = data.length - 1;
+        while (idx <= lastIdx) {
+            if (!(idx % sample))
+                result.push(data[idx]);
             idx++;
         }
         return result;

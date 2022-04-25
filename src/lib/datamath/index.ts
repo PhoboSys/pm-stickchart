@@ -119,7 +119,7 @@ export default class datamath {
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
-        maxsteps: number = 20,
+        maxsteps: number,
     ): number[] {
 
         if (!stepsize) return [minv]
@@ -151,4 +151,27 @@ export default class datamath {
         return result
     }
 
+
+    static sample(
+        data: number[],
+        density: number,
+    ): number[] {
+
+        const amount = new Big(data.length)
+
+        if (amount.lte(density)) return data
+
+        const result: number[] = []
+
+        const sample = amount.div(density).round(0, Big.roundUp).toNumber()
+        console.log('Sampling', sample)
+        let idx = 0
+        let lastIdx = data.length-1
+        while (idx <= lastIdx) {
+            if (!(idx % sample)) result.push(data[idx])
+            idx++
+        }
+
+        return result
+    }
 }

@@ -35,8 +35,8 @@ export class LatestPricePointRenderer extends BaseRenderer {
         context: RenderingContext,
     ): Graphics {
         const {
-            xdata,
-            ydata,
+            xlast,
+            ylast,
 
             xrange,
             yrange,
@@ -47,11 +47,8 @@ export class LatestPricePointRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const lastXData = Number(xdata.at(-1))
-        const lastYData = Number(ydata.at(-1))
-
-        const [x] = datamath.scale([lastXData], xrange, width)
-        const [yr] = datamath.scale([lastYData], yrange, height)
+        const [x] = datamath.scale([xlast], xrange, width)
+        const [yr] = datamath.scale([ylast], yrange, height)
         const y = height - yr
 
         const outerpoint = GraphicUtils.createCircle(

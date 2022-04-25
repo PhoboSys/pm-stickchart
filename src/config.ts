@@ -14,14 +14,18 @@ export default {
     antialias: false,
     resolution: Math.ceil(window.devicePixelRatio),
 
+    //data
+    maxdensity: 400,
+
     //chart
     style: {
         background: 0x22273F,
+        linesize: 1,
     },
     padding: {
         left: -0.1, // %
         right: 0.3819, // % golden
         top: 0.1, // %
-        bottom: 0.2, // %
+        bottom: 0.25, // %
     }
 }

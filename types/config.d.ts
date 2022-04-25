@@ -8,8 +8,10 @@ declare const _default: {
     autoDensity: boolean;
     antialias: boolean;
     resolution: number;
+    maxdensity: number;
     style: {
         background: number;
+        linesize: number;
     };
     padding: {
         left: number;

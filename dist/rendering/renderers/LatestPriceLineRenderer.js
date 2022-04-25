@@ -37,12 +37,11 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID;
     }
     create(context) {
-        const { ydata, yrange, } = context.plotdata;
+        const { ylast, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
-        const lastYData = Number(ydata.at(-1));
-        const [yr] = datamath_1.default.scale([lastYData], yrange, height);
+        const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
-        const coveredText = __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(lastYData, 8), [width, y], this.textCoverStyle);
+        const coveredText = __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(ylast, 8), [width, y], this.textCoverStyle);
         const coverx = coveredText.x + coveredText.children[0].x;
         const line = __1.GraphicUtils.createLine([0, y], [coverx - this.lineStyle.paddingx, y], this.lineStyle);
         const result = new pixi_1.Graphics();
