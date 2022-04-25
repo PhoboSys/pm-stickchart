@@ -51,7 +51,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
 
         const {
-            ydata,
+            ylast,
             yrange,
         } = context.plotdata
 
@@ -60,12 +60,11 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const lastYData = Number(ydata.at(-1))
-        const [yr] = datamath.scale([lastYData], yrange, height)
+        const [yr] = datamath.scale([ylast], yrange, height)
         const y = height - yr
 
         const coveredText = GraphicUtils.createCoveredText(
-            datamath.toFixedPrecision(lastYData, 8),
+            datamath.toFixedPrecision(ylast, 8),
             [width, y],
             this.textCoverStyle,
         )

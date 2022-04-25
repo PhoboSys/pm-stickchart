@@ -23,11 +23,17 @@ const config_1 = __importDefault(require("../config"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
 class DataConverter {
     static convert(chartdata) {
-        const xdata = Object.keys(chartdata).map(k => Number(k));
-        const ydata = Object.values(chartdata);
+        const xorig = Object.keys(chartdata).map(k => Number(k));
+        const yorig = Object.values(chartdata);
+        const xlast = Number(xorig.at(-1));
+        const ylast = Number(yorig.at(-1));
+        const xdata = datamath_1.default.sample(xorig, config_1.default.maxdensity);
+        const ydata = datamath_1.default.sample(yorig, config_1.default.maxdensity);
         const xrange = datamath_1.default.range(xdata, DataConverter.xpadding.min, DataConverter.xpadding.max);
         const yrange = datamath_1.default.range(ydata, DataConverter.ypadding.min, DataConverter.ypadding.max);
         return {
+            xlast,
+            ylast,
             xdata,
             ydata,
             xrange,

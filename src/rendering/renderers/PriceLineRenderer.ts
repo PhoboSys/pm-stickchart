@@ -16,7 +16,7 @@ export class PriceLineRenderer extends BaseRenderer {
     constructor(renderer: IGraphicRenderer) {
         super(renderer)
         this.lineStyle = {
-            width: 3,
+            width: config.style.linesize,
             color: 0x009797,
             alpha: 1,
             join: 'round',

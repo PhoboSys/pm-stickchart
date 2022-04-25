@@ -8,6 +8,9 @@ export type DataPadding = {
 }
 
 export type PlotData = {
+    xlast: number,
+    ylast: number,
+
     xdata: number[],
     ydata: number[],
 

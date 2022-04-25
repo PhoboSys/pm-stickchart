@@ -11,7 +11,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.lineStyle = {
-            width: 3,
+            width: config_1.default.style.linesize,
             color: 0x009797,
             alpha: 1,
             join: 'round',

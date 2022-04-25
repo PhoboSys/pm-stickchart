@@ -10,5 +10,6 @@ export default class datamath {
     static toFixedPrecision(value: number, significant: number): any;
     static toFixedScaled(value: number, stepsize: number): any;
     static toFixed(value: number, dp: number): any;
-    static steps([minv, maxv]: [number, number], stepsize: number, maxsteps?: number): number[];
+    static steps([minv, maxv]: [number, number], stepsize: number, maxsteps: number): number[];
+    static sample(data: number[], density: number): number[];
 }

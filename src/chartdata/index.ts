@@ -17,8 +17,13 @@ export class DataConverter {
     }
 
     static convert(chartdata: ChartData) {
-        const xdata = Object.keys(chartdata).map(k => Number(k))
-        const ydata = Object.values(chartdata)
+        const xorig = Object.keys(chartdata).map(k => Number(k))
+        const yorig = Object.values(chartdata)
+        const xlast = Number(xorig.at(-1))
+        const ylast = Number(yorig.at(-1))
+
+        const xdata = datamath.sample(xorig, config.maxdensity)
+        const ydata = datamath.sample(yorig, config.maxdensity)
 
         const xrange = datamath.range(
             xdata,
@@ -32,6 +37,9 @@ export class DataConverter {
         )
 
         return {
+            xlast,
+            ylast,
+
             xdata,
             ydata,
 
