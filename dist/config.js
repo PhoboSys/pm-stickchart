@@ -18,7 +18,7 @@ exports.default = {
     //chart
     style: {
         background: 0x22273F,
-        linesize: 2,
+        linesize: 3,
         rectunged: false,
     },
     padding: {

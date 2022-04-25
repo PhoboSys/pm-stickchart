@@ -20,9 +20,10 @@ export default {
     //chart
     style: {
         background: 0x22273F,
-        linesize: 2,
+        linesize: 3,
         rectunged: false,
     },
+
     padding: {
         left: -0.1, // %
         right: 0.3819, // % golden
