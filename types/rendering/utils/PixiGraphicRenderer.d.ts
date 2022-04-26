@@ -1,5 +1,5 @@
-import { Container, Graphics } from '../../lib/pixi';
 import { IGraphicRenderer } from '..';
+import { Container, Graphics } from '../../lib/pixi';
 export declare class PixiGraphicRenderer implements IGraphicRenderer {
     private readonly container;
     private rendered;

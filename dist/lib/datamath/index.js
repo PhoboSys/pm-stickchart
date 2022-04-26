@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const big_js_1 = __importDefault(require("big.js"));
+// eslint-disable-next-line @typescript-eslint/naming-convention
 class datamath {
     static min(data) {
         let [minimum] = data;
@@ -50,7 +51,7 @@ class datamath {
         const mapadd = diff.times(maxpadd);
         return [
             min.minus(mipadd).toNumber(),
-            max.plus(mapadd).toNumber()
+            max.plus(mapadd).toNumber(),
         ];
     }
     static datastep([minv, maxv]) {
@@ -79,7 +80,7 @@ class datamath {
     static toFixedPrecision(value, significant) {
         const v = datamath.precision(value, significant);
         if (v % 1) {
-            return v.toString().padEnd(significant + 1, 0);
+            return v.toString().padEnd(significant + 1, '0');
         }
         const more = significant - v.toString().length;
         if (more > 0) {
@@ -126,7 +127,7 @@ class datamath {
         const result = [];
         const sample = amount.div(density).round(0, big_js_1.default.roundUp).toNumber();
         let idx = 0;
-        let lastIdx = data.length - 1;
+        const lastIdx = data.length - 1;
         while (idx <= lastIdx) {
             if (!(idx % sample))
                 result.push(data[idx]);

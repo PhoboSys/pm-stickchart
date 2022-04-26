@@ -1,5 +1,6 @@
-import { Rectangle } from '../../lib/pixi'
 import { ChartData, PlotData } from '../../chartdata'
+import { Rectangle } from '../../lib/pixi'
+
 import { ITextureStorage } from './interfaces'
 
 export type DoneFunction = () => void

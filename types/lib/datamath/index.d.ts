@@ -6,10 +6,10 @@ export default class datamath {
     static range(data: number[], minpadd?: number, maxpadd?: number): [number, number];
     static datastep([minv, maxv]: [number, number]): number;
     static roundpow2(value: number): number;
-    static precision(value: number, significant: number): any;
-    static toFixedPrecision(value: number, significant: number): any;
-    static toFixedScaled(value: number, stepsize: number): any;
-    static toFixed(value: number, dp: number): any;
+    static precision(value: number, significant: number): number;
+    static toFixedPrecision(value: number, significant: number): string;
+    static toFixedScaled(value: number, stepsize: number): string;
+    static toFixed(value: number, dp: number): string;
     static steps([minv, maxv]: [number, number], stepsize: number, maxsteps: number): number[];
     static sample(data: number[], density: number): number[];
 }

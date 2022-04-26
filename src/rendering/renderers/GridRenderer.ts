@@ -1,13 +1,19 @@
-import { RenderingContext, RenderingCompositor } from '..'
-import { IGraphicRenderer, IRenderer, DoneFunction } from '..'
-import { HorizontalGridRenderer, VerticalGridRenderer } from '..'
+import {
+    RenderingContext,
+    RenderingCompositor,
+    HorizontalGridRenderer,
+    VerticalGridRenderer,
+    IGraphicRenderer,
+    IRenderer,
+    DoneFunction,
+} from '..'
 
 export class GridRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
     constructor(
-       private readonly renderer: IGraphicRenderer
+        private readonly renderer: IGraphicRenderer,
     ) {
         this.compositor = new RenderingCompositor([
             new VerticalGridRenderer(renderer),
@@ -17,10 +23,11 @@ export class GridRenderer implements IRenderer {
 
     public render(
         context: RenderingContext,
-        done: DoneFunction
+        done: DoneFunction,
     ): void {
 
         const render = this.compositor.compose(context, done)
+
         render()
     }
 

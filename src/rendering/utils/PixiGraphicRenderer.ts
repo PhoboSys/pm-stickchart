@@ -1,6 +1,5 @@
-import { Container, Graphics } from '../../lib/pixi'
-
 import { IGraphicRenderer } from '..'
+import { Container, Graphics } from '../../lib/pixi'
 
 export class PixiGraphicRenderer implements IGraphicRenderer {
 
@@ -12,7 +11,7 @@ export class PixiGraphicRenderer implements IGraphicRenderer {
 
     public render(
         graphics: Graphics,
-        renderKey: symbol
+        renderKey: symbol,
     ):void {
 
         if (this.exists(renderKey)) {

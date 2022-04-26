@@ -1,6 +1,5 @@
+import { IGraphicRenderer, RenderingContext, BaseRenderer } from '..';
 import { Graphics } from '../../lib/pixi';
-import { IGraphicRenderer, RenderingContext } from '..';
-import { BaseRenderer } from '..';
 export declare class CrosshairRenderer extends BaseRenderer {
     static readonly CROSSHAIR_ID: symbol;
     private readonly lineStyle;

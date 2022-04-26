@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
+const chartdata_1 = require("./chartdata");
 const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
-const pixi_1 = require("./lib/pixi");
-const chartdata_1 = require("./chartdata");
 const infra_1 = require("./infra");
+const pixi_1 = require("./lib/pixi");
 const rendering_1 = require("./rendering");
-const rendering_2 = require("./rendering");
 class StickChart extends EventTarget {
     constructor(stageElement, chartType) {
         super();
@@ -27,9 +26,14 @@ class StickChart extends EventTarget {
             backgroundAlpha: 1,
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
+<<<<<<< HEAD
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         const renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
+=======
+        this.textureStorage = new rendering_1.TextureStorage(this.application);
+        this.pipelineFactory = new rendering_1.RenderingPipelineFactory(this.renderer);
+>>>>>>> 5d8a960 (eslint fix)
     }
     get canvas() {
         return this.application.view;

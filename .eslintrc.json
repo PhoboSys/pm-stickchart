@@ -18,7 +18,7 @@
     },
     "rules": {
         "max-len": [
-            "error",
+            "warn",
             140
         ],
         "linebreak-style": [

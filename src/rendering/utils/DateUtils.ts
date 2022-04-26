@@ -12,5 +12,4 @@ export class DateUtils {
         return `${hh}:${mm}`
     }
 
-
 }

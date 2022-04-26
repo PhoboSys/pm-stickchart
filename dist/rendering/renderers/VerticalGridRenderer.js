@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VerticalGridRenderer = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 const DateUtils_1 = require("../utils/DateUtils");
 class VerticalGridRenderer extends __1.BaseRenderer {
     constructor(renderer) {

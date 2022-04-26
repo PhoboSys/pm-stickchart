@@ -1,16 +1,15 @@
+import { IGraphicRenderer, RenderingContext, BaseRenderer, GraphicUtils } from '..'
 import config from '../../config'
 
-import { Graphics } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
-
-import { IGraphicRenderer, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
+import { Graphics } from '../../lib/pixi'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
     static readonly LATEST_PRICE_LINE_ID: symbol = Symbol('LATEST_PRICE_LINE_ID')
 
     private readonly lineStyle: any
+
     private readonly textCoverStyle: any
 
     constructor(renderer: IGraphicRenderer) {
@@ -41,11 +40,11 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             linestyle: {
                 color: config.style.linecolor,
                 width: 1,
-            }
+            },
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID
     }
 
@@ -76,13 +75,14 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const line = GraphicUtils.createLine(
             [0, y],
             [coverx - this.lineStyle.paddingx, y],
-            this.lineStyle
+            this.lineStyle,
         )
 
         const result = new Graphics()
+
         result.addChild(line, coveredText)
+
         return result
     }
-
 
 }

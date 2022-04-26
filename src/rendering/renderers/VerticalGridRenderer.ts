@@ -1,15 +1,14 @@
-import { Graphics } from '../../lib/pixi'
+import { IGraphicRenderer, RenderingContext, BaseRenderer, GraphicUtils } from '..'
 import datamath from '../../lib/datamath'
-
-import { IGraphicRenderer, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
-import { DateUtils } from '../utils/DateUtils';
+import { Graphics } from '../../lib/pixi'
+import { DateUtils } from '../utils/DateUtils'
 
 export class VerticalGridRenderer extends BaseRenderer {
 
     static readonly VERTICAL_GRID_ID: symbol = Symbol('VERTICAL_GRID_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicRenderer) {
@@ -27,7 +26,7 @@ export class VerticalGridRenderer extends BaseRenderer {
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return VerticalGridRenderer.VERTICAL_GRID_ID
     }
 
@@ -51,14 +50,14 @@ export class VerticalGridRenderer extends BaseRenderer {
                 GraphicUtils.createLine(
                     [x, 0],
                     [x, height],
-                    this.lineStyle
+                    this.lineStyle,
                 ),
                 GraphicUtils.createText(
                     DateUtils.formatUnixTSToHHmm(xsteps[idx]),
                     [x, height],
                     this.textStyle,
-                    1.1
-                )
+                    1.1,
+                ),
             )
         }
 

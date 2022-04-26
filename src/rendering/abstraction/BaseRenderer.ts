@@ -1,17 +1,20 @@
+import {
+    IRenderer,
+    IGraphicRenderer,
+    RenderingContext,
+    DoneFunction,
+} from '..'
 import { Graphics } from '../../lib/pixi'
-
-import { IRenderer, IGraphicRenderer } from '..'
-import { RenderingContext, DoneFunction } from '..'
 
 export abstract class BaseRenderer implements IRenderer {
 
     constructor(
-       protected readonly renderer: IGraphicRenderer
+        protected readonly renderer: IGraphicRenderer,
     ) { }
 
     public render(
         context: RenderingContext,
-        done: DoneFunction
+        done: DoneFunction,
     ): void {
 
         this.renderer.render(

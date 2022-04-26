@@ -2,13 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GridRenderer = void 0;
 const __1 = require("..");
-const __2 = require("..");
 class GridRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
-            new __2.VerticalGridRenderer(renderer),
-            new __2.HorizontalGridRenderer(renderer),
+            new __1.VerticalGridRenderer(renderer),
+            new __1.HorizontalGridRenderer(renderer),
         ]);
     }
     render(context, done) {

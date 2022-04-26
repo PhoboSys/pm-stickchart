@@ -1,16 +1,20 @@
+import {
+    IGraphicRenderer,
+    RenderingContext,
+    BaseRenderer,
+    GraphicUtils,
+} from '..'
 import config from '../../config'
 
-import { Graphics } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
-
-import { IGraphicRenderer, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
+import { Graphics } from '../../lib/pixi'
 
 export class LatestPricePointRenderer extends BaseRenderer {
 
     static readonly LATEST_PRICE_POINT_ID: symbol = Symbol('LATEST_PRICE_POINT_ID')
 
     private readonly outerPointStyle: any
+
     private readonly innerPointStyle: any
 
     constructor(renderer: IGraphicRenderer) {
@@ -18,16 +22,16 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
         this.innerPointStyle = {
             color: 0xFFFFFF,
-            radius: 4
+            radius: 4,
         }
 
         this.outerPointStyle = {
             color: config.style.linecolor,
-            radius: 10
+            radius: 10,
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID
     }
 
@@ -54,7 +58,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
         const outerpoint = GraphicUtils.createCircle(
             [x, y],
             this.outerPointStyle.radius,
-            this.outerPointStyle
+            this.outerPointStyle,
         )
 
         const innerpoint = GraphicUtils.createCircle(
@@ -64,9 +68,10 @@ export class LatestPricePointRenderer extends BaseRenderer {
         )
 
         const result = new Graphics()
+
         result.addChild(outerpoint, innerpoint)
+
         return result
     }
-
 
 }

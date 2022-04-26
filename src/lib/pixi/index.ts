@@ -12,7 +12,7 @@ export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 export * from '@pixi-essentials/gradients'
 
-import '@pixi/graphics-extras';
+import '@pixi/graphics-extras'
 
 import { Application } from '@pixi/app'
 import { Renderer, BatchRenderer } from '@pixi/core'

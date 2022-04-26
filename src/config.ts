@@ -30,5 +30,5 @@ export default {
         right: 0.3819, // % golden
         top: 0.1, // %
         bottom: 0.25, // %
-    }
+    },
 }

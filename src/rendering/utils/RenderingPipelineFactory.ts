@@ -1,21 +1,23 @@
-import { Container, Graphics } from '../../lib/pixi'
-import { EChartType } from '../../enums'
+import {
+    LineChartRenderer,
+    NotSupportedChartTypeRenderer,
+    IRenderer,
+    IGraphicRenderer,
+} from '..'
 
-import { LineChartRenderer } from '..'
-import { NotSupportedChartTypeRenderer } from '..'
-import { IRenderer, IGraphicRenderer } from '..'
+import { EChartType } from '../../enums'
 
 export class RenderingPipelineFactory {
 
     private pipelines: { [key in EChartType]: IRenderer }
 
-    constructor (
-        private readonly renderer: IGraphicRenderer
+    constructor(
+        private readonly renderer: IGraphicRenderer,
     ) {
 
         this.pipelines = {
             [EChartType.LINE]: this.create(EChartType.LINE),
-            [EChartType.CANDLES]: this.create(EChartType.CANDLES)
+            [EChartType.CANDLES]: this.create(EChartType.CANDLES),
         }
 
     }
@@ -38,6 +40,4 @@ export class RenderingPipelineFactory {
 
     }
 }
-
-
 

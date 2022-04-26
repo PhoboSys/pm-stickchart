@@ -1,6 +1,5 @@
+import { IRenderer, IGraphicRenderer, RenderingContext, DoneFunction } from '..';
 import { Graphics } from '../../lib/pixi';
-import { IRenderer, IGraphicRenderer } from '..';
-import { RenderingContext, DoneFunction } from '..';
 export declare abstract class BaseRenderer implements IRenderer {
     protected readonly renderer: IGraphicRenderer;
     constructor(renderer: IGraphicRenderer);

@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -30,7 +30,7 @@ class CrosshairRenderer extends __1.BaseRenderer {
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 13,
-            }
+            },
         };
     }
     get rendererId() {

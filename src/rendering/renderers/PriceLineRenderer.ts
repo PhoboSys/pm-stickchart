@@ -1,17 +1,16 @@
-import config from '../../config'
-
-import { Graphics } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { PRICE_LINE_TEXTURE } from '..'
+import config from '../../config'
+import datamath from '../../lib/datamath'
+import { Graphics } from '../../lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
     static readonly PRICE_LINE_ID: symbol = Symbol('PRICE_LINE_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicRenderer) {
@@ -31,7 +30,7 @@ export class PriceLineRenderer extends BaseRenderer {
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return PriceLineRenderer.PRICE_LINE_ID
     }
 
@@ -46,7 +45,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const ys = datamath.scale(ydata, yrange, height)
 
         let result: Graphics = new Graphics()
-        let shape: number[] = []
+        const shape: number[] = []
         let prevY: any = null
         let prevX: any = null
 
@@ -64,58 +63,62 @@ export class PriceLineRenderer extends BaseRenderer {
                     result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
                     shape.push(x, prevY)
                 }
+
                 result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
                 shape.push(x, y)
                 prevY = y
             }
 
-            if (config.debuglatest && +idx+1 === xs.length) {
+            if (config.debuglatest && +idx + 1 === xs.length) {
                 result.addChild(
                     GraphicUtils.createText(
                         xdata[idx],
                         [x, y],
                         this.textStyle,
-                        1
+                        1,
                     ),
                     GraphicUtils.createText(
                         ydata[idx],
                         [x, y],
                         this.textStyle,
-                        0
-                    )
+                        0,
+                    ),
                 )
             }
+
             if (config.debugtime) {
                 result.addChild(
                     GraphicUtils.createText(
                         xdata[idx],
                         [x, y],
                         this.textStyle,
-                        1
-                    )
+                        1,
+                    ),
                 )
             }
+
             if (config.debugprice) {
                 result.addChild(
                     GraphicUtils.createText(
                         ydata[idx],
                         [x, y],
                         this.textStyle,
-                        0
-                    )
+                        0,
+                    ),
                 )
             }
+
             prevY = y
             prevX = x
         }
 
-
         shape.push(prevX, height)
 
         const gradient = new Graphics()
+
         gradient.beginTextureFill({
             texture: context.textures.get(PRICE_LINE_TEXTURE),
-            alpha: 0.5
+            alpha: 0.5,
         })
         gradient.drawPolygon(shape)
         gradient.closePath()
@@ -125,6 +128,5 @@ export class PriceLineRenderer extends BaseRenderer {
 
         return result
     }
-
 
 }

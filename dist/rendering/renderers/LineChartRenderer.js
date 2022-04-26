@@ -2,16 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChartRenderer = void 0;
 const __1 = require("..");
-const __2 = require("..");
-const __3 = require("..");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
             new __1.GridRenderer(renderer),
             new __1.PriceLineRenderer(renderer),
-            new __2.PoolRenderer(renderer),
-            new __3.LatestPriceRenderer(renderer),
+            new __1.PoolRenderer(renderer),
+            new __1.LatestPriceRenderer(renderer),
         ]);
     }
     render(context, done) {

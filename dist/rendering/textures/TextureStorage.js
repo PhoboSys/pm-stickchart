@@ -4,10 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
-const infra_1 = require("../../infra");
 const config_1 = __importDefault(require("../../config"));
+<<<<<<< HEAD
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
+=======
+const infra_1 = require("../../infra");
+>>>>>>> 5d8a960 (eslint fix)
 const pixi_1 = require("../../lib/pixi");
 const pixi_2 = require("../../lib/pixi");
 class TextureStorage {
@@ -43,16 +46,17 @@ class TextureStorage {
         const y1 = this.application.screen.height;
         const top = '#' + config_1.default.style.linecolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
-        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
-            width: this.application.renderer.width,
-            height: this.application.renderer.height
+        const { renderer } = this.application;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
+            width: renderer.width,
+            height: renderer.height,
         }), {
             x0, y0,
             x1, y1,
             colorStops: [
                 { color: top, offset: 0 },
                 { color: bottom, offset: 1 },
-            ]
+            ],
         });
         return gradient;
     }
@@ -67,9 +71,10 @@ class TextureStorage {
         const middlecolor1 = '#00A573';
         const middlecolor2 = '#F07750';
         const bottomcolor = '#F07750' + '00';
-        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
-            width: this.application.renderer.width,
-            height: this.application.renderer.height
+        const { renderer } = this.application;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
+            width: renderer.width,
+            height: renderer.height,
         }), {
             x0, y0,
             x1, y1,
@@ -78,7 +83,7 @@ class TextureStorage {
                 { color: middlecolor1, offset: 0.33 },
                 { color: middlecolor2, offset: 0.90 },
                 { color: bottomcolor, offset: 1.0 },
-            ]
+            ],
         });
         return gradient;
     }

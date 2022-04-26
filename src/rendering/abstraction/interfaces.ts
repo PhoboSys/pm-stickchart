@@ -1,4 +1,4 @@
-import { Graphics, RenderTexture } from '../../lib/pixi'
+import { Graphics, RenderTexture, Texture } from '../../lib/pixi'
 
 import { DoneFunction, RenderingContext } from './types'
 
@@ -14,5 +14,5 @@ export interface IGraphicRenderer {
 }
 
 export interface ITextureStorage {
-    get(name: symbol): RenderTexture
+    get(name: symbol): Texture
 }
