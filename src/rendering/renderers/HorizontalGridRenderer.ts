@@ -44,6 +44,10 @@ export class HorizontalGridRenderer extends BaseRenderer {
 
         for (const idx in ys) {
 
+            // Avoid rendering over time axe text
+            // 12px size + anchor 1.1
+            if (ys[idx] <= 12 + 12 * 1.1) continue
+
             const y = height - ys[idx]
 
             result.addChild(

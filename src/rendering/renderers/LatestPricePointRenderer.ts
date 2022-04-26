@@ -22,7 +22,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
         }
 
         this.outerPointStyle = {
-            color: 0x00A573,
+            color: config.style.linecolor,
             radius: 10
         }
     }

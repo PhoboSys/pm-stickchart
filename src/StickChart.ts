@@ -15,6 +15,7 @@ export class StickChart extends EventTarget {
     private application: Application
     private eventsProducer: EventsProducer
     private textureStorage: TextureStorage
+    private pipelineFactory: RenderingPipelineFactory
 
     constructor(
         private stageElement: HTMLElement,
@@ -36,6 +37,7 @@ export class StickChart extends EventTarget {
         this.renderer = new PixiGraphicRenderer(this.application.stage)
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
+        this.pipelineFactory = new RenderingPipelineFactory(this.renderer)
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -49,20 +51,22 @@ export class StickChart extends EventTarget {
         pool: any,
         mousepos: any,
     }): void {
-        const pipelineFactory = new RenderingPipelineFactory(this.renderer)
-        const pipeline = pipelineFactory.get(context.charttype)
+        const pipeline = this.pipelineFactory.get(context.charttype)
         const ctx = {
             pool: context.pool,
             chartdata: context.chartdata,
             plotdata: DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            gradient: this.textureStorage.getPriceLineGradient(),
+            priceLineGradient: this.textureStorage.getPriceLineGradient(),
+            poolRaundGradient: this.textureStorage.getPoolRoundGradient(),
         }
 
-        pipeline.render(
-            ctx,
-            () => this.application.render()
+        window.requestAnimationFrame(() =>
+            pipeline.render(
+                ctx,
+                () => this.application.render()
+            )
         )
     }
 

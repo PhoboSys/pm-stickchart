@@ -31,7 +31,6 @@ export class PixiGraphicRenderer implements IGraphicRenderer {
 
         this.container.addChild(graphics)
         this.rendered.push(renderKey)
-
     }
 
     private update(renderKey: symbol, graphics: Graphics): void {

@@ -17,7 +17,7 @@ export class PriceLineRenderer extends BaseRenderer {
         super(renderer)
         this.lineStyle = {
             width: config.style.linesize,
-            color: 0x009797,
+            color: config.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
@@ -112,7 +112,10 @@ export class PriceLineRenderer extends BaseRenderer {
         shape.push(prevX, height)
 
         const gradient = new Graphics()
-        gradient.beginTextureFill({ texture: context.gradient, alpha: 0.5 })
+        gradient.beginTextureFill({
+            texture: context.priceLineGradient,
+            alpha: 0.5
+        })
         gradient.drawPolygon(shape)
         gradient.closePath()
         gradient.endFill()

@@ -12,6 +12,7 @@ declare const _default: {
     style: {
         background: number;
         linesize: number;
+        linecolor: number;
         rectunged: boolean;
     };
     padding: {

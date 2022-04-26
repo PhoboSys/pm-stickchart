@@ -13,7 +13,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
         super(renderer);
         this.lineStyle = {
             width: config_1.default.style.linesize,
-            color: 0x009797,
+            color: config_1.default.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
@@ -69,7 +69,10 @@ class PriceLineRenderer extends __1.BaseRenderer {
         }
         shape.push(prevX, height);
         const gradient = new pixi_1.Graphics();
-        gradient.beginTextureFill({ texture: context.gradient, alpha: 0.5 });
+        gradient.beginTextureFill({
+            texture: context.priceLineGradient,
+            alpha: 0.5
+        });
         gradient.drawPolygon(shape);
         gradient.closePath();
         gradient.endFill();

@@ -169,12 +169,42 @@ export class PoolRenderer extends BaseRenderer {
             openPrice,
         } = context.pool
 
-        const result = new Graphics()
-        result.addChild(
-            this.createPool(context, 'Open', openDate, this.openPoolStyle),
-            this.createPool(context, 'Lock', lockDate, this.lockPoolStyle),
-            this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle),
+        const {
+            xrange,
+            yrange,
+        } = context.plotdata
 
+        const {
+            width,
+            height,
+        } = context.screen
+
+        const result = new Graphics()
+
+        const [ox, rx] = datamath.scale([openDate, resolutionDate], xrange, width)
+
+        const shape = [
+            ox, 0,
+            rx, 0,
+            rx, height,
+            ox, height,
+        ]
+
+        const gradient = new Graphics()
+        gradient.beginTextureFill({
+            texture: context.poolRaundGradient,
+            alpha: 0.05
+        })
+        gradient.drawPolygon(shape)
+        gradient.closePath()
+        gradient.endFill()
+
+        result.addChild(gradient)
+
+        result.addChild(
+            this.createPoolBorder(context, 'Open', openDate, this.openPoolStyle),
+            this.createPoolBorder(context, 'Lock', lockDate, this.lockPoolStyle),
+            this.createPoolBorder(context, 'Resolution', resolutionDate, this.resolutionPoolStyle),
         )
         if (openPrice) {
             result.addChild(
@@ -232,7 +262,7 @@ export class PoolRenderer extends BaseRenderer {
         return price
     }
 
-    private createPool(context: RenderingContext, name: string, poolDate, style): Graphics {
+    private createPoolBorder(context: RenderingContext, name: string, poolDate, style): Graphics {
         const {
             xrange,
         } = context.plotdata
