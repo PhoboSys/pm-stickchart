@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceLineRenderer = void 0;
+const config_1 = __importDefault(require("../../config"));
 const pixi_1 = require("../../lib/pixi");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
@@ -12,14 +13,14 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         super(renderer);
         this.lineStyle = {
             width: 2,
-            color: 0x00A573,
+            color: config_1.default.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
             paddingx: 6,
         };
         this.textCoverStyle = {
-            color: 0x00A573,
+            color: config_1.default.style.linecolor,
             paddingx: 10,
             paddingy: 5,
             anchorx: 1.1,

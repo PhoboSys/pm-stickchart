@@ -18,7 +18,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         this.lineStyle = {
             width: 2,
-            color: 0x00A573,
+            color: config.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
@@ -26,7 +26,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         }
 
         this.textCoverStyle = {
-            color: 0x00A573,
+            color: config.style.linecolor,
             paddingx: 10,
             paddingy: 5,
             anchorx: 1.1,
@@ -48,7 +48,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
     protected create(
         context: RenderingContext,
     ): Graphics {
-
 
         const {
             ylast,

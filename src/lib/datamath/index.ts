@@ -97,9 +97,16 @@ export default class datamath {
     static toFixedPrecision(value: number, significant: number) {
 
         const v = datamath.precision(value, significant)
-        return (v % 1)
-            ? v.toString().padEnd(significant+1, 0)
-            : v.toFixed(0)
+        if (v % 1) {
+            return v.toString().padEnd(significant+1, 0)
+        }
+
+        const more = significant - v.toString().length
+        if (more > 0) {
+            return v.toFixed(more)
+        }
+
+        return v.toFixed(0)
     }
 
     static toFixedScaled(value: number, stepsize: number) {

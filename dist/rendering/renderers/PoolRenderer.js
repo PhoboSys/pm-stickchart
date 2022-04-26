@@ -96,8 +96,26 @@ class PoolRenderer extends __1.BaseRenderer {
         if (!context.pool)
             return new pixi_1.Graphics();
         const { lockDate, openDate, resolutionDate, openPrice, } = context.pool;
+        const { xrange, yrange, } = context.plotdata;
+        const { width, height, } = context.screen;
         const result = new pixi_1.Graphics();
-        result.addChild(this.createPool(context, 'Open', openDate, this.openPoolStyle), this.createPool(context, 'Lock', lockDate, this.lockPoolStyle), this.createPool(context, 'Resolution', resolutionDate, this.resolutionPoolStyle));
+        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], xrange, width);
+        const shape = [
+            ox, 0,
+            rx, 0,
+            rx, height,
+            ox, height,
+        ];
+        const gradient = new pixi_1.Graphics();
+        gradient.beginTextureFill({
+            texture: context.poolRaundGradient,
+            alpha: 0.05
+        });
+        gradient.drawPolygon(shape);
+        gradient.closePath();
+        gradient.endFill();
+        result.addChild(gradient);
+        result.addChild(this.createPoolBorder(context, 'Open', openDate, this.openPoolStyle), this.createPoolBorder(context, 'Lock', lockDate, this.lockPoolStyle), this.createPoolBorder(context, 'Resolution', resolutionDate, this.resolutionPoolStyle));
         if (openPrice) {
             result.addChild(this.createPrice(context, openPrice, this.openPricePointStyle));
         }
@@ -117,7 +135,7 @@ class PoolRenderer extends __1.BaseRenderer {
         price.addChild(line, outer, inner, coveredText);
         return price;
     }
-    createPool(context, name, poolDate, style) {
+    createPoolBorder(context, name, poolDate, style) {
         const { xrange, } = context.plotdata;
         const { width, height, } = context.screen;
         const { paddingTop, paddingBottom } = style;

@@ -21,6 +21,7 @@ export default {
     style: {
         background: 0x22273F,
         linesize: 3,
+        linecolor: 0x009797,
         rectunged: false,
     },
 

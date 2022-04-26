@@ -29,22 +29,23 @@ class StickChart extends EventTarget {
         this.renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
+        this.pipelineFactory = new rendering_1.RenderingPipelineFactory(this.renderer);
     }
     get canvas() {
         return this.application.view;
     }
     render(context) {
-        const pipelineFactory = new rendering_1.RenderingPipelineFactory(this.renderer);
-        const pipeline = pipelineFactory.get(context.charttype);
+        const pipeline = this.pipelineFactory.get(context.charttype);
         const ctx = {
             pool: context.pool,
             chartdata: context.chartdata,
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            gradient: this.textureStorage.getPriceLineGradient(),
+            priceLineGradient: this.textureStorage.getPriceLineGradient(),
+            poolRaundGradient: this.textureStorage.getPoolRoundGradient(),
         };
-        pipeline.render(ctx, () => this.application.render());
+        window.requestAnimationFrame(() => pipeline.render(ctx, () => this.application.render()));
     }
     destroy() {
         this.application.destroy();

@@ -33,6 +33,10 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
         const ysteps = datamath_1.default.steps(yrange, stepsize, 20);
         const ys = datamath_1.default.scale(ysteps, yrange, height);
         for (const idx in ys) {
+            // Avoid rendering over time axe text
+            // 12px size + anchor 1.1
+            if (ys[idx] <= 12 + 12 * 1.1)
+                continue;
             const y = height - ys[idx];
             result.addChild(__1.GraphicUtils.createLine([0, y], [width, y], this.lineStyle), __1.GraphicUtils.createText(datamath_1.default.toFixedScaled(ysteps[idx], stepsize), [width, y], this.textStyle, 1.1));
         }

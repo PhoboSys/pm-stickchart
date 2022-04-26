@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPricePointRenderer = void 0;
+const config_1 = __importDefault(require("../../config"));
 const pixi_1 = require("../../lib/pixi");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
@@ -15,7 +16,7 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
             radius: 4
         };
         this.outerPointStyle = {
-            color: 0x00A573,
+            color: config_1.default.style.linecolor,
             radius: 10
         };
     }

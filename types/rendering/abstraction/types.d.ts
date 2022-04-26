@@ -6,7 +6,8 @@ export declare type RenderingContext = {
     chartdata: ChartData;
     plotdata: PlotData;
     screen: Rectangle;
-    gradient: RenderTexture;
+    priceLineGradient: RenderTexture;
+    poolRaundGradient: RenderTexture;
     mousepos?: {
         x: number;
         y: number;

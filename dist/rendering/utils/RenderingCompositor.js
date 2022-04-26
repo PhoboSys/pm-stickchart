@@ -10,7 +10,9 @@ class RenderingCompositor {
     }
     compose(context, next = () => { }) {
         let prevnext = next;
-        for (const renderer of this.renderers.reverse()) {
+        let idx = this.renderers.length;
+        while (--idx >= 0) {
+            const renderer = this.renderers[idx];
             prevnext = this.create(context, renderer, prevnext);
         }
         return prevnext;

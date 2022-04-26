@@ -30,7 +30,7 @@ class VerticalGridRenderer extends __1.BaseRenderer {
         const result = new pixi_1.Graphics();
         const { width, height } = context.screen;
         const { xdata, xrange } = context.plotdata;
-        const stepsize = context.pool.period;
+        const stepsize = context.pool.duration;
         const xsteps = datamath_1.default.steps(xrange, stepsize, 20);
         const xs = datamath_1.default.scale(xsteps, xrange, width);
         for (const idx in xs) {
