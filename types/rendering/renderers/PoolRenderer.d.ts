@@ -12,5 +12,6 @@ export declare class PoolRenderer extends BaseRenderer {
     get rendererId(): symbol;
     protected create(context: RenderingContext): Graphics;
     private createPrice;
+    private createLockLine;
     private createPoolBorder;
 }

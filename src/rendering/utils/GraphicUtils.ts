@@ -4,8 +4,7 @@ import { castArray } from 'lodash'
 
 import { Graphics, LineStyle, Text, TextStyle } from '../../lib/pixi'
 import { Texture, GradientFactory, RenderTexture } from '../../lib/pixi'
-import { Renderer, AbstractRenderer } from '../../lib/pixi'
-
+import { Renderer, AbstractRenderer, Sprite } from '../../lib/pixi'
 
 export class GraphicUtils {
 
@@ -44,10 +43,11 @@ export class GraphicUtils {
         [x, y]: [number, number],
         [width, height]: [number, number],
         radius: number,
-        style: { color }
+        style: { fill, linestyle }
     ): Graphics {
         const rect = new Graphics()
-            .beginFill(style.color)
+            .beginFill(style.fill)
+            .lineStyle(style.linestyle)
             .drawRoundedRect(0, 0, width, height, radius)
             .endFill()
 
@@ -55,10 +55,52 @@ export class GraphicUtils {
         return rect
     }
 
+    static createCoveredIcon(
+        [x, y]: [number, number],
+        style: { iconstyle, paddingx, paddingy, color, radius, anchorx, anchory, linestyle, texture },
+    ) {
+
+        const { paddingx, paddingy } = style
+
+        const icon = new Sprite(style.texture)
+        const scale = style.iconstyle.size / icon.height
+        icon.position.set(
+            paddingx,
+            paddingy
+        )
+        icon.scale.set(
+            scale
+        )
+
+        const coverwidth = icon.width + paddingx * 2
+        const coverheight = icon.height + paddingy * 2
+
+        const cover = GraphicUtils.createRoundedRect(
+            [0, 0],
+            [coverwidth, coverheight],
+            style.radius,
+            {
+                fill: style.color,
+                linestyle: style.linestyle,
+            }
+        )
+
+        const result = new Graphics()
+        result.addChild(cover, icon)
+
+        const { anchorx, anchory } = style
+        result.position.set(
+            x - cover.width * (anchorx ?? 0),
+            y - cover.height * (anchory ?? 0)
+        )
+
+        return result
+    }
+
     static createCoveredText(
         value: any,
         [x, y]: [number, number],
-        style: { textstyle, paddingx, paddingy, color, radius, anchorx, anchory },
+        style: { textstyle, paddingx, paddingy, color, radius, anchorx, anchory, linestyle },
     ) {
         const { paddingx, paddingy } = style
 
@@ -74,14 +116,16 @@ export class GraphicUtils {
 
         const cover = GraphicUtils.createRoundedRect(
             [0, 0],
-            [coverwidth, coverheight,],
+            [coverwidth, coverheight],
             style.radius,
-            style,
+            {
+                fill: style.color,
+                linestyle: style.linestyle,
+            }
         )
 
         const coveredText = new Graphics()
         coveredText.addChild(cover, text)
-
         const { anchorx, anchory } = style
         coveredText.position.set(
             x - cover.width * (anchorx ?? 0),

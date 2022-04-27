@@ -35,6 +35,7 @@
     "@pixi/text": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
+    "@pixi/sprite": "6.3.0",
     "@pixi-essentials/gradients": "0.0.5",
     "big.js": "6.1.1",
     "debug": "4.3.2"

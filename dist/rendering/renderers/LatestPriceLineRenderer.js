@@ -21,7 +21,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         };
         this.textCoverStyle = {
             color: config_1.default.style.linecolor,
-            paddingx: 10,
+            paddingx: 7,
             paddingy: 5,
             anchorx: 1.1,
             anchory: 0.5,
@@ -31,6 +31,10 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 13,
+            },
+            linestyle: {
+                color: config_1.default.style.linecolor,
+                width: 1,
             }
         };
     }
