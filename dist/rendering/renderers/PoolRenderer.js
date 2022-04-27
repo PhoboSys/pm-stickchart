@@ -7,6 +7,7 @@ exports.PoolRenderer = void 0;
 const pixi_1 = require("../../lib/pixi");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
+const __2 = require("..");
 class PoolRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -108,7 +109,7 @@ class PoolRenderer extends __1.BaseRenderer {
         ];
         const gradient = new pixi_1.Graphics();
         gradient.beginTextureFill({
-            texture: context.poolRaundGradient,
+            texture: context.textures.get(__2.POOL_ROUND_TEXTURE),
             alpha: 0.05
         });
         gradient.drawPolygon(shape);

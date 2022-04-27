@@ -1,40 +1,42 @@
 import { Logger } from '../../infra'
 import config from '../../config'
 
+import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
+import { ITextureStorage } from '../abstraction'
+
 import { Application, RenderTexture, GradientFactory, Renderer } from '../../lib/pixi'
 
-export class TextureStorage {
+export class TextureStorage implements ITextureStorage {
 
-    static readonly PRICE_LINE_TEXTURE: symbol = Symbol('PRICE_LINE_TEXTURE')
-    static readonly POOL_ROUND_TEXTURE: symbol = Symbol('POOL_ROUND_TEXTURE')
-
-    private readonly textires: { [key: symbol]: RenderTexture } = {}
+    private readonly textures: { [key: symbol]: RenderTexture } = {}
 
     constructor(
         private readonly application: Application
     ) { }
 
-    getPriceLineGradient() {
+    public get(name: symbol) {
 
-        if (!this.textires[TextureStorage.PRICE_LINE_TEXTURE]) {
-            Logger.warn('Create PRICE_LINE_TEXTURE Texture')
-            this.textires[TextureStorage.PRICE_LINE_TEXTURE] = this.createPriceLineTexture()
+        if (!this.textures[name]) {
+            Logger.warn('Create Texture', name)
+            if (this[name] instanceof Function) {
+                this.textures[name] = this[name]()
+            } else {
+                Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty')
+                this.textures[name] = this.EMPTY()
+            }
         }
 
-        return this.textires[TextureStorage.PRICE_LINE_TEXTURE]
+        return this.textures[name]
     }
 
-    getPoolRoundGradient() {
-
-        if (!this.textires[TextureStorage.POOL_ROUND_TEXTURE]) {
-            Logger.warn('Create POOL_ROUND_TEXTURE Texture')
-            this.textires[TextureStorage.POOL_ROUND_TEXTURE] = this.createPoolRoundTexture()
-        }
-
-        return this.textires[TextureStorage.POOL_ROUND_TEXTURE]
+    private EMPTY() {
+        return RenderTexture.create({
+            width: this.application.renderer.width,
+            height: this.application.renderer.height
+        })
     }
 
-    createPriceLineTexture() {
+    private [PRICE_LINE_TEXTURE]() {
         const x0 = 0
         const y0 = 0 + this.application.screen.height * config.padding.top
         const x1 = 0
@@ -62,7 +64,7 @@ export class TextureStorage {
         return gradient
     }
 
-    createPoolRoundTexture() {
+    private [POOL_ROUND_TEXTURE]() {
         const { width, height } = this.application.screen
         const { padding } = config
 

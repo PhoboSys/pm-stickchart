@@ -8,14 +8,14 @@ import { DataConverter, ChartData } from './chartdata'
 import { Logger } from './infra'
 import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
 import { TextureStorage, GraphicUtils } from './rendering'
+import { POOL_ROUND_TEXTURE, PRICE_LINE_TEXTURE } from './rendering'
 
 export class StickChart extends EventTarget {
 
-    private renderer: PixiGraphicRenderer
     private application: Application
     private eventsProducer: EventsProducer
-    private textureStorage: TextureStorage
     private pipelineFactory: RenderingPipelineFactory
+    private textureStorage: TextureStorage
 
     constructor(
         private stageElement: HTMLElement,
@@ -34,10 +34,11 @@ export class StickChart extends EventTarget {
             backgroundAlpha: 1,
         })
 
-        this.renderer = new PixiGraphicRenderer(this.application.stage)
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
-        this.pipelineFactory = new RenderingPipelineFactory(this.renderer)
+
+        const renderer = new PixiGraphicRenderer(this.application.stage)
+        this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -58,8 +59,7 @@ export class StickChart extends EventTarget {
             plotdata: DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            priceLineGradient: this.textureStorage.getPriceLineGradient(),
-            poolRaundGradient: this.textureStorage.getPoolRoundGradient(),
+            textures: this.textureStorage
         }
 
         window.requestAnimationFrame(() =>

@@ -3,11 +3,10 @@ import { ChartData } from './chartdata';
 export declare class StickChart extends EventTarget {
     private stageElement;
     private chartType;
-    private renderer;
     private application;
     private eventsProducer;
-    private textureStorage;
     private pipelineFactory;
+    private textureStorage;
     constructor(stageElement: HTMLElement, chartType: EChartType);
     get canvas(): HTMLCanvasElement;
     render(context: {

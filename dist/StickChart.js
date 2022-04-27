@@ -26,10 +26,10 @@ class StickChart extends EventTarget {
             backgroundColor: config_1.default.style.background,
             backgroundAlpha: 1,
         });
-        this.renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
-        this.pipelineFactory = new rendering_1.RenderingPipelineFactory(this.renderer);
+        const renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
+        this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
     get canvas() {
         return this.application.view;
@@ -42,8 +42,7 @@ class StickChart extends EventTarget {
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            priceLineGradient: this.textureStorage.getPriceLineGradient(),
-            poolRaundGradient: this.textureStorage.getPoolRoundGradient(),
+            textures: this.textureStorage
         };
         window.requestAnimationFrame(() => pipeline.render(ctx, () => this.application.render()));
     }

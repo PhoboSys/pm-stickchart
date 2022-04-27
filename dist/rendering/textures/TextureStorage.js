@@ -6,27 +6,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
 const infra_1 = require("../../infra");
 const config_1 = __importDefault(require("../../config"));
+const symbols_1 = require("./symbols");
 const pixi_1 = require("../../lib/pixi");
 class TextureStorage {
     constructor(application) {
         this.application = application;
-        this.textires = {};
+        this.textures = {};
     }
-    getPriceLineGradient() {
-        if (!this.textires[TextureStorage.PRICE_LINE_TEXTURE]) {
-            infra_1.Logger.warn('Create PRICE_LINE_TEXTURE Texture');
-            this.textires[TextureStorage.PRICE_LINE_TEXTURE] = this.createPriceLineTexture();
+    get(name) {
+        if (!this.textures[name]) {
+            infra_1.Logger.warn('Create Texture', name);
+            if (this[name] instanceof Function) {
+                this.textures[name] = this[name]();
+            }
+            else {
+                infra_1.Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty');
+                this.textures[name] = this.EMPTY();
+            }
         }
-        return this.textires[TextureStorage.PRICE_LINE_TEXTURE];
+        return this.textures[name];
     }
-    getPoolRoundGradient() {
-        if (!this.textires[TextureStorage.POOL_ROUND_TEXTURE]) {
-            infra_1.Logger.warn('Create POOL_ROUND_TEXTURE Texture');
-            this.textires[TextureStorage.POOL_ROUND_TEXTURE] = this.createPoolRoundTexture();
-        }
-        return this.textires[TextureStorage.POOL_ROUND_TEXTURE];
+    EMPTY() {
+        return pixi_1.RenderTexture.create({
+            width: this.application.renderer.width,
+            height: this.application.renderer.height
+        });
     }
-    createPriceLineTexture() {
+    [symbols_1.PRICE_LINE_TEXTURE]() {
         const x0 = 0;
         const y0 = 0 + this.application.screen.height * config_1.default.padding.top;
         const x1 = 0;
@@ -46,7 +52,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    createPoolRoundTexture() {
+    [symbols_1.POOL_ROUND_TEXTURE]() {
         const { width, height } = this.application.screen;
         const { padding } = config_1.default;
         const x0 = width - width * padding.right - width / 100;
@@ -74,6 +80,4 @@ class TextureStorage {
     }
 }
 exports.TextureStorage = TextureStorage;
-TextureStorage.PRICE_LINE_TEXTURE = Symbol('PRICE_LINE_TEXTURE');
-TextureStorage.POOL_ROUND_TEXTURE = Symbol('POOL_ROUND_TEXTURE');
 //# sourceMappingURL=TextureStorage.js.map

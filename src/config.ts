@@ -8,10 +8,10 @@ export default {
     zoomspeed: 100,
 
     //pixi
-    forceCanvas: true,
+    forceCanvas: false,
     autoStart: false,
     autoDensity: true,
-    antialias: false,
+    antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
 
     //data

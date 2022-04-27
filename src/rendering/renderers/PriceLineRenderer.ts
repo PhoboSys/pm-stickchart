@@ -5,6 +5,7 @@ import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+import { PRICE_LINE_TEXTURE } from '..'
 
 export class PriceLineRenderer extends BaseRenderer {
 
@@ -113,7 +114,7 @@ export class PriceLineRenderer extends BaseRenderer {
 
         const gradient = new Graphics()
         gradient.beginTextureFill({
-            texture: context.priceLineGradient,
+            texture: context.textures.get(PRICE_LINE_TEXTURE),
             alpha: 0.5
         })
         gradient.drawPolygon(shape)

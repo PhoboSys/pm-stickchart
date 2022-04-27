@@ -29,7 +29,7 @@
         "comma-dangle": [
             "off"
         ],
-        "no-duplicate-imports": "error",
+        "no-duplicate-imports": "off",
         "no-redeclare": "error",
         "no-trailing-spaces": "error",
         "space-before-blocks": "error",
