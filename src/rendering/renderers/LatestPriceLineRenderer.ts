@@ -27,7 +27,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         this.textCoverStyle = {
             color: config.style.linecolor,
-            paddingx: 10,
+            paddingx: 7,
             paddingy: 5,
             anchorx: 1.1,
             anchory: 0.5,
@@ -37,6 +37,10 @@ export class LatestPriceLineRenderer extends BaseRenderer {
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 13,
+            },
+            linestyle: {
+                color: config.style.linecolor,
+                width: 1,
             }
         }
     }

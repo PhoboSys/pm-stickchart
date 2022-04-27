@@ -7,7 +7,19 @@ export declare class GraphicUtils {
         color: any;
     }): Graphics;
     static createRoundedRect([x, y]: [number, number], [width, height]: [number, number], radius: number, style: {
+        fill: any;
+        linestyle: any;
+    }): Graphics;
+    static createCoveredIcon([x, y]: [number, number], style: {
+        iconstyle: any;
+        paddingx: any;
+        paddingy: any;
         color: any;
+        radius: any;
+        anchorx: any;
+        anchory: any;
+        linestyle: any;
+        texture: any;
     }): Graphics;
     static createCoveredText(value: any, [x, y]: [number, number], style: {
         textstyle: any;
@@ -17,6 +29,7 @@ export declare class GraphicUtils {
         radius: any;
         anchorx: any;
         anchory: any;
+        linestyle: any;
     }): Graphics;
     static createVerticalDashLine(// TODO: implement point to point
     x: number, [y1, y2]: [number, number], linestyle: LineStyle & {

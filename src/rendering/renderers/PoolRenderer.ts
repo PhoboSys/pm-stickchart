@@ -5,7 +5,7 @@ import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
-import { POOL_ROUND_TEXTURE } from '..'
+import { POOL_ROUND_TEXTURE, LOCK_ICON_TEXTURE } from '..'
 
 export class PoolRenderer extends BaseRenderer {
 
@@ -48,49 +48,24 @@ export class PoolRenderer extends BaseRenderer {
             linePadding: 5,
         }
 
-        this.openPoolStyle = {
-            paddingTop: 20,
-            paddingBottom: 5,
-            linestyle: {
-                ...basicLineStyle,
-                color: 0xB7BDD7,
-            },
-            torusstyle: {
-                ...basicTorusStyle,
-                color: 0xB7BDD7,
-
-            },
-            coveredNameStyle: {
-                ...basicCoveredTextStyle,
-                textstyle: {
-                    ...basicTextNameStyle,
-                    fill: 0x303550,
-                },
-                linePadding: -5,
-                color: 0xB7BDD7,
-                anchorx: 1,
-                anchory: 0,
-            }
-        }
-
         this.lockPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 5,
+            paddingBottom: 20,
             linestyle: {
                 ...basicLineStyle,
-                color: 0x00A573,
+                color: 0xFFA000,
             },
             torusstyle: {
                 ...basicTorusStyle,
-                color: 0x00A573
+                color: 0xFFA000,
             },
-            coveredNameStyle: {
+            coveredIconStyle: {
                 ...basicCoveredTextStyle,
-                textstyle: {
-                    ...basicTextNameStyle,
-                    fill: 0xFFFFFF,
+                paddingx: 8,
+                iconstyle: {
+                    size: 13
                 },
-                color: 0x00A573,
+                color: 0xFFA000,
                 anchorx: 0,
                 anchory: 0,
             }
@@ -98,7 +73,7 @@ export class PoolRenderer extends BaseRenderer {
 
         this.resolutionPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 5,
+            paddingBottom: 20,
             linestyle: {
                 ...basicLineStyle,
                 color: 0xF05350,
@@ -115,6 +90,36 @@ export class PoolRenderer extends BaseRenderer {
                 },
                 color: 0xF05350,
                 anchorx: 0,
+                anchory: 0,
+            }
+        }
+
+        this.openPoolStyle = {
+            paddingTop: 20,
+            paddingBottom: 20,
+            linestyle: {
+                ...basicLineStyle,
+                color: 0xB7BDD7,
+            },
+            torusstyle: {
+                ...basicTorusStyle,
+                color: 0xB7BDD7,
+
+            },
+            coveredNameStyle: {
+                ...basicCoveredTextStyle,
+                textstyle: {
+                    ...basicTextNameStyle,
+                    fill: 0xB7BDD7,
+                },
+                linestyle: {
+                    color: 0xB7BDD7,
+                    width: 1,
+                },
+                linePadding: -5,
+                color: 0x22273F,
+                bordercolor: 0xB7BDD7,
+                anchorx: 1,
                 anchory: 0,
             }
         }
@@ -138,17 +143,21 @@ export class PoolRenderer extends BaseRenderer {
                 alpha: 0.7,
             },
             textCoverStyle: {
-                color: 0xB7BDD7,
-                paddingx: 10,
-                paddingy: 2,
+                color: 0x22273F,
+                paddingx: 7,
+                paddingy: 5,
                 anchorx: 1.1,
                 anchory: 0.5,
-                radius: 10,
+                radius: 30,
                 textstyle: {
-                    fill: 0x303550,
+                    fill: 0xB7BDD7,
                     fontWeight: 600,
                     fontFamily: 'Gilroy',
                     fontSize: 13,
+                },
+                linestyle: {
+                    color: 0xB7BDD7,
+                    width: 1,
                 }
             }
         }
@@ -194,7 +203,7 @@ export class PoolRenderer extends BaseRenderer {
         const gradient = new Graphics()
         gradient.beginTextureFill({
             texture: context.textures.get(POOL_ROUND_TEXTURE),
-            alpha: 0.05
+            alpha: 0.07
         })
         gradient.drawPolygon(shape)
         gradient.closePath()
@@ -202,9 +211,10 @@ export class PoolRenderer extends BaseRenderer {
 
         result.addChild(gradient)
 
+        this.lockPoolStyle.coveredIconStyle.texture = context.textures.get(LOCK_ICON_TEXTURE)
         result.addChild(
-            this.createPoolBorder(context, 'Open', openDate, this.openPoolStyle),
-            this.createPoolBorder(context, 'Lock', lockDate, this.lockPoolStyle),
+            this.createPoolBorder(context, 'Start', openDate, this.openPoolStyle),
+            this.createLockLine(context, lockDate, this.lockPoolStyle),
             this.createPoolBorder(context, 'Resolution', resolutionDate, this.resolutionPoolStyle),
         )
         if (openPrice) {
@@ -263,7 +273,50 @@ export class PoolRenderer extends BaseRenderer {
         return price
     }
 
-    private createPoolBorder(context: RenderingContext, name: string, poolDate, style): Graphics {
+    private createLockLine(context: RenderingContext, poolDate, style): Graphics {
+        const {
+            xrange,
+        } = context.plotdata
+
+        const {
+            width,
+            height,
+        } = context.screen
+
+        const { paddingTop, paddingBottom } = style
+        const [x] = datamath.scale([poolDate], xrange, width)
+
+        const { coveredIconStyle } = style
+        const { linePadding: coverpadding } = coveredIconStyle
+        const coveredIcon = GraphicUtils.createCoveredIcon(
+            [x + coverpadding, paddingTop],
+            coveredIconStyle
+        )
+
+        const covery = coveredIcon.y + coveredIcon.height
+        const { torusstyle } = style
+        const torus = GraphicUtils.createTorus(
+            [x, covery],
+            [torusstyle.innerr, torusstyle.outterr],
+            torusstyle,
+        )
+
+        const torusy = torus.y + torusstyle.outterr
+        const { linestyle } = style
+        const { torusPadding } = linestyle
+        const line = GraphicUtils.createVerticalDashLine( // TODO: dash-line
+            x,
+            [torusy + torusPadding, height - paddingBottom],
+            style.linestyle
+        )
+
+        const pool = new Graphics()
+        pool.addChild(line, torus, coveredIcon)
+        return pool
+
+    }
+
+    private createPoolBorder(context: RenderingContext, title: string, poolDate, style): Graphics {
         const {
             xrange,
         } = context.plotdata
@@ -279,7 +332,7 @@ export class PoolRenderer extends BaseRenderer {
         const { coveredNameStyle } = style
         const { linePadding: coverpadding } = coveredNameStyle
         const coveredName = GraphicUtils.createCoveredText(
-            name,
+            title,
             [x + coverpadding, paddingTop],
             coveredNameStyle
         )
