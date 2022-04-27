@@ -1,12 +1,9 @@
+import { ITextureStorage } from '../abstraction';
 import { Application, RenderTexture } from '../../lib/pixi';
-export declare class TextureStorage {
+export declare class TextureStorage implements ITextureStorage {
     private readonly application;
-    static readonly PRICE_LINE_TEXTURE: symbol;
-    static readonly POOL_ROUND_TEXTURE: symbol;
-    private readonly textires;
+    private readonly textures;
     constructor(application: Application);
-    getPriceLineGradient(): RenderTexture;
-    getPoolRoundGradient(): RenderTexture;
-    createPriceLineTexture(): RenderTexture;
-    createPoolRoundTexture(): RenderTexture;
+    get(name: symbol): RenderTexture;
+    private EMPTY;
 }

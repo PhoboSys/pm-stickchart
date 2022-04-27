@@ -5,6 +5,7 @@ import datamath from '../../lib/datamath'
 
 import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+import { POOL_ROUND_TEXTURE } from '..'
 
 export class PoolRenderer extends BaseRenderer {
 
@@ -192,7 +193,7 @@ export class PoolRenderer extends BaseRenderer {
 
         const gradient = new Graphics()
         gradient.beginTextureFill({
-            texture: context.poolRaundGradient,
+            texture: context.textures.get(POOL_ROUND_TEXTURE),
             alpha: 0.05
         })
         gradient.drawPolygon(shape)

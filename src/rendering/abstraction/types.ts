@@ -1,5 +1,6 @@
-import { Rectangle, RenderTexture } from '../../lib/pixi'
+import { Rectangle } from '../../lib/pixi'
 import { ChartData, PlotData } from '../../chartdata'
+import { ITextureStorage } from './interfaces'
 
 export type DoneFunction = () => void
 
@@ -8,8 +9,7 @@ export type RenderingContext = {
     chartdata: ChartData,
     plotdata: PlotData,
     screen: Rectangle,
-    priceLineGradient: RenderTexture,
-    poolRaundGradient: RenderTexture,
+    textures: ITextureStorage,
 
     mousepos?: { x: number, y: number, }
 }
