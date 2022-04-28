@@ -1,4 +1,4 @@
-import { IGraphicRenderer } from '..'
+import { IGraphicStorage } from '..'
 import { DoneFunction, RenderingContext, IRenderer } from '..'
 import { RenderingCompositor } from '..'
 import { LatestPriceLineRenderer } from './LatestPriceLineRenderer'
@@ -9,7 +9,7 @@ export class LatestPriceRenderer implements IRenderer {
     private readonly compositor: RenderingCompositor
 
     constructor (
-       private readonly renderer: IGraphicRenderer
+       private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
             new LatestPriceLineRenderer(renderer),

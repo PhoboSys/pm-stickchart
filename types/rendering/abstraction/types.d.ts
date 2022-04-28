@@ -4,6 +4,7 @@ import { ITextureStorage } from './interfaces';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
+    paris: any[];
     chartdata: ChartData;
     plotdata: PlotData;
     screen: Rectangle;

@@ -8,6 +8,7 @@ const infra_1 = require("../../infra");
 const config_1 = __importDefault(require("../../config"));
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
+const symbols_3 = require("./symbols");
 const pixi_1 = require("../../lib/pixi");
 const pixi_2 = require("../../lib/pixi");
 class TextureStorage {
@@ -15,7 +16,7 @@ class TextureStorage {
         this.application = application;
         this.textures = {};
         // pre-create
-        this.get(symbols_2.LOCK_ICON_TEXTURE);
+        this.get(symbols_3.LOCK_ICON_TEXTURE);
     }
     get(name) {
         if (!this.textures[name]) {
@@ -35,6 +36,48 @@ class TextureStorage {
             width: this.application.renderer.width,
             height: this.application.renderer.height
         });
+    }
+    [symbols_2.UP_WAGET_TEXTURE]() {
+        const height = this.application.screen.height;
+        const x0 = 0;
+        const y0 = 0;
+        const x1 = 0;
+        const y1 = height;
+        const top = '#' + config_1.default.style.upcolor.toString(16).padStart(6, '0');
+        const bottom = top + '00'; // same color with opacity = 0
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
+            width: this.application.renderer.width,
+            height: this.application.renderer.height
+        }), {
+            x0, y0,
+            x1, y1,
+            colorStops: [
+                { color: top, offset: 0 },
+                { color: bottom, offset: 1 },
+            ]
+        });
+        return gradient;
+    }
+    [symbols_2.DOWN_WAGET_TEXTURE]() {
+        const height = this.application.screen.height;
+        const x0 = 0;
+        const y0 = 0;
+        const x1 = 0;
+        const y1 = height;
+        const top = '#' + config_1.default.style.downcolor.toString(16).padStart(6, '0');
+        const bottom = top + '00'; // same color with opacity = 0
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
+            width: this.application.renderer.width,
+            height: this.application.renderer.height
+        }), {
+            x0, y0,
+            x1, y1,
+            colorStops: [
+                { color: top, offset: 0 },
+                { color: bottom, offset: 1 },
+            ]
+        });
+        return gradient;
     }
     [symbols_1.PRICE_LINE_TEXTURE]() {
         const x0 = 0;
@@ -82,7 +125,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_2.LOCK_ICON_TEXTURE]() {
+    [symbols_3.LOCK_ICON_TEXTURE]() {
         const { width, height } = this.application.screen;
         const { padding } = config_1.default;
         const svg = `

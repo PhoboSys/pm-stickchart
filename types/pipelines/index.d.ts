@@ -8,14 +8,14 @@ export declare type ChartData = {
 export declare class RenderingPipelineFactory {
     private readonly renderer;
     private pipelines;
-    constructor(renderer: IGraphicRenderer);
+    constructor(renderer: IGraphicStorage);
     get(charttype: EChartType): IRenderer;
     private create;
 }
-export interface IGraphicRenderer {
+export interface IGraphicStorage {
     render(graphics: Graphics, renderKey: string): void;
 }
-export declare class GraphicRenderer implements IGraphicRenderer {
+export declare class GraphicRenderer implements IGraphicStorage {
     private readonly container;
     private rendered;
     constructor(container: Container);

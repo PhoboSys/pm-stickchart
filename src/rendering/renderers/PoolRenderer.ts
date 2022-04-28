@@ -1,9 +1,9 @@
 import config from '../../config'
 
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
 
-import { IGraphicRenderer, RenderingContext } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { POOL_ROUND_TEXTURE, LOCK_ICON_TEXTURE } from '..'
 
@@ -17,7 +17,7 @@ export class PoolRenderer extends BaseRenderer {
     private readonly openPricePointStyle: any
     private readonly resolutionPricePointStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
 
         const basicLineStyle = {
@@ -167,9 +167,10 @@ export class PoolRenderer extends BaseRenderer {
         return PoolRenderer.POOL_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
         if (!context.pool) return new Graphics()
 
         const {
@@ -304,7 +305,7 @@ export class PoolRenderer extends BaseRenderer {
         const torusy = torus.y + torusstyle.outterr
         const { linestyle } = style
         const { torusPadding } = linestyle
-        const line = GraphicUtils.createVerticalDashLine( // TODO: dash-line
+        const line = GraphicUtils.createVerticalDashLine(
             x,
             [torusy + torusPadding, height - paddingBottom],
             style.linestyle
@@ -348,7 +349,7 @@ export class PoolRenderer extends BaseRenderer {
         const torusy = torus.y + torusstyle.outterr
         const { linestyle } = style
         const { torusPadding } = linestyle
-        const line = GraphicUtils.createVerticalDashLine( // TODO: dash-line
+        const line = GraphicUtils.createVerticalDashLine(
             x,
             [torusy + torusPadding, height - paddingBottom],
             style.linestyle

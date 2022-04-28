@@ -23,7 +23,7 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
     get rendererId() {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
-    create(context) {
+    update(context, container) {
         const { xlast, ylast, xrange, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([xlast], xrange, width);

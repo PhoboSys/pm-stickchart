@@ -1,10 +1,12 @@
-import { Graphics } from '../../lib/pixi';
-import { IRenderer, IGraphicRenderer } from '..';
+import { Container } from '../../lib/pixi';
+import { IRenderer, IGraphicStorage } from '..';
 import { RenderingContext, DoneFunction } from '..';
 export declare abstract class BaseRenderer implements IRenderer {
-    protected readonly renderer: IGraphicRenderer;
-    constructor(renderer: IGraphicRenderer);
+    protected readonly storage: IGraphicStorage;
+    private local;
+    constructor(storage: IGraphicStorage);
     render(context: RenderingContext, done: DoneFunction): void;
+    protected get<T>(name: string, init: () => T): [T, any];
     abstract get rendererId(): symbol;
-    protected abstract create(context: RenderingContext): Graphics;
+    protected abstract update(context: RenderingContext, container: Container): Container;
 }

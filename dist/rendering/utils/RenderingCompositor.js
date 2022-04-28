@@ -5,9 +5,6 @@ class RenderingCompositor {
     constructor(renderers) {
         this.renderers = renderers;
     }
-    use(renderer) {
-        this.renderers.push(renderer);
-    }
     compose(context, next = () => { }) {
         let prevnext = next;
         let idx = this.renderers.length;
