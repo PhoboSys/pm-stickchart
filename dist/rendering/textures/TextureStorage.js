@@ -9,7 +9,10 @@ const infra_1 = require("../../infra");
 const pixi_1 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
+<<<<<<< HEAD
 const symbols_3 = require("./symbols");
+=======
+>>>>>>> e25cbca (build project)
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -34,6 +37,7 @@ class TextureStorage {
         return pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
             height: this.application.renderer.height,
+<<<<<<< HEAD
         });
     }
     [symbols_1.UP_WAGET_TEXTURE]() {
@@ -75,6 +79,8 @@ class TextureStorage {
                 { color: top, offset: 0 },
                 { color: bottom, offset: 1 },
             ],
+=======
+>>>>>>> e25cbca (build project)
         });
         return gradient;
     }

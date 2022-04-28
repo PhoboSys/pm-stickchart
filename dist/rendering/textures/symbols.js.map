@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"file":"symbols.js","sourceRoot":"","sources":["../../../src/rendering/textures/symbols.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG,MAAM,CAAC,oBAAoB,CAAC,CAAA;AACjD,QAAA,kBAAkB,GAAG,MAAM,CAAC,oBAAoB,CAAC,CAAA;AACjD,QAAA,iBAAiB,GAAG,MAAM,CAAC,mBAAmB,CAAC,CAAA;AAC/C,QAAA,kBAAkB,GAAG,MAAM,CAAC,oBAAoB,CAAC,CAAA;AACjD,QAAA,gBAAgB,GAAG,MAAM,CAAC,kBAAkB,CAAC,CAAA"}
+=======
+{"version":3,"file":"symbols.js","sourceRoot":"","sources":["../../../src/rendering/textures/symbols.ts"],"names":[],"mappings":";;;AAAa,QAAA,kBAAkB,GAAG,MAAM,CAAC,oBAAoB,CAAC,CAAA;AACjD,QAAA,kBAAkB,GAAG,MAAM,CAAC,oBAAoB,CAAC,CAAA;AACjD,QAAA,iBAAiB,GAAG,MAAM,CAAC,mBAAmB,CAAC,CAAA"}
+>>>>>>> e25cbca (build project)
