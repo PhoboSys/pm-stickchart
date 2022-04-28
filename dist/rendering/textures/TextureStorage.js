@@ -5,14 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
 const config_1 = __importDefault(require("../../config"));
-<<<<<<< HEAD
+const infra_1 = require("../../infra");
+const pixi_1 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
-=======
-const infra_1 = require("../../infra");
->>>>>>> 5d8a960 (eslint fix)
-const pixi_1 = require("../../lib/pixi");
-const pixi_2 = require("../../lib/pixi");
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -36,7 +32,7 @@ class TextureStorage {
     EMPTY() {
         return pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
-            height: this.application.renderer.height
+            height: this.application.renderer.height,
         });
     }
     [symbols_1.PRICE_LINE_TEXTURE]() {
@@ -92,12 +88,12 @@ class TextureStorage {
         const { padding } = config_1.default;
         const svg = `
         <svg width="113" height="148" viewBox="0 0 113 148" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M98.875 49.3333H91.8125V35.2381C91.8125 15.7867 75.9925 0 56.5 0C37.0075 0 21.1875 15.7867 21.1875 35.2381V49.3333H14.125C6.35625 49.3333 0 55.6762 0 63.4286V133.905C0 141.657 6.35625 148 14.125 148H98.875C106.644 148 113 141.657 113 133.905V63.4286C113 55.6762 106.644 49.3333 98.875 49.3333ZM56.5 112.762C48.7312 112.762 42.375 106.419 42.375 98.6667C42.375 90.9143 48.7312 84.5714 56.5 84.5714C64.2688 84.5714 70.625 90.9143 70.625 98.6667C70.625 106.419 64.2688 112.762 56.5 112.762ZM35.3125 49.3333V35.2381C35.3125 23.539 44.7763 14.0952 56.5 14.0952C68.2237 14.0952 77.6875 23.539 77.6875 35.2381V49.3333H35.3125Z" fill="#303550"/>
+        <path d="M98.875 49.3333H91.8125V35.2381C91.8125 15.7867 75.9925 0 56.5 0C37.0075 0 21.1875 15.7867 21.1875 35.2381V49.3333H14.125C6.35625 49.3333 0 55.6762 0 63.4286V133.905C0 141.657 6.35625 148 14.125 148H98.875C106.644 148 113 141.657 113 133.905V63.4286C113 55.6762 106.644 49.3333 98.875 49.3333ZM56.5 112.762C48.7312 112.762 42.375 106.419 42.375 98.6667C42.375 90.9143 48.7312 84.5714 56.5 84.5714C64.2688 84.5714 70.625 90.9143 70.625 98.6667C70.625 106.419 64.2688 112.762 56.5 112.762ZM35.3125 49.3333V35.2381C35.3125 23.539 44.7763 14.0952 56.5 14.0952C68.2237 14.0952 77.6875 23.539 77.6875 35.2381V49.3333H35.3125Z" fill="#303550"/>
         </svg>
         `;
         const blob = new Blob([svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
-        return pixi_2.Texture.from(url);
+        return pixi_1.RenderTexture.from(url);
     }
 }
 exports.TextureStorage = TextureStorage;

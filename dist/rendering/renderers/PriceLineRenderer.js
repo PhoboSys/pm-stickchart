@@ -5,14 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PriceLineRenderer = void 0;
 const __1 = require("..");
+const __2 = require("..");
 const config_1 = __importDefault(require("../../config"));
 const datamath_1 = __importDefault(require("../../lib/datamath"));
-<<<<<<< HEAD
-const __1 = require("..");
-const __2 = require("..");
-=======
 const pixi_1 = require("../../lib/pixi");
->>>>>>> 5d8a960 (eslint fix)
 class PriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -75,13 +71,8 @@ class PriceLineRenderer extends __1.BaseRenderer {
         shape.push(prevX, height);
         const gradient = new pixi_1.Graphics();
         gradient.beginTextureFill({
-<<<<<<< HEAD
             texture: context.textures.get(__2.PRICE_LINE_TEXTURE),
-            alpha: 0.5
-=======
-            texture: context.priceLineGradient,
             alpha: 0.5,
->>>>>>> 5d8a960 (eslint fix)
         });
         gradient.drawPolygon(shape);
         gradient.closePath();

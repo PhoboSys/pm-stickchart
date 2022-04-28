@@ -32,13 +32,10 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
                 fontFamily: 'Gilroy',
                 fontSize: 13,
             },
-<<<<<<< HEAD
             linestyle: {
                 color: config_1.default.style.linecolor,
                 width: 1,
-            }
-=======
->>>>>>> 5d8a960 (eslint fix)
+            },
         };
     }
     get rendererId() {

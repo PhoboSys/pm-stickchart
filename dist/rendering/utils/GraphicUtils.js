@@ -7,7 +7,6 @@ exports.GraphicUtils = void 0;
 const lodash_1 = require("lodash");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
-const pixi_2 = require("../../lib/pixi");
 class GraphicUtils {
     static createCircle([x, y], radius, style) {
         const cirl = new pixi_1.Graphics()
@@ -36,7 +35,7 @@ class GraphicUtils {
     }
     static createCoveredIcon([x, y], style) {
         const { paddingx, paddingy } = style;
-        const icon = new pixi_2.Sprite(style.texture);
+        const icon = new pixi_1.Sprite(style.texture);
         const scale = style.iconstyle.size / icon.height;
         icon.position.set(paddingx, paddingy);
         icon.scale.set(scale);
@@ -57,14 +56,10 @@ class GraphicUtils {
         const text = GraphicUtils.createText(value, [paddingx, paddingy], style.textstyle, [0, 0]);
         const coverwidth = text.width + paddingx * 2;
         const coverheight = text.height + paddingy * 2;
-<<<<<<< HEAD
         const cover = GraphicUtils.createRoundedRect([0, 0], [coverwidth, coverheight], style.radius, {
             fill: style.color,
             linestyle: style.linestyle,
         });
-=======
-        const cover = GraphicUtils.createRoundedRect([0, 0], [coverwidth, coverheight], style.radius, style);
->>>>>>> 5d8a960 (eslint fix)
         const coveredText = new pixi_1.Graphics();
         coveredText.addChild(cover, text);
         const { anchorx, anchory } = style;
