@@ -1,6 +1,6 @@
 import { Container, Graphics } from '../../lib/pixi';
-import { IGraphicRenderer } from '..';
-export declare class GraphicRenderer implements IGraphicRenderer {
+import { IGraphicStorage } from '..';
+export declare class GraphicRenderer implements IGraphicStorage {
     private readonly container;
     private rendered;
     constructor(container: Container);

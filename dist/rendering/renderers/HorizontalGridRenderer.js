@@ -25,7 +25,7 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
     get rendererId() {
         return HorizontalGridRenderer.HORIZONTAL_GRID_ID;
     }
-    create(context) {
+    update(context, container) {
         const result = new pixi_1.Graphics();
         const { width, height } = context.screen;
         const { ydata, yrange } = context.plotdata;

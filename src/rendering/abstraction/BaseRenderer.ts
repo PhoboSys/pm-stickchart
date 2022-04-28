@@ -1,27 +1,45 @@
-import { Graphics } from '../../lib/pixi'
+import { Container } from '../../lib/pixi'
 
-import { IRenderer, IGraphicRenderer } from '..'
+import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
 
 export abstract class BaseRenderer implements IRenderer {
 
+    private local: { [key: string]: any }
+
     constructor(
-       protected readonly renderer: IGraphicRenderer
+       protected readonly storage: IGraphicStorage,
     ) { }
 
     public render(
         context: RenderingContext,
-        done: DoneFunction
+        done: DoneFunction,
     ): void {
 
-        this.renderer.render(
-            this.create(context),
-            this.rendererId,
-        )
+        const container = this.storage.get(this.rendererId)
+        const newcontainer = this.update(context, container)
+        if (newcontainer !== container) {
+            this.storage.set(this.rendererId, newcontainer)
+            this.local = {}
+        }
 
         done()
     }
 
+    protected get<T>(name: string, init: () => T): [T, any] {
+
+        const stored = this.local[name]
+        if (stored) {
+            const [g, state] = stored
+            state.new = false
+            return [<T>g, state]
+        }
+
+        this.local[name] = [init(), { new: true }]
+        return this.local[name]
+
+    }
+
     public abstract get rendererId(): symbol
-    protected abstract create(context: RenderingContext): Graphics
+    protected abstract update(context: RenderingContext, container: Container): Container
 }

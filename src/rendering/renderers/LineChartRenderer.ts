@@ -1,18 +1,18 @@
-import { IGraphicRenderer } from '..'
+import { IGraphicStorage } from '..'
 import { DoneFunction, RenderingContext, IRenderer } from '..'
 import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
-import { PoolRenderer } from '..';
-import { LatestPriceRenderer } from '..';
+import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..';
 
 export class LineChartRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
     constructor (
-       private readonly renderer: IGraphicRenderer
+       private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
             new GridRenderer(renderer),
+            new PariResolutionRenderer(renderer),
             new PriceLineRenderer(renderer),
             new PoolRenderer(renderer),
             new LatestPriceRenderer(renderer),

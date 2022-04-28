@@ -36,7 +36,7 @@ class CrosshairRenderer extends __1.BaseRenderer {
     get rendererId() {
         return CrosshairRenderer.CROSSHAIR_ID;
     }
-    create(context) {
+    update(context, container) {
         if (!context.mousepos)
             return new pixi_1.Graphics();
         const { height, width, } = context.screen;

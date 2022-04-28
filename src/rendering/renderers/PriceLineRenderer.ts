@@ -1,9 +1,9 @@
 import config from '../../config'
 
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
 
-import { IGraphicRenderer, RenderingContext } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { PRICE_LINE_TEXTURE } from '..'
 
@@ -14,8 +14,9 @@ export class PriceLineRenderer extends BaseRenderer {
     private readonly lineStyle: any
     private readonly textStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
+
         this.lineStyle = {
             width: config.style.linesize,
             color: config.style.linecolor,
@@ -35,9 +36,10 @@ export class PriceLineRenderer extends BaseRenderer {
         return PriceLineRenderer.PRICE_LINE_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
 
         const { width, height } = context.screen
         const { xdata, xrange, ydata, yrange } = context.plotdata

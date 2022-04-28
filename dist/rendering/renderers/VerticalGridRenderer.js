@@ -26,7 +26,7 @@ class VerticalGridRenderer extends __1.BaseRenderer {
     get rendererId() {
         return VerticalGridRenderer.VERTICAL_GRID_ID;
     }
-    create(context) {
+    update(context, container) {
         const result = new pixi_1.Graphics();
         const { width, height } = context.screen;
         const { xdata, xrange } = context.plotdata;

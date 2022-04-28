@@ -29,7 +29,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
     get rendererId() {
         return PriceLineRenderer.PRICE_LINE_ID;
     }
-    create(context) {
+    update(context, container) {
         const { width, height } = context.screen;
         const { xdata, xrange, ydata, yrange } = context.plotdata;
         const xs = datamath_1.default.scale(xdata, xrange, width);

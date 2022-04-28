@@ -1,5 +1,5 @@
-import { Graphics } from '../../lib/pixi';
-import { IGraphicRenderer, RenderingContext } from '..';
+import { Container } from '../../lib/pixi';
+import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
 export declare class PoolRenderer extends BaseRenderer {
     static readonly POOL_ID: symbol;
@@ -8,9 +8,9 @@ export declare class PoolRenderer extends BaseRenderer {
     private readonly resolutionPoolStyle;
     private readonly openPricePointStyle;
     private readonly resolutionPricePointStyle;
-    constructor(renderer: IGraphicRenderer);
+    constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    protected create(context: RenderingContext): Graphics;
+    protected update(context: RenderingContext, container: Container): Container;
     private createPrice;
     private createLockLine;
     private createPoolBorder;

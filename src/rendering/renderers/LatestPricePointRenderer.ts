@@ -1,9 +1,9 @@
 import config from '../../config'
 
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 import datamath from '../../lib/datamath'
 
-import { IGraphicRenderer, RenderingContext } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
 export class LatestPricePointRenderer extends BaseRenderer {
@@ -13,7 +13,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
     private readonly outerPointStyle: any
     private readonly innerPointStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
 
         this.innerPointStyle = {
@@ -31,9 +31,10 @@ export class LatestPricePointRenderer extends BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
         const {
             xlast,
             ylast,

@@ -1,11 +1,11 @@
 import { Graphics } from '../../lib/pixi';
 import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
-export declare class MouseCrossRenderer extends BaseRenderer {
-    static readonly MOUSE_CROSS_ID: symbol;
-    private readonly lineStyle;
-    private readonly priceCoverStyle;
-    constructor(renderer: IGraphicStorage);
+export declare class PariResolutionRenderer extends BaseRenderer {
+    static readonly WAGER_GRID_ID: symbol;
     get rendererId(): symbol;
+    private readonly wagerUp;
+    private readonly wagerDown;
+    constructor(renderer: IGraphicStorage);
     protected create(context: RenderingContext): Graphics;
 }

@@ -17,6 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./GraphicUtils"), exports);
 __exportStar(require("./RenderingCompositor"), exports);
 __exportStar(require("./RenderingPipelineFactory"), exports);
-__exportStar(require("./PixiGraphicRenderer"), exports);
+__exportStar(require("./GraphicStorage"), exports);
 __exportStar(require("./DateUtils"), exports);
 //# sourceMappingURL=index.js.map

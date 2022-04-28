@@ -2,7 +2,8 @@ import { Logger } from '../../infra'
 import config from '../../config'
 
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
-import { LOCK_ICON_TEXTURE } from './symbols'
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
+import { LOCK_ICON_TEXTURE  } from './symbols'
 
 import { ITextureStorage } from '../abstraction'
 
@@ -40,6 +41,67 @@ export class TextureStorage implements ITextureStorage {
             width: this.application.renderer.width,
             height: this.application.renderer.height
         })
+    }
+
+    private [UP_WAGET_TEXTURE]() {
+        const height = this.application.screen.height
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const top = '#' + config.style.upcolor.toString(16).padStart(6, '0')
+        const bottom = top + '00' // same color with opacity = 0
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>this.application.renderer,
+            RenderTexture.create({
+                width: this.application.renderer.width,
+                height: this.application.renderer.height
+            }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops : [
+                    { color: top, offset: 0 },
+                    { color: bottom, offset: 1 },
+                ]
+            }
+        )
+
+        return gradient
+
+    }
+
+    private [DOWN_WAGET_TEXTURE]() {
+        const height = this.application.screen.height
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const top = '#' + config.style.downcolor.toString(16).padStart(6, '0')
+        const bottom = top + '00' // same color with opacity = 0
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>this.application.renderer,
+            RenderTexture.create({
+                width: this.application.renderer.width,
+                height: this.application.renderer.height
+            }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops : [
+                    { color: top, offset: 0 },
+                    { color: bottom, offset: 1 },
+                ]
+            }
+        )
+
+        return gradient
     }
 
     private [PRICE_LINE_TEXTURE]() {
