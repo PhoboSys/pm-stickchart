@@ -9,7 +9,7 @@ export default {
 
     //pixi
     forceCanvas: false,
-    autoStart: false,
+    autoStart: true,
     autoDensity: true,
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),

@@ -7,5 +7,5 @@ export interface IGraphicRenderer {
     render(graphics: Graphics, renderKey: symbol): void;
 }
 export interface ITextureStorage {
-    get(name: symbol): Texture;
+    get(name: symbol): Texture | Texture[];
 }

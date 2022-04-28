@@ -106,7 +106,7 @@ class datamath {
         const result = [];
         const amount = diff.div(stepsize);
         let sample = 1;
-        if (amount.gt(maxsteps)) {
+        if (maxsteps !== undefined && amount.gt(maxsteps)) {
             sample = amount.div(maxsteps).round(0, big_js_1.default.roundUp);
         }
         let cur = startMin;

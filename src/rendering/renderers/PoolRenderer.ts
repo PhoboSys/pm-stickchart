@@ -2,7 +2,7 @@ import { IGraphicRenderer, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { POOL_ROUND_TEXTURE, LOCK_ICON_TEXTURE } from '..'
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Texture } from '../../lib/pixi'
 
 export class PoolRenderer extends BaseRenderer {
 
@@ -203,7 +203,7 @@ export class PoolRenderer extends BaseRenderer {
         const gradient = new Graphics()
 
         gradient.beginTextureFill({
-            texture: context.textures.get(POOL_ROUND_TEXTURE),
+            texture: <Texture>context.textures.get(POOL_ROUND_TEXTURE),
             alpha: 0.07,
         })
         gradient.drawPolygon(shape)

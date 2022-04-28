@@ -1,16 +1,19 @@
 import config from '../../config'
 import { Logger } from '../../infra'
 
+import datamath from '../../lib/datamath'
 import { Application, RenderTexture, GradientFactory, Sprite } from '../../lib/pixi'
 import { Texture, Renderer } from '../../lib/pixi'
 import { ITextureStorage } from '../abstraction'
+import { GraphicUtils } from '../utils'
 
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
+import { LATEST_PRICE_POINT_TEXTURES } from './symbols'
 import { LOCK_ICON_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
-    private readonly textures: { [key: symbol]: Texture } = {}
+    private readonly textures: { [key: symbol]: Texture | Texture[] } = {}
 
     constructor(
         private readonly application: Application,
@@ -19,8 +22,7 @@ export class TextureStorage implements ITextureStorage {
         this.get(LOCK_ICON_TEXTURE)
     }
 
-    public get(name: symbol): Texture {
-
+    public get(name: symbol): Texture | Texture[] {
         if (!this.textures[name]) {
             Logger.warn('Create Texture', name)
             if (this[name] instanceof Function) {
@@ -104,6 +106,25 @@ export class TextureStorage implements ITextureStorage {
         )
 
         return gradient
+    }
+
+    private [LATEST_PRICE_POINT_TEXTURES](): Texture[] {
+        const textures: RenderTexture[] = []
+
+        const steps = datamath.steps([4, 10], .5)
+
+        steps.push(...steps.map((_, i) => <number>steps.at(-i - 1)))
+
+        for (const radius of steps) {
+            const color = config.style.linecolor
+            const circle = GraphicUtils.createCircle([0, 0], radius, { color })
+
+            const texture = this.application.renderer.generateTexture(circle)
+
+            textures.push(texture)
+        }
+
+        return textures
     }
 
     private [LOCK_ICON_TEXTURE](): Texture {

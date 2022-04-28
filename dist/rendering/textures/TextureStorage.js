@@ -6,15 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
 const config_1 = __importDefault(require("../../config"));
 const infra_1 = require("../../infra");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
+const utils_1 = require("../utils");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
+const symbols_3 = require("./symbols");
 class TextureStorage {
     constructor(application) {
         this.application = application;
         this.textures = {};
         // pre-create
-        this.get(symbols_2.LOCK_ICON_TEXTURE);
+        this.get(symbols_3.LOCK_ICON_TEXTURE);
     }
     get(name) {
         if (!this.textures[name]) {
@@ -83,7 +86,19 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_2.LOCK_ICON_TEXTURE]() {
+    [symbols_2.LATEST_PRICE_POINT_TEXTURES]() {
+        const textures = [];
+        const steps = datamath_1.default.steps([4, 10], .5);
+        steps.push(...steps.map((_, i) => steps.at(-i - 1)));
+        for (const radius of steps) {
+            const color = config_1.default.style.linecolor;
+            const circle = utils_1.GraphicUtils.createCircle([0, 0], radius, { color });
+            const texture = this.application.renderer.generateTexture(circle);
+            textures.push(texture);
+        }
+        return textures;
+    }
+    [symbols_3.LOCK_ICON_TEXTURE]() {
         const { width, height } = this.application.screen;
         const { padding } = config_1.default;
         const svg = `

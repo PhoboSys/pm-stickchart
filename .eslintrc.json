@@ -155,7 +155,7 @@
             }
         ],
         "@typescript-eslint/consistent-type-assertions": [
-            "error",
+            "off",
             {
                 "assertionStyle": "angle-bracket"
             }

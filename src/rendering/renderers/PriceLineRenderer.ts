@@ -3,7 +3,7 @@ import { BaseRenderer, GraphicUtils } from '..'
 import { PRICE_LINE_TEXTURE } from '..'
 import config from '../../config'
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Texture } from '../../lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
@@ -117,7 +117,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const gradient = new Graphics()
 
         gradient.beginTextureFill({
-            texture: context.textures.get(PRICE_LINE_TEXTURE),
+            texture: <Texture>context.textures.get(PRICE_LINE_TEXTURE),
             alpha: 0.5,
         })
         gradient.drawPolygon(shape)

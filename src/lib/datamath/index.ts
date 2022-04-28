@@ -133,7 +133,7 @@ export default class datamath {
     static steps(
         [minv, maxv]: [number, number],
         stepsize: number,
-        maxsteps: number,
+        maxsteps?: number,
     ): number[] {
 
         if (!stepsize) return [minv]
@@ -149,7 +149,7 @@ export default class datamath {
         const amount = diff.div(stepsize)
 
         let sample = 1
-        if (amount.gt(maxsteps)) {
+        if (maxsteps !== undefined && amount.gt(maxsteps)) {
             sample = amount.div(maxsteps).round(0, Big.roundUp)
         }
 

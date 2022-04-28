@@ -1,3 +1,5 @@
+import { AnimatedSprite } from '@pixi/sprite-animated'
+
 import {
     IGraphicRenderer,
     RenderingContext,
@@ -8,6 +10,7 @@ import config from '../../config'
 
 import datamath from '../../lib/datamath'
 import { Graphics } from '../../lib/pixi'
+import { LATEST_PRICE_POINT_TEXTURES } from '../textures/symbols'
 
 export class LatestPricePointRenderer extends BaseRenderer {
 
@@ -55,11 +58,15 @@ export class LatestPricePointRenderer extends BaseRenderer {
         const [yr] = datamath.scale([ylast], yrange, height)
         const y = height - yr
 
-        const outerpoint = GraphicUtils.createCircle(
-            [x, y],
-            this.outerPointStyle.radius,
-            this.outerPointStyle,
+        const outerpoint = new AnimatedSprite(
+            context.textures.get(LATEST_PRICE_POINT_TEXTURES) as [],
+            true,
         )
+
+        outerpoint.position.set(x, y)
+        outerpoint.anchor.set(0.5)
+        outerpoint.animationSpeed = 0.5
+        outerpoint.play()
 
         const innerpoint = GraphicUtils.createCircle(
             [x, y],

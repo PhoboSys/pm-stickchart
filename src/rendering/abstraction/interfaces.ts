@@ -14,5 +14,5 @@ export interface IGraphicRenderer {
 }
 
 export interface ITextureStorage {
-    get(name: symbol): Texture
+    get(name: symbol): Texture | Texture[]
 }
