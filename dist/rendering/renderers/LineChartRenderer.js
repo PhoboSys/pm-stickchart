@@ -8,8 +8,8 @@ class LineChartRenderer {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
             new __1.GridRenderer(renderer),
-            new __2.PariResolutionRenderer(renderer),
             new __1.PriceLineRenderer(renderer),
+            new __2.PariResolutionRenderer(renderer),
             new __2.PoolRenderer(renderer),
             new __2.LatestPriceRenderer(renderer),
         ]);

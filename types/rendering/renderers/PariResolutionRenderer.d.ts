@@ -1,11 +1,8 @@
-import { Container } from '../../lib/pixi';
-import { IGraphicStorage, RenderingContext } from '..';
-import { BaseRenderer } from '..';
-export declare class PariResolutionRenderer extends BaseRenderer {
-    static readonly PARI_RESOLUTION_ID: symbol;
-    get rendererId(): symbol;
-    private readonly wagerUp;
-    private readonly wagerDown;
+import { IGraphicStorage } from '..';
+import { DoneFunction, RenderingContext, IRenderer } from '..';
+export declare class PariResolutionRenderer implements IRenderer {
+    private readonly renderer;
+    private readonly compositor;
     constructor(renderer: IGraphicStorage);
-    protected update(context: RenderingContext, container: Container): Container;
+    render(context: RenderingContext, done: DoneFunction): void;
 }

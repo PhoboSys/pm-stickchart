@@ -24,12 +24,6 @@ export class PriceLineRenderer extends BaseRenderer {
             join: 'round',
             cap: 'round',
         }
-        this.textStyle = {
-            fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-        }
     }
 
     public get rendererId() {
@@ -57,56 +51,36 @@ export class PriceLineRenderer extends BaseRenderer {
             const y = height - ys[idx]
 
             if (+idx === 0) {
+
                 result = GraphicUtils.startLine([x, y], this.lineStyle)
                 prevY = y
                 shape.push(x, height)
                 shape.push(x, y)
-            } else {
+
+            } else if (+idx+1 === xs.length) {
+
                 if (config.style.rectunged) {
                     result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
                     shape.push(x, prevY)
                 }
+
                 result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
                 shape.push(x, y)
                 prevY = y
+
+            } else {
+
+                if (config.style.rectunged) {
+                    result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                    shape.push(x, prevY)
+                }
+
+                result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                shape.push(x, y)
+                prevY = y
+
             }
 
-            if (config.debuglatest && +idx+1 === xs.length) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        xdata[idx],
-                        [x, y],
-                        this.textStyle,
-                        1
-                    ),
-                    GraphicUtils.createText(
-                        ydata[idx],
-                        [x, y],
-                        this.textStyle,
-                        0
-                    )
-                )
-            }
-            if (config.debugtime) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        xdata[idx],
-                        [x, y],
-                        this.textStyle,
-                        1
-                    )
-                )
-            }
-            if (config.debugprice) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        ydata[idx],
-                        [x, y],
-                        this.textStyle,
-                        0
-                    )
-                )
-            }
             prevY = y
             prevX = x
         }

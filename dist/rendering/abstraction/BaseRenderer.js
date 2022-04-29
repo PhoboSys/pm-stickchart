@@ -4,6 +4,7 @@ exports.BaseRenderer = void 0;
 class BaseRenderer {
     constructor(storage) {
         this.storage = storage;
+        this.local = {};
     }
     render(context, done) {
         const container = this.storage.get(this.rendererId);
@@ -13,6 +14,17 @@ class BaseRenderer {
             this.local = {};
         }
         done();
+    }
+    clear(name) {
+        if (name === undefined) {
+            for (const key in this.local)
+                this.clear(key);
+        }
+        else if (name in this.local) {
+            const [g, state] = this.local[name];
+            g.destroy();
+            delete this.local[name];
+        }
     }
     get(name, init) {
         const stored = this.local[name];

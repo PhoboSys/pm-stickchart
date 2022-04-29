@@ -12,8 +12,8 @@ export class LineChartRenderer implements IRenderer {
     ) {
         this.compositor = new RenderingCompositor([
             new GridRenderer(renderer),
-            new PariResolutionRenderer(renderer),
             new PriceLineRenderer(renderer),
+            new PariResolutionRenderer(renderer),
             new PoolRenderer(renderer),
             new LatestPriceRenderer(renderer),
         ])
