@@ -1,10 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
-    //debug
-    debugtime: false,
-    debugprice: false,
-    debuglatest: false,
     //events
     zoomspeed: 100,
     //pixi
@@ -27,9 +23,8 @@ exports.default = {
     padding: {
         left: -0.1,
         right: 0.3819,
-        top: 0.1,
-        bottom: 0.25,
-        minbottom: 162,
+        top: 0.2,
+        bottom: 0.3819, // % golden
     }
 };
 //# sourceMappingURL=config.js.map

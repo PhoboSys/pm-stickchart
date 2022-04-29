@@ -5,7 +5,7 @@ import { RenderingContext, DoneFunction } from '..'
 
 export abstract class BaseRenderer implements IRenderer {
 
-    private local: { [key: string]: any }
+    private local: { [key: string]: any } = {}
 
     constructor(
        protected readonly storage: IGraphicStorage,
@@ -24,6 +24,18 @@ export abstract class BaseRenderer implements IRenderer {
         }
 
         done()
+    }
+
+    protected clear(name?: string): void {
+
+        if (name === undefined) {
+            for (const key in this.local) this.clear(key)
+        } else if (name in this.local) {
+            const [g, state] = this.local[name]
+            g.destroy()
+            delete this.local[name]
+        }
+
     }
 
     protected get<T>(name: string, init: () => T): [T, any] {

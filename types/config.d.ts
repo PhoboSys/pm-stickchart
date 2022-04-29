@@ -1,7 +1,4 @@
 declare const _default: {
-    debugtime: boolean;
-    debugprice: boolean;
-    debuglatest: boolean;
     zoomspeed: number;
     forceCanvas: boolean;
     autoStart: boolean;
@@ -22,7 +19,6 @@ declare const _default: {
         right: number;
         top: number;
         bottom: number;
-        minbottom: number;
     };
 };
 export default _default;

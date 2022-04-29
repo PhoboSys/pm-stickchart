@@ -1,8 +1,6 @@
 export * from './types';
-import { ChartData, DataPadding } from './types';
+import { ChartData } from './types';
 export declare class DataConverter {
-    static readonly xpadding: DataPadding;
-    static readonly ypadding: DataPadding;
     static convert(chartdata: ChartData): {
         xlast: number;
         ylast: number;
