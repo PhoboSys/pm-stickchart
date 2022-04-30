@@ -1,6 +1,8 @@
-import { RenderingContext, RenderingCompositor } from '..'
-import { IGraphicStorage, IRenderer, DoneFunction } from '..'
-import { HorizontalGridRenderer, VerticalGridRenderer } from '..'
+import { RenderingContext, RenderingCompositor } from '../..'
+import { IGraphicStorage, IRenderer, DoneFunction } from '../..'
+
+import { VerticalGridRenderer } from './VerticalGridRenderer'
+import { HorizontalGridRenderer } from './HorizontalGridRenderer'
 
 export class GridRenderer implements IRenderer {
 

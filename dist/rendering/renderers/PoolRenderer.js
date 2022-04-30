@@ -40,7 +40,7 @@ class PoolRenderer extends __1.BaseRenderer {
             paddingBottom: 20,
             linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xFFA000 }),
             torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xFFA000 }),
-            coveredIconStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { paddingx: 8, iconstyle: {
+            coveredIconStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { radius: 8, paddingx: 7, iconstyle: {
                     size: 13
                 }, color: 0xFFA000, anchorx: 0, anchory: 0 })
         };

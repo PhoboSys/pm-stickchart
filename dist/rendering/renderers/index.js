@@ -15,12 +15,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./PriceLineRenderer"), exports);
-__exportStar(require("./VerticalGridRenderer"), exports);
-__exportStar(require("./HorizontalGridRenderer"), exports);
-__exportStar(require("./GridRenderer"), exports);
+__exportStar(require("./grid/GridRenderer"), exports);
 __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
 __exportStar(require("./LatestPriceRenderer"), exports);
 __exportStar(require("./PoolRenderer"), exports);
-__exportStar(require("./PariResolutionRenderer"), exports);
+__exportStar(require("./pari/resolution/PariResolutionRenderer"), exports);
+__exportStar(require("./pari/resolved/PariResolvedRenderer"), exports);
 //# sourceMappingURL=index.js.map

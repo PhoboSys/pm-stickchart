@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionRenderer = void 0;
-const __1 = require("..");
+const __1 = require("../../..");
 const PariResolutionBackground_1 = require("./PariResolutionBackground");
 const PariResolutionPrize_1 = require("./PariResolutionPrize");
 class PariResolutionRenderer {

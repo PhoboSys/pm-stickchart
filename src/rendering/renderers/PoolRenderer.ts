@@ -61,7 +61,8 @@ export class PoolRenderer extends BaseRenderer {
             },
             coveredIconStyle: {
                 ...basicCoveredTextStyle,
-                paddingx: 8,
+                radius: 8,
+                paddingx: 7,
                 iconstyle: {
                     size: 13
                 },

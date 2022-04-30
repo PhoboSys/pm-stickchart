@@ -31,7 +31,7 @@ export class StickChart extends EventTarget {
             forceCanvas: config.forceCanvas,
 
             backgroundColor: config.style.background,
-            backgroundAlpha: 1,
+            backgroundAlpha: config.style.backgroundAlpha,
         })
 
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
@@ -49,21 +49,21 @@ export class StickChart extends EventTarget {
         chartdata: ChartData,
         charttype: EChartType,
         paris: any[],
-        pari: any,
+        resolved: any[],
         pool: any,
-        mousepos: any,
     }): void {
         const pipeline = this.pipelineFactory.get(context.charttype)
         const ctx = {
             pool: context.pool,
             paris: context.paris,
+            resolved: context.resolved,
             chartdata: context.chartdata,
             plotdata: DataConverter.convert(context.chartdata),
-            mousepos: context.mousepos,
             screen: this.application.screen,
             textures: this.textureStorage
         }
 
+        Logger.info('chart render')
         window.requestAnimationFrame(() =>
             pipeline.render(
                 ctx,
@@ -75,6 +75,5 @@ export class StickChart extends EventTarget {
     public destroy() {
         this.application.destroy()
         this.eventsProducer.destroy()
-        Logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
     }
 }

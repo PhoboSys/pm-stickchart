@@ -138,4 +138,4 @@ class PariResolutionPrize extends __1.BaseRenderer {
 }
 exports.PariResolutionPrize = PariResolutionPrize;
 PariResolutionPrize.PARI_RESOLUTION_PRIZE_ID = Symbol('PARI_RESOLUTION_PRIZE_ID');
-//# sourceMappingURL=PariResolutionPrize.js.map
+//# sourceMappingURL=ResolvedParisRenderer.js.map

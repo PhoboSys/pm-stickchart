@@ -8,6 +8,7 @@ declare const _default: {
     maxdensity: number;
     style: {
         background: number;
+        backgroundAlpha: number;
         linesize: number;
         linecolor: number;
         rectunged: boolean;

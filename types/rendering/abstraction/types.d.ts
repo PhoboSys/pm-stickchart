@@ -5,6 +5,7 @@ export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
     paris: any[];
+    resolved: any[];
     chartdata: ChartData;
     plotdata: PlotData;
     screen: Rectangle;
