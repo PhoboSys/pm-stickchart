@@ -14,9 +14,9 @@ export class EventsProducer {
         private readonly stage: HTMLElement,
     ) {
         // bind to instance
-        this.scroll = (e: WheelEvent): any => this.target.dispatchEvent(new ZoomEvent(e))
-        this.error = (e: Event): any => this.target.dispatchEvent(new CanvasErrorEvent(e))
-        this.mouse = (e: MouseEvent): any => this.target.dispatchEvent(new MousemoveEvent(e))
+        this.scroll = (e: WheelEvent) => this.target.dispatchEvent(new ZoomEvent(e))
+        this.error = (e: Event) => this.target.dispatchEvent(new CanvasErrorEvent(e))
+        this.mouse = (e: MouseEvent) => this.target.dispatchEvent(new MousemoveEvent(e))
 
         this.canvas.addEventListener('webglcontextlost', this.error)
         this.stage.addEventListener('wheel', this.scroll)

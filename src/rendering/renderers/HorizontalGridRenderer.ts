@@ -8,7 +8,6 @@ export class HorizontalGridRenderer extends BaseRenderer {
     static readonly HORIZONTAL_GRID_ID: symbol = Symbol('HORIZONTAL_GRID_ID')
 
     private readonly lineStyle: any
-
     private readonly textStyle: any
 
     constructor(renderer: IGraphicStorage) {

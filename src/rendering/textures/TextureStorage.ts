@@ -11,7 +11,7 @@ import { LOCK_ICON_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
-    private readonly textures: { [key: symbol]: Texture } = {}
+    private readonly textures: { [key: symbol]: RenderTexture } = {}
 
     constructor(
         private readonly application: Application,
@@ -20,7 +20,7 @@ export class TextureStorage implements ITextureStorage {
         this.get(LOCK_ICON_TEXTURE)
     }
 
-    public get(name: symbol): Texture {
+    public get(name: symbol): RenderTexture {
 
         if (!this.textures[name]) {
             Logger.warn('Create Texture', name)
@@ -42,7 +42,7 @@ export class TextureStorage implements ITextureStorage {
         })
     }
 
-    private [UP_WAGET_TEXTURE](): Texture {
+    private [UP_WAGET_TEXTURE](): RenderTexture {
         const height = this.application.screen.height
 
         const x0 = 0
@@ -73,7 +73,7 @@ export class TextureStorage implements ITextureStorage {
 
     }
 
-    private [DOWN_WAGET_TEXTURE](): Texture {
+    private [DOWN_WAGET_TEXTURE](): RenderTexture {
         const height = this.application.screen.height
 
         const x0 = 0
@@ -103,7 +103,7 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [PRICE_LINE_TEXTURE](): Texture {
+    private [PRICE_LINE_TEXTURE](): RenderTexture {
         const x0 = 0
         const y0 = 0 + this.application.screen.height * config.padding.top
         const x1 = 0

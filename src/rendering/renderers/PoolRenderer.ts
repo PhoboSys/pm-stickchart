@@ -9,13 +9,9 @@ export class PoolRenderer extends BaseRenderer {
     static readonly POOL_ID: symbol = Symbol('POOL_ID')
 
     private readonly openPoolStyle: any
-
     private readonly lockPoolStyle: any
-
     private readonly resolutionPoolStyle: any
-
     private readonly openPricePointStyle: any
-
     private readonly resolutionPricePointStyle: any
 
     constructor(renderer: IGraphicStorage) {

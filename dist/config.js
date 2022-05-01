@@ -24,7 +24,7 @@ exports.default = {
         left: -0.1,
         right: 0.3819,
         top: 0.1,
-        bottom: 0.25, // %
+        bottom: 0.3819, // % golden
     },
 };
 //# sourceMappingURL=config.js.map

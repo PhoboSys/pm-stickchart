@@ -1,4 +1,4 @@
-import { Container, Texture } from '../../lib/pixi';
+import { Container, RenderTexture } from '../../lib/pixi';
 import { DoneFunction, RenderingContext } from './types';
 export interface IRenderer {
     render(context: RenderingContext, done: DoneFunction): void;
@@ -8,5 +8,5 @@ export interface IGraphicStorage {
     set(renderKey: symbol, container: Container): void;
 }
 export interface ITextureStorage {
-    get(name: symbol): Texture;
+    get(name: symbol): RenderTexture;
 }

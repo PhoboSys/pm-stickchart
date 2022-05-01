@@ -35,7 +35,7 @@ export default class datamath {
     static scale(
         data: number[],
         [min, max]: [number, number],
-        factor = 1,
+        factor: number = 1,
     ): number[] {
         const scalesize = max - min
         const result: number[] = []
@@ -50,8 +50,8 @@ export default class datamath {
 
     static range(
         data: number[],
-        minpadd = 0,
-        maxpadd = 0,
+        minpadd: number = 0,
+        maxpadd: number = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)
@@ -105,7 +105,7 @@ export default class datamath {
 
         const v = datamath.precision(value, significant)
         if (v % 1) {
-            return v.toString().padEnd(significant + 1, '0')
+            return v.toString().padEnd(significant+1, '0')
         }
 
         const more = significant - v.toString().length
@@ -179,7 +179,7 @@ export default class datamath {
 
         const sample = amount.div(density).round(0, Big.roundUp).toNumber()
         let idx = 0
-        const lastIdx = data.length - 1
+        const lastIdx = data.length-1
         while (idx <= lastIdx) {
             if (!(idx % sample)) result.push(data[idx])
             idx++
