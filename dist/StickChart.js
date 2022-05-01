@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
+const chartdata_1 = require("./chartdata");
 const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
-const pixi_1 = require("./lib/pixi");
-const chartdata_1 = require("./chartdata");
 const infra_1 = require("./infra");
+const pixi_1 = require("./lib/pixi");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
 class StickChart extends EventTarget {
@@ -28,7 +28,7 @@ class StickChart extends EventTarget {
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
-        const renderer = new rendering_1.GraphicStorage(this.application.stage);
+        const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
     get canvas() {
@@ -43,7 +43,7 @@ class StickChart extends EventTarget {
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            textures: this.textureStorage
+            textures: this.textureStorage,
         };
         window.requestAnimationFrame(() => pipeline.render(ctx, () => this.application.render()));
     }

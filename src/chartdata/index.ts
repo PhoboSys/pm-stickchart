@@ -2,12 +2,23 @@ export * from './types'
 
 import config from '../config'
 
-import { ChartData, DataPadding, PlotData } from './types'
 import datamath from '../lib/datamath'
+
+import { ChartData, DataPadding, PlotData } from './types'
 
 export class DataConverter {
 
-    static convert(chartdata: ChartData) {
+    static readonly xpadding: DataPadding = {
+        min: config.padding.left,
+        max: config.padding.right,
+    }
+
+    static readonly ypadding: DataPadding = {
+        min: config.padding.bottom,
+        max: config.padding.top,
+    }
+
+    static convert(chartdata: ChartData): any {
 
         const xorig = Object.keys(chartdata).map(k => Number(k))
         const yorig = Object.values(chartdata)
@@ -35,8 +46,8 @@ export class DataConverter {
 
         const yrange = datamath.range(
             ydata,
-            config.padding.bottom ,
-            config.padding.top,
+            DataConverter.ypadding.min,
+            DataConverter.ypadding.max,
         )
 
         return {

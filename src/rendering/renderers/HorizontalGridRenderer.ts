@@ -1,14 +1,14 @@
-import { Graphics, Container } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+import datamath from '../../lib/datamath'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class HorizontalGridRenderer extends BaseRenderer {
 
     static readonly HORIZONTAL_GRID_ID: symbol = Symbol('HORIZONTAL_GRID_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -27,7 +27,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return HorizontalGridRenderer.HORIZONTAL_GRID_ID
     }
 
@@ -56,14 +56,14 @@ export class HorizontalGridRenderer extends BaseRenderer {
                 GraphicUtils.createLine(
                     [0, y],
                     [width, y],
-                    this.lineStyle
+                    this.lineStyle,
                 ),
                 GraphicUtils.createText(
                     datamath.toFixedScaled(ysteps[idx], stepsize),
                     [width, y],
                     this.textStyle,
-                    1.1
-                )
+                    1.1,
+                ),
             )
         }
 
@@ -71,5 +71,4 @@ export class HorizontalGridRenderer extends BaseRenderer {
     }
 
 }
-
 

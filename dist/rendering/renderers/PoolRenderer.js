@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolRenderer = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
 const __2 = require("..");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 class PoolRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -41,15 +41,15 @@ class PoolRenderer extends __1.BaseRenderer {
             linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xFFA000 }),
             torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xFFA000 }),
             coveredIconStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { paddingx: 8, iconstyle: {
-                    size: 13
-                }, color: 0xFFA000, anchorx: 0, anchory: 0 })
+                    size: 13,
+                }, color: 0xFFA000, anchorx: 0, anchory: 0 }),
         };
         this.resolutionPoolStyle = {
             paddingTop: 20,
             paddingBottom: 20,
             linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xF05350 }),
             torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xF05350 }),
-            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xFFFFFF }), color: 0xF05350, anchorx: 0, anchory: 0 })
+            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xFFFFFF }), color: 0xF05350, anchorx: 0, anchory: 0 }),
         };
         this.openPoolStyle = {
             paddingTop: 20,
@@ -59,7 +59,7 @@ class PoolRenderer extends __1.BaseRenderer {
             coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xB7BDD7 }), linestyle: {
                     color: 0xB7BDD7,
                     width: 1,
-                }, linePadding: -5, color: 0x22273F, bordercolor: 0xB7BDD7, anchorx: 1, anchory: 0 })
+                }, linePadding: -5, color: 0x22273F, bordercolor: 0xB7BDD7, anchorx: 1, anchory: 0 }),
         };
         this.openPricePointStyle = {
             circlstyle: {
@@ -72,7 +72,7 @@ class PoolRenderer extends __1.BaseRenderer {
                     radius: 6,
                     color: 0xB7BDD7,
                     alpha: 1,
-                }
+                },
             },
             linestyle: {
                 color: 0xB7BDD7,
@@ -95,8 +95,8 @@ class PoolRenderer extends __1.BaseRenderer {
                 linestyle: {
                     color: 0xB7BDD7,
                     width: 1,
-                }
-            }
+                },
+            },
         };
     }
     get rendererId() {
@@ -119,7 +119,7 @@ class PoolRenderer extends __1.BaseRenderer {
         const gradient = new pixi_1.Graphics();
         gradient.beginTextureFill({
             texture: context.textures.get(__2.POOL_ROUND_TEXTURE),
-            alpha: 0.07
+            alpha: 0.07,
         });
         gradient.drawPolygon(shape);
         gradient.closePath();

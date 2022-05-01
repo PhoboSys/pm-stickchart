@@ -36,7 +36,7 @@ class DataConverter {
             ydata.push(ylast);
         }
         const xrange = datamath_1.default.range(xdata, config_1.default.padding.left, config_1.default.padding.right);
-        const yrange = datamath_1.default.range(ydata, config_1.default.padding.bottom, config_1.default.padding.top);
+        const yrange = datamath_1.default.range(ydata, DataConverter.ypadding.min, DataConverter.ypadding.max);
         return {
             xlast,
             ylast,
@@ -48,4 +48,12 @@ class DataConverter {
     }
 }
 exports.DataConverter = DataConverter;
+DataConverter.xpadding = {
+    min: config_1.default.padding.left,
+    max: config_1.default.padding.right,
+};
+DataConverter.ypadding = {
+    min: config_1.default.padding.bottom,
+    max: config_1.default.padding.top,
+};
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,7 @@
-import datamath from '../../lib/datamath'
-
 import { castArray } from 'lodash'
 
-import { Graphics, LineStyle, Text, TextStyle } from '../../lib/pixi'
-import { Texture, GradientFactory, RenderTexture } from '../../lib/pixi'
-import { Renderer, AbstractRenderer, Sprite } from '../../lib/pixi'
+import datamath from '../../lib/datamath'
+import { Graphics, LineStyle, Text, TextStyle, Sprite } from '../../lib/pixi'
 
 export class GraphicUtils {
 
@@ -20,14 +17,15 @@ export class GraphicUtils {
             .endFill()
 
         cirl.position.set(x, y)
+
         return cirl
     }
 
     static createTorus(
         [x, y]: [number, number],
         [innerr, outerr]: [number, number],
-        style: { color, }
-    ) {
+        style: { color, },
+    ): Graphics {
         const torus = new Graphics()
 
         torus
@@ -36,6 +34,7 @@ export class GraphicUtils {
             .endFill()
 
         torus.position.set(x, y)
+
         return torus
     }
 
@@ -43,7 +42,7 @@ export class GraphicUtils {
         [x, y]: [number, number],
         [width, height]: [number, number],
         radius: number,
-        style: { fill, linestyle }
+        style: { fill, linestyle },
     ): Graphics {
         const rect = new Graphics()
             .beginFill(style.fill)
@@ -52,24 +51,26 @@ export class GraphicUtils {
             .endFill()
 
         rect.position.set(x, y)
+
         return rect
     }
 
     static createCoveredIcon(
         [x, y]: [number, number],
         style: { iconstyle, paddingx, paddingy, color, radius, anchorx, anchory, linestyle, texture },
-    ) {
+    ): Graphics {
 
         const { paddingx, paddingy } = style
 
         const icon = new Sprite(style.texture)
         const scale = style.iconstyle.size / icon.height
+
         icon.position.set(
             paddingx,
-            paddingy
+            paddingy,
         )
         icon.scale.set(
-            scale
+            scale,
         )
 
         const coverwidth = icon.width + paddingx * 2
@@ -82,16 +83,18 @@ export class GraphicUtils {
             {
                 fill: style.color,
                 linestyle: style.linestyle,
-            }
+            },
         )
 
         const result = new Graphics()
+
         result.addChild(cover, icon)
 
         const { anchorx, anchory } = style
+
         result.position.set(
             x - cover.width * (anchorx ?? 0),
-            y - cover.height * (anchory ?? 0)
+            y - cover.height * (anchory ?? 0),
         )
 
         return result
@@ -101,14 +104,14 @@ export class GraphicUtils {
         value: any,
         [x, y]: [number, number],
         style: { textstyle, paddingx, paddingy, color, radius, anchorx, anchory, linestyle },
-    ) {
+    ): Graphics {
         const { paddingx, paddingy } = style
 
         const text = GraphicUtils.createText(
             value,
             [paddingx, paddingy],
             style.textstyle,
-            [0, 0]
+            [0, 0],
         )
 
         const coverwidth = text.width + paddingx * 2
@@ -121,15 +124,17 @@ export class GraphicUtils {
             {
                 fill: style.color,
                 linestyle: style.linestyle,
-            }
+            },
         )
 
         const coveredText = new Graphics()
+
         coveredText.addChild(cover, text)
         const { anchorx, anchory } = style
+
         coveredText.position.set(
             x - cover.width * (anchorx ?? 0),
-            y - cover.height * (anchory ?? 0)
+            y - cover.height * (anchory ?? 0),
         )
 
         return coveredText
@@ -138,16 +143,16 @@ export class GraphicUtils {
     static createVerticalDashLine( // TODO: implement point to point
         x: number,
         [y1, y2]: [number, number],
-        linestyle: LineStyle & { gap, dash }
-    ) {
+        linestyle: LineStyle & { gap, dash },
+    ): Graphics {
         const dashLine = GraphicUtils.startLine([x, y1], linestyle)
         const maxsteps = 100
         const stepsize = linestyle.dash + linestyle.gap
 
         const ysteps = datamath.steps(
-            [y1+stepsize, y2-stepsize],
+            [y1 + stepsize, y2 - stepsize],
             stepsize,
-            maxsteps
+            maxsteps,
         )
 
         for (const ystep of ysteps) {
@@ -164,7 +169,7 @@ export class GraphicUtils {
     static createLine(
         [x1, y1]: [number, number],
         [x2, y2]: [number, number],
-        linestyle: LineStyle
+        linestyle: LineStyle,
     ): Graphics {
 
         const line = (new Graphics())
@@ -178,7 +183,7 @@ export class GraphicUtils {
     static lineTo(
         line: Graphics,
         [x, y]: [number, number],
-        linestyle: LineStyle
+        linestyle: LineStyle,
     ): Graphics {
 
         line.lineStyle(linestyle)
@@ -189,7 +194,7 @@ export class GraphicUtils {
 
     static startLine(
         [x, y]: [number, number],
-        linestyle: LineStyle
+        linestyle: LineStyle,
     ): Graphics {
 
         const line = (new Graphics())
@@ -203,11 +208,12 @@ export class GraphicUtils {
         value: any,
         [x, y]: [number, number],
         textstyle: object,
-        anchor: [number, number] | number
+        anchor: [number, number] | number,
     ): Text {
 
         const style = new TextStyle(textstyle)
         const text = new Text(String(value), style)
+
         text.position.set(x, y)
         text.roundPixels = true
         text.resolution = Math.ceil(window.devicePixelRatio)

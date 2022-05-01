@@ -1,25 +1,27 @@
+import { DataConverter, ChartData } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
 import { EventsProducer } from './events'
-import { Application } from './lib/pixi'
-import { DataConverter, ChartData } from './chartdata'
-
 import { Logger } from './infra'
-import { RenderingPipelineFactory, GraphicStorage } from './rendering'
-import { TextureStorage, GraphicUtils } from './rendering'
-import { POOL_ROUND_TEXTURE, PRICE_LINE_TEXTURE } from './rendering'
+import { Application } from './lib/pixi'
+
+import { RenderingPipelineFactory } from './rendering'
+import { TextureStorage, GraphicStorage } from './rendering'
 
 export class StickChart extends EventTarget {
 
     private application: Application
+
     private eventsProducer: EventsProducer
+
     private pipelineFactory: RenderingPipelineFactory
+
     private textureStorage: TextureStorage
 
     constructor(
         private stageElement: HTMLElement,
-        private chartType: EChartType
+        private chartType: EChartType,
     ) {
         super()
         this.application = new Application({
@@ -38,6 +40,7 @@ export class StickChart extends EventTarget {
         this.textureStorage = new TextureStorage(this.application)
 
         const renderer = new GraphicStorage(this.application.stage)
+
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
@@ -61,18 +64,18 @@ export class StickChart extends EventTarget {
             plotdata: DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,
             screen: this.application.screen,
-            textures: this.textureStorage
+            textures: this.textureStorage,
         }
 
         window.requestAnimationFrame(() =>
             pipeline.render(
                 ctx,
-                () => this.application.render()
-            )
+                () => this.application.render(),
+            ),
         )
     }
 
-    public destroy() {
+    public destroy(): void {
         this.application.destroy()
         this.eventsProducer.destroy()
         Logger.warn('Applicaiont get destoryed!!!!!!!!!!!')
