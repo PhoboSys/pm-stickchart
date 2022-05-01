@@ -11,4 +11,5 @@ export * from '@pixi/sprite';
 export { Text, TextStyle } from '@pixi/text';
 export * as utils from '@pixi/utils';
 export * from '@pixi-essentials/gradients';
+export { gsap } from "gsap";
 import '@pixi/graphics-extras';
