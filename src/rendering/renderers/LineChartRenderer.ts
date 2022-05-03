@@ -3,6 +3,8 @@ import { DoneFunction, RenderingContext, IRenderer } from '..'
 import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
 import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..'
 
+import { CrosshairRenderer } from './CrosshairRenderer'
+
 export class LineChartRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
@@ -16,6 +18,7 @@ export class LineChartRenderer implements IRenderer {
             new PariResolutionRenderer(renderer),
             new PoolRenderer(renderer),
             new LatestPriceRenderer(renderer),
+            new CrosshairRenderer(renderer),
         ])
     }
 
