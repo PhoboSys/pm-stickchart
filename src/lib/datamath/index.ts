@@ -50,8 +50,8 @@ export default class datamath {
 
     static range(
         data: number[],
-        minpadd = 0,
-        maxpadd = 0,
+        minpadd: number = 0,
+        maxpadd: number = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)

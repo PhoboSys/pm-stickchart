@@ -44,6 +44,67 @@ export class TextureStorage implements ITextureStorage {
         })
     }
 
+    private [UP_WAGET_TEXTURE](): RenderTexture {
+        const height = this.application.screen.height
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const top = '#' + config.style.upcolor.toString(16).padStart(6, '0')
+        const bottom = top + '00' // same color with opacity = 0
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>this.application.renderer,
+            RenderTexture.create({
+                width: this.application.renderer.width,
+                height: this.application.renderer.height,
+            }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops: [
+                    { color: top, offset: 0 },
+                    { color: bottom, offset: 1 },
+                ],
+            },
+        )
+
+        return gradient
+
+    }
+
+    private [DOWN_WAGET_TEXTURE](): RenderTexture {
+        const height = this.application.screen.height
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const top = '#' + config.style.downcolor.toString(16).padStart(6, '0')
+        const bottom = top + '00' // same color with opacity = 0
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>this.application.renderer,
+            RenderTexture.create({
+                width: this.application.renderer.width,
+                height: this.application.renderer.height,
+            }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops: [
+                    { color: top, offset: 0 },
+                    { color: bottom, offset: 1 },
+                ],
+            },
+        )
+
+        return gradient
+    }
+
     private [PRICE_LINE_TEXTURE](): RenderTexture {
         const x0 = 0
         const y0 = 0 + this.application.screen.height * config.padding.top
