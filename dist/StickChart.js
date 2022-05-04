@@ -45,8 +45,10 @@ class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage
         };
-        infra_1.Logger.info('chart render');
-        window.requestAnimationFrame(() => pipeline.render(ctx, () => this.application.render()));
+        window.requestAnimationFrame(() => {
+            infra_1.Logger.info('chart render');
+            pipeline.render(ctx, () => this.application.render());
+        });
     }
     destroy() {
         this.application.destroy();

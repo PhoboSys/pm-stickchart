@@ -9,7 +9,7 @@ import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from '../../..'
 
 export class PariResolutionBackground extends BaseRenderer {
 
-    static readonly PARI_RESOLUTION_ID: symbol = Symbol('PARI_RESOLUTION_ID')
+    static readonly PARI_RESOLUTION_ID: symbol = Symbol('PARI_RESOLUTION_BG_ID')
 
     public get rendererId() {
         return PariResolutionBackground.PARI_RESOLUTION_ID
@@ -50,14 +50,13 @@ export class PariResolutionBackground extends BaseRenderer {
         const y = height - yr
 
         // clear if one dissapeared
-        const paries = {}
-        for (const pari of context.paris) paries[pari.position] = pari
-        if (!paries['POS']) this.clear('gradientPos')
-        if (!paries['NEG']) this.clear('gradientNeg')
+        const paris = {}
+        for (const pari of context.paris) paris[pari.position] = pari
+        if (!paris['POS']) this.clear('gradientPos')
+        if (!paris['NEG']) this.clear('gradientNeg')
 
         const anim = {
             high: {
-                lable: 'high',
                 pixi: {
                     height: height * 0.9,
                     alpha: 0.3,
@@ -66,7 +65,6 @@ export class PariResolutionBackground extends BaseRenderer {
                 ease: 'back.inOut(2)',
             },
             low: {
-                lable: 'low',
                 pixi: {
                     height: height * 0.4,
                     alpha: 0.15,
@@ -75,7 +73,6 @@ export class PariResolutionBackground extends BaseRenderer {
                 ease: 'back.inOut(2)',
             },
             settle: {
-                lable: 'settle',
                 pixi: {
                     height: height * 0.9,
                     alpha: 0.6,
@@ -89,6 +86,7 @@ export class PariResolutionBackground extends BaseRenderer {
         }
 
         // pool
+        const { pool } = context
         for (const pari of context.paris) {
 
             if (pari.position === 'POS') {
@@ -102,28 +100,29 @@ export class PariResolutionBackground extends BaseRenderer {
                 // flip
                 if (statepos.new) gradientPos.scale.y *= -1
 
-                if (pari.position === context.pool.resolution) {
+                if (pari.position === pool.resolution) {
 
                     if (statepos.new) {
                         gradientPos.alpha = anim.high.pixi.alpha
                         gradientPos.height = anim.high.pixi.height
                     }
 
-                    if (context.pool.settling) {
+                    if (pool.settling) {
 
-                        if (statepos.animation !== anim.settle.lable) {
-                            statepos.animation = anim.settle.lable
+                        if (statepos.animation !== 'settle') {
+                            statepos.animation = 'settle'
 
-                            gsap.to(gradientPos, anim.settle)
+                            statepos.timeline = gsap.to(gradientPos, anim.settle)
 
                         }
 
                     } else {
 
-                        if (statepos.animation !== anim.high.lable) {
-                            statepos.animation = anim.high.lable
+                        if (statepos.animation !== 'high') {
+                            statepos.animation = 'high'
 
-                            gsap.to(gradientPos, anim.high)
+                            statepos.timeline = gsap.to(gradientPos, anim.high)
+
                         }
 
                     }
@@ -135,10 +134,10 @@ export class PariResolutionBackground extends BaseRenderer {
                         gradientPos.height = anim.low.pixi.height
                     }
 
-                    if (statepos.animation !== anim.low.lable) {
-                        statepos.animation = anim.low.lable
+                    if (statepos.animation !== 'low') {
+                        statepos.animation = 'low'
 
-                        gsap.to(gradientPos, anim.low)
+                        statepos.timeline = gsap.to(gradientPos, anim.low)
                     }
 
                 }
@@ -152,28 +151,29 @@ export class PariResolutionBackground extends BaseRenderer {
                 gradientNeg.position.set(ox, y)
                 gradientNeg.width = rx-ox
 
-                if (pari.position === context.pool.resolution) {
+                if (pari.position === pool.resolution) {
 
                     if (stateneg.new) {
                         gradientNeg.alpha = anim.high.pixi.alpha
                         gradientNeg.height = anim.high.pixi.height
                     }
 
-                    if (context.pool.settling) {
+                    if (pool.settling) {
 
-                        if (stateneg.animation !== anim.settle.lable) {
-                            stateneg.animation = anim.settle.lable
+                        if (stateneg.animation !== 'settle') {
+                            stateneg.animation = 'settle'
 
-                            gsap.to(gradientNeg, anim.settle)
+                            stateneg.timeline = gsap.to(gradientNeg, anim.settle)
 
                         }
 
                     } else {
 
-                        if (stateneg.animation !== anim.high.lable) {
-                            stateneg.animation = anim.high.lable
+                        if (stateneg.animation !== 'high') {
+                            stateneg.animation = 'high'
 
-                            gsap.to(gradientNeg, anim.high)
+                            stateneg.timeline?.kill()
+                            stateneg.timeline = gsap.to(gradientNeg, anim.high)
                         }
 
                     }
@@ -185,13 +185,15 @@ export class PariResolutionBackground extends BaseRenderer {
                         gradientNeg.height = anim.low.pixi.height
                     }
 
-                    if (stateneg.animation !== anim.low.lable) {
-                        stateneg.animation = anim.low.lable
+                    if (stateneg.animation !== 'low') {
+                        stateneg.animation = 'low'
 
-                        gsap.to(gradientNeg, anim.low)
+                        stateneg.timeline?.kill()
+                        stateneg.timeline = gsap.to(gradientNeg, anim.low)
                     }
 
                 }
+
             }
 
         }

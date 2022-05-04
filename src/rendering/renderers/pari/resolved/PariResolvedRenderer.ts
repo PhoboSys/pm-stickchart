@@ -44,6 +44,7 @@ export class PariResolvedRenderer extends BaseRenderer {
     }
 
     private renderedMetaId: any
+    private unresolvedParis: any = {}
 
     protected update(
         context: RenderingContext,
@@ -51,104 +52,153 @@ export class PariResolvedRenderer extends BaseRenderer {
     ): Container {
         if (
             !context.pool ||
-            !context.resolved?.length
+            !context.paris?.length && !context.resolved?.length
         ) {
             this.clear()
             return container
         }
 
         // clear if pool changed
-        if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
+        if (this.renderedMetaId !== context.pool.metaid) {
             this.clear()
+            this.renderedMetaId = context.pool.metaid
+            this.unresolvedParis = {}
         }
-        this.renderedMetaId = context.pool.metaid
 
-        const { width, height } = context.screen
-        const { xrange, yrange, ylast } = context.plotdata
-
-        console.log('---------------------')
-        console.log(context.resolved)
-        console.log('---------------------')
-
-        const { resolutionDate, openPrice } = context.pool
-
-        let [x] = datamath.scale([resolutionDate], xrange, width)
-        const [yr] = datamath.scale([openPrice.value], yrange, height)
-        let y = height - yr
-
-        x += 100
-        y += 100
-
-        const gap = 6
-        const xpad = 8
-
-        // clear
-        const paries = {}
-        for (const pari of context.paris) paries[pari.position] = pari
-        if (!paries['POS']) {
-            this.clear('dividendsPos')
-            this.clear('dividendsCurPos')
-            this.clear('dividendsPerPos')
+        // create Paris for render
+        const paris = {}
+        const resolvedPari1 = context.resolved.at(0)
+        if (resolvedPari1 && this.unresolvedParis[resolvedPari1.position]?.id === resolvedPari1.id) {
+            paris[resolvedPari1.position] = resolvedPari1
         }
-        if (!paries['NEG']) {
-            this.clear('dividendsNeg')
-            this.clear('dividendsCurNeg')
-            this.clear('dividendsPerNeg')
+        const resolvedPari2 = context.resolved.at(1)
+        if (resolvedPari2 && this.unresolvedParis[resolvedPari2.position]?.id === resolvedPari2.id) {
+            paris[resolvedPari2.position] = resolvedPari2
+        }
+
+        // update unresolved paris
+        for (const pari of context.paris) {
+            this.unresolvedParis[pari.position] = pari
+        }
+
+        const anim = {
+            win: {
+                pixi: {
+                    positionY: '-=100',
+                    scale: 1.5,
+                    alpha: -0.5,
+                },
+                ease: 'power2.out',
+                duration: 10,
+            },
+            lose: {
+                pixi: {
+                    alpha: 0,
+                },
+                ease: 'power2.out',
+                duration: 3,
+            },
         }
 
         // loop
-        const { pool } = context
-        for (const pari of context.paris) {
+        const { width, height } = context.screen
+        const { xrange, yrange } = context.plotdata
+        for (const position in paris) {
+            const pari = paris[position]
+
+            let [x] = datamath.scale([pari.resolutionDate], xrange, width)
+            const [yr] = datamath.scale([pari.openPrice.value], yrange, height)
+            let y = height - yr
+
+            const gap = 6
+            const xpad = 8
 
             const prize = datamath.returnPrize({
                 wager: pari.wager,
                 position: pari.position,
-                resolution: pool.resolution,
-                positiveFund: pool.positiveFund,
-                negativeFund: pool.negativeFund,
+                resolution: pari.resolution,
+                positiveFund: pari.positiveFund,
+                negativeFund: pari.negativeFund,
                 precision: 5
             })
+
             const percent = datamath.profitPercent(prize, pari.wager, 2)
             const isWinning = prize !== 0
 
             if (pari.position === 'POS') {
 
+                const [prizePos, prizePosState] = this.get('prizePos', () => new Container())
+                if (prizePosState.new) container.addChild(prizePos)
+
+                if (prizePosState.animation !== 'POS') {
+                    prizePosState.animation = 'POS'
+
+                    prizePos.position.set(x, y)
+                    this.unresolvedParis = {}
+
+                    if (isWinning) {
+
+                        prizePosState.timeline = gsap.to(prizePos, {
+                            ...anim.win,
+                            onComplete: () => {
+                                this.clear('prizePos')
+                                this.clear('dividendsPos')
+                                this.clear('dividendsCurPos')
+                                this.clear('dividendsPerPos')
+                            }
+                        })
+
+                    } else {
+
+                        prizePosState.timeline = gsap.to(prizePos, {
+                            ...anim.lose,
+                            onComplete: () => {
+                                this.clear('prizePos')
+                                this.clear('dividendsPos')
+                                this.clear('dividendsCurPos')
+                                this.clear('dividendsPerPos')
+                            }
+                        })
+
+                    }
+                }
+
                 const [dividendsPos, dividendsPosState] = this.get(
                     'dividendsPos',
                     () => GraphicUtils.createText(
                         prize,
-                        [x, y],
+                        [0, 0],
                         this.textstyle,
                         [0, 1.25],
                     )
                 )
-                if (dividendsPosState.new) container.addChild(dividendsPos)
-                dividendsPos.position.set(x + xpad, y)
+                if (dividendsPosState.new) prizePos.addChild(dividendsPos)
+                dividendsPos.position.set(xpad, 0)
                 dividendsPos.text = String(prize)
 
                 const [dividendsCurPos, dividendsCurPosState] = this.get(
                     'dividendsCurPos',
                     () => GraphicUtils.createText(
-                        'ETH',
-                        [x, y],
+                        pari.currency,
+                        [0, 0],
                         this.subtextstyle,
                         [0, 1.25],
                     )
                 )
-                if (dividendsCurPosState.new) container.addChild(dividendsCurPos)
-                dividendsCurPos.position.set(x + xpad + dividendsPos.width + gap, y)
+                if (dividendsCurPosState.new) prizePos.addChild(dividendsCurPos)
+                dividendsCurPos.position.set(xpad + dividendsPos.width + gap, 0)
 
                 const [dividendsPerPos, dividendsPerPosState] = this.get(
                     'dividendsPerPos',
                     () => GraphicUtils.createText(
                         percent + '%',
-                        [x, y],
+                        [0, 0],
                         this.textstylePrecent,
                         [0, 1.25],
                     )
                 )
-                if (dividendsPerPosState.new) container.addChild(dividendsPerPos)
-                dividendsPerPos.position.set(x + xpad, y - dividendsPos.height)
+                if (dividendsPerPosState.new) prizePos.addChild(dividendsPerPos)
+                dividendsPerPos.position.set(xpad, -dividendsPos.height)
                 dividendsPerPos.text = percent + '%'
 
                 if (isWinning) {
@@ -165,42 +215,79 @@ export class PariResolvedRenderer extends BaseRenderer {
 
             if (pari.position === 'NEG') {
 
+                const [prizeNeg, prizeNegState] = this.get('prizeNeg', () => new Container())
+                if (prizeNegState.new) container.addChild(prizeNeg)
+
+                if (prizeNegState.animation !== 'NEG') {
+                    prizeNegState.animation = 'NEG'
+
+                    prizeNeg.position.set(x, y)
+                    this.unresolvedParis = {}
+
+                    if (isWinning) {
+
+                        prizeNegState.timeline = gsap.to(prizeNeg, {
+                            ...anim.win,
+                            onComplete: () => {
+                                this.clear('prizeNeg')
+                                this.clear('dividendsNeg')
+                                this.clear('dividendsCurNeg')
+                                this.clear('dividendsPerNeg')
+                            }
+                        })
+
+                    } else {
+
+                        prizeNegState.timeline = gsap.to(prizeNeg, {
+                            ...anim.lose,
+                            onComplete: () => {
+                                this.clear('prizeNeg')
+                                this.clear('dividendsNeg')
+                                this.clear('dividendsCurNeg')
+                                this.clear('dividendsPerNeg')
+                            }
+                        })
+
+                    }
+                }
+
                 const [dividendsNeg, dividendsNegState] = this.get(
                     'dividendsNeg',
                     () => GraphicUtils.createText(
                         prize,
-                        [x, y],
+                        [0, 0],
                         this.textstyle,
                         [0, -0.3],
                     )
                 )
-                if (dividendsNegState.new) container.addChild(dividendsNeg)
-                dividendsNeg.position.set(x + xpad, y)
+                if (dividendsNegState.new) prizeNeg.addChild(dividendsNeg)
+                dividendsNeg.position.set(xpad, 0)
                 dividendsNeg.text = String(prize)
 
                 const [dividendsCurNeg, dividendsCurNegState] = this.get(
                     'dividendsCurNeg',
                     () => GraphicUtils.createText(
                         'ETH',
-                        [x, y],
+                        [0, 0],
                         this.subtextstyle,
                         [0, -0.3],
                     )
                 )
-                if (dividendsCurNegState.new) container.addChild(dividendsCurNeg)
-                dividendsCurNeg.position.set(x + xpad + dividendsNeg.width + gap, y)
+                if (dividendsCurNegState.new) prizeNeg.addChild(dividendsCurNeg)
+                dividendsCurNeg.position.set(xpad + dividendsNeg.width + gap, 0)
 
                 const [dividendsPerNeg, dividendsPerNegState] = this.get(
                     'dividendsPerNeg',
                     () => GraphicUtils.createText(
                         percent + '%',
-                        [x, y],
+                        [0, 0],
                         this.textstylePrecent,
                         [0, -0.3],
                     )
                 )
-                if (dividendsPerNegState.new) container.addChild(dividendsPerNeg)
-                dividendsPerNeg.position.set(x + xpad, y + dividendsNeg.height)
+
+                if (dividendsPerNegState.new) prizeNeg.addChild(dividendsPerNeg)
+                dividendsPerNeg.position.set(xpad, dividendsNeg.height)
                 dividendsPerNeg.text = percent + '%'
 
                 if (isWinning) {

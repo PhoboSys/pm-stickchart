@@ -53,15 +53,15 @@ class PariResolutionPrize extends __1.BaseRenderer {
         const gap = 6;
         const xpad = 8;
         // clear
-        const paries = {};
+        const paris = {};
         for (const pari of context.paris)
-            paries[pari.position] = pari;
-        if (!paries['POS']) {
+            paris[pari.position] = pari;
+        if (!paris['POS']) {
             this.clear('dividendsPos');
             this.clear('dividendsCurPos');
             this.clear('dividendsPerPos');
         }
-        if (!paries['NEG']) {
+        if (!paris['NEG']) {
             this.clear('dividendsNeg');
             this.clear('dividendsCurNeg');
             this.clear('dividendsPerNeg');
@@ -85,7 +85,7 @@ class PariResolutionPrize extends __1.BaseRenderer {
                     container.addChild(dividendsPos);
                 dividendsPos.position.set(x + xpad, y);
                 dividendsPos.text = String(prize);
-                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, 1.25]));
+                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText(pari.currency, [x, y], this.subtextstyle, [0, 1.25]));
                 if (dividendsCurPosState.new)
                     container.addChild(dividendsCurPos);
                 dividendsCurPos.position.set(x + xpad + dividendsPos.width + gap, y);

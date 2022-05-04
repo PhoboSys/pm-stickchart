@@ -33,6 +33,7 @@ export abstract class BaseRenderer implements IRenderer {
         } else if (name in this.local) {
             const [g, state] = this.local[name]
             g.destroy()
+            state.timeline?.kill()
             delete this.local[name]
         }
 

@@ -16,6 +16,7 @@ class BaseRenderer {
         done();
     }
     clear(name) {
+        var _a;
         if (name === undefined) {
             for (const key in this.local)
                 this.clear(key);
@@ -23,6 +24,7 @@ class BaseRenderer {
         else if (name in this.local) {
             const [g, state] = this.local[name];
             g.destroy();
+            (_a = state.timeline) === null || _a === void 0 ? void 0 : _a.kill();
             delete this.local[name];
         }
     }

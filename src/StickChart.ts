@@ -63,13 +63,13 @@ export class StickChart extends EventTarget {
             textures: this.textureStorage
         }
 
-        Logger.info('chart render')
-        window.requestAnimationFrame(() =>
+        window.requestAnimationFrame(() => {
+            Logger.info('chart render')
             pipeline.render(
                 ctx,
                 () => this.application.render()
             )
-        )
+        })
     }
 
     public destroy() {

@@ -16,7 +16,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
         return PariResolutionBackground.PARI_RESOLUTION_ID;
     }
     update(context, container) {
-        var _a;
+        var _a, _b, _c;
         if (!context.pool ||
             !context.pool.openPrice ||
             !((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length)) {
@@ -35,16 +35,15 @@ class PariResolutionBackground extends __1.BaseRenderer {
         const [yr] = datamath_1.default.scale([openPrice.value], yrange, height);
         const y = height - yr;
         // clear if one dissapeared
-        const paries = {};
+        const paris = {};
         for (const pari of context.paris)
-            paries[pari.position] = pari;
-        if (!paries['POS'])
+            paris[pari.position] = pari;
+        if (!paris['POS'])
             this.clear('gradientPos');
-        if (!paries['NEG'])
+        if (!paris['NEG'])
             this.clear('gradientNeg');
         const anim = {
             high: {
-                lable: 'high',
                 pixi: {
                     height: height * 0.9,
                     alpha: 0.3,
@@ -53,7 +52,6 @@ class PariResolutionBackground extends __1.BaseRenderer {
                 ease: 'back.inOut(2)',
             },
             low: {
-                lable: 'low',
                 pixi: {
                     height: height * 0.4,
                     alpha: 0.15,
@@ -62,7 +60,6 @@ class PariResolutionBackground extends __1.BaseRenderer {
                 ease: 'back.inOut(2)',
             },
             settle: {
-                lable: 'settle',
                 pixi: {
                     height: height * 0.9,
                     alpha: 0.6,
@@ -75,6 +72,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
             }
         };
         // pool
+        const { pool } = context;
         for (const pari of context.paris) {
             if (pari.position === 'POS') {
                 const [gradientPos, statepos] = this.get('gradientPos', () => new pixi_1.Sprite(context.textures.get(__2.UP_WAGET_TEXTURE)));
@@ -85,21 +83,21 @@ class PariResolutionBackground extends __1.BaseRenderer {
                 // flip
                 if (statepos.new)
                     gradientPos.scale.y *= -1;
-                if (pari.position === context.pool.resolution) {
+                if (pari.position === pool.resolution) {
                     if (statepos.new) {
                         gradientPos.alpha = anim.high.pixi.alpha;
                         gradientPos.height = anim.high.pixi.height;
                     }
-                    if (context.pool.settling) {
-                        if (statepos.animation !== anim.settle.lable) {
-                            statepos.animation = anim.settle.lable;
-                            pixi_1.gsap.to(gradientPos, anim.settle);
+                    if (pool.settling) {
+                        if (statepos.animation !== 'settle') {
+                            statepos.animation = 'settle';
+                            statepos.timeline = pixi_1.gsap.to(gradientPos, anim.settle);
                         }
                     }
                     else {
-                        if (statepos.animation !== anim.high.lable) {
-                            statepos.animation = anim.high.lable;
-                            pixi_1.gsap.to(gradientPos, anim.high);
+                        if (statepos.animation !== 'high') {
+                            statepos.animation = 'high';
+                            statepos.timeline = pixi_1.gsap.to(gradientPos, anim.high);
                         }
                     }
                 }
@@ -108,9 +106,9 @@ class PariResolutionBackground extends __1.BaseRenderer {
                         gradientPos.alpha = anim.low.pixi.alpha;
                         gradientPos.height = anim.low.pixi.height;
                     }
-                    if (statepos.animation !== anim.low.lable) {
-                        statepos.animation = anim.low.lable;
-                        pixi_1.gsap.to(gradientPos, anim.low);
+                    if (statepos.animation !== 'low') {
+                        statepos.animation = 'low';
+                        statepos.timeline = pixi_1.gsap.to(gradientPos, anim.low);
                     }
                 }
             }
@@ -120,21 +118,22 @@ class PariResolutionBackground extends __1.BaseRenderer {
                     container.addChild(gradientNeg);
                 gradientNeg.position.set(ox, y);
                 gradientNeg.width = rx - ox;
-                if (pari.position === context.pool.resolution) {
+                if (pari.position === pool.resolution) {
                     if (stateneg.new) {
                         gradientNeg.alpha = anim.high.pixi.alpha;
                         gradientNeg.height = anim.high.pixi.height;
                     }
-                    if (context.pool.settling) {
-                        if (stateneg.animation !== anim.settle.lable) {
-                            stateneg.animation = anim.settle.lable;
-                            pixi_1.gsap.to(gradientNeg, anim.settle);
+                    if (pool.settling) {
+                        if (stateneg.animation !== 'settle') {
+                            stateneg.animation = 'settle';
+                            stateneg.timeline = pixi_1.gsap.to(gradientNeg, anim.settle);
                         }
                     }
                     else {
-                        if (stateneg.animation !== anim.high.lable) {
-                            stateneg.animation = anim.high.lable;
-                            pixi_1.gsap.to(gradientNeg, anim.high);
+                        if (stateneg.animation !== 'high') {
+                            stateneg.animation = 'high';
+                            (_b = stateneg.timeline) === null || _b === void 0 ? void 0 : _b.kill();
+                            stateneg.timeline = pixi_1.gsap.to(gradientNeg, anim.high);
                         }
                     }
                 }
@@ -143,9 +142,10 @@ class PariResolutionBackground extends __1.BaseRenderer {
                         gradientNeg.alpha = anim.low.pixi.alpha;
                         gradientNeg.height = anim.low.pixi.height;
                     }
-                    if (stateneg.animation !== anim.low.lable) {
-                        stateneg.animation = anim.low.lable;
-                        pixi_1.gsap.to(gradientNeg, anim.low);
+                    if (stateneg.animation !== 'low') {
+                        stateneg.animation = 'low';
+                        (_c = stateneg.timeline) === null || _c === void 0 ? void 0 : _c.kill();
+                        stateneg.timeline = pixi_1.gsap.to(gradientNeg, anim.low);
                     }
                 }
             }
@@ -154,5 +154,5 @@ class PariResolutionBackground extends __1.BaseRenderer {
     }
 }
 exports.PariResolutionBackground = PariResolutionBackground;
-PariResolutionBackground.PARI_RESOLUTION_ID = Symbol('PARI_RESOLUTION_ID');
+PariResolutionBackground.PARI_RESOLUTION_ID = Symbol('PARI_RESOLUTION_BG_ID');
 //# sourceMappingURL=PariResolutionBackground.js.map

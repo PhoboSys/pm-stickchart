@@ -9,5 +9,6 @@ export declare class PariResolvedRenderer extends BaseRenderer {
     private readonly textstylePrecent;
     constructor(renderer: IGraphicStorage);
     private renderedMetaId;
+    private unresolvedParis;
     protected update(context: RenderingContext, container: Container): Container;
 }

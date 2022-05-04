@@ -76,14 +76,14 @@ export class PariResolutionPrize extends BaseRenderer {
         const xpad = 8
 
         // clear
-        const paries = {}
-        for (const pari of context.paris) paries[pari.position] = pari
-        if (!paries['POS']) {
+        const paris = {}
+        for (const pari of context.paris) paris[pari.position] = pari
+        if (!paris['POS']) {
             this.clear('dividendsPos')
             this.clear('dividendsCurPos')
             this.clear('dividendsPerPos')
         }
-        if (!paries['NEG']) {
+        if (!paris['NEG']) {
             this.clear('dividendsNeg')
             this.clear('dividendsCurNeg')
             this.clear('dividendsPerNeg')
@@ -122,7 +122,7 @@ export class PariResolutionPrize extends BaseRenderer {
                 const [dividendsCurPos, dividendsCurPosState] = this.get(
                     'dividendsCurPos',
                     () => GraphicUtils.createText(
-                        'ETH',
+                        pari.currency,
                         [x, y],
                         this.subtextstyle,
                         [0, 1.25],
