@@ -5,14 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
 const __1 = require("..");
+const events_1 = require("../../events");
 const MouseleaveEvent_1 = require("../../events/MouseleaveEvent");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(storage) {
         super(storage);
-        global.chartEventTarget.addEventListener('mousemove', (e) => this.handleMouseEvent(e));
-        global.chartEventTarget.addEventListener('mouseleave', (e) => this.handleMouseEvent(e));
+        events_1.localEventTarget.addEventListener('mousemove', (e) => this.handleMouseEvent(e));
+        events_1.localEventTarget.addEventListener('mouseleave', (e) => this.handleMouseEvent(e));
         this.lineStyle = {
             width: 2,
             color: 0x009797,
@@ -45,6 +46,8 @@ class CrosshairRenderer extends __1.BaseRenderer {
     }
     handleMouseEvent(event) {
         this.lastEvent = event;
+        if (!this.lastContext)
+            return;
         this.render(this.lastContext, () => { });
     }
     update(context, container) {

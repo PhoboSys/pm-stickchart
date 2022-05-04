@@ -2,7 +2,7 @@ import { DataConverter, ChartData } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
-import { EventsProducer } from './events'
+import { EventsProducer, localEventTarget } from './events'
 import { Logger } from './infra'
 import { Application } from './lib/pixi'
 
@@ -36,11 +36,15 @@ export class StickChart extends EventTarget {
             backgroundAlpha: 1,
         })
 
-        this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
+        this.eventsProducer = new EventsProducer(
+            [this, localEventTarget],
+            this.canvas,
+            stageElement,
+        )
+
         this.textureStorage = new TextureStorage(this.application)
 
         const renderer = new GraphicStorage(this.application.stage)
-
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 

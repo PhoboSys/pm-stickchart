@@ -26,7 +26,7 @@ class StickChart extends EventTarget {
             backgroundColor: config_1.default.style.background,
             backgroundAlpha: 1,
         });
-        this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
+        this.eventsProducer = new events_1.EventsProducer([this, events_1.localEventTarget], this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);

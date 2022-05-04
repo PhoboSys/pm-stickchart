@@ -3,17 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventsProducer = void 0;
 const _1 = require(".");
 class EventsProducer {
-    constructor(target, canvas, stage) {
-        this.target = target;
+    constructor(targets, canvas, stage) {
+        this.targets = targets;
         this.canvas = canvas;
         this.stage = stage;
-        const chartEventTarget = new EventTarget();
-        global.chartEventTarget = chartEventTarget;
         // bind to instance
-        this.scroll = (e) => this.target.dispatchEvent(new _1.ZoomEvent(e));
-        this.error = (e) => this.target.dispatchEvent(new _1.CanvasErrorEvent(e));
-        this.mousemove = (e) => this.target.dispatchEvent(new _1.MousemoveEvent(e));
-        this.mouseleave = (e) => this.target.dispatchEvent(new _1.MouseleaveEvent(e));
+        this.scroll = (e) => this.dispatchToAll(new _1.ZoomEvent(e));
+        this.error = (e) => this.dispatchToAll(new _1.CanvasErrorEvent(e));
+        this.mousemove = (e) => this.dispatchToAll(new _1.MousemoveEvent(e));
+        this.mouseleave = (e) => this.dispatchToAll(new _1.MouseleaveEvent(e));
         this.canvas.addEventListener('webglcontextlost', this.error);
         this.stage.addEventListener('wheel', this.scroll);
         this.stage.addEventListener('mousemove', this.mousemove);
@@ -24,6 +22,11 @@ class EventsProducer {
         this.stage.removeEventListener('wheel', this.scroll);
         this.stage.removeEventListener('mousemove', this.mousemove);
         this.stage.removeEventListener('mouseleave', this.mouseleave);
+    }
+    dispatchToAll(event) {
+        for (const target of this.targets) {
+            target.dispatchEvent(event);
+        }
     }
 }
 exports.EventsProducer = EventsProducer;

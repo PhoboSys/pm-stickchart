@@ -1,5 +1,6 @@
 import { RenderingContext, DoneFunction, IGraphicStorage } from '..';
 import { BaseRenderer, GraphicUtils } from '..'
+import { localEventTarget } from '../../events';
 
 import { MouseleaveEvent } from '../../events/MouseleaveEvent'
 import { MousemoveEvent } from '../../events/MousemoveEvent'
@@ -21,12 +22,12 @@ export class CrosshairRenderer extends BaseRenderer {
     constructor(storage: IGraphicStorage) {
         super(storage)
 
-        global.chartEventTarget.addEventListener(
+        localEventTarget.addEventListener(
             'mousemove',
             (e: MousemoveEvent) => this.handleMouseEvent(e),
         )
 
-        global.chartEventTarget.addEventListener(
+        localEventTarget.addEventListener(
             'mouseleave',
             (e: MouseleaveEvent) => this.handleMouseEvent(e),
         )
@@ -69,6 +70,7 @@ export class CrosshairRenderer extends BaseRenderer {
     protected handleMouseEvent(event: MousemoveEvent | MouseleaveEvent): void {
         this.lastEvent = event
 
+        if (!this.lastContext) return
         this.render(this.lastContext, () => { })
     }
 
