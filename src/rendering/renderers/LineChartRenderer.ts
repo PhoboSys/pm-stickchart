@@ -2,8 +2,8 @@ import { IGraphicStorage } from '..'
 import { DoneFunction, RenderingContext, IRenderer } from '..'
 import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
 import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..'
+import { CrosshairRenderer } from '..'
 
-import { CrosshairRenderer } from './CrosshairRenderer'
 
 export class LineChartRenderer implements IRenderer {
 

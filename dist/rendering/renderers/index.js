@@ -23,4 +23,5 @@ __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
 __exportStar(require("./LatestPriceRenderer"), exports);
 __exportStar(require("./PoolRenderer"), exports);
 __exportStar(require("./PariResolutionRenderer"), exports);
+__exportStar(require("./CrosshairRenderer"), exports);
 //# sourceMappingURL=index.js.map

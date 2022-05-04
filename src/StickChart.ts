@@ -45,6 +45,7 @@ export class StickChart extends EventTarget {
         this.textureStorage = new TextureStorage(this.application)
 
         const renderer = new GraphicStorage(this.application.stage)
+
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
