@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPricePointRenderer = void 0;
-const sprite_animated_1 = require("@pixi/sprite-animated");
 const __1 = require("..");
 const config_1 = __importDefault(require("../../config"));
 const datamath_1 = __importDefault(require("../../lib/datamath"));
@@ -25,13 +24,13 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
     get rendererId() {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
-    create(context) {
+    update(context, container) {
         const { xlast, ylast, xrange, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([xlast], xrange, width);
         const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
-        const outerpoint = new sprite_animated_1.AnimatedSprite(context.textures.get(symbols_1.LATEST_PRICE_POINT_TEXTURES), true);
+        const outerpoint = new pixi_1.AnimatedSprite(context.textures.get(symbols_1.LATEST_PRICE_POINT_TEXTURES), true);
         outerpoint.position.set(x, y);
         outerpoint.anchor.set(0.5);
         outerpoint.animationSpeed = 0.5;

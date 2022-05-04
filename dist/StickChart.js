@@ -28,7 +28,7 @@ class StickChart extends EventTarget {
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
-        const renderer = new rendering_1.PixiGraphicRenderer(this.application.stage);
+        const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
     get canvas() {
@@ -38,6 +38,7 @@ class StickChart extends EventTarget {
         const pipeline = this.pipelineFactory.get(context.charttype);
         const ctx = {
             pool: context.pool,
+            paris: context.paris,
             chartdata: context.chartdata,
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,

@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
 const config_1 = __importDefault(require("../../config"));
 const infra_1 = require("../../infra");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
 const utils_1 = require("../utils");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
@@ -38,7 +38,7 @@ class TextureStorage {
             height: this.application.renderer.height,
         });
     }
-    [symbols_1.PRICE_LINE_TEXTURE]() {
+    [symbols_2.PRICE_LINE_TEXTURE]() {
         const x0 = 0;
         const y0 = 0 + this.application.screen.height * config_1.default.padding.top;
         const x1 = 0;
@@ -59,7 +59,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.POOL_ROUND_TEXTURE]() {
+    [symbols_2.POOL_ROUND_TEXTURE]() {
         const { width, height } = this.application.screen;
         const { padding } = config_1.default;
         const x0 = width - width * padding.right - width / 100;
@@ -86,7 +86,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_2.LATEST_PRICE_POINT_TEXTURES]() {
+    [symbols_1.LATEST_PRICE_POINT_TEXTURES]() {
         const textures = [];
         const steps = datamath_1.default.steps([4, 10], .5);
         steps.push(...steps.map((_, i) => steps.at(-i - 1)));

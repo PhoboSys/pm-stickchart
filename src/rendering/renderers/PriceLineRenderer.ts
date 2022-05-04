@@ -1,9 +1,9 @@
-import { IGraphicRenderer, RenderingContext } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { PRICE_LINE_TEXTURE } from '..'
 import config from '../../config'
 import datamath from '../../lib/datamath'
-import { Graphics, Texture } from '../../lib/pixi'
+import { Graphics, Container, Texture } from '../../lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
@@ -13,8 +13,9 @@ export class PriceLineRenderer extends BaseRenderer {
 
     private readonly textStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
+
         this.lineStyle = {
             width: config.style.linesize,
             color: config.style.linecolor,
@@ -22,21 +23,16 @@ export class PriceLineRenderer extends BaseRenderer {
             join: 'round',
             cap: 'round',
         }
-        this.textStyle = {
-            fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-        }
     }
 
     public get rendererId(): symbol {
         return PriceLineRenderer.PRICE_LINE_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
 
         const { width, height } = context.screen
         const { xdata, xrange, ydata, yrange } = context.plotdata
@@ -54,11 +50,14 @@ export class PriceLineRenderer extends BaseRenderer {
             const y = height - ys[idx]
 
             if (+idx === 0) {
+
                 result = GraphicUtils.startLine([x, y], this.lineStyle)
                 prevY = y
                 shape.push(x, height)
                 shape.push(x, y)
-            } else {
+
+            } else if (+idx + 1 === xs.length) {
+
                 if (config.style.rectunged) {
                     result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
                     shape.push(x, prevY)
@@ -67,45 +66,18 @@ export class PriceLineRenderer extends BaseRenderer {
                 result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
                 shape.push(x, y)
                 prevY = y
-            }
 
-            if (config.debuglatest && +idx + 1 === xs.length) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        xdata[idx],
-                        [x, y],
-                        this.textStyle,
-                        1,
-                    ),
-                    GraphicUtils.createText(
-                        ydata[idx],
-                        [x, y],
-                        this.textStyle,
-                        0,
-                    ),
-                )
-            }
+            } else {
 
-            if (config.debugtime) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        xdata[idx],
-                        [x, y],
-                        this.textStyle,
-                        1,
-                    ),
-                )
-            }
+                if (config.style.rectunged) {
+                    result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                    shape.push(x, prevY)
+                }
 
-            if (config.debugprice) {
-                result.addChild(
-                    GraphicUtils.createText(
-                        ydata[idx],
-                        [x, y],
-                        this.textStyle,
-                        0,
-                    ),
-                )
+                result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                shape.push(x, y)
+                prevY = y
+
             }
 
             prevY = y

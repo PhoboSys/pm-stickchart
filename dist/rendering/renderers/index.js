@@ -22,4 +22,5 @@ __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
 __exportStar(require("./LatestPriceRenderer"), exports);
 __exportStar(require("./PoolRenderer"), exports);
+__exportStar(require("./PariResolutionRenderer"), exports);
 //# sourceMappingURL=index.js.map

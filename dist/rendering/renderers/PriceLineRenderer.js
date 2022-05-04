@@ -19,17 +19,11 @@ class PriceLineRenderer extends __1.BaseRenderer {
             join: 'round',
             cap: 'round',
         };
-        this.textStyle = {
-            fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-        };
     }
     get rendererId() {
         return PriceLineRenderer.PRICE_LINE_ID;
     }
-    create(context) {
+    update(context, container) {
         const { width, height } = context.screen;
         const { xdata, xrange, ydata, yrange } = context.plotdata;
         const xs = datamath_1.default.scale(xdata, xrange, width);
@@ -47,7 +41,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
                 shape.push(x, height);
                 shape.push(x, y);
             }
-            else {
+            else if (+idx + 1 === xs.length) {
                 if (config_1.default.style.rectunged) {
                     result = __1.GraphicUtils.lineTo(result, [x, prevY], this.lineStyle);
                     shape.push(x, prevY);
@@ -56,14 +50,14 @@ class PriceLineRenderer extends __1.BaseRenderer {
                 shape.push(x, y);
                 prevY = y;
             }
-            if (config_1.default.debuglatest && +idx + 1 === xs.length) {
-                result.addChild(__1.GraphicUtils.createText(xdata[idx], [x, y], this.textStyle, 1), __1.GraphicUtils.createText(ydata[idx], [x, y], this.textStyle, 0));
-            }
-            if (config_1.default.debugtime) {
-                result.addChild(__1.GraphicUtils.createText(xdata[idx], [x, y], this.textStyle, 1));
-            }
-            if (config_1.default.debugprice) {
-                result.addChild(__1.GraphicUtils.createText(ydata[idx], [x, y], this.textStyle, 0));
+            else {
+                if (config_1.default.style.rectunged) {
+                    result = __1.GraphicUtils.lineTo(result, [x, prevY], this.lineStyle);
+                    shape.push(x, prevY);
+                }
+                result = __1.GraphicUtils.lineTo(result, [x, y], this.lineStyle);
+                shape.push(x, y);
+                prevY = y;
             }
             prevY = y;
             prevX = x;

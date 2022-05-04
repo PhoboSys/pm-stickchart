@@ -1,9 +1,9 @@
-import { IRenderer, IGraphicRenderer } from '..';
-import { EChartType } from '../../enums';
+import { IRenderer, IGraphicStorage } from '..';
+import { EChartType } from '../../enums/EChartType';
 export declare class RenderingPipelineFactory {
     private readonly renderer;
     private pipelines;
-    constructor(renderer: IGraphicRenderer);
+    constructor(renderer: IGraphicStorage);
     get(charttype: EChartType): IRenderer;
     private create;
 }

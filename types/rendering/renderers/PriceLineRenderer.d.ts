@@ -1,11 +1,11 @@
-import { IGraphicRenderer, RenderingContext } from '..';
+import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
-import { Graphics } from '../../lib/pixi';
+import { Container } from '../../lib/pixi';
 export declare class PriceLineRenderer extends BaseRenderer {
     static readonly PRICE_LINE_ID: symbol;
     private readonly lineStyle;
     private readonly textStyle;
-    constructor(renderer: IGraphicRenderer);
+    constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    protected create(context: RenderingContext): Graphics;
+    protected update(context: RenderingContext, container: Container): Container;
 }

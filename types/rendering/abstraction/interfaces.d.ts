@@ -1,11 +1,12 @@
-import { Graphics, Texture } from '../../lib/pixi';
+import { Container, RenderTexture } from '../../lib/pixi';
 import { DoneFunction, RenderingContext } from './types';
 export interface IRenderer {
     render(context: RenderingContext, done: DoneFunction): void;
 }
-export interface IGraphicRenderer {
-    render(graphics: Graphics, renderKey: symbol): void;
+export interface IGraphicStorage {
+    get(renderKey: symbol): Container;
+    set(renderKey: symbol, container: Container): void;
 }
 export interface ITextureStorage {
-    get(name: symbol): Texture | Texture[];
+    get(name: symbol): RenderTexture | RenderTexture[];
 }

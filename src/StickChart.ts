@@ -6,8 +6,8 @@ import { EventsProducer } from './events'
 import { Logger } from './infra'
 import { Application } from './lib/pixi'
 
-import { RenderingPipelineFactory, PixiGraphicRenderer } from './rendering'
-import { TextureStorage } from './rendering'
+import { RenderingPipelineFactory } from './rendering'
+import { TextureStorage, GraphicStorage } from './rendering'
 
 export class StickChart extends EventTarget {
 
@@ -39,7 +39,7 @@ export class StickChart extends EventTarget {
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
 
-        const renderer = new PixiGraphicRenderer(this.application.stage)
+        const renderer = new GraphicStorage(this.application.stage)
 
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
@@ -51,6 +51,7 @@ export class StickChart extends EventTarget {
     public render(context: {
         chartdata: ChartData,
         charttype: EChartType,
+        paris: any[],
         pari: any,
         pool: any,
         mousepos: any,
@@ -58,6 +59,7 @@ export class StickChart extends EventTarget {
         const pipeline = this.pipelineFactory.get(context.charttype)
         const ctx = {
             pool: context.pool,
+            paris: context.paris,
             chartdata: context.chartdata,
             plotdata: DataConverter.convert(context.chartdata),
             mousepos: context.mousepos,

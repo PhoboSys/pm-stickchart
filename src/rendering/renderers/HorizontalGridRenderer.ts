@@ -1,6 +1,7 @@
-import { IGraphicRenderer, RenderingContext, BaseRenderer, GraphicUtils } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
+import { BaseRenderer, GraphicUtils } from '..'
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class HorizontalGridRenderer extends BaseRenderer {
 
@@ -10,8 +11,9 @@ export class HorizontalGridRenderer extends BaseRenderer {
 
     private readonly textStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
+
         this.lineStyle = {
             width: 1,
             color: 0x303550,
@@ -29,9 +31,10 @@ export class HorizontalGridRenderer extends BaseRenderer {
         return HorizontalGridRenderer.HORIZONTAL_GRID_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
         const result = new Graphics()
 
         const { width, height } = context.screen

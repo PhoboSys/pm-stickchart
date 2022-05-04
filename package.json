@@ -38,6 +38,9 @@
     "@pixi/text": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
+    "@pixi/filter-blur": "6.3.0",
+    "@pixi/filter-color-matrix": "6.3.0",
+    "gsap": "3.10.4",
     "big.js": "6.1.1",
     "debug": "4.3.2"
   },

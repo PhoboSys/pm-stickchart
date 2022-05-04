@@ -1,19 +1,13 @@
-import {
-    RenderingContext,
-    RenderingCompositor,
-    HorizontalGridRenderer,
-    VerticalGridRenderer,
-    IGraphicRenderer,
-    IRenderer,
-    DoneFunction,
-} from '..'
+import { RenderingContext, RenderingCompositor } from '..'
+import { IGraphicStorage, IRenderer, DoneFunction } from '..'
+import { HorizontalGridRenderer, VerticalGridRenderer } from '..'
 
 export class GridRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
     constructor(
-        private readonly renderer: IGraphicRenderer,
+        private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
             new VerticalGridRenderer(renderer),

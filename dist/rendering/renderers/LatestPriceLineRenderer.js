@@ -41,7 +41,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
     get rendererId() {
         return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID;
     }
-    create(context) {
+    update(context, container) {
         const { ylast, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [yr] = datamath_1.default.scale([ylast], yrange, height);

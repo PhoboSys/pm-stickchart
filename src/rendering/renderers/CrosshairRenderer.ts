@@ -1,12 +1,8 @@
-import {
-    IGraphicRenderer,
-    RenderingContext,
-    BaseRenderer,
-    GraphicUtils,
-} from '..'
+import { IGraphicStorage, RenderingContext } from '..'
+import { BaseRenderer, GraphicUtils } from '..'
 
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class CrosshairRenderer extends BaseRenderer {
 
@@ -16,8 +12,9 @@ export class CrosshairRenderer extends BaseRenderer {
 
     private readonly priceCoverStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
+
         this.lineStyle = {
             width: 2,
             color: 0x009797,
@@ -47,9 +44,10 @@ export class CrosshairRenderer extends BaseRenderer {
         return CrosshairRenderer.CROSSHAIR_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
         if (!context.mousepos) return new Graphics()
 
         const {

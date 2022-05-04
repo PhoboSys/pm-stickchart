@@ -102,7 +102,7 @@ class PoolRenderer extends __1.BaseRenderer {
     get rendererId() {
         return PoolRenderer.POOL_ID;
     }
-    create(context) {
+    update(context, container) {
         if (!context.pool)
             return new pixi_1.Graphics();
         const { lockDate, openDate, resolutionDate, openPrice, } = context.pool;
@@ -160,8 +160,7 @@ class PoolRenderer extends __1.BaseRenderer {
         const torusy = torus.y + torusstyle.outterr;
         const { linestyle } = style;
         const { torusPadding } = linestyle;
-        const line = __1.GraphicUtils.createVerticalDashLine(// TODO: dash-line
-        x, [torusy + torusPadding, height - paddingBottom], style.linestyle);
+        const line = __1.GraphicUtils.createVerticalDashLine(x, [torusy + torusPadding, height - paddingBottom], style.linestyle);
         const pool = new pixi_1.Graphics();
         pool.addChild(line, torus, coveredIcon);
         return pool;
@@ -180,8 +179,7 @@ class PoolRenderer extends __1.BaseRenderer {
         const torusy = torus.y + torusstyle.outterr;
         const { linestyle } = style;
         const { torusPadding } = linestyle;
-        const line = __1.GraphicUtils.createVerticalDashLine(// TODO: dash-line
-        x, [torusy + torusPadding, height - paddingBottom], style.linestyle);
+        const line = __1.GraphicUtils.createVerticalDashLine(x, [torusy + torusPadding, height - paddingBottom], style.linestyle);
         const pool = new pixi_1.Graphics();
         pool.addChild(line, torus, coveredName);
         return pool;

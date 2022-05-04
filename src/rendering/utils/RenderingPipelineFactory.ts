@@ -1,18 +1,14 @@
-import {
-    LineChartRenderer,
-    NotSupportedChartTypeRenderer,
-    IRenderer,
-    IGraphicRenderer,
-} from '..'
-
-import { EChartType } from '../../enums'
+import { LineChartRenderer } from '..'
+import { NotSupportedChartTypeRenderer } from '..'
+import { IRenderer, IGraphicStorage } from '..'
+import { EChartType } from '../../enums/EChartType'
 
 export class RenderingPipelineFactory {
 
     private pipelines: { [key in EChartType]: IRenderer }
 
     constructor(
-        private readonly renderer: IGraphicRenderer,
+        private readonly renderer: IGraphicStorage,
     ) {
 
         this.pipelines = {

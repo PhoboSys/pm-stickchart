@@ -33,7 +33,9 @@
         "no-redeclare": "error",
         "no-trailing-spaces": "error",
         "space-before-blocks": "error",
-        "space-infix-ops": "error",
+        "space-infix-ops": [
+            "off",
+        ],
         "import/prefer-default-export": "off",
         "import/no-extraneous-dependencies": "off",
         "no-multiple-empty-lines": [
@@ -154,6 +156,7 @@
                 ]
             }
         ],
+        "@typescript-eslint/space-infix-ops": "off",
         "@typescript-eslint/consistent-type-assertions": [
             "off",
             {
@@ -174,10 +177,10 @@
         ],
         "@typescript-eslint/typedef": "off",
         "@typescript-eslint/explicit-function-return-type": [
-            "error"
+            "warn"
         ],
         "@typescript-eslint/comma-dangle": [
-            "error",
+            "off",
             "always-multiline"
         ],
         "no-return-await": "off",

@@ -12,4 +12,14 @@ export default class datamath {
     static toFixed(value: number, dp: number): string;
     static steps([minv, maxv]: [number, number], stepsize: number, maxsteps?: number): number[];
     static sample(data: number[], density: number): number[];
+    static returnPrize(args: {
+        positiveFund: number;
+        negativeFund: number;
+        wager: number;
+        position: string;
+        resolution: string;
+        precision: number;
+    }): any;
+    static dividends(pool1v: number, pool2v: number, wagerv: number, vigorishv?: number): any;
+    static profitPercent(wagerv: number, basev: number, precision: number, multiplicator?: number): any;
 }

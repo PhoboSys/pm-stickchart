@@ -1,19 +1,19 @@
 import config from '../../config'
 import { Logger } from '../../infra'
 
-import datamath from '../../lib/datamath'
 import { Application, RenderTexture, GradientFactory, Sprite } from '../../lib/pixi'
 import { Texture, Renderer } from '../../lib/pixi'
+import datamath from '../../lib/datamath'
 import { ITextureStorage } from '../abstraction'
 import { GraphicUtils } from '../utils'
 
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, LATEST_PRICE_POINT_TEXTURES } from './symbols';
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
-import { LATEST_PRICE_POINT_TEXTURES } from './symbols'
 import { LOCK_ICON_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
-    private readonly textures: { [key: symbol]: Texture | Texture[] } = {}
+    private readonly textures: { [key: symbol]: RenderTexture | RenderTexture[] } = {}
 
     constructor(
         private readonly application: Application,
@@ -22,7 +22,8 @@ export class TextureStorage implements ITextureStorage {
         this.get(LOCK_ICON_TEXTURE)
     }
 
-    public get(name: symbol): Texture | Texture[] {
+    public get(name: symbol): RenderTexture | RenderTexture[] {
+
         if (!this.textures[name]) {
             Logger.warn('Create Texture', name)
             if (this[name] instanceof Function) {
@@ -108,7 +109,7 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [LATEST_PRICE_POINT_TEXTURES](): Texture[] {
+    private [LATEST_PRICE_POINT_TEXTURES](): RenderTexture[] {
         const textures: RenderTexture[] = []
 
         const steps = datamath.steps([4, 10], .5)

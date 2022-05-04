@@ -1,16 +1,10 @@
-import { AnimatedSprite } from '@pixi/sprite-animated'
-
-import {
-    IGraphicRenderer,
-    RenderingContext,
-    BaseRenderer,
-    GraphicUtils,
-} from '..'
+import { IGraphicStorage, RenderingContext } from '..'
+import { BaseRenderer, GraphicUtils } from '..'
 import config from '../../config'
 
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
-import { LATEST_PRICE_POINT_TEXTURES } from '../textures/symbols'
+import { Graphics, Container, AnimatedSprite } from '../../lib/pixi'
+import { LATEST_PRICE_POINT_TEXTURES } from '../textures/symbols';
 
 export class LatestPricePointRenderer extends BaseRenderer {
 
@@ -20,7 +14,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
     private readonly innerPointStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
 
         this.innerPointStyle = {
@@ -38,9 +32,10 @@ export class LatestPricePointRenderer extends BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
         const {
             xlast,
             ylast,

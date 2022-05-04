@@ -1,9 +1,9 @@
-import { IGraphicRenderer, IRenderer } from '..'
+import { IGraphicStorage, IRenderer } from '..'
 
 export class NotSupportedChartTypeRenderer implements IRenderer {
 
     constructor(
-        private readonly renderer: IGraphicRenderer,
+        private readonly renderer: IGraphicStorage,
     ) {
 
     }

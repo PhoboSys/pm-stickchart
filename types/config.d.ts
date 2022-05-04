@@ -1,7 +1,4 @@
 declare const _default: {
-    debugtime: boolean;
-    debugprice: boolean;
-    debuglatest: boolean;
     zoomspeed: number;
     forceCanvas: boolean;
     autoStart: boolean;
@@ -14,6 +11,8 @@ declare const _default: {
         linesize: number;
         linecolor: number;
         rectunged: boolean;
+        upcolor: number;
+        downcolor: number;
     };
     padding: {
         left: number;

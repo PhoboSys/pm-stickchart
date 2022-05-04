@@ -1,8 +1,9 @@
-import { IGraphicRenderer, RenderingContext, BaseRenderer, GraphicUtils } from '..'
+import { IGraphicStorage, RenderingContext } from '..'
+import { BaseRenderer, GraphicUtils } from '..'
 import config from '../../config'
 
 import datamath from '../../lib/datamath'
-import { Graphics } from '../../lib/pixi'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
@@ -12,7 +13,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
     private readonly textCoverStyle: any
 
-    constructor(renderer: IGraphicRenderer) {
+    constructor(renderer: IGraphicStorage) {
         super(renderer)
 
         this.lineStyle = {
@@ -48,9 +49,10 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID
     }
 
-    protected create(
+    protected update(
         context: RenderingContext,
-    ): Graphics {
+        container: Container,
+    ): Container {
 
         const {
             ylast,
