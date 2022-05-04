@@ -1,5 +1,8 @@
 import { Graphics, LineStyle, Text } from '../../lib/pixi';
 export declare class GraphicUtils {
+    static createCircleIn(target: Graphics, radius: any, style: {
+        color: any;
+    }): Graphics;
     static createCircle([x, y]: [number, number], radius: number, style: {
         color: any;
     }): Graphics;

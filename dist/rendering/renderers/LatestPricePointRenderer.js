@@ -17,8 +17,21 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         };
         this.outerPointStyle = {
             color: config_1.default.style.linecolor,
-            radius: 10,
+            radius: 20,
+            alpha: 0,
         };
+        this.outerPointTween = pixi_1.gsap.to(this.outerPointStyle, { radius: 4, alpha: 1, duration: 1, repeat: -1, runBackwards: true });
+        pixi_1.Ticker.shared.add(() => {
+            const [outterpoint] = this.get('outterPoint') || [];
+            if (!outterpoint)
+                return;
+            outterpoint
+                .clear()
+                .beginFill(this.outerPointStyle.color)
+                .drawCircle(0, 0, this.outerPointStyle.radius)
+                .endFill();
+            outterpoint.alpha = this.outerPointStyle.alpha;
+        });
     }
     get rendererId() {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
@@ -29,11 +42,12 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([xlast], xrange, width);
         const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
-        const outerpoint = __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle);
-        const innerpoint = __1.GraphicUtils.createCircle([x, y], this.innerPointStyle.radius, this.innerPointStyle);
-        const result = new pixi_1.Graphics();
-        result.addChild(outerpoint, innerpoint);
-        return result;
+        const [outerpoint] = this.use('outterPoint', () => __1.GraphicUtils.createCircle([0, 0], this.outerPointStyle.radius, this.outerPointStyle));
+        outerpoint.position.set(x, y);
+        const [innerpoint] = this.use('innerPoint', () => __1.GraphicUtils.createCircle([0, 0], this.innerPointStyle.radius, this.innerPointStyle));
+        innerpoint.position.set(x, y);
+        container.addChild(outerpoint, innerpoint);
+        return container;
     }
 }
 exports.LatestPricePointRenderer = LatestPricePointRenderer;

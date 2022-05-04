@@ -1,6 +1,6 @@
-import { Container } from '../../lib/pixi';
 import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
+import { Container } from '../../lib/pixi';
 export declare class PariResolutionPrize extends BaseRenderer {
     static readonly PARI_RESOLUTION_PRIZE_ID: symbol;
     get rendererId(): symbol;

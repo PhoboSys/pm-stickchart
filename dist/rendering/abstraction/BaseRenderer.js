@@ -26,7 +26,10 @@ class BaseRenderer {
             delete this.local[name];
         }
     }
-    get(name, init) {
+    get(name) {
+        return this.local[name];
+    }
+    use(name, init) {
         const stored = this.local[name];
         if (stored) {
             const [g, state] = stored;

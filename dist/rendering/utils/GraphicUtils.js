@@ -8,6 +8,13 @@ const lodash_1 = require("lodash");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class GraphicUtils {
+    static createCircleIn(target, radius, style) {
+        target
+            .beginFill(style.color)
+            .drawCircle(0, 0, radius)
+            .endFill();
+        return target;
+    }
     static createCircle([x, y], radius, style) {
         const cirl = new pixi_1.Graphics()
             .beginFill(style.color)

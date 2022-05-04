@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionBackground = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
 const __2 = require("..");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 class PariResolutionBackground extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -38,9 +38,9 @@ class PariResolutionBackground extends __1.BaseRenderer {
         const paries = {};
         for (const pari of context.paris)
             paries[pari.position] = pari;
-        if (!paries['POS'])
+        if (!paries.POS)
             this.clear('gradientPos');
-        if (!paries['NEG'])
+        if (!paries.NEG)
             this.clear('gradientNeg');
         const anim = {
             high: {
@@ -65,7 +65,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
         // pool
         for (const pari of context.paris) {
             if (pari.position === 'POS') {
-                const [gradientPos, statepos] = this.get('gradientPos', () => new pixi_1.Sprite(context.textures.get(__2.UP_WAGET_TEXTURE)));
+                const [gradientPos, statepos] = this.use('gradientPos', () => new pixi_1.Sprite(context.textures.get(__2.UP_WAGET_TEXTURE)));
                 if (statepos.new)
                     container.addChild(gradientPos);
                 gradientPos.position.set(ox, y);
@@ -122,7 +122,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
                 }
             }
             if (pari.position === 'NEG') {
-                const [gradientNeg, stateneg] = this.get('gradientNeg', () => new pixi_1.Sprite(context.textures.get(__2.DOWN_WAGET_TEXTURE)));
+                const [gradientNeg, stateneg] = this.use('gradientNeg', () => new pixi_1.Sprite(context.textures.get(__2.DOWN_WAGET_TEXTURE)));
                 if (stateneg.new)
                     container.addChild(gradientNeg);
                 gradientNeg.position.set(ox, y);

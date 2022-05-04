@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionPrize = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 class PariResolutionPrize extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -57,12 +57,12 @@ class PariResolutionPrize extends __1.BaseRenderer {
         const paries = {};
         for (const pari of context.paris)
             paries[pari.position] = pari;
-        if (!paries['POS']) {
+        if (!paries.POS) {
             this.clear('dividendsPos');
             this.clear('dividendsCurPos');
             this.clear('dividendsPerPos');
         }
-        if (!paries['NEG']) {
+        if (!paries.NEG) {
             this.clear('dividendsNeg');
             this.clear('dividendsCurNeg');
             this.clear('dividendsPerNeg');
@@ -81,16 +81,16 @@ class PariResolutionPrize extends __1.BaseRenderer {
             const percent = datamath_1.default.profitPercent(prize, pari.wager, 2);
             const isWinning = prize !== 0;
             if (pari.position === 'POS') {
-                const [dividendsPos, dividendsPosState] = this.get('dividendsPos', () => __1.GraphicUtils.createText(prize, [x, y], this.textstyle, [0, 1.25]));
+                const [dividendsPos, dividendsPosState] = this.use('dividendsPos', () => __1.GraphicUtils.createText(prize, [x, y], this.textstyle, [0, 1.25]));
                 if (dividendsPosState.new)
                     container.addChild(dividendsPos);
                 dividendsPos.position.set(x + xpad, y);
                 dividendsPos.text = String(prize);
-                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, 1.25]));
+                const [dividendsCurPos, dividendsCurPosState] = this.use('dividendsCurPos', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, 1.25]));
                 if (dividendsCurPosState.new)
                     container.addChild(dividendsCurPos);
                 dividendsCurPos.position.set(x + xpad + dividendsPos.width + gap, y);
-                const [dividendsPerPos, dividendsPerPosState] = this.get('dividendsPerPos', () => __1.GraphicUtils.createText(percent + '%', [x, y], this.textstylePrecent, [0, 1.25]));
+                const [dividendsPerPos, dividendsPerPosState] = this.use('dividendsPerPos', () => __1.GraphicUtils.createText(percent + '%', [x, y], this.textstylePrecent, [0, 1.25]));
                 if (dividendsPerPosState.new)
                     container.addChild(dividendsPerPos);
                 dividendsPerPos.position.set(x + xpad, y - dividendsPos.height);
@@ -107,16 +107,16 @@ class PariResolutionPrize extends __1.BaseRenderer {
                 }
             }
             if (pari.position === 'NEG') {
-                const [dividendsNeg, dividendsNegState] = this.get('dividendsNeg', () => __1.GraphicUtils.createText(prize, [x, y], this.textstyle, [0, -0.3]));
+                const [dividendsNeg, dividendsNegState] = this.use('dividendsNeg', () => __1.GraphicUtils.createText(prize, [x, y], this.textstyle, [0, -0.3]));
                 if (dividendsNegState.new)
                     container.addChild(dividendsNeg);
                 dividendsNeg.position.set(x + xpad, y);
                 dividendsNeg.text = String(prize);
-                const [dividendsCurNeg, dividendsCurNegState] = this.get('dividendsCurNeg', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, -0.3]));
+                const [dividendsCurNeg, dividendsCurNegState] = this.use('dividendsCurNeg', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, -0.3]));
                 if (dividendsCurNegState.new)
                     container.addChild(dividendsCurNeg);
                 dividendsCurNeg.position.set(x + xpad + dividendsNeg.width + gap, y);
-                const [dividendsPerNeg, dividendsPerNegState] = this.get('dividendsPerNeg', () => __1.GraphicUtils.createText(percent + '%', [x, y], this.textstylePrecent, [0, -0.3]));
+                const [dividendsPerNeg, dividendsPerNegState] = this.use('dividendsPerNeg', () => __1.GraphicUtils.createText(percent + '%', [x, y], this.textstylePrecent, [0, -0.3]));
                 if (dividendsPerNegState.new)
                     container.addChild(dividendsPerNeg);
                 dividendsPerNeg.position.set(x + xpad, y + dividendsNeg.height);

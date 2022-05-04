@@ -39,7 +39,11 @@ export abstract class BaseRenderer implements IRenderer {
 
     }
 
-    protected get<T>(name: string, init: () => T): [T, any] {
+    protected get<T>(name: string): [T, any] {
+        return this.local[name]
+    }
+
+    protected use<T>(name: string, init: () => T): [T, any] {
 
         const stored = this.local[name]
         if (stored) {

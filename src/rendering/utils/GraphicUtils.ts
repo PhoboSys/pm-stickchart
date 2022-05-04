@@ -5,6 +5,19 @@ import { Graphics, LineStyle, Text, TextStyle, Sprite } from '../../lib/pixi'
 
 export class GraphicUtils {
 
+    static createCircleIn(
+        target: Graphics,
+        radius,
+        style: { color }
+    ): Graphics {
+        target
+            .beginFill(style.color)
+            .drawCircle(0, 0, radius)
+            .endFill()
+
+        return target
+    }
+
     static createCircle(
         [x, y]: [number, number],
         radius: number,

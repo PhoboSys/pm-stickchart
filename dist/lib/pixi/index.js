@@ -47,17 +47,17 @@ Object.defineProperty(exports, "gsap", { enumerable: true, get: function () { re
 require("@pixi/graphics-extras");
 const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");
-const ticker_1 = require("@pixi/ticker");
-const utils = __importStar(require("@pixi/utils"));
-const gsap_2 = require("gsap");
-const PixiPlugin_js_1 = require("gsap/PixiPlugin.js");
-const graphics_1 = require("@pixi/graphics");
 const display_1 = require("@pixi/display");
 const filter_blur_1 = require("@pixi/filter-blur");
 const filter_color_matrix_1 = require("@pixi/filter-color-matrix");
+const graphics_1 = require("@pixi/graphics");
+const ticker_1 = require("@pixi/ticker");
+const utils = __importStar(require("@pixi/utils"));
+const gsap_2 = require("gsap");
+const PixiPlugin_1 = require("gsap/PixiPlugin");
 utils.skipHello();
-gsap_2.gsap.registerPlugin(PixiPlugin_js_1.PixiPlugin);
-PixiPlugin_js_1.PixiPlugin.registerPIXI({
+gsap_2.gsap.registerPlugin(PixiPlugin_1.PixiPlugin);
+PixiPlugin_1.PixiPlugin.registerPIXI({
     DisplayObject: display_1.DisplayObject,
     Graphics: graphics_1.Graphics,
     filters: {

@@ -1,8 +1,7 @@
-import { Graphics, Container, Sprite, gsap } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+import datamath from '../../lib/datamath'
+import { Graphics, Container, Sprite, gsap } from '../../lib/pixi'
 import { DateUtils } from '../utils'
 
 export class PariResolutionPrize extends BaseRenderer {
@@ -14,7 +13,9 @@ export class PariResolutionPrize extends BaseRenderer {
     }
 
     private readonly textstyle: any
+
     private readonly subtextstyle: any
+
     private readonly textstylePrecent: any
 
     constructor(renderer: IGraphicStorage) {
@@ -45,6 +46,7 @@ export class PariResolutionPrize extends BaseRenderer {
     private renderedMetaId: any
 
     private renderedPool: any
+
     private renderedParis: any
 
     protected update(
@@ -59,6 +61,7 @@ export class PariResolutionPrize extends BaseRenderer {
         if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
             this.clear()
         }
+
         this.renderedMetaId = context.pool.metaid
 
         const { resolutionDate, openPrice } = context.pool
@@ -75,13 +78,15 @@ export class PariResolutionPrize extends BaseRenderer {
 
         // clear
         const paries = {}
+
         for (const pari of context.paris) paries[pari.position] = pari
-        if (!paries['POS']) {
+        if (!paries.POS) {
             this.clear('dividendsPos')
             this.clear('dividendsCurPos')
             this.clear('dividendsPerPos')
         }
-        if (!paries['NEG']) {
+
+        if (!paries.NEG) {
             this.clear('dividendsNeg')
             this.clear('dividendsCurNeg')
             this.clear('dividendsPerNeg')
@@ -104,7 +109,7 @@ export class PariResolutionPrize extends BaseRenderer {
 
             if (pari.position === 'POS') {
 
-                const [dividendsPos, dividendsPosState] = this.get(
+                const [dividendsPos, dividendsPosState] = this.use(
                     'dividendsPos',
                     () => GraphicUtils.createText(
                         prize,
@@ -113,11 +118,12 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, 1.25],
                     )
                 )
+
                 if (dividendsPosState.new) container.addChild(dividendsPos)
                 dividendsPos.position.set(x + xpad, y)
                 dividendsPos.text = String(prize)
 
-                const [dividendsCurPos, dividendsCurPosState] = this.get(
+                const [dividendsCurPos, dividendsCurPosState] = this.use(
                     'dividendsCurPos',
                     () => GraphicUtils.createText(
                         'ETH',
@@ -126,10 +132,11 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, 1.25],
                     )
                 )
+
                 if (dividendsCurPosState.new) container.addChild(dividendsCurPos)
                 dividendsCurPos.position.set(x + xpad + dividendsPos.width + gap, y)
 
-                const [dividendsPerPos, dividendsPerPosState] = this.get(
+                const [dividendsPerPos, dividendsPerPosState] = this.use(
                     'dividendsPerPos',
                     () => GraphicUtils.createText(
                         percent + '%',
@@ -138,6 +145,7 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, 1.25],
                     )
                 )
+
                 if (dividendsPerPosState.new) container.addChild(dividendsPerPos)
                 dividendsPerPos.position.set(x + xpad, y - dividendsPos.height)
                 dividendsPerPos.text = percent + '%'
@@ -156,7 +164,7 @@ export class PariResolutionPrize extends BaseRenderer {
 
             if (pari.position === 'NEG') {
 
-                const [dividendsNeg, dividendsNegState] = this.get(
+                const [dividendsNeg, dividendsNegState] = this.use(
                     'dividendsNeg',
                     () => GraphicUtils.createText(
                         prize,
@@ -165,11 +173,12 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, -0.3],
                     )
                 )
+
                 if (dividendsNegState.new) container.addChild(dividendsNeg)
                 dividendsNeg.position.set(x + xpad, y)
                 dividendsNeg.text = String(prize)
 
-                const [dividendsCurNeg, dividendsCurNegState] = this.get(
+                const [dividendsCurNeg, dividendsCurNegState] = this.use(
                     'dividendsCurNeg',
                     () => GraphicUtils.createText(
                         'ETH',
@@ -178,10 +187,11 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, -0.3],
                     )
                 )
+
                 if (dividendsCurNegState.new) container.addChild(dividendsCurNeg)
                 dividendsCurNeg.position.set(x + xpad + dividendsNeg.width + gap, y)
 
-                const [dividendsPerNeg, dividendsPerNegState] = this.get(
+                const [dividendsPerNeg, dividendsPerNegState] = this.use(
                     'dividendsPerNeg',
                     () => GraphicUtils.createText(
                         percent + '%',
@@ -190,6 +200,7 @@ export class PariResolutionPrize extends BaseRenderer {
                         [0, -0.3],
                     )
                 )
+
                 if (dividendsPerNegState.new) container.addChild(dividendsPerNeg)
                 dividendsPerNeg.position.set(x + xpad, y + dividendsNeg.height)
                 dividendsPerNeg.text = percent + '%'
