@@ -24,7 +24,7 @@ class StickChart extends EventTarget {
             autoStart: config_1.default.autoStart,
             forceCanvas: config_1.default.forceCanvas,
             backgroundColor: config_1.default.style.background,
-            backgroundAlpha: 1,
+            backgroundAlpha: config_1.default.style.backgroundAlpha,
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
@@ -39,18 +39,20 @@ class StickChart extends EventTarget {
         const ctx = {
             pool: context.pool,
             paris: context.paris,
+            resolved: context.resolved,
             chartdata: context.chartdata,
             plotdata: chartdata_1.DataConverter.convert(context.chartdata),
-            mousepos: context.mousepos,
             screen: this.application.screen,
             textures: this.textureStorage,
         };
-        window.requestAnimationFrame(() => pipeline.render(ctx, () => this.application.render()));
+        window.requestAnimationFrame(() => {
+            infra_1.Logger.info('chart render');
+            pipeline.render(ctx, () => this.application.render());
+        });
     }
     destroy() {
         this.application.destroy();
         this.eventsProducer.destroy();
-        infra_1.Logger.warn('Applicaiont get destoryed!!!!!!!!!!!');
     }
 }
 exports.StickChart = StickChart;

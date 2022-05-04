@@ -8,6 +8,7 @@ export type DoneFunction = () => void
 export type RenderingContext = {
     pool: any,
     paris: any[],
+    resolved: any[],
     chartdata: ChartData,
     plotdata: PlotData,
     screen: Rectangle,

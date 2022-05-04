@@ -14,7 +14,8 @@ export default {
 
     //chart
     style: {
-        background: 0x22273F,
+        background: 0x000000,
+        backgroundAlpha: 0,
         linesize: 3,
         linecolor: 0x009797,
         rectunged: false,

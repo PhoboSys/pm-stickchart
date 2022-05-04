@@ -1,8 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
-import datamath from '../../lib/datamath'
-import { Graphics, Container } from '../../lib/pixi'
-import { DateUtils } from '../utils/DateUtils'
+import { Graphics, Container } from '../../../lib/pixi'
+import datamath from '../../../lib/datamath'
+
+import { IGraphicStorage, RenderingContext } from '../..'
+import { BaseRenderer, GraphicUtils } from '../..'
+import { DateUtils } from '../../utils/DateUtils';
 
 export class VerticalGridRenderer extends BaseRenderer {
 

@@ -34,6 +34,7 @@ export abstract class BaseRenderer implements IRenderer {
             const [g, state] = this.local[name]
 
             g.destroy()
+            state.timeline?.kill()
             delete this.local[name]
         }
 

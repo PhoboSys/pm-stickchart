@@ -34,7 +34,7 @@
         "no-trailing-spaces": "error",
         "space-before-blocks": "error",
         "space-infix-ops": [
-            "off",
+            "off"
         ],
         "import/prefer-default-export": "off",
         "import/no-extraneous-dependencies": "off",

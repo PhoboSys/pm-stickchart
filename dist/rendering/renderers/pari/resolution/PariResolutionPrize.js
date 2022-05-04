@@ -4,9 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionPrize = void 0;
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
-const __1 = require("..");
+const datamath_1 = __importDefault(require("../../../../lib/datamath"));
+const __1 = require("../../..");
 class PariResolutionPrize extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -34,12 +33,12 @@ class PariResolutionPrize extends __1.BaseRenderer {
     }
     update(context, container) {
         var _a;
-        if (!context.pool)
-            return new pixi_1.Container();
-        if (!context.pool.openPrice)
-            return new pixi_1.Container();
-        if (!((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length))
-            return new pixi_1.Container();
+        if (!context.pool ||
+            !context.pool.openPrice ||
+            !((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length)) {
+            this.clear();
+            return container;
+        }
         // clear if pool changed
         if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
             this.clear();
@@ -54,15 +53,15 @@ class PariResolutionPrize extends __1.BaseRenderer {
         const gap = 6;
         const xpad = 8;
         // clear
-        const paries = {};
+        const paris = {};
         for (const pari of context.paris)
-            paries[pari.position] = pari;
-        if (!paries['POS']) {
+            paris[pari.position] = pari;
+        if (!paris['POS']) {
             this.clear('dividendsPos');
             this.clear('dividendsCurPos');
             this.clear('dividendsPerPos');
         }
-        if (!paries['NEG']) {
+        if (!paris['NEG']) {
             this.clear('dividendsNeg');
             this.clear('dividendsCurNeg');
             this.clear('dividendsPerNeg');
@@ -86,7 +85,7 @@ class PariResolutionPrize extends __1.BaseRenderer {
                     container.addChild(dividendsPos);
                 dividendsPos.position.set(x + xpad, y);
                 dividendsPos.text = String(prize);
-                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText('ETH', [x, y], this.subtextstyle, [0, 1.25]));
+                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText(pari.currency, [x, y], this.subtextstyle, [0, 1.25]));
                 if (dividendsCurPosState.new)
                     container.addChild(dividendsCurPos);
                 dividendsCurPos.position.set(x + xpad + dividendsPos.width + gap, y);

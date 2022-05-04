@@ -1,6 +1,7 @@
-import { IGraphicStorage } from '..'
-import { DoneFunction, RenderingContext, IRenderer } from '..'
-import { RenderingCompositor } from '..'
+import { IGraphicStorage } from '../../..'
+import { DoneFunction, RenderingContext, IRenderer } from '../../..'
+import { RenderingCompositor } from '../../..'
+
 import { PariResolutionBackground } from './PariResolutionBackground'
 import { PariResolutionPrize } from './PariResolutionPrize'
 

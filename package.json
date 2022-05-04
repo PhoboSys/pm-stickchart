@@ -16,8 +16,7 @@
   "scripts": {
     "build": "tsc",
     "build:lde": "./bin/dev.sh",
-    "lint": "echo 'Truned off, use lint-orig'",
-    "lint-orig": "eslint --ext .ts .",
+    "lint": "eslint --ext .ts .",
     "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },

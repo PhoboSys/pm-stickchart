@@ -13,9 +13,8 @@ export declare class StickChart extends EventTarget {
         chartdata: ChartData;
         charttype: EChartType;
         paris: any[];
-        pari: any;
+        resolved: any[];
         pool: any;
-        mousepos: any;
     }): void;
     destroy(): void;
 }
