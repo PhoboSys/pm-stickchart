@@ -4,7 +4,9 @@ export class ZoomEvent extends Event {
     public static readonly NAME: string = 'zoom'
 
     public readonly inner: WheelEvent
+
     public readonly zoom: number
+
     public readonly coefficient: number = 0.1 * (config.zoomspeed / 100)
 
     constructor(inner: WheelEvent) {

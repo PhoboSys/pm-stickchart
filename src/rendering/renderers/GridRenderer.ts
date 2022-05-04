@@ -7,7 +7,7 @@ export class GridRenderer implements IRenderer {
     private readonly compositor: RenderingCompositor
 
     constructor(
-       private readonly renderer: IGraphicStorage
+        private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
             new VerticalGridRenderer(renderer),
@@ -17,10 +17,11 @@ export class GridRenderer implements IRenderer {
 
     public render(
         context: RenderingContext,
-        done: DoneFunction
+        done: DoneFunction,
     ): void {
 
         const render = this.compositor.compose(context, done)
+
         render()
     }
 

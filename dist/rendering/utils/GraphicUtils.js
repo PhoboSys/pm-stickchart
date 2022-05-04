@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraphicUtils = void 0;
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const lodash_1 = require("lodash");
+const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
-const pixi_2 = require("../../lib/pixi");
 class GraphicUtils {
     static createCircle([x, y], radius, style) {
         const cirl = new pixi_1.Graphics()
@@ -36,7 +35,7 @@ class GraphicUtils {
     }
     static createCoveredIcon([x, y], style) {
         const { paddingx, paddingy } = style;
-        const icon = new pixi_2.Sprite(style.texture);
+        const icon = new pixi_1.Sprite(style.texture);
         const scale = style.iconstyle.size / icon.height;
         icon.position.set(paddingx, paddingy);
         icon.scale.set(scale);

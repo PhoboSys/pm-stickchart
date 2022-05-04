@@ -1,14 +1,14 @@
-import { Container } from '../../lib/pixi'
-
 import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
+
+import { Container } from '../../lib/pixi'
 
 export abstract class BaseRenderer implements IRenderer {
 
     private local: { [key: string]: any } = {}
 
     constructor(
-       protected readonly storage: IGraphicStorage,
+        protected readonly storage: IGraphicStorage,
     ) { }
 
     public render(
@@ -32,6 +32,7 @@ export abstract class BaseRenderer implements IRenderer {
             for (const key in this.local) this.clear(key)
         } else if (name in this.local) {
             const [g, state] = this.local[name]
+
             g.destroy()
             delete this.local[name]
         }
@@ -43,11 +44,14 @@ export abstract class BaseRenderer implements IRenderer {
         const stored = this.local[name]
         if (stored) {
             const [g, state] = stored
+
             state.new = false
+
             return [<T>g, state]
         }
 
         this.local[name] = [init(), { new: true }]
+
         return this.local[name]
 
     }

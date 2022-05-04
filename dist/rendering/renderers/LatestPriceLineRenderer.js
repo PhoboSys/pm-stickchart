@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceLineRenderer = void 0;
-const config_1 = __importDefault(require("../../config"));
-const pixi_1 = require("../../lib/pixi");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
 const __1 = require("..");
+const config_1 = __importDefault(require("../../config"));
+const datamath_1 = __importDefault(require("../../lib/datamath"));
+const pixi_1 = require("../../lib/pixi");
 class LatestPriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -35,7 +35,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
             linestyle: {
                 color: config_1.default.style.linecolor,
                 width: 1,
-            }
+            },
         };
     }
     get rendererId() {

@@ -23,8 +23,8 @@ exports.default = {
     padding: {
         left: -0.1,
         right: 0.3819,
-        top: 0.2,
+        top: 0.1,
         bottom: 0.3819, // % golden
-    }
+    },
 };
 //# sourceMappingURL=config.js.map

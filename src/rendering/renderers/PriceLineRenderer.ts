@@ -1,17 +1,16 @@
-import config from '../../config'
-
-import { Graphics, Container } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { PRICE_LINE_TEXTURE } from '..'
+import config from '../../config'
+import datamath from '../../lib/datamath'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
     static readonly PRICE_LINE_ID: symbol = Symbol('PRICE_LINE_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -26,7 +25,7 @@ export class PriceLineRenderer extends BaseRenderer {
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return PriceLineRenderer.PRICE_LINE_ID
     }
 
@@ -42,7 +41,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const ys = datamath.scale(ydata, yrange, height)
 
         let result: Graphics = new Graphics()
-        let shape: number[] = []
+        const shape: number[] = []
         let prevY: any = null
         let prevX: any = null
 
@@ -57,7 +56,7 @@ export class PriceLineRenderer extends BaseRenderer {
                 shape.push(x, height)
                 shape.push(x, y)
 
-            } else if (+idx+1 === xs.length) {
+            } else if (+idx + 1 === xs.length) {
 
                 if (config.style.rectunged) {
                     result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
@@ -85,13 +84,13 @@ export class PriceLineRenderer extends BaseRenderer {
             prevX = x
         }
 
-
         shape.push(prevX, height)
 
         const gradient = new Graphics()
+
         gradient.beginTextureFill({
             texture: context.textures.get(PRICE_LINE_TEXTURE),
-            alpha: 0.5
+            alpha: 0.5,
         })
         gradient.drawPolygon(shape)
         gradient.closePath()
@@ -101,6 +100,5 @@ export class PriceLineRenderer extends BaseRenderer {
 
         return result
     }
-
 
 }

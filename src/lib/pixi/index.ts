@@ -13,7 +13,7 @@ export * as utils from '@pixi/utils'
 export * from '@pixi-essentials/gradients'
 export { gsap } from "gsap"
 
-import '@pixi/graphics-extras';
+import '@pixi/graphics-extras'
 
 import { Application } from '@pixi/app'
 import { Renderer, BatchRenderer } from '@pixi/core'

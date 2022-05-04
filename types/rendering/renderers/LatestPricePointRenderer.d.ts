@@ -1,6 +1,6 @@
-import { Container } from '../../lib/pixi';
 import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
+import { Container } from '../../lib/pixi';
 export declare class LatestPricePointRenderer extends BaseRenderer {
     static readonly LATEST_PRICE_POINT_ID: symbol;
     private readonly outerPointStyle;
