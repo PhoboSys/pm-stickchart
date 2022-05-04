@@ -1,6 +1,6 @@
-import { Container } from '../../lib/pixi';
 import { IGraphicStorage, RenderingContext } from '..';
 import { BaseRenderer } from '..';
+import { Container } from '../../lib/pixi';
 export declare class PoolRenderer extends BaseRenderer {
     static readonly POOL_ID: symbol;
     private readonly openPoolStyle;

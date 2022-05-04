@@ -3,12 +3,12 @@ import { IRenderer, RenderingContext, DoneFunction } from '..'
 export class RenderingCompositor {
 
     constructor(
-        private readonly renderers: Array<IRenderer>
+        private readonly renderers: Array<IRenderer>,
     ) { }
 
     public compose(
         context: RenderingContext,
-        next: DoneFunction = () => {}
+        next: DoneFunction = (): void => { },
     ): DoneFunction {
 
         let prevnext = next
@@ -16,6 +16,7 @@ export class RenderingCompositor {
         let idx = this.renderers.length
         while (--idx >= 0) {
             const renderer = this.renderers[idx]
+
             prevnext = this.create(context, renderer, prevnext)
         }
 
@@ -26,11 +27,10 @@ export class RenderingCompositor {
     private create(
         context: RenderingContext,
         renderer: IRenderer,
-        next: DoneFunction
+        next: DoneFunction,
     ): () => void {
         return () => renderer.render(context, next)
     }
 
 }
-
 

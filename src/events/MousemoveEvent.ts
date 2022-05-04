@@ -2,6 +2,7 @@ export class MousemoveEvent extends Event {
     public static readonly NAME: string = 'mousemove'
 
     public readonly inner: MouseEvent
+
     public readonly position: { x: number, y: number }
 
     constructor(inner: MouseEvent) {

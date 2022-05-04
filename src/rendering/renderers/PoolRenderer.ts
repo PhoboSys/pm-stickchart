@@ -1,11 +1,8 @@
-import config from '../../config'
-
-import { Graphics, Container } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 import { POOL_ROUND_TEXTURE, LOCK_ICON_TEXTURE } from '..'
+import datamath from '../../lib/datamath'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class PoolRenderer extends BaseRenderer {
 
@@ -64,12 +61,12 @@ export class PoolRenderer extends BaseRenderer {
                 radius: 8,
                 paddingx: 7,
                 iconstyle: {
-                    size: 13
+                    size: 13,
                 },
                 color: 0xFFA000,
                 anchorx: 0,
                 anchory: 0,
-            }
+            },
         }
 
         this.resolutionPoolStyle = {
@@ -81,7 +78,7 @@ export class PoolRenderer extends BaseRenderer {
             },
             torusstyle: {
                 ...basicTorusStyle,
-                color: 0xF05350
+                color: 0xF05350,
             },
             coveredNameStyle: {
                 ...basicCoveredTextStyle,
@@ -92,7 +89,7 @@ export class PoolRenderer extends BaseRenderer {
                 color: 0xF05350,
                 anchorx: 0,
                 anchory: 0,
-            }
+            },
         }
 
         this.openPoolStyle = {
@@ -105,7 +102,6 @@ export class PoolRenderer extends BaseRenderer {
             torusstyle: {
                 ...basicTorusStyle,
                 color: 0xB7BDD7,
-
             },
             coveredNameStyle: {
                 ...basicCoveredTextStyle,
@@ -122,7 +118,7 @@ export class PoolRenderer extends BaseRenderer {
                 bordercolor: 0xB7BDD7,
                 anchorx: 1,
                 anchory: 0,
-            }
+            },
         }
 
         this.openPricePointStyle = {
@@ -136,7 +132,7 @@ export class PoolRenderer extends BaseRenderer {
                     radius: 6,
                     color: 0xB7BDD7,
                     alpha: 1,
-                }
+                },
             },
             linestyle: {
                 color: 0xB7BDD7,
@@ -159,12 +155,12 @@ export class PoolRenderer extends BaseRenderer {
                 linestyle: {
                     color: 0xB7BDD7,
                     width: 1,
-                }
-            }
+                },
+            },
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return PoolRenderer.POOL_ID
     }
 
@@ -203,9 +199,10 @@ export class PoolRenderer extends BaseRenderer {
         ]
 
         const gradient = new Graphics()
+
         gradient.beginTextureFill({
             texture: context.textures.get(POOL_ROUND_TEXTURE),
-            alpha: 0.07
+            alpha: 0.07,
         })
         gradient.drawPolygon(shape)
         gradient.closePath()
@@ -221,7 +218,7 @@ export class PoolRenderer extends BaseRenderer {
         )
         if (openPrice) {
             result.addChild(
-                this.createPrice(context, openPrice, this.openPricePointStyle)
+                this.createPrice(context, openPrice, this.openPricePointStyle),
             )
         }
 
@@ -231,8 +228,8 @@ export class PoolRenderer extends BaseRenderer {
     private createPrice(
         context: RenderingContext,
         pricePoint,
-        { circlstyle, linestyle, textCoverStyle }
-    ) {
+        { circlstyle, linestyle, textCoverStyle },
+    ): Graphics {
 
         const {
             xrange,
@@ -271,7 +268,9 @@ export class PoolRenderer extends BaseRenderer {
         )
 
         const price = new Graphics()
+
         price.addChild(line, outer, inner, coveredText)
+
         return price
     }
 
@@ -292,7 +291,7 @@ export class PoolRenderer extends BaseRenderer {
         const { linePadding: coverpadding } = coveredIconStyle
         const coveredIcon = GraphicUtils.createCoveredIcon(
             [x + coverpadding, paddingTop],
-            coveredIconStyle
+            coveredIconStyle,
         )
 
         const covery = coveredIcon.y + coveredIcon.height
@@ -309,11 +308,13 @@ export class PoolRenderer extends BaseRenderer {
         const line = GraphicUtils.createVerticalDashLine(
             x,
             [torusy + torusPadding, height - paddingBottom],
-            style.linestyle
+            style.linestyle,
         )
 
         const pool = new Graphics()
+
         pool.addChild(line, torus, coveredIcon)
+
         return pool
 
     }
@@ -336,7 +337,7 @@ export class PoolRenderer extends BaseRenderer {
         const coveredName = GraphicUtils.createCoveredText(
             title,
             [x + coverpadding, paddingTop],
-            coveredNameStyle
+            coveredNameStyle,
         )
 
         const covery = coveredName.y + coveredName.height
@@ -353,11 +354,13 @@ export class PoolRenderer extends BaseRenderer {
         const line = GraphicUtils.createVerticalDashLine(
             x,
             [torusy + torusPadding, height - paddingBottom],
-            style.linestyle
+            style.linestyle,
         )
 
         const pool = new Graphics()
+
         pool.addChild(line, torus, coveredName)
+
         return pool
     }
 }

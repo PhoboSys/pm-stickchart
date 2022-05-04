@@ -10,6 +10,7 @@ export class VerticalGridRenderer extends BaseRenderer {
     static readonly VERTICAL_GRID_ID: symbol = Symbol('VERTICAL_GRID_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -28,7 +29,7 @@ export class VerticalGridRenderer extends BaseRenderer {
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return VerticalGridRenderer.VERTICAL_GRID_ID
     }
 
@@ -53,14 +54,14 @@ export class VerticalGridRenderer extends BaseRenderer {
                 GraphicUtils.createLine(
                     [x, 0],
                     [x, height],
-                    this.lineStyle
+                    this.lineStyle,
                 ),
                 GraphicUtils.createText(
                     DateUtils.formatUnixTSToHHmm(xsteps[idx]),
                     [x, height],
                     this.textStyle,
-                    1.1
-                )
+                    1.1,
+                ),
             )
         }
 

@@ -1,5 +1,5 @@
-import { Rectangle } from '../../lib/pixi';
 import { ChartData, PlotData } from '../../chartdata';
+import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {

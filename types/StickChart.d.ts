@@ -1,5 +1,5 @@
-import { EChartType } from './enums';
 import { ChartData } from './chartdata';
+import { EChartType } from './enums';
 export declare class StickChart extends EventTarget {
     private stageElement;
     private chartType;

@@ -7,8 +7,8 @@ export class LineChartRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
-    constructor (
-       private readonly renderer: IGraphicStorage
+    constructor(
+        private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
             new GridRenderer(renderer),

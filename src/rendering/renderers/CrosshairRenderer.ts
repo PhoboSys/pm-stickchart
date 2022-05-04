@@ -1,16 +1,15 @@
-import config from '../../config'
-
-import { Graphics, Container } from '../../lib/pixi'
-import datamath from '../../lib/datamath'
-
 import { IGraphicStorage, RenderingContext } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
+
+import datamath from '../../lib/datamath'
+import { Graphics, Container } from '../../lib/pixi'
 
 export class CrosshairRenderer extends BaseRenderer {
 
     static readonly CROSSHAIR_ID: symbol = Symbol('CROSSHAIR_ID')
 
     private readonly lineStyle: any
+
     private readonly priceCoverStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -37,11 +36,11 @@ export class CrosshairRenderer extends BaseRenderer {
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 13,
-            }
+            },
         }
     }
 
-    public get rendererId() {
+    public get rendererId(): symbol {
         return CrosshairRenderer.CROSSHAIR_ID
     }
 
@@ -66,7 +65,7 @@ export class CrosshairRenderer extends BaseRenderer {
         const verticalLine = GraphicUtils.createLine(
             [x, 0],
             [x, height],
-            this.lineStyle
+            this.lineStyle,
         )
 
         const pricedif = yrange[1] - yrange[0]
@@ -76,20 +75,20 @@ export class CrosshairRenderer extends BaseRenderer {
         const priceText = GraphicUtils.createCoveredText(
             price.toFixed(3),
             [width - paddingright, y],
-            this.priceCoverStyle
+            this.priceCoverStyle,
         )
 
         const horizontalLine = GraphicUtils.createLine(
             [0, y],
             [priceText.x, y],
-            this.lineStyle
+            this.lineStyle,
         )
 
         const result = new Graphics()
+
         result.addChild(verticalLine, horizontalLine, priceText)
 
         return result
     }
-
 
 }
