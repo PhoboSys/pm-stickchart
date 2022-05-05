@@ -64,6 +64,14 @@ export class LatestPricePointRenderer extends BaseRenderer {
         const [yr] = datamath.scale([ylast], yrange, height)
         const y = height - yr
 
+        const [point, pointState] = this.get('point', () => GraphicUtils.createCircle(
+            [x, y],
+            this.outerPointStyle.radius,
+            this.outerPointStyle,
+        ))
+        if (pointState.new) container.addChild(point)
+        point.position.set(x, y)
+
         const [outerpoint, outerpointState] = this.get('outerpoint', () => GraphicUtils.createCircle(
             [x, y],
             this.outerPointStyle.radius,

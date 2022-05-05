@@ -38,6 +38,10 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([xlast], xrange, width);
         const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
+        const [point, pointState] = this.get('point', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
+        if (pointState.new)
+            container.addChild(point);
+        point.position.set(x, y);
         const [outerpoint, outerpointState] = this.get('outerpoint', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
         if (outerpointState.new)
             container.addChild(outerpoint);
