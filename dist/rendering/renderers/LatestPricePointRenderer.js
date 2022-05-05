@@ -17,7 +17,16 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         };
         this.outerPointStyle = {
             color: config_1.default.style.linecolor,
-            radius: 10,
+            radius: 9,
+        };
+        this.outerPointAnimation = {
+            pixi: {
+                scale: 4,
+                alpha: -0.1,
+            },
+            ease: 'power3.out',
+            duration: 3.819,
+            repeat: -1,
         };
     }
     get rendererId() {
@@ -29,11 +38,19 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([xlast], xrange, width);
         const [yr] = datamath_1.default.scale([ylast], yrange, height);
         const y = height - yr;
-        const outerpoint = __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle);
-        const innerpoint = __1.GraphicUtils.createCircle([x, y], this.innerPointStyle.radius, this.innerPointStyle);
-        const result = new pixi_1.Graphics();
-        result.addChild(outerpoint, innerpoint);
-        return result;
+        const [outerpoint, outerpointState] = this.get('outerpoint', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
+        if (outerpointState.new)
+            container.addChild(outerpoint);
+        outerpoint.position.set(x, y);
+        if (outerpointState.amination !== 'puls') {
+            outerpointState.amination = 'puls';
+            outerpointState.timeline = pixi_1.gsap.to(outerpoint, this.outerPointAnimation);
+        }
+        const [innerpoint, innerpointState] = this.get('innerpoint', () => __1.GraphicUtils.createCircle([x, y], this.innerPointStyle.radius, this.innerPointStyle));
+        if (innerpointState.new)
+            container.addChild(innerpoint);
+        innerpoint.position.set(x, y);
+        return container;
     }
 }
 exports.LatestPricePointRenderer = LatestPricePointRenderer;
