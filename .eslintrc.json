@@ -51,7 +51,7 @@
             "always"
         ],
         "import/order": [
-            "error",
+            "off",
             {
                 "pathGroups": [
                     {

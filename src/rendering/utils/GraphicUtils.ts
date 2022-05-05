@@ -24,7 +24,7 @@ export class GraphicUtils {
     static createTorus(
         [x, y]: [number, number],
         [innerr, outerr]: [number, number],
-        style: { color, },
+        style: { color },
     ): Graphics {
         const torus = new Graphics()
 
