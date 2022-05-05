@@ -19,7 +19,7 @@ __exportStar(require("./grid/GridRenderer"), exports);
 __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
 __exportStar(require("./LatestPriceRenderer"), exports);
-__exportStar(require("./PoolRenderer"), exports);
+__exportStar(require("./pool/PoolRenderer"), exports);
 __exportStar(require("./pari/resolution/PariResolutionRenderer"), exports);
 __exportStar(require("./pari/resolved/PariResolvedRenderer"), exports);
 //# sourceMappingURL=index.js.map
