@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolRenderer = void 0;
-const __1 = require("..");
-const __2 = require("..");
-const datamath_1 = __importDefault(require("../../lib/datamath"));
-const pixi_1 = require("../../lib/pixi");
+const __1 = require("../..");
+const __2 = require("../..");
+const datamath_1 = __importDefault(require("../../../lib/datamath"));
+const pixi_1 = require("../../../lib/pixi");
 class PoolRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);

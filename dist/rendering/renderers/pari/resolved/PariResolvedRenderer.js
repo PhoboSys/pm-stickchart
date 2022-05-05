@@ -65,10 +65,10 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                 pixi: {
                     positionY: '-=100',
                     scale: 1.5,
-                    alpha: -0.5,
+                    alpha: -0.3,
                 },
                 ease: 'power2.out',
-                duration: 10,
+                duration: 12,
             },
             lose: {
                 pixi: {
