@@ -178,6 +178,9 @@
         "@typescript-eslint/no-inferrable-types": [
             "off"
         ],
+        "@typescript-eslint/dot-notation": [
+            "off"
+        ],
         "@typescript-eslint/typedef": "off",
         "@typescript-eslint/explicit-function-return-type": [
             "warn"

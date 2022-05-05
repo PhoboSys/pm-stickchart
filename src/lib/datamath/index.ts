@@ -32,20 +32,33 @@ export default class datamath {
         return [minimum, maximum]
     }
 
-    static scale(
+    static reverseScale(
         data: number[],
         [min, max]: [number, number],
         factor: number = 1,
-        reversed: boolean = false,
     ): number[] {
         const scalesize = max - min
         const result: number[] = []
         for (const item of data) {
             const offset = item - min
 
-            const scale = offset / scalesize
+            result.push((1 - offset / scalesize) * factor)
+        }
 
-            result.push((reversed ? 1 - scale : scale)  * factor)
+        return result
+    }
+
+    static scale(
+        data: number[],
+        [min, max]: [number, number],
+        factor: number = 1,
+    ): number[] {
+        const scalesize = max - min
+        const result: number[] = []
+        for (const item of data) {
+            const offset = item - min
+
+            result.push(offset / scalesize * factor)
         }
 
         return result

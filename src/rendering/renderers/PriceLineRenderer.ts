@@ -107,7 +107,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const [xlastTwo, ylastTwo] = [xdata.slice(-2), ydata.slice(-2)]
 
         const [prevx, curx] = datamath.scale(xlastTwo, xrange, width)
-        const [prevy, cury] = datamath.scale(ylastTwo, yrange, height, true)
+        const [prevy, cury] = datamath.reverseScale(ylastTwo, yrange, height)
 
         const to = (prev, cur) => prev + (cur - prev) * this.anim.rate
 
@@ -145,7 +145,7 @@ export class PriceLineRenderer extends BaseRenderer {
         const { xdata, xrange, ydata, yrange } = context.plotdata
 
         const xs = datamath.scale(xdata, xrange, width)
-        const ys = datamath.scale(ydata, yrange, height, true)
+        const ys = datamath.reverseScale(ydata, yrange, height)
 
         const [priceline] = this.get<Graphics>('priceline')
 

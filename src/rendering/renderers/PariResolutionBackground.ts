@@ -47,8 +47,8 @@ export class PariResolutionBackground extends BaseRenderer {
         const paries: any = {}
 
         for (const pari of context.paris) paries[pari.position] = pari
-        if (!paries.POS) this.clear('gradientPos')
-        if (!paries.NEG) this.clear('gradientNeg')
+        if (!paries['POS']) this.clear('gradientPos')
+        if (!paries['NEG']) this.clear('gradientNeg')
 
         const anim = {
             high: {
