@@ -17,6 +17,11 @@ class GraphicStorage {
         old.destroy();
         this.root.addChildAt(container, index);
     }
+    init(renderKey) {
+        const container = new pixi_1.Container();
+        this.add(renderKey, container);
+        return container;
+    }
     set(renderKey, container) {
         const old = this.get(renderKey);
         if (old !== container) {
@@ -24,9 +29,6 @@ class GraphicStorage {
         }
     }
     get(renderKey) {
-        if (!this.exists(renderKey)) {
-            this.add(renderKey, new pixi_1.Container());
-        }
         return this.root.getChildAt(this.indexOf(renderKey));
     }
     exists(renderKey) {

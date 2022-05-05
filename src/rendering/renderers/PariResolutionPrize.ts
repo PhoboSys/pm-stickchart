@@ -77,7 +77,7 @@ export class PariResolutionPrize extends BaseRenderer {
         const xpad = 8
 
         // clear
-        const paries = {}
+        const paries: any = {}
 
         for (const pari of context.paris) paries[pari.position] = pari
         if (!paries.POS) {

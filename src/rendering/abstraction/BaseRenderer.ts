@@ -9,7 +9,13 @@ export abstract class BaseRenderer implements IRenderer {
 
     constructor(
         protected readonly storage: IGraphicStorage,
-    ) { }
+    ) {
+        this.initStorage()
+    }
+
+    private initStorage(): void {
+        this.storage.init(this.rendererId)
+    }
 
     public render(
         context: RenderingContext,

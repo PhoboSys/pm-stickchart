@@ -5,6 +5,7 @@ export declare abstract class BaseRenderer implements IRenderer {
     protected readonly storage: IGraphicStorage;
     private local;
     constructor(storage: IGraphicStorage);
+    private initStorage;
     render(context: RenderingContext, done: DoneFunction): void;
     protected clear(name?: string): void;
     protected get<T>(name: string): [T, any];

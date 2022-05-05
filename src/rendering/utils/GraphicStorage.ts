@@ -1,6 +1,5 @@
-import { Container } from '../../lib/pixi'
-
 import { IGraphicStorage } from '..'
+import { Container } from '../../lib/pixi'
 
 export class GraphicStorage implements IGraphicStorage {
 
@@ -22,9 +21,20 @@ export class GraphicStorage implements IGraphicStorage {
         const index = this.indexOf(renderKey)
 
         const old = this.root.getChildAt(index)
+
         old.destroy()
 
         this.root.addChildAt(container, index)
+    }
+
+    public init(renderKey: symbol): Container {
+
+        const container = new Container()
+
+        this.add(renderKey, container)
+
+        return container
+
     }
 
     public set(renderKey: symbol, container: Container): void {
@@ -38,11 +48,7 @@ export class GraphicStorage implements IGraphicStorage {
 
     public get(renderKey: symbol): Container {
 
-        if (!this.exists(renderKey)) {
-            this.add(renderKey, new Container())
-        }
-
-        return <Container>this.root.getChildAt(this.indexOf(renderKey))
+        return <Container> this.root.getChildAt(this.indexOf(renderKey))
 
     }
 

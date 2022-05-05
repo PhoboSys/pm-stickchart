@@ -7,6 +7,7 @@ export interface IRenderer {
 }
 
 export interface IGraphicStorage {
+    init(renderKey: symbol): Container
     get(renderKey: symbol): Container
     set(renderKey: symbol, container: Container): void
 }

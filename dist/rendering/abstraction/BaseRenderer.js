@@ -5,13 +5,17 @@ class BaseRenderer {
     constructor(storage) {
         this.storage = storage;
         this.local = {};
+        this.initStorage();
+    }
+    initStorage() {
+        this.storage.init(this.rendererId);
     }
     render(context, done) {
         const container = this.storage.get(this.rendererId);
         const newcontainer = this.update(context, container);
         if (newcontainer !== container) {
             this.storage.set(this.rendererId, newcontainer);
-            // this.local = {}
+            this.local = {};
         }
         done();
     }

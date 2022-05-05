@@ -10,8 +10,9 @@ const config_1 = __importDefault(require("../../config"));
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class PriceLineRenderer extends __1.BaseRenderer {
-    constructor(renderer) {
-        super(renderer);
+    constructor(storage) {
+        super(storage);
+        this.anim = { rate: 0 };
         this.lineStyle = {
             width: config_1.default.style.linesize,
             color: config_1.default.style.linecolor,
@@ -19,63 +20,86 @@ class PriceLineRenderer extends __1.BaseRenderer {
             join: 'round',
             cap: 'round',
         };
-        this.use('latestAnimationLine', () => new pixi_1.Graphics());
+        this.performContainer();
+    }
+    performContainer() {
+        const [pricelineLatest] = this.use('pricelineLatest', () => new pixi_1.Graphics());
+        const [gradientLatest] = this.use('gradientLatest', () => new pixi_1.Graphics());
+        const [priceline] = this.use('priceline', () => new pixi_1.Graphics());
+        const [gradient] = this.use('gradient', () => new pixi_1.Graphics());
+        const container = this.storage.get(this.rendererId);
+        container.addChild(priceline, gradient, pricelineLatest, gradientLatest);
     }
     get rendererId() {
         return PriceLineRenderer.PRICE_LINE_ID;
     }
-    render(context, done) {
-        this.context = context;
-        super.render(context, done);
-    }
     update(context, container) {
-        const { xlast } = context.plotdata;
-        if (this.xlast !== xlast) {
-            console.log('start animation');
+        var _a, _b;
+        const shouldAnimate = ((_b = (_a = this.context) === null || _a === void 0 ? void 0 : _a.plotdata) === null || _b === void 0 ? void 0 : _b.xlast) !== context.plotdata.xlast;
+        if (shouldAnimate) {
             this.animateLatestLine();
         }
-        this.xlast = xlast;
-        return this.renderLines(context, container);
+        this.context = context;
+        this.updatePriceline(context);
+        this.updateLatest(context);
+        return container;
     }
     animateLatestLine() {
         if (!this.context)
             return;
-        this.anim = { rate: 0 };
-        const tween = pixi_1.gsap.to(this.anim, { rate: 1, duration: 5 });
-        this.ticker = new pixi_1.Ticker();
-        this.ticker.add(() => {
-            const [line] = this.get('latestAnimationLine');
-            if (!tween.isActive()) {
-                return this.ticker.destroy();
-                // return this.render(context, () => { line.clear() })
-            }
-            console.log('animate2');
-            const { context } = this;
-            const { width, height } = context.screen;
-            const { xdata, xrange, ydata, yrange } = context.plotdata;
-            const [prevx, curx] = datamath_1.default.scale([xdata.at(-2), xdata.at(-1)], xrange, width);
-            const [prevy, cury] = datamath_1.default.scale([ydata.at(-2), ydata.at(-1)], yrange, height, true);
-            const animate = (prev, cur) => prev + (cur - prev) * this.anim.rate;
-            line
-                .clear()
-                .lineStyle(Object.assign(Object.assign({}, this.lineStyle), { color: 0xFFFFFF }))
-                .moveTo(prevx, prevy)
-                .lineTo(animate(prevx, curx), animate(prevy, cury));
-        });
-        this.ticker.start();
+        this.performTween();
+        this.performTicker();
     }
-    renderLines(context, container) {
+    performTween() {
+        this.anim = { rate: 0 };
+        this.tween = pixi_1.gsap.to(this.anim, { rate: 1, duration: .5 });
+    }
+    performTicker() {
+        const ticker = new pixi_1.Ticker();
+        ticker.add(() => {
+            var _a;
+            if (!((_a = this.tween) === null || _a === void 0 ? void 0 : _a.isActive())) {
+                return ticker.destroy();
+            }
+            this.updateLatest(this.context);
+        });
+        ticker.start();
+    }
+    updateLatest(context) {
         const { width, height } = context.screen;
-        const { xdata, ydata } = context.plotdata;
-        const { xrange, yrange } = context.plotdata;
+        const { xdata, xrange, ydata, yrange } = context.plotdata;
+        const [xlastTwo, ylastTwo] = [xdata.slice(-2), ydata.slice(-2)];
+        const [prevx, curx] = datamath_1.default.scale(xlastTwo, xrange, width);
+        const [prevy, cury] = datamath_1.default.scale(ylastTwo, yrange, height, true);
+        const to = (prev, cur) => prev + (cur - prev) * this.anim.rate;
+        const [endx, endy] = [to(prevx, curx), to(prevy, cury)];
+        const [line] = this.get('pricelineLatest');
+        line
+            .clear()
+            .lineStyle(this.lineStyle)
+            .moveTo(prevx, prevy)
+            .lineTo(endx, endy);
+        const [gradient] = this.get('gradientLatest');
+        gradient
+            .clear()
+            .beginTextureFill({
+            texture: context.textures.get(__2.PRICE_LINE_TEXTURE),
+            alpha: 0.5,
+        })
+            .drawPolygon(prevx, height, prevx, prevy, endx, endy, endx, height)
+            .endFill();
+    }
+    updatePriceline(context) {
+        const { width, height } = context.screen;
+        const { xdata, xrange, ydata, yrange } = context.plotdata;
         const xs = datamath_1.default.scale(xdata, xrange, width);
         const ys = datamath_1.default.scale(ydata, yrange, height, true);
-        const [priceline, plstate] = this.use('priceline', () => new pixi_1.Graphics());
-        if (!plstate.new)
-            priceline.clear();
-        priceline.lineStyle(this.lineStyle);
+        const [priceline] = this.get('priceline');
+        priceline
+            .clear()
+            .lineStyle(this.lineStyle);
         const shape = [];
-        for (let i = 0; i < xs.length; i++) {
+        for (let i = 0; i < xs.length - 1; i++) {
             const x = xs[i], y = ys[i];
             if (i === 0) {
                 shape.push(x, height, x, y);
@@ -89,8 +113,8 @@ class PriceLineRenderer extends __1.BaseRenderer {
             priceline.lineTo(x, y);
             shape.push(x, y);
         }
-        shape.push(xs.at(-1), height);
-        const [gradient] = this.use('gradient', () => new pixi_1.Graphics());
+        shape.push(xs.at(-2), height);
+        const [gradient] = this.get('gradient');
         gradient
             .clear()
             .beginTextureFill({
@@ -99,9 +123,6 @@ class PriceLineRenderer extends __1.BaseRenderer {
         })
             .drawPolygon(shape)
             .endFill();
-        const [animtedline] = this.get('latestAnimationLine');
-        container.addChild(priceline, gradient, animtedline);
-        return container;
     }
 }
 exports.PriceLineRenderer = PriceLineRenderer;
