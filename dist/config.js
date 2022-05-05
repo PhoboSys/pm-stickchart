@@ -24,7 +24,7 @@ exports.default = {
     padding: {
         left: -0.1,
         right: 0.3819,
-        top: 0.1,
+        top: 0.2,
         bottom: 0.3819, // % golden
     },
 };
