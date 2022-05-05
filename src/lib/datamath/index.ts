@@ -35,8 +35,8 @@ export default class datamath {
     static scale(
         data: number[],
         [min, max]: [number, number],
-        factor = 1,
-        reversed = false,
+        factor: number = 1,
+        reversed: boolean = false,
     ): number[] {
         const scalesize = max - min
         const result: number[] = []
@@ -53,8 +53,8 @@ export default class datamath {
 
     static range(
         data: number[],
-        minpadd = 0,
-        maxpadd = 0,
+        minpadd: number = 0,
+        maxpadd: number = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)
@@ -198,7 +198,7 @@ export default class datamath {
         position: string,
         resolution: string,
         precision: number,
-    }) {
+    }): number {
         const {
             positiveFund,
             negativeFund,
@@ -239,8 +239,8 @@ export default class datamath {
         pool1v: number,
         pool2v: number,
         wagerv: number,
-        vigorishv = 0.01
-    ) {
+        vigorishv: number = 0.01
+    ): number {
 
         const pool1 = new Big(pool1v)
         const pool2 = new Big(pool2v)
@@ -263,8 +263,8 @@ export default class datamath {
         wagerv: number,
         basev: number,
         precision: number,
-        multiplicator = 100
-    ) {
+        multiplicator: number = 100
+    ): number {
         const wager = new Big(wagerv)
         const base = new Big(basev)
 
