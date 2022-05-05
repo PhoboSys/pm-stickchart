@@ -11,7 +11,7 @@ class BaseRenderer {
         const newcontainer = this.update(context, container);
         if (newcontainer !== container) {
             this.storage.set(this.rendererId, newcontainer);
-            this.local = {};
+            // this.local = {}
         }
         done();
     }

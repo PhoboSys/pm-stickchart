@@ -10,7 +10,7 @@ export default {
     resolution: Math.ceil(window.devicePixelRatio),
 
     //data
-    maxdensity: 500,
+    maxdensity: 100,
 
     //chart
     style: {

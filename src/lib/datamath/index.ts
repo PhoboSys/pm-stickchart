@@ -35,14 +35,17 @@ export default class datamath {
     static scale(
         data: number[],
         [min, max]: [number, number],
-        factor: number = 1,
+        factor = 1,
+        reversed = false,
     ): number[] {
         const scalesize = max - min
         const result: number[] = []
         for (const item of data) {
             const offset = item - min
 
-            result.push(offset / scalesize * factor)
+            const scale = offset / scalesize
+
+            result.push((reversed ? 1 - scale : scale)  * factor)
         }
 
         return result
@@ -50,8 +53,8 @@ export default class datamath {
 
     static range(
         data: number[],
-        minpadd: number = 0,
-        maxpadd: number = 0,
+        minpadd = 0,
+        maxpadd = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)
@@ -236,7 +239,7 @@ export default class datamath {
         pool1v: number,
         pool2v: number,
         wagerv: number,
-        vigorishv: number = 0.01
+        vigorishv = 0.01
     ) {
 
         const pool1 = new Big(pool1v)
@@ -260,7 +263,7 @@ export default class datamath {
         wagerv: number,
         basev: number,
         precision: number,
-        multiplicator: number = 100
+        multiplicator = 100
     ) {
         const wager = new Big(wagerv)
         const base = new Big(basev)
