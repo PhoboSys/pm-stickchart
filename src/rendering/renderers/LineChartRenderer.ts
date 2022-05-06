@@ -1,7 +1,7 @@
 import { IGraphicStorage, IRenderer } from '..'
 import { DoneFunction, RenderingContext, RenderingCompositor } from '..'
 import { PriceLineRenderer, GridRenderer, PariResolvedRenderer } from '..'
-import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..';
+import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..'
 
 export class LineChartRenderer implements IRenderer {
 

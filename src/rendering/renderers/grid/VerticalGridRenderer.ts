@@ -40,11 +40,11 @@ export class VerticalGridRenderer extends BaseRenderer {
         const result = new Graphics()
 
         const { width, height } = context.screen
-        const { xdata, xrange } = context.plotdata
+        const { timerange } = context.plotdata
 
         const stepsize = context.pool.duration
-        const xsteps = datamath.steps(xrange, stepsize, 20)
-        const xs = datamath.scale(xsteps, xrange, width)
+        const xsteps = datamath.steps(timerange, stepsize, 20)
+        const xs = datamath.scale(xsteps, timerange, width)
 
         for (const idx in xs) {
 

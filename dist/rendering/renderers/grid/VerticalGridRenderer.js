@@ -29,10 +29,10 @@ class VerticalGridRenderer extends __1.BaseRenderer {
     update(context, container) {
         const result = new pixi_1.Graphics();
         const { width, height } = context.screen;
-        const { xdata, xrange } = context.plotdata;
+        const { timerange } = context.plotdata;
         const stepsize = context.pool.duration;
-        const xsteps = datamath_1.default.steps(xrange, stepsize, 20);
-        const xs = datamath_1.default.scale(xsteps, xrange, width);
+        const xsteps = datamath_1.default.steps(timerange, stepsize, 20);
+        const xs = datamath_1.default.scale(xsteps, timerange, width);
         for (const idx in xs) {
             const x = xs[idx];
             result.addChild(__1.GraphicUtils.createLine([x, 0], [x, height], this.lineStyle), __1.GraphicUtils.createText(DateUtils_1.DateUtils.formatUnixTSToHHmm(xsteps[idx]), [x, height], this.textStyle, 1.1));

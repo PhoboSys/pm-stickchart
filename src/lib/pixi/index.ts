@@ -11,7 +11,8 @@ export * from '@pixi/sprite'
 export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 export * from '@pixi-essentials/gradients'
-export { gsap } from "gsap"
+export { gsap } from 'gsap'
+export { MorphSVGPlugin } from 'gsap/MorphSVGPlugin'
 
 import '@pixi/graphics-extras'
 
@@ -19,15 +20,20 @@ import { Application } from '@pixi/app'
 import { Renderer, BatchRenderer } from '@pixi/core'
 import { TickerPlugin } from '@pixi/ticker'
 import * as utils from '@pixi/utils'
-import { gsap } from "gsap"
-import { PixiPlugin } from "gsap/PixiPlugin.js"
 import { Graphics } from '@pixi/graphics'
-import { DisplayObject } from "@pixi/display";
-import { BlurFilter } from "@pixi/filter-blur";
-import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
+import { DisplayObject } from '@pixi/display'
+import { BlurFilter } from '@pixi/filter-blur'
+import { ColorMatrixFilter } from '@pixi/filter-color-matrix'
+
+// GSAP
+import { gsap } from 'gsap'
+import { PixiPlugin } from 'gsap/PixiPlugin'
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin'
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 
 utils.skipHello()
 gsap.registerPlugin(PixiPlugin)
+gsap.registerPlugin(MorphSVGPlugin)
 PixiPlugin.registerPIXI({
     DisplayObject,
     Graphics,

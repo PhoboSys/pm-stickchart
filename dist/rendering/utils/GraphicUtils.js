@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraphicUtils = void 0;
 const lodash_1 = require("lodash");
+const infra_1 = require("../../infra");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class GraphicUtils {
@@ -17,10 +18,13 @@ class GraphicUtils {
         return cirl;
     }
     static createTorus([x, y], [innerr, outerr], style) {
-        var _a, _b;
         const torus = new pixi_1.Graphics();
-        (_b = (_a = torus
-            .beginFill(style.color)).drawTorus) === null || _b === void 0 ? void 0 : _b.call(_a, 0, 0, innerr, outerr).endFill();
+        torus.beginFill(style.color);
+        if (torus.drawTorus)
+            torus.drawTorus(0, 0, innerr, outerr);
+        else
+            infra_1.Logger.error('drawTorus is not supported install @pixi/graphics-extras');
+        torus.endFill();
         torus.position.set(x, y);
         return torus;
     }
@@ -66,9 +70,10 @@ class GraphicUtils {
         coveredText.position.set(x - cover.width * (anchorx !== null && anchorx !== void 0 ? anchorx : 0), y - cover.height * (anchory !== null && anchory !== void 0 ? anchory : 0));
         return coveredText;
     }
-    static createVerticalDashLine(// TODO: implement point to point
-    x, [y1, y2], linestyle) {
-        const dashLine = GraphicUtils.startLine([x, y1], linestyle);
+    static createVerticalDashLine(x, [y1, y2], linestyle) {
+        const dashLine = new pixi_1.Graphics()
+            .lineStyle(linestyle)
+            .moveTo(x, y1);
         const maxsteps = 100;
         const stepsize = linestyle.dash + linestyle.gap;
         const ysteps = datamath_1.default.steps([y1 + stepsize, y2 - stepsize], stepsize, maxsteps);
@@ -86,17 +91,6 @@ class GraphicUtils {
             .lineStyle(linestyle)
             .moveTo(x1, y1)
             .lineTo(x2, y2);
-        return line;
-    }
-    static lineTo(line, [x, y], linestyle) {
-        line.lineStyle(linestyle)
-            .lineTo(x, y);
-        return line;
-    }
-    static startLine([x, y], linestyle) {
-        const line = (new pixi_1.Graphics())
-            .lineStyle(linestyle)
-            .moveTo(x, y);
         return line;
     }
     static createText(value, [x, y], textstyle, anchor) {

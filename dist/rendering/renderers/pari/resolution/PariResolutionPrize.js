@@ -46,9 +46,9 @@ class PariResolutionPrize extends __1.BaseRenderer {
         this.renderedMetaId = context.pool.metaid;
         const { resolutionDate, openPrice } = context.pool;
         const { width, height } = context.screen;
-        const { xrange, yrange, ylast } = context.plotdata;
-        const [x] = datamath_1.default.scale([resolutionDate], xrange, width);
-        const [yr] = datamath_1.default.scale([openPrice.value], yrange, height);
+        const { timerange, pricerange } = context.plotdata;
+        const [x] = datamath_1.default.scale([resolutionDate], timerange, width);
+        const [yr] = datamath_1.default.scale([openPrice.value], pricerange, height);
         const y = height - yr;
         const gap = 6;
         const xpad = 8;

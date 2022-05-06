@@ -28,16 +28,16 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
     update(context, container) {
         const result = new pixi_1.Graphics();
         const { width, height } = context.screen;
-        const { ydata, yrange } = context.plotdata;
-        const stepsize = datamath_1.default.datastep(yrange);
-        const ysteps = datamath_1.default.steps(yrange, stepsize, 20);
-        const ys = datamath_1.default.scale(ysteps, yrange, height);
+        const { pricerange } = context.plotdata;
+        const stepsize = datamath_1.default.datastep(pricerange);
+        const ysteps = datamath_1.default.steps(pricerange, stepsize, 20);
+        const ys = datamath_1.default.scaleReverse(ysteps, pricerange, height);
         for (const idx in ys) {
+            const y = ys[idx];
             // Avoid rendering over time axe text
             // 12px size + anchor 1.1
-            if (ys[idx] <= 12 + 12 * 1.1)
+            if (y > (height - 12 + 12 * 1.1))
                 continue;
-            const y = height - ys[idx];
             result.addChild(__1.GraphicUtils.createLine([0, y], [width, y], this.lineStyle), __1.GraphicUtils.createText(datamath_1.default.toFixedScaled(ysteps[idx], stepsize), [width, y], this.textStyle, 1.1));
         }
         return result;

@@ -1,9 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
-import { PRICE_LINE_TEXTURE } from '..'
-import config from '../../config'
-import datamath from '../../lib/datamath'
-import { Graphics, Container } from '../../lib/pixi'
+import { IGraphicStorage, RenderingContext } from '../../..'
+import { BaseRenderer, GraphicUtils } from '../../..'
+import { PRICE_LINE_TEXTURE } from '../../..'
+import config from '../../../../config'
+import datamath from '../../../../lib/datamath'
+import { Graphics, Container } from '../../../../lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
@@ -35,23 +35,26 @@ export class PriceLineRenderer extends BaseRenderer {
     ): Container {
 
         const { width, height } = context.screen
-        const { xdata, xrange, ydata, yrange } = context.plotdata
+        const { xs, ys, pricerange, timerange } = context.plotdata
 
-        const xs = datamath.scale(xdata, xrange, width)
-        const ys = datamath.scale(ydata, yrange, height)
-
-        let result: Graphics = new Graphics()
         const shape: number[] = []
         let prevY: any = null
         let prevX: any = null
 
+        const [line, lineState] = this.get('line', () => new Graphics())
+        if (lineState.new) container.addChild(line)
+
         for (const idx in xs) {
             const x = xs[idx]
-            const y = height - ys[idx]
+            const y = ys[idx]
 
             if (+idx === 0) {
 
-                result = GraphicUtils.startLine([x, y], this.lineStyle)
+                line
+                    .clear()
+                    .lineStyle(this.lineStyle)
+                    .moveTo(x, y)
+
                 prevY = y
                 shape.push(x, height)
                 shape.push(x, y)
@@ -59,22 +62,22 @@ export class PriceLineRenderer extends BaseRenderer {
             } else if (+idx + 1 === xs.length) {
 
                 if (config.style.rectunged) {
-                    result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                    line.lineTo(x, prevY)
                     shape.push(x, prevY)
                 }
 
-                result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                line.lineTo(x, y)
                 shape.push(x, y)
                 prevY = y
 
             } else {
 
                 if (config.style.rectunged) {
-                    result = GraphicUtils.lineTo(result, [x, prevY], this.lineStyle)
+                    line.lineTo(x, prevY)
                     shape.push(x, prevY)
                 }
 
-                result = GraphicUtils.lineTo(result, [x, y], this.lineStyle)
+                line.lineTo(x, y)
                 shape.push(x, y)
                 prevY = y
 
@@ -86,19 +89,20 @@ export class PriceLineRenderer extends BaseRenderer {
 
         shape.push(prevX, height)
 
-        const gradient = new Graphics()
+        const [gradient, gradientState] = this.get('gradient', () => new Graphics())
+        if (gradientState.new) container.addChild(gradient)
 
-        gradient.beginTextureFill({
-            texture: context.textures.get(PRICE_LINE_TEXTURE),
-            alpha: 0.5,
-        })
-        gradient.drawPolygon(shape)
-        gradient.closePath()
-        gradient.endFill()
+        gradient
+            .clear()
+            .beginTextureFill({
+                texture: context.textures.get(PRICE_LINE_TEXTURE),
+                alpha: 0.5,
+            })
+            .drawPolygon(shape)
+            .closePath()
+            .endFill()
 
-        result.addChild(gradient)
-
-        return result
+        return container
     }
 
 }

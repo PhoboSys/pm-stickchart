@@ -102,13 +102,12 @@ export class PariResolvedRenderer extends BaseRenderer {
 
         // loop
         const { width, height } = context.screen
-        const { xrange, yrange } = context.plotdata
+        const { timerange, pricerange } = context.plotdata
         for (const position in paris) {
             const pari = paris[position]
 
-            let [x] = datamath.scale([pari.resolutionDate], xrange, width)
-            const [yr] = datamath.scale([pari.openPrice.value], yrange, height)
-            let y = height - yr
+            const [x] = datamath.scale([pari.resolutionDate], timerange, width)
+            const [y] = datamath.scaleReverse([pari.openPrice.value], pricerange, height)
 
             const gap = 6
             const xpad = 8

@@ -80,12 +80,11 @@ class PariResolvedRenderer extends __1.BaseRenderer {
         };
         // loop
         const { width, height } = context.screen;
-        const { xrange, yrange } = context.plotdata;
+        const { timerange, pricerange } = context.plotdata;
         for (const position in paris) {
             const pari = paris[position];
-            let [x] = datamath_1.default.scale([pari.resolutionDate], xrange, width);
-            const [yr] = datamath_1.default.scale([pari.openPrice.value], yrange, height);
-            let y = height - yr;
+            const [x] = datamath_1.default.scale([pari.resolutionDate], timerange, width);
+            const [y] = datamath_1.default.scaleReverse([pari.openPrice.value], pricerange, height);
             const gap = 6;
             const xpad = 8;
             const prize = datamath_1.default.returnPrize({

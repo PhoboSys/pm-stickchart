@@ -56,8 +56,8 @@ export class CrosshairRenderer extends BaseRenderer {
         } = context.screen
 
         const {
-            xrange,
-            yrange,
+            timerange,
+            pricerange,
         } = context.plotdata
 
         const { x, y } = context.mousepos
@@ -68,8 +68,8 @@ export class CrosshairRenderer extends BaseRenderer {
             this.lineStyle,
         )
 
-        const pricedif = yrange[1] - yrange[0]
-        const price = yrange[1] - datamath.scale([y], [0, height], pricedif)[0]
+        const pricedif = pricerange[1] - pricerange[0]
+        const price = pricerange[1] - datamath.scale([y], [0, height], pricedif)[0]
 
         const { paddingright } = this.priceCoverStyle
         const priceText = GraphicUtils.createCoveredText(

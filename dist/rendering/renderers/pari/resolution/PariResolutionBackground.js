@@ -30,10 +30,9 @@ class PariResolutionBackground extends __1.BaseRenderer {
         this.renderedMetaId = context.pool.metaid;
         const { openDate, resolutionDate, openPrice } = context.pool;
         const { width, height } = context.screen;
-        const { xrange, yrange, ylast } = context.plotdata;
-        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], xrange, width);
-        const [yr] = datamath_1.default.scale([openPrice.value], yrange, height);
-        const y = height - yr;
+        const { timerange, pricerange } = context.plotdata;
+        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([openPrice.value], pricerange, height);
         // clear if one dissapeared
         const paris = {};
         for (const pari of context.paris)

@@ -5,6 +5,7 @@ declare const _default: {
     autoDensity: boolean;
     antialias: boolean;
     resolution: number;
+    morph: boolean;
     maxdensity: number;
     style: {
         background: number;

@@ -106,10 +106,10 @@ class PoolRenderer extends __1.BaseRenderer {
         if (!context.pool)
             return new pixi_1.Graphics();
         const { lockDate, openDate, resolutionDate, openPrice, } = context.pool;
-        const { xrange, yrange, } = context.plotdata;
+        const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const result = new pixi_1.Graphics();
-        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], xrange, width);
+        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], timerange, width);
         const shape = [
             ox, 0,
             rx, 0,
@@ -133,11 +133,10 @@ class PoolRenderer extends __1.BaseRenderer {
         return result;
     }
     createPrice(context, pricePoint, { circlstyle, linestyle, textCoverStyle }) {
-        const { xrange, yrange, } = context.plotdata;
+        const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
-        const [x] = datamath_1.default.scale([pricePoint.timestamp], xrange, width);
-        const [yr] = datamath_1.default.scale([pricePoint.value], yrange, height);
-        const y = height - yr;
+        const [x] = datamath_1.default.scale([pricePoint.timestamp], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([pricePoint.value], pricerange, height);
         const outer = __1.GraphicUtils.createCircle([x, y], circlstyle.outer.radius, circlstyle.outer);
         const inner = __1.GraphicUtils.createCircle([x, y], circlstyle.inner.radius, circlstyle.inner);
         const line = __1.GraphicUtils.createLine([0, y], [width, y], linestyle);
@@ -147,10 +146,10 @@ class PoolRenderer extends __1.BaseRenderer {
         return price;
     }
     createLockLine(context, poolDate, style) {
-        const { xrange, } = context.plotdata;
+        const { timerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const { paddingTop, paddingBottom } = style;
-        const [x] = datamath_1.default.scale([poolDate], xrange, width);
+        const [x] = datamath_1.default.scale([poolDate], timerange, width);
         const { coveredIconStyle } = style;
         const { linePadding: coverpadding } = coveredIconStyle;
         const coveredIcon = __1.GraphicUtils.createCoveredIcon([x + coverpadding, paddingTop], coveredIconStyle);
@@ -166,10 +165,10 @@ class PoolRenderer extends __1.BaseRenderer {
         return pool;
     }
     createPoolBorder(context, title, poolDate, style) {
-        const { xrange, } = context.plotdata;
+        const { timerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const { paddingTop, paddingBottom } = style;
-        const [x] = datamath_1.default.scale([poolDate], xrange, width);
+        const [x] = datamath_1.default.scale([poolDate], timerange, width);
         const { coveredNameStyle } = style;
         const { linePadding: coverpadding } = coveredNameStyle;
         const coveredName = __1.GraphicUtils.createCoveredText(title, [x + coverpadding, paddingTop], coveredNameStyle);

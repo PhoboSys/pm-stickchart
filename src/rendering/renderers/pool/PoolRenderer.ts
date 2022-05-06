@@ -179,8 +179,8 @@ export class PoolRenderer extends BaseRenderer {
         } = context.pool
 
         const {
-            xrange,
-            yrange,
+            timerange,
+            pricerange,
         } = context.plotdata
 
         const {
@@ -190,7 +190,7 @@ export class PoolRenderer extends BaseRenderer {
 
         const result = new Graphics()
 
-        const [ox, rx] = datamath.scale([openDate, resolutionDate], xrange, width)
+        const [ox, rx] = datamath.scale([openDate, resolutionDate], timerange, width)
 
         const shape = [
             ox, 0,
@@ -233,8 +233,8 @@ export class PoolRenderer extends BaseRenderer {
     ): Graphics {
 
         const {
-            xrange,
-            yrange,
+            timerange,
+            pricerange,
         } = context.plotdata
 
         const {
@@ -242,9 +242,8 @@ export class PoolRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const [x] = datamath.scale([pricePoint.timestamp], xrange, width)
-        const [yr] = datamath.scale([pricePoint.value], yrange, height)
-        const y = height - yr
+        const [x] = datamath.scale([pricePoint.timestamp], timerange, width)
+        const [y] = datamath.scaleReverse([pricePoint.value], pricerange, height)
 
         const outer = GraphicUtils.createCircle(
             [x, y],
@@ -277,7 +276,7 @@ export class PoolRenderer extends BaseRenderer {
 
     private createLockLine(context: RenderingContext, poolDate, style): Graphics {
         const {
-            xrange,
+            timerange,
         } = context.plotdata
 
         const {
@@ -286,7 +285,7 @@ export class PoolRenderer extends BaseRenderer {
         } = context.screen
 
         const { paddingTop, paddingBottom } = style
-        const [x] = datamath.scale([poolDate], xrange, width)
+        const [x] = datamath.scale([poolDate], timerange, width)
 
         const { coveredIconStyle } = style
         const { linePadding: coverpadding } = coveredIconStyle
@@ -322,7 +321,7 @@ export class PoolRenderer extends BaseRenderer {
 
     private createPoolBorder(context: RenderingContext, title: string, poolDate, style): Graphics {
         const {
-            xrange,
+            timerange,
         } = context.plotdata
 
         const {
@@ -331,7 +330,7 @@ export class PoolRenderer extends BaseRenderer {
         } = context.screen
 
         const { paddingTop, paddingBottom } = style
-        const [x] = datamath.scale([poolDate], xrange, width)
+        const [x] = datamath.scale([poolDate], timerange, width)
 
         const { coveredNameStyle } = style
         const { linePadding: coverpadding } = coveredNameStyle
