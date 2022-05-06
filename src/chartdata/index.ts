@@ -25,14 +25,13 @@ export class DataConverter {
         }
 
         return { xs, ys }
-
     }
 
     static toPath(
         plotdata: PlotData
     ) {
 
-        const { xs, ys, yrange } = plotdata
+        const { xs, ys } = plotdata
 
         const result: string[] = []
 

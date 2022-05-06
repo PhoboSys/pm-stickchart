@@ -9,7 +9,7 @@ export default {
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
 
-    //animation
+    //chart morph animation
     morph: false,
 
     //data

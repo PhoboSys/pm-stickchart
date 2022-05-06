@@ -37,7 +37,7 @@ class DataConverter {
         return { xs, ys };
     }
     static toPath(plotdata) {
-        const { xs, ys, yrange } = plotdata;
+        const { xs, ys } = plotdata;
         const result = [];
         for (const idx in xs) {
             result.push(xs[idx] + ',' + ys[idx]);

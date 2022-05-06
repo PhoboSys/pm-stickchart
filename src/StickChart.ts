@@ -62,6 +62,7 @@ export class StickChart extends EventTarget {
         resolved: any[],
         pool: any,
     }): void {
+
         const pipeline = this.pipelineFactory.get(context.charttype)
         const ctx = {
             pool: context.pool,
@@ -72,7 +73,6 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
         }
-
 
         window.requestAnimationFrame(() => {
 
@@ -86,13 +86,13 @@ export class StickChart extends EventTarget {
                         ease: 'power2',
                         morphSVG: {
                             shape: DataConverter.toPath(ctx.plotdata),
+                            type: 'linear',
                             shapeIndex: 'auto',
                             updateTarget: false,
                             render: (path) => {
                                 Logger.info('morph render')
                                 const { xs, ys } = DataConverter.fromPath(path)
-                                console.log(ys)
-                                ctx.plotdata = { ...ctx.plotdata, ys, xs }
+                                ctx.plotdata = { ...ctx.plotdata, xs, ys }
                                 pipeline.render(
                                     ctx,
                                     () => this.application.render()

@@ -55,20 +55,20 @@ class StickChart extends EventTarget {
                     ease: 'power2',
                     morphSVG: {
                         shape: chartdata_1.DataConverter.toPath(ctx.plotdata),
+                        type: 'linear',
                         shapeIndex: 'auto',
                         updateTarget: false,
                         render: (path) => {
-                            infra_1.Logger.info('animational render');
+                            infra_1.Logger.info('morph render');
                             const { xs, ys } = chartdata_1.DataConverter.fromPath(path);
-                            console.log(ys);
-                            ctx.plotdata = Object.assign(Object.assign({}, ctx.plotdata), { ys, xs });
+                            ctx.plotdata = Object.assign(Object.assign({}, ctx.plotdata), { xs, ys });
                             pipeline.render(ctx, () => this.application.render());
                         }
                     }
                 });
             }
             else {
-                infra_1.Logger.info('chart render');
+                infra_1.Logger.info('render');
                 pipeline.render(ctx, () => this.application.render());
             }
             this._plotdata = ctx.plotdata;
