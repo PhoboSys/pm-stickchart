@@ -83,14 +83,15 @@ class StickChart extends EventTarget {
         this.rerender('latestpoint');
     }
     rerender(reason) {
-        if (!this._context)
-            return;
         window.requestAnimationFrame(() => {
+            if (!this._context)
+                return;
             const pipeline = this.pipelineFactory.get(this._context.charttype);
             pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => infra_1.Logger.info('re-render', reason));
         });
     }
     render(context) {
+        var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataConverter.chartdata(context.chartdata);
         const plotdata = chartdata_1.DataConverter.plotdata(chartdata, this.application.screen, this.timeframe);
@@ -104,13 +105,23 @@ class StickChart extends EventTarget {
             chartdata,
             plotdata,
         };
+        if (context.pool.metaid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.pool.metaid)) {
+            // clear context if metaid changed
+            this._context = null;
+        }
         window.requestAnimationFrame(() => {
             var _a;
             // Morph
             if (config_1.default.morph && this._context) {
-                const aminatedPoint = chartdata_1.DataConverter.getLatest(this._context.plotdata);
+                const aminated = chartdata_1.DataConverter.getLatest(this._context.plotdata);
+                const target = chartdata_1.DataConverter.getLatest(ctx.plotdata);
                 (_a = this.timeline) === null || _a === void 0 ? void 0 : _a.kill();
-                this.timeline = pixi_1.gsap.to(aminatedPoint, Object.assign(Object.assign({}, chartdata_1.DataConverter.getLatest(ctx.plotdata)), { duration: 1, ease: 'power2', onUpdate: () => this.applyLatestPoint(aminatedPoint) }));
+                this.timeline = pixi_1.gsap.to(aminated, Object.assign(Object.assign({}, target), { duration: 1, ease: 'power2', onUpdate: () => {
+                        if (aminated.timestamp !== target.timestamp ||
+                            aminated.price !== target.price) {
+                            this.applyLatestPoint(aminated);
+                        }
+                    } }));
             }
             else {
                 infra_1.Logger.info('render');

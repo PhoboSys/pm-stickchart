@@ -35,7 +35,7 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
-    private _context: RenderingContext
+    private _context: RenderingContext | null
 
     private timeline: any
 
@@ -125,10 +125,9 @@ export class StickChart extends EventTarget {
     }
 
     public rerender(reason: string): void {
-
-        if (!this._context) return
-
         window.requestAnimationFrame(() => {
+            if (!this._context) return
+
             const pipeline = this.pipelineFactory.get(this._context.charttype)
             pipeline.render(
                 {
@@ -163,21 +162,34 @@ export class StickChart extends EventTarget {
             plotdata,
         }
 
+        if (context.pool.metaid !== this._context?.pool.metaid) {
+            // clear context if metaid changed
+            this._context = null
+        }
+
         window.requestAnimationFrame(() => {
 
             // Morph
             if (config.morph && this._context) {
 
-                const aminatedPoint = DataConverter.getLatest(this._context.plotdata)
+                const aminated = DataConverter.getLatest(this._context.plotdata)
+                const target = DataConverter.getLatest(ctx.plotdata)
 
                 this.timeline?.kill()
                 this.timeline = gsap.to(
-                    aminatedPoint,
+                    aminated,
                     {
-                        ...DataConverter.getLatest(ctx.plotdata),
+                        ...target,
                         duration: 1,
                         ease: 'power2',
-                        onUpdate: () => this.applyLatestPoint(aminatedPoint)
+                        onUpdate: () => {
+                            if (
+                                aminated.timestamp !== target.timestamp ||
+                                aminated.price !== target.price
+                            ) {
+                                this.applyLatestPoint(aminated)
+                            }
+                        }
                     }
                 )
             } else {
