@@ -106,9 +106,8 @@ export class PariResolvedRenderer extends BaseRenderer {
         for (const position in paris) {
             const pari = paris[position]
 
-            let [x] = datamath.scale([pari.resolutionDate], xrange, width)
-            const [yr] = datamath.scale([pari.openPrice.value], yrange, height)
-            let y = height - yr
+            const [x] = datamath.scale([pari.resolutionDate], xrange, width)
+            const [y] = datamath.scaleReverse([pari.openPrice.value], yrange, height)
 
             const gap = 6
             const xpad = 8

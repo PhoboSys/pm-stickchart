@@ -1,9 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
-import config from '../../config'
+import { IGraphicStorage, RenderingContext } from '../../..'
+import { BaseRenderer, GraphicUtils } from '../../..'
+import config from '../../../../config'
 
-import datamath from '../../lib/datamath'
-import { Graphics, Container, gsap } from '../../lib/pixi'
+import datamath from '../../../../lib/datamath'
+import { Graphics, Container, gsap } from '../../../../lib/pixi'
 
 export class LatestPricePointRenderer extends BaseRenderer {
 
@@ -47,22 +47,14 @@ export class LatestPricePointRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        const {
-            xlast,
-            ylast,
 
-            xrange,
-            yrange,
+        const {
+            xs,
+            ys,
         } = context.plotdata
 
-        const {
-            width,
-            height,
-        } = context.screen
-
-        const [x] = datamath.scale([xlast], xrange, width)
-        const [yr] = datamath.scale([ylast], yrange, height)
-        const y = height - yr
+        const x = Number(xs.at(-1))
+        const y = Number(ys.at(-1))
 
         const [point, pointState] = this.get('point', () => GraphicUtils.createCircle(
             [x, y],

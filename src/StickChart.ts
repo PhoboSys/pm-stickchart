@@ -1,10 +1,13 @@
 import { DataConverter, ChartData } from './chartdata'
 import config from './config'
 
+
 import { EChartType } from './enums'
 import { EventsProducer } from './events'
 import { Logger } from './infra'
-import { Application } from './lib/pixi'
+
+import datamath from './lib/datamath'
+import { Application, gsap } from './lib/pixi'
 
 import { RenderingPipelineFactory } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
@@ -61,10 +64,11 @@ export class StickChart extends EventTarget {
             paris: context.paris,
             resolved: context.resolved,
             chartdata: context.chartdata,
-            plotdata: DataConverter.convert(context.chartdata),
+            plotdata: DataConverter.convert(context.chartdata, this.application.screen),
             screen: this.application.screen,
             textures: this.textureStorage,
         }
+
 
         window.requestAnimationFrame(() => {
             Logger.info('chart render')

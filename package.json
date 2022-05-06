@@ -22,26 +22,26 @@
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },
   "dependencies": {
+    "@pixi-essentials/gradients": "0.0.5",
     "@pixi/app": "6.3.0",
     "@pixi/canvas-display": "6.3.0",
     "@pixi/constants": "6.3.0",
     "@pixi/core": "6.3.0",
     "@pixi/display": "6.3.0",
+    "@pixi/filter-blur": "6.3.0",
+    "@pixi/filter-color-matrix": "6.3.0",
     "@pixi/graphics": "6.3.0",
-    "@pixi/graphics-extras": "^6.3.0",
+    "@pixi/graphics-extras": "6.3.0",
     "@pixi/math": "6.3.0",
     "@pixi/runner": "6.3.0",
     "@pixi/settings": "6.3.0",
+    "@pixi/sprite": "6.3.0",
     "@pixi/text": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
-    "@pixi/filter-blur": "6.3.0",
-    "@pixi/filter-color-matrix": "6.3.0",
-    "@pixi/sprite": "6.3.0",
-    "@pixi-essentials/gradients": "0.0.5",
-    "gsap": "3.10.4",
     "big.js": "6.1.1",
-    "debug": "4.3.2"
+    "debug": "4.3.2",
+    "gsap": "file:gsap-bonus.tgz"
   },
   "files": [
     "dist",

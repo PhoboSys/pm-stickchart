@@ -38,19 +38,19 @@ export class HorizontalGridRenderer extends BaseRenderer {
         const result = new Graphics()
 
         const { width, height } = context.screen
-        const { ydata, yrange } = context.plotdata
+        const { yrange } = context.plotdata
 
         const stepsize = datamath.datastep(yrange)
         const ysteps = datamath.steps(yrange, stepsize, 20)
-        const ys = datamath.scale(ysteps, yrange, height)
+        const ys = datamath.scaleReverse(ysteps, yrange, height)
 
         for (const idx in ys) {
 
+            const y = ys[idx]
+
             // Avoid rendering over time axe text
             // 12px size + anchor 1.1
-            if (ys[idx] <= 12 + 12 * 1.1) continue
-
-            const y = height - ys[idx]
+            if (y > (height - 12 + 12 * 1.1)) continue
 
             result.addChild(
                 GraphicUtils.createLine(

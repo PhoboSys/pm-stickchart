@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceRenderer = void 0;
-const __1 = require("..");
+const __1 = require("../../..");
 const LatestPriceLineRenderer_1 = require("./LatestPriceLineRenderer");
 const LatestPricePointRenderer_1 = require("./LatestPricePointRenderer");
 class LatestPriceRenderer {

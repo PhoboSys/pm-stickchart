@@ -1,5 +1,7 @@
 import { castArray } from 'lodash'
 
+import { Logger } from '../../infra'
+
 import datamath from '../../lib/datamath'
 import { Graphics, LineStyle, Text, TextStyle, Sprite } from '../../lib/pixi'
 
@@ -26,12 +28,12 @@ export class GraphicUtils {
         [innerr, outerr]: [number, number],
         style: { color },
     ): Graphics {
-        const torus = new Graphics()
 
-        torus
-            .beginFill(style.color)
-            .drawTorus?.(0, 0, innerr, outerr)
-            .endFill()
+        const torus = new Graphics()
+        torus.beginFill(style.color)
+        if (torus.drawTorus) torus.drawTorus(0, 0, innerr, outerr)
+        else Logger.error('drawTorus is not supported install @pixi/graphics-extras')
+        torus.endFill()
 
         torus.position.set(x, y)
 
@@ -140,12 +142,16 @@ export class GraphicUtils {
         return coveredText
     }
 
-    static createVerticalDashLine( // TODO: implement point to point
+    static createVerticalDashLine(
         x: number,
         [y1, y2]: [number, number],
         linestyle: LineStyle & { gap, dash },
     ): Graphics {
-        const dashLine = GraphicUtils.startLine([x, y1], linestyle)
+
+        const dashLine = new Graphics()
+            .lineStyle(linestyle)
+            .moveTo(x, y1)
+
         const maxsteps = 100
         const stepsize = linestyle.dash + linestyle.gap
 
@@ -176,30 +182,6 @@ export class GraphicUtils {
             .lineStyle(linestyle)
             .moveTo(x1, y1)
             .lineTo(x2, y2)
-
-        return line
-    }
-
-    static lineTo(
-        line: Graphics,
-        [x, y]: [number, number],
-        linestyle: LineStyle,
-    ): Graphics {
-
-        line.lineStyle(linestyle)
-            .lineTo(x, y)
-
-        return line
-    }
-
-    static startLine(
-        [x, y]: [number, number],
-        linestyle: LineStyle,
-    ): Graphics {
-
-        const line = (new Graphics())
-            .lineStyle(linestyle)
-            .moveTo(x, y)
 
         return line
     }

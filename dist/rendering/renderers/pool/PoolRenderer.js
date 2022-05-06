@@ -136,8 +136,7 @@ class PoolRenderer extends __1.BaseRenderer {
         const { xrange, yrange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([pricePoint.timestamp], xrange, width);
-        const [yr] = datamath_1.default.scale([pricePoint.value], yrange, height);
-        const y = height - yr;
+        const [y] = datamath_1.default.scaleReverse([pricePoint.value], yrange, height);
         const outer = __1.GraphicUtils.createCircle([x, y], circlstyle.outer.radius, circlstyle.outer);
         const inner = __1.GraphicUtils.createCircle([x, y], circlstyle.inner.radius, circlstyle.inner);
         const line = __1.GraphicUtils.createLine([0, y], [width, y], linestyle);

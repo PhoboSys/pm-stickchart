@@ -35,6 +35,7 @@ class BaseRenderer {
             state.new = false;
             return [g, state];
         }
+        console.log('create new', name);
         this.local[name] = [init(), { new: true }];
         return this.local[name];
     }

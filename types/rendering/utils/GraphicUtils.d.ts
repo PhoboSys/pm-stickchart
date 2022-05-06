@@ -31,13 +31,10 @@ export declare class GraphicUtils {
         anchory: any;
         linestyle: any;
     }): Graphics;
-    static createVerticalDashLine(// TODO: implement point to point
-    x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
+    static createVerticalDashLine(x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
         gap: any;
         dash: any;
     }): Graphics;
     static createLine([x1, y1]: [number, number], [x2, y2]: [number, number], linestyle: LineStyle): Graphics;
-    static lineTo(line: Graphics, [x, y]: [number, number], linestyle: LineStyle): Graphics;
-    static startLine([x, y]: [number, number], linestyle: LineStyle): Graphics;
     static createText(value: any, [x, y]: [number, number], textstyle: object, anchor: [number, number] | number): Text;
 }

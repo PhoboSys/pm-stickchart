@@ -41,7 +41,7 @@ class StickChart extends EventTarget {
             paris: context.paris,
             resolved: context.resolved,
             chartdata: context.chartdata,
-            plotdata: chartdata_1.DataConverter.convert(context.chartdata),
+            plotdata: chartdata_1.DataConverter.convert(context.chartdata, this.application.screen),
             screen: this.application.screen,
             textures: this.textureStorage,
         };

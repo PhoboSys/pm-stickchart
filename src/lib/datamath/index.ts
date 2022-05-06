@@ -37,12 +37,32 @@ export default class datamath {
         [min, max]: [number, number],
         factor: number = 1,
     ): number[] {
+
         const scalesize = max - min
         const result: number[] = []
+
         for (const item of data) {
             const offset = item - min
 
             result.push(offset / scalesize * factor)
+        }
+
+        return result
+    }
+
+    static scaleReverse(
+        data: number[],
+        [min, max]: [number, number],
+        factor: number = 1,
+    ): number[] {
+
+        const scalesize = max - min
+        const result: number[] = []
+
+        for (const item of data) {
+            const offset = item - min
+
+            result.push((1 - offset / scalesize) * factor)
         }
 
         return result

@@ -51,6 +51,7 @@ export abstract class BaseRenderer implements IRenderer {
             return [<T>g, state]
         }
 
+        console.log('create new', name)
         this.local[name] = [init(), { new: true }]
 
         return this.local[name]

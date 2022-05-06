@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceLineRenderer = void 0;
-const __1 = require("..");
-const config_1 = __importDefault(require("../../config"));
-const datamath_1 = __importDefault(require("../../lib/datamath"));
-const pixi_1 = require("../../lib/pixi");
+const __1 = require("../../..");
+const config_1 = __importDefault(require("../../../../config"));
+const datamath_1 = __importDefault(require("../../../../lib/datamath"));
 class LatestPriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -17,7 +16,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 6,
+            paddingx: 16,
         };
         this.textCoverStyle = {
             color: config_1.default.style.linecolor,
@@ -42,16 +41,23 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID;
     }
     update(context, container) {
-        const { ylast, yrange, } = context.plotdata;
+        const { ys, ydata, } = context.plotdata;
         const { width, height, } = context.screen;
-        const [yr] = datamath_1.default.scale([ylast], yrange, height);
-        const y = height - yr;
-        const coveredText = __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(ylast, 8), [width, y], this.textCoverStyle);
-        const coverx = coveredText.x + coveredText.children[0].x;
-        const line = __1.GraphicUtils.createLine([0, y], [coverx - this.lineStyle.paddingx, y], this.lineStyle);
-        const result = new pixi_1.Graphics();
-        result.addChild(line, coveredText);
-        return result;
+        const x = width;
+        const y = Number(ys.at(-1));
+        const price = Number(ydata.at(-1));
+        const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [x, y], this.textCoverStyle));
+        if (coveredTextState.new)
+            container.addChild(coveredText);
+        const { anchorx, anchory } = this.textCoverStyle;
+        coveredText.position.set(x - coveredText.width * anchorx, y - coveredText.height * anchory);
+        const padding = coveredText.width + this.lineStyle.paddingx;
+        const [line, lineState] = this.get('line', () => __1.GraphicUtils.createLine([0, 0], [x, 0], this.lineStyle));
+        if (lineState.new)
+            container.addChild(line);
+        line.position.set(0, y);
+        line.width = width - padding;
+        return container;
     }
 }
 exports.LatestPriceLineRenderer = LatestPriceLineRenderer;

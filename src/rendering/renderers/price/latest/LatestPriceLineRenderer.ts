@@ -1,9 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '..'
-import { BaseRenderer, GraphicUtils } from '..'
-import config from '../../config'
+import { IGraphicStorage, RenderingContext } from '../../..'
+import { BaseRenderer, GraphicUtils } from '../../..'
+import config from '../../../../config'
 
-import datamath from '../../lib/datamath'
-import { Graphics, Container } from '../../lib/pixi'
+import datamath from '../../../../lib/datamath'
+import { Graphics, Container } from '../../../../lib/pixi'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
@@ -22,7 +22,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 6,
+            paddingx: 16,
         }
 
         this.textCoverStyle = {
@@ -55,8 +55,8 @@ export class LatestPriceLineRenderer extends BaseRenderer {
     ): Container {
 
         const {
-            ylast,
-            yrange,
+            ys,
+            ydata,
         } = context.plotdata
 
         const {
@@ -64,27 +64,34 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             height,
         } = context.screen
 
-        const [yr] = datamath.scale([ylast], yrange, height)
-        const y = height - yr
+        const x = width
+        const y = Number(ys.at(-1))
+        const price = Number(ydata.at(-1))
 
-        const coveredText = GraphicUtils.createCoveredText(
-            datamath.toFixedPrecision(ylast, 8),
-            [width, y],
+        const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
+            datamath.toFixedPrecision(price, 8),
+            [x, y],
             this.textCoverStyle,
+        ))
+        if (coveredTextState.new) container.addChild(coveredText)
+
+        const { anchorx, anchory } = this.textCoverStyle
+        coveredText.position.set(
+            x - coveredText.width * anchorx,
+            y - coveredText.height * anchory
         )
 
-        const coverx = coveredText.x + coveredText.children[0].x
-        const line = GraphicUtils.createLine(
-            [0, y],
-            [coverx - this.lineStyle.paddingx, y],
+        const padding = coveredText.width + this.lineStyle.paddingx
+        const [line, lineState] = this.get('line', () => GraphicUtils.createLine(
+            [0, 0],
+            [x, 0],
             this.lineStyle,
-        )
+        ))
+        if (lineState.new) container.addChild(line)
+        line.position.set(0, y)
+        line.width = width - padding
 
-        const result = new Graphics()
-
-        result.addChild(line, coveredText)
-
-        return result
+        return container
     }
 
 }

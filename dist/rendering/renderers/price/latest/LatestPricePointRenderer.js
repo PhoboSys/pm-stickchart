@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPricePointRenderer = void 0;
-const __1 = require("..");
-const config_1 = __importDefault(require("../../config"));
-const datamath_1 = __importDefault(require("../../lib/datamath"));
-const pixi_1 = require("../../lib/pixi");
+const __1 = require("../../..");
+const config_1 = __importDefault(require("../../../../config"));
+const pixi_1 = require("../../../../lib/pixi");
 class LatestPricePointRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -33,11 +32,9 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
     update(context, container) {
-        const { xlast, ylast, xrange, yrange, } = context.plotdata;
-        const { width, height, } = context.screen;
-        const [x] = datamath_1.default.scale([xlast], xrange, width);
-        const [yr] = datamath_1.default.scale([ylast], yrange, height);
-        const y = height - yr;
+        const { xs, ys, } = context.plotdata;
+        const x = Number(xs.at(-1));
+        const y = Number(ys.at(-1));
         const [point, pointState] = this.get('point', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
         if (pointState.new)
             container.addChild(point);

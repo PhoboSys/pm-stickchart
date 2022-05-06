@@ -243,8 +243,7 @@ export class PoolRenderer extends BaseRenderer {
         } = context.screen
 
         const [x] = datamath.scale([pricePoint.timestamp], xrange, width)
-        const [yr] = datamath.scale([pricePoint.value], yrange, height)
-        const y = height - yr
+        const [y] = datamath.scaleReverse([pricePoint.value], yrange, height)
 
         const outer = GraphicUtils.createCircle(
             [x, y],
