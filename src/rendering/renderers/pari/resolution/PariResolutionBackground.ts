@@ -43,10 +43,10 @@ export class PariResolutionBackground extends BaseRenderer {
         const { openDate, resolutionDate, openPrice } = context.pool
 
         const { width, height } = context.screen
-        const { xrange, yrange } = context.plotdata
+        const { timerange, pricerange } = context.plotdata
 
-        const [ox, rx] = datamath.scale([openDate, resolutionDate], xrange, width)
-        const [y] = datamath.scaleReverse([openPrice.value], yrange, height)
+        const [ox, rx] = datamath.scale([openDate, resolutionDate], timerange, width)
+        const [y] = datamath.scaleReverse([openPrice.value], pricerange, height)
 
         // clear if one dissapeared
         const paris = {}

@@ -35,7 +35,7 @@ export class PriceLineRenderer extends BaseRenderer {
     ): Container {
 
         const { width, height } = context.screen
-        const { xs, ys, yrange, xrange } = context.plotdata
+        const { xs, ys, pricerange, timerange } = context.plotdata
 
         const shape: number[] = []
         let prevY: any = null

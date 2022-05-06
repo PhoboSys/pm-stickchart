@@ -29,6 +29,7 @@ import { ColorMatrixFilter } from '@pixi/filter-color-matrix'
 import { gsap } from 'gsap'
 import { PixiPlugin } from 'gsap/PixiPlugin'
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin'
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 
 utils.skipHello()
 gsap.registerPlugin(PixiPlugin)

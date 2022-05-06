@@ -8,11 +8,11 @@ export type DataPadding = {
 }
 
 export type PlotData = {
-    xdata: number[],
-    ydata: number[],
+    timestamps: number[],
+    prices: number[],
 
-    xrange: [number, number],
-    yrange: [number, number],
+    timerange: [number, number],
+    pricerange: [number, number],
 
     xs: number[],
     ys: number[],

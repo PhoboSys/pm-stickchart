@@ -40,11 +40,11 @@ class CrosshairRenderer extends __1.BaseRenderer {
         if (!context.mousepos)
             return new pixi_1.Graphics();
         const { height, width, } = context.screen;
-        const { xrange, yrange, } = context.plotdata;
+        const { timerange, pricerange, } = context.plotdata;
         const { x, y } = context.mousepos;
         const verticalLine = __1.GraphicUtils.createLine([x, 0], [x, height], this.lineStyle);
-        const pricedif = yrange[1] - yrange[0];
-        const price = yrange[1] - datamath_1.default.scale([y], [0, height], pricedif)[0];
+        const pricedif = pricerange[1] - pricerange[0];
+        const price = pricerange[1] - datamath_1.default.scale([y], [0, height], pricedif)[0];
         const { paddingright } = this.priceCoverStyle;
         const priceText = __1.GraphicUtils.createCoveredText(price.toFixed(3), [width - paddingright, y], this.priceCoverStyle);
         const horizontalLine = __1.GraphicUtils.createLine([0, y], [priceText.x, y], this.lineStyle);

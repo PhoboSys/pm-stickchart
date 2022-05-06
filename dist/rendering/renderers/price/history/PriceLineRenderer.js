@@ -24,7 +24,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
     }
     update(context, container) {
         const { width, height } = context.screen;
-        const { xs, ys, yrange, xrange } = context.plotdata;
+        const { xs, ys, pricerange, timerange } = context.plotdata;
         const shape = [];
         let prevY = null;
         let prevX = null;

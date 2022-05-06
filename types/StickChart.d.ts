@@ -2,15 +2,19 @@ import { ChartData } from './chartdata';
 import { EChartType } from './enums';
 export declare class StickChart extends EventTarget {
     private stageElement;
-    private chartType;
     private application;
     private eventsProducer;
     private pipelineFactory;
     private textureStorage;
-    private _plotdata;
+    private _context;
     private timeline;
-    constructor(stageElement: HTMLElement, chartType: EChartType);
+    private timeframe;
+    constructor(stageElement: HTMLElement);
+    setTimeframe(timeframe: number): void;
     get canvas(): HTMLCanvasElement;
+    private applyTimeframe;
+    private applyLatestPoint;
+    rerender(reason: string): void;
     render(context: {
         chartdata: ChartData;
         charttype: EChartType;

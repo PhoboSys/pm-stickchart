@@ -9,13 +9,23 @@ const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
 const infra_1 = require("./infra");
 const pixi_1 = require("./lib/pixi");
+const date_utils_1 = require("./lib/date-utils");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
+function validate(duration) {
+    return duration && !tooBig(duration) && !tooSmall(duration);
+}
+function tooBig(duration) {
+    return duration > date_utils_1.UNIX_DAY;
+}
+function tooSmall(duration) {
+    return duration < date_utils_1.UNIX_MINUTE * 10;
+}
 class StickChart extends EventTarget {
-    constructor(stageElement, chartType) {
+    constructor(stageElement) {
         super();
         this.stageElement = stageElement;
-        this.chartType = chartType;
+        this.timeframe = date_utils_1.UNIX_DAY;
         this.application = new pixi_1.Application({
             resizeTo: stageElement,
             antialias: config_1.default.antialias,
@@ -28,50 +38,86 @@ class StickChart extends EventTarget {
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
+        this.addEventListener('zoom', (e) => {
+            const zoom = e.zoom;
+            const offset = Math.round(this.timeframe * zoom);
+            const timeframe = this.timeframe + offset;
+            const zoominUp = zoom > 0;
+            const zoominDown = zoom < 0;
+            const hitLower = tooSmall(timeframe) && zoominDown;
+            const hitUpper = tooBig(timeframe) && zoominUp;
+            if (!hitLower && !hitUpper) {
+                this.applyTimeframe(timeframe);
+            }
+        });
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
+    }
+    setTimeframe(timeframe) {
+        if (validate(timeframe)) {
+            this.applyTimeframe(timeframe);
+        }
+        else {
+            this.applyTimeframe(date_utils_1.UNIX_DAY);
+        }
     }
     get canvas() {
         return this.application.view;
     }
+    applyTimeframe(timeframe) {
+        this.timeframe = timeframe;
+        if (!this._context)
+            return;
+        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
+        this.rerender('timeframe');
+    }
+    applyLatestPoint(latest) {
+        if (!this._context)
+            return;
+        const { price, timestamp } = latest;
+        const { timestamps, prices } = this._context.chartdata;
+        const idx = timestamps.length - 1;
+        timestamps[idx] = timestamp;
+        prices[idx] = price;
+        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
+        this.rerender('latestpoint');
+    }
+    rerender(reason) {
+        if (!this._context)
+            return;
+        window.requestAnimationFrame(() => {
+            const pipeline = this.pipelineFactory.get(this._context.charttype);
+            pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => infra_1.Logger.info('re-render', reason));
+        });
+    }
     render(context) {
         const pipeline = this.pipelineFactory.get(context.charttype);
+        const chartdata = chartdata_1.DataConverter.chartdata(context.chartdata);
+        const plotdata = chartdata_1.DataConverter.plotdata(chartdata, this.application.screen, this.timeframe);
         const ctx = {
             pool: context.pool,
             paris: context.paris,
             resolved: context.resolved,
-            chartdata: context.chartdata,
-            plotdata: chartdata_1.DataConverter.convert(context.chartdata, this.application.screen),
+            charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+            chartdata,
+            plotdata,
         };
         window.requestAnimationFrame(() => {
             var _a;
             // Morph
-            if (config_1.default.morph && this._plotdata) {
+            if (config_1.default.morph && this._context) {
+                const aminatedPoint = chartdata_1.DataConverter.getLatest(this._context.plotdata);
                 (_a = this.timeline) === null || _a === void 0 ? void 0 : _a.kill();
-                this.timeline = pixi_1.gsap.to(chartdata_1.DataConverter.toPath(this._plotdata), {
-                    duration: 0.2,
-                    ease: 'power2',
-                    morphSVG: {
-                        shape: chartdata_1.DataConverter.toPath(ctx.plotdata),
-                        type: 'linear',
-                        shapeIndex: 'auto',
-                        updateTarget: false,
-                        render: (path) => {
-                            infra_1.Logger.info('morph render');
-                            const { xs, ys } = chartdata_1.DataConverter.fromPath(path);
-                            ctx.plotdata = Object.assign(Object.assign({}, ctx.plotdata), { xs, ys });
-                            pipeline.render(ctx, () => this.application.render());
-                        }
-                    }
-                });
+                this.timeline = pixi_1.gsap.to(aminatedPoint, Object.assign(Object.assign({}, chartdata_1.DataConverter.getLatest(ctx.plotdata)), { duration: 1, ease: 'power2', onUpdate: () => this.applyLatestPoint(aminatedPoint) }));
             }
             else {
                 infra_1.Logger.info('render');
                 pipeline.render(ctx, () => this.application.render());
             }
-            this._plotdata = ctx.plotdata;
+            // save latest rendered context
+            this._context = ctx;
         });
     }
     destroy() {

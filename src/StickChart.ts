@@ -3,14 +3,27 @@ import config from './config'
 
 
 import { EChartType } from './enums'
-import { EventsProducer } from './events'
+import { EventsProducer, ZoomEvent } from './events'
 import { Logger } from './infra'
 
 import datamath from './lib/datamath'
 import { Application, gsap } from './lib/pixi'
+import { UNIX_DAY, UNIX_MINUTE } from './lib/date-utils'
 
-import { RenderingPipelineFactory } from './rendering'
+import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
+
+function validate(duration) {
+    return duration && !tooBig(duration) && !tooSmall(duration)
+}
+
+function tooBig(duration) {
+    return duration > UNIX_DAY
+}
+
+function tooSmall(duration) {
+    return duration < UNIX_MINUTE * 10
+}
 
 export class StickChart extends EventTarget {
 
@@ -22,13 +35,14 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
-    private _plotdata: any
+    private _context: RenderingContext
 
     private timeline: any
 
+    private timeframe: number = UNIX_DAY
+
     constructor(
-        private stageElement: HTMLElement,
-        private chartType: EChartType,
+        private stageElement: HTMLElement
     ) {
         super()
         this.application = new Application({
@@ -46,13 +60,84 @@ export class StickChart extends EventTarget {
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
 
+        this.addEventListener('zoom', (e: ZoomEvent) => {
+
+            const zoom = e.zoom
+            const offset = Math.round(this.timeframe * zoom)
+            const timeframe = this.timeframe + offset
+
+            const zoominUp = zoom > 0
+            const zoominDown = zoom < 0
+
+            const hitLower = tooSmall(timeframe) && zoominDown
+            const hitUpper = tooBig(timeframe) && zoominUp
+
+            if (!hitLower && !hitUpper) {
+                this.applyTimeframe(timeframe)
+            }
+
+        })
+
         const renderer = new GraphicStorage(this.application.stage)
 
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
+    public setTimeframe(timeframe: number) {
+        if (validate(timeframe)) {
+            this.applyTimeframe(timeframe)
+        } else {
+            this.applyTimeframe(UNIX_DAY)
+        }
+    }
+
     public get canvas(): HTMLCanvasElement {
         return this.application.view
+    }
+
+    private applyTimeframe(timeframe: number) {
+        this.timeframe = timeframe
+        if (!this._context) return
+
+        this._context.plotdata = DataConverter.plotdata(
+            this._context.chartdata,
+            this.application.screen,
+            this.timeframe,
+        )
+        this.rerender('timeframe')
+    }
+
+    private applyLatestPoint(latest: { price, timestamp }) {
+        if (!this._context) return
+
+        const { price, timestamp } = latest
+        const { timestamps, prices } = this._context.chartdata
+        const idx = timestamps.length-1
+        timestamps[idx] = timestamp
+        prices[idx] = price
+
+        this._context.plotdata = DataConverter.plotdata(
+            this._context.chartdata,
+            this.application.screen,
+            this.timeframe,
+        )
+        this.rerender('latestpoint')
+    }
+
+    public rerender(reason: string): void {
+
+        if (!this._context) return
+
+        window.requestAnimationFrame(() => {
+            const pipeline = this.pipelineFactory.get(this._context.charttype)
+            pipeline.render(
+                {
+                    ...this._context,
+                    rerender: true
+                },
+                () => Logger.info('re-render', reason)
+            )
+        })
     }
 
     public render(context: {
@@ -64,41 +149,35 @@ export class StickChart extends EventTarget {
     }): void {
 
         const pipeline = this.pipelineFactory.get(context.charttype)
+        const chartdata = DataConverter.chartdata(context.chartdata)
+        const plotdata = DataConverter.plotdata(chartdata, this.application.screen, this.timeframe)
         const ctx = {
             pool: context.pool,
             paris: context.paris,
             resolved: context.resolved,
-            chartdata: context.chartdata,
-            plotdata: DataConverter.convert(context.chartdata, this.application.screen),
+            charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+
+            chartdata,
+            plotdata,
         }
 
         window.requestAnimationFrame(() => {
 
             // Morph
-            if (config.morph && this._plotdata) {
+            if (config.morph && this._context) {
+
+                const aminatedPoint = DataConverter.getLatest(this._context.plotdata)
+
                 this.timeline?.kill()
                 this.timeline = gsap.to(
-                    DataConverter.toPath(this._plotdata),
+                    aminatedPoint,
                     {
-                        duration: 0.2,
+                        ...DataConverter.getLatest(ctx.plotdata),
+                        duration: 1,
                         ease: 'power2',
-                        morphSVG: {
-                            shape: DataConverter.toPath(ctx.plotdata),
-                            type: 'linear',
-                            shapeIndex: 'auto',
-                            updateTarget: false,
-                            render: (path) => {
-                                Logger.info('morph render')
-                                const { xs, ys } = DataConverter.fromPath(path)
-                                ctx.plotdata = { ...ctx.plotdata, xs, ys }
-                                pipeline.render(
-                                    ctx,
-                                    () => this.application.render()
-                                )
-                            }
-                        }
+                        onUpdate: () => this.applyLatestPoint(aminatedPoint)
                     }
                 )
             } else {
@@ -109,7 +188,8 @@ export class StickChart extends EventTarget {
                 )
             }
 
-            this._plotdata = ctx.plotdata
+            // save latest rendered context
+            this._context = ctx
         })
     }
 

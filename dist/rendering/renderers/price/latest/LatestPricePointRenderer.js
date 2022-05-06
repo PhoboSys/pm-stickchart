@@ -18,7 +18,7 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
             color: config_1.default.style.linecolor,
             radius: 9,
         };
-        this.pulsPointAnimation = {
+        this.outerPointAnimation = {
             pixi: {
                 scale: 4,
                 alpha: -0.1,
@@ -32,41 +32,25 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
     update(context, container) {
-        var _a, _b;
         const { xs, ys, } = context.plotdata;
         const x = Number(xs.at(-1));
         const y = Number(ys.at(-1));
         const [point, pointState] = this.get('point', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
         if (pointState.new)
             container.addChild(point);
-        (_a = pointState.timeline) === null || _a === void 0 ? void 0 : _a.kill();
-        pointState.timeline = pixi_1.gsap.to(point, {
-            pixi: {
-                positionX: x,
-                positionY: y
-            },
-            duration: 0.3,
-            ease: 'power4.out',
-        });
-        const [pulspoint, pulspointState] = this.get('pulspoint', () => __1.GraphicUtils.createCircle([0, 0], this.outerPointStyle.radius, this.outerPointStyle));
-        if (pulspointState.new)
-            point.addChild(pulspoint);
-        if (pulspointState.amination !== 'puls') {
-            pulspointState.amination = 'puls';
-            pulspointState.timeline = pixi_1.gsap.to(pulspoint, this.pulsPointAnimation);
+        point.position.set(x, y);
+        const [outerpoint, outerpointState] = this.get('outerpoint', () => __1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
+        if (outerpointState.new)
+            container.addChild(outerpoint);
+        outerpoint.position.set(x, y);
+        if (outerpointState.amination !== 'puls') {
+            outerpointState.amination = 'puls';
+            outerpointState.timeline = pixi_1.gsap.to(outerpoint, this.outerPointAnimation);
         }
         const [innerpoint, innerpointState] = this.get('innerpoint', () => __1.GraphicUtils.createCircle([x, y], this.innerPointStyle.radius, this.innerPointStyle));
         if (innerpointState.new)
             container.addChild(innerpoint);
-        (_b = innerpointState.timeline) === null || _b === void 0 ? void 0 : _b.kill();
-        innerpointState.timeline = pixi_1.gsap.to(innerpoint, {
-            pixi: {
-                positionX: x,
-                positionY: y
-            },
-            duration: 0.3,
-            ease: 'power4.out',
-        });
+        innerpoint.position.set(x, y);
         return container;
     }
 }

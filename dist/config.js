@@ -10,7 +10,7 @@ exports.default = {
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
     //chart morph animation
-    morph: false,
+    morph: true,
     //data
     maxdensity: 500,
     //chart

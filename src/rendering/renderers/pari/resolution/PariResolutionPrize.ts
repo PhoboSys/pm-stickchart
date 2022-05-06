@@ -66,10 +66,10 @@ export class PariResolutionPrize extends BaseRenderer {
         const { resolutionDate, openPrice } = context.pool
 
         const { width, height } = context.screen
-        const { xrange, yrange } = context.plotdata
+        const { timerange, pricerange } = context.plotdata
 
-        const [x] = datamath.scale([resolutionDate], xrange, width)
-        const [yr] = datamath.scale([openPrice.value], yrange, height)
+        const [x] = datamath.scale([resolutionDate], timerange, width)
+        const [yr] = datamath.scale([openPrice.value], pricerange, height)
         const y = height - yr
 
         const gap = 6

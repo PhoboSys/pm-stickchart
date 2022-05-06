@@ -6,10 +6,10 @@ export declare type DataPadding = {
     max: number;
 };
 export declare type PlotData = {
-    xdata: number[];
-    ydata: number[];
-    xrange: [number, number];
-    yrange: [number, number];
+    timestamps: number[];
+    prices: number[];
+    timerange: [number, number];
+    pricerange: [number, number];
     xs: number[];
     ys: number[];
 };

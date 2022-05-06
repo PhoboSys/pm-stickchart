@@ -3,7 +3,7 @@ import { BaseRenderer, GraphicUtils } from '../../..'
 import config from '../../../../config'
 
 import datamath from '../../../../lib/datamath'
-import { Graphics, Container, Text, gsap } from '../../../../lib/pixi'
+import { Graphics, Container, Text } from '../../../../lib/pixi'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
@@ -56,7 +56,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         const {
             ys,
-            ydata,
+            prices,
         } = context.plotdata
 
         const {
@@ -66,7 +66,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         const x = width
         const y = Number(ys.at(-1))
-        const price = Number(ydata.at(-1))
+        const price = Number(prices.at(-1))
 
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
             datamath.toFixedPrecision(price, 8),
@@ -75,19 +75,20 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         ))
         if (coveredTextState.new) container.addChild(coveredText)
 
+
         const textGraphic = <Text>coveredText.getChildAt(1)
         textGraphic.text = datamath.toFixedPrecision(price, 8)
 
+        const { paddingx, paddingy } = this.textCoverStyle
+        const coverGraphic = <Graphics>coveredText.getChildAt(0)
+        coverGraphic.width = textGraphic.width + paddingx * 2
+        coverGraphic.height = textGraphic.height + paddingy * 2
+
         const { anchorx, anchory } = this.textCoverStyle
-        coveredTextState.timeline?.kill()
-        coveredTextState.timeline = gsap.to(coveredText, {
-            pixi: {
-                positionX: x - coveredText.width * anchorx,
-                positionY: y - coveredText.height * anchory,
-            },
-            duration: 0.3,
-            ease: 'power4.out',
-        })
+        coveredText.position.set(
+            x - coveredText.width * anchorx,
+            y - coveredText.height * anchory
+        )
 
         const padding = coveredText.width + this.lineStyle.paddingx
         const [line, lineState] = this.get('line', () => GraphicUtils.createLine(
@@ -96,21 +97,9 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             this.lineStyle,
         ))
 
-        if (lineState.new) {
-            container.addChild(line)
-            line.position.set(0, y)
-        }
+        if (lineState.new) container.addChild(line)
+        line.position.set(0, y)
         line.width = width - padding
-
-        lineState.timeline?.kill()
-        lineState.timeline = gsap.to(line, {
-            pixi: {
-                positionX: 0,
-                positionY: y
-            },
-            duration: 0.3,
-            ease: 'power4.out',
-        })
 
         return container
     }
