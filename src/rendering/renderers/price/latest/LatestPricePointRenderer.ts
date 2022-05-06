@@ -13,7 +13,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
     private readonly innerPointStyle: any
 
-    private readonly outerPointAnimation: any
+    private readonly pulsPointAnimation: any
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -28,7 +28,7 @@ export class LatestPricePointRenderer extends BaseRenderer {
             radius: 9,
         }
 
-        this.outerPointAnimation = {
+        this.pulsPointAnimation = {
             pixi: {
                 scale: 4,
                 alpha: -0.1,
@@ -62,20 +62,28 @@ export class LatestPricePointRenderer extends BaseRenderer {
             this.outerPointStyle,
         ))
         if (pointState.new) container.addChild(point)
-        point.position.set(x, y)
 
-        const [outerpoint, outerpointState] = this.get('outerpoint', () => GraphicUtils.createCircle(
-            [x, y],
+        pointState.timeline?.kill()
+        pointState.timeline = gsap.to(point, {
+            pixi: {
+                positionX: x,
+                positionY: y
+            },
+            duration: 0.3,
+            ease: 'power4.out',
+        })
+
+        const [pulspoint, pulspointState] = this.get('pulspoint', () => GraphicUtils.createCircle(
+            [0, 0],
             this.outerPointStyle.radius,
             this.outerPointStyle,
         ))
-        if (outerpointState.new) container.addChild(outerpoint)
-        outerpoint.position.set(x, y)
+        if (pulspointState.new) point.addChild(pulspoint)
 
-        if (outerpointState.amination !== 'puls') {
-            outerpointState.amination = 'puls'
+        if (pulspointState.amination !== 'puls') {
+            pulspointState.amination = 'puls'
 
-            outerpointState.timeline = gsap.to(outerpoint, this.outerPointAnimation)
+            pulspointState.timeline = gsap.to(pulspoint, this.pulsPointAnimation)
         }
 
         const [innerpoint, innerpointState] = this.get('innerpoint', () => GraphicUtils.createCircle(
@@ -84,7 +92,16 @@ export class LatestPricePointRenderer extends BaseRenderer {
             this.innerPointStyle,
         ))
         if (innerpointState.new) container.addChild(innerpoint)
-        innerpoint.position.set(x, y)
+
+        innerpointState.timeline?.kill()
+        innerpointState.timeline = gsap.to(innerpoint, {
+            pixi: {
+                positionX: x,
+                positionY: y
+            },
+            duration: 0.3,
+            ease: 'power4.out',
+        })
 
         return container
     }

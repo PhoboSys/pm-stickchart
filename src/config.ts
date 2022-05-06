@@ -9,6 +9,9 @@ export default {
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
 
+    //animation
+    morph: false,
+
     //data
     maxdensity: 500,
 

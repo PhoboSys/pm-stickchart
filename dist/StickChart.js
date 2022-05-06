@@ -46,8 +46,32 @@ class StickChart extends EventTarget {
             textures: this.textureStorage,
         };
         window.requestAnimationFrame(() => {
-            infra_1.Logger.info('chart render');
-            pipeline.render(ctx, () => this.application.render());
+            var _a;
+            // Morph
+            if (config_1.default.morph && this._plotdata) {
+                (_a = this.timeline) === null || _a === void 0 ? void 0 : _a.kill();
+                this.timeline = pixi_1.gsap.to(chartdata_1.DataConverter.toPath(this._plotdata), {
+                    duration: 0.2,
+                    ease: 'power2',
+                    morphSVG: {
+                        shape: chartdata_1.DataConverter.toPath(ctx.plotdata),
+                        shapeIndex: 'auto',
+                        updateTarget: false,
+                        render: (path) => {
+                            infra_1.Logger.info('animational render');
+                            const { xs, ys } = chartdata_1.DataConverter.fromPath(path);
+                            console.log(ys);
+                            ctx.plotdata = Object.assign(Object.assign({}, ctx.plotdata), { ys, xs });
+                            pipeline.render(ctx, () => this.application.render());
+                        }
+                    }
+                });
+            }
+            else {
+                infra_1.Logger.info('chart render');
+                pipeline.render(ctx, () => this.application.render());
+            }
+            this._plotdata = ctx.plotdata;
         });
     }
     destroy() {

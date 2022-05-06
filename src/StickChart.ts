@@ -22,6 +22,10 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
+    private _plotdata: any
+
+    private timeline: any
+
     constructor(
         private stageElement: HTMLElement,
         private chartType: EChartType,
@@ -71,11 +75,41 @@ export class StickChart extends EventTarget {
 
 
         window.requestAnimationFrame(() => {
-            Logger.info('chart render')
-            pipeline.render(
-                ctx,
-                () => this.application.render()
-            )
+
+            // Morph
+            if (config.morph && this._plotdata) {
+                this.timeline?.kill()
+                this.timeline = gsap.to(
+                    DataConverter.toPath(this._plotdata),
+                    {
+                        duration: 0.2,
+                        ease: 'power2',
+                        morphSVG: {
+                            shape: DataConverter.toPath(ctx.plotdata),
+                            shapeIndex: 'auto',
+                            updateTarget: false,
+                            render: (path) => {
+                                Logger.info('morph render')
+                                const { xs, ys } = DataConverter.fromPath(path)
+                                console.log(ys)
+                                ctx.plotdata = { ...ctx.plotdata, ys, xs }
+                                pipeline.render(
+                                    ctx,
+                                    () => this.application.render()
+                                )
+                            }
+                        }
+                    }
+                )
+            } else {
+                Logger.info('render')
+                pipeline.render(
+                    ctx,
+                    () => this.application.render()
+                )
+            }
+
+            this._plotdata = ctx.plotdata
         })
     }
 

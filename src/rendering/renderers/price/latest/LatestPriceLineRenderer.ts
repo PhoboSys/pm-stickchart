@@ -3,7 +3,7 @@ import { BaseRenderer, GraphicUtils } from '../../..'
 import config from '../../../../config'
 
 import datamath from '../../../../lib/datamath'
-import { Graphics, Container } from '../../../../lib/pixi'
+import { Graphics, Container, Text, gsap } from '../../../../lib/pixi'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
@@ -75,11 +75,19 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         ))
         if (coveredTextState.new) container.addChild(coveredText)
 
+        const textGraphic = <Text>coveredText.getChildAt(1)
+        textGraphic.text = datamath.toFixedPrecision(price, 8)
+
         const { anchorx, anchory } = this.textCoverStyle
-        coveredText.position.set(
-            x - coveredText.width * anchorx,
-            y - coveredText.height * anchory
-        )
+        coveredTextState.timeline?.kill()
+        coveredTextState.timeline = gsap.to(coveredText, {
+            pixi: {
+                positionX: x - coveredText.width * anchorx,
+                positionY: y - coveredText.height * anchory,
+            },
+            duration: 0.3,
+            ease: 'power4.out',
+        })
 
         const padding = coveredText.width + this.lineStyle.paddingx
         const [line, lineState] = this.get('line', () => GraphicUtils.createLine(
@@ -87,9 +95,22 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             [x, 0],
             this.lineStyle,
         ))
-        if (lineState.new) container.addChild(line)
-        line.position.set(0, y)
+
+        if (lineState.new) {
+            container.addChild(line)
+            line.position.set(0, y)
+        }
         line.width = width - padding
+
+        lineState.timeline?.kill()
+        lineState.timeline = gsap.to(line, {
+            pixi: {
+                positionX: 0,
+                positionY: y
+            },
+            duration: 0.3,
+            ease: 'power4.out',
+        })
 
         return container
     }
