@@ -2,7 +2,8 @@ export default class datamath {
     static min(data: number[]): number;
     static max(data: number[]): number;
     static minmax(data: number[]): [number, number];
-    static scale(data: number[], [min, max]: [number, number], factor?: number, reversed?: boolean): number[];
+    static reverseScale(data: number[], [min, max]: [number, number], factor?: number): number[];
+    static scale(data: number[], [min, max]: [number, number], factor?: number): number[];
     static range(data: number[], minpadd?: number, maxpadd?: number): [number, number];
     static datastep([minv, maxv]: [number, number]): number;
     static roundpow2(value: number): number;
@@ -19,7 +20,7 @@ export default class datamath {
         position: string;
         resolution: string;
         precision: number;
-    }): any;
-    static dividends(pool1v: number, pool2v: number, wagerv: number, vigorishv?: number): any;
-    static profitPercent(wagerv: number, basev: number, precision: number, multiplicator?: number): any;
+    }): number;
+    static dividends(pool1v: number, pool2v: number, wagerv: number, vigorishv?: number): number;
+    static profitPercent(wagerv: number, basev: number, precision: number, multiplicator?: number): number;
 }

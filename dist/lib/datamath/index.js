@@ -33,13 +33,21 @@ class datamath {
         }
         return [minimum, maximum];
     }
-    static scale(data, [min, max], factor = 1, reversed = false) {
+    static reverseScale(data, [min, max], factor = 1) {
         const scalesize = max - min;
         const result = [];
         for (const item of data) {
             const offset = item - min;
-            const scale = offset / scalesize;
-            result.push((reversed ? 1 - scale : scale) * factor);
+            result.push((1 - offset / scalesize) * factor);
+        }
+        return result;
+    }
+    static scale(data, [min, max], factor = 1) {
+        const scalesize = max - min;
+        const result = [];
+        for (const item of data) {
+            const offset = item - min;
+            result.push(offset / scalesize * factor);
         }
         return result;
     }

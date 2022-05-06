@@ -12,16 +12,14 @@ export class PriceLineRenderer extends BaseRenderer {
 
     private readonly lineStyle: any
 
-    private readonly textStyle: any
+    private readonly slideAnimation: any
 
     private context: RenderingContext
 
-    private anim = { rate:  0 }
-
-    private tween: gsap.core.Tween
-
     constructor(storage: IGraphicStorage) {
         super(storage)
+
+        this.initContainer()
 
         this.lineStyle = {
             width: config.style.linesize,
@@ -31,10 +29,14 @@ export class PriceLineRenderer extends BaseRenderer {
             cap: 'round',
         }
 
-        this.performContainer()
+        this.slideAnimation = {
+            rate: 1,
+            duration: .819,
+            ease: 'power3.out'
+        }
     }
 
-    private performContainer(): void {
+    private initContainer(): void {
         const [pricelineLatest] = this.use('pricelineLatest', () => new Graphics())
         const [gradientLatest] = this.use('gradientLatest', () => new Graphics())
 
@@ -57,50 +59,39 @@ export class PriceLineRenderer extends BaseRenderer {
         const shouldAnimate = this.context?.plotdata?.xlast !== context.plotdata.xlast
 
         if (shouldAnimate) {
-            this.animateLatestLine()
+            const [line, state] = this.get('pricelineLatest')
+
+            state.rate = 0
+            state.animation = gsap.to(state, this.slideAnimation)
+
+            this.createAnimationTicker(state.animation)
         }
 
         this.context = context
 
         this.updatePriceline(context)
-        this.updateLatest(context)
+        this.updateLatestPriceline(context)
 
         return container
     }
 
-    private animateLatestLine(): void {
-        if (!this.context) return
-
-        this.performTween()
-        this.performTicker()
-    }
-
-    private performTween(): void {
-        this.anim = { rate: 0 }
-
-        this.tween = gsap.to(
-            this.anim,
-            { rate: 1, duration: .5 }
-        )
-    }
-
-    private performTicker(): void {
+    private createAnimationTicker(tween: gsap.core.Tween): void {
         const ticker = new Ticker()
 
         ticker.add(
             () => {
-                if (!this.tween?.isActive()) {
+                if (!tween?.isActive()) {
                     return ticker.destroy()
                 }
 
-                this.updateLatest(this.context)
+                this.updateLatestPriceline(this.context)
             }
         )
 
         ticker.start()
     }
 
-    protected updateLatest(context: RenderingContext): void {
+    protected updateLatestPriceline(context: RenderingContext): void {
         const { width, height } = context.screen
         const { xdata, xrange, ydata, yrange } = context.plotdata
 
@@ -109,11 +100,11 @@ export class PriceLineRenderer extends BaseRenderer {
         const [prevx, curx] = datamath.scale(xlastTwo, xrange, width)
         const [prevy, cury] = datamath.reverseScale(ylastTwo, yrange, height)
 
-        const to = (prev, cur) => prev + (cur - prev) * this.anim.rate
+        const [line, linestate] = this.get<Graphics>('pricelineLatest')
+
+        const to = (prev, cur) => prev + (cur - prev) * (linestate?.rate ?? 1)
 
         const [endx, endy] = [to(prevx, curx), to(prevy, cury)]
-
-        const [line] = this.get<Graphics>('pricelineLatest')
 
         line
             .clear()

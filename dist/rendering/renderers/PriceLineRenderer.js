@@ -12,7 +12,7 @@ const pixi_1 = require("../../lib/pixi");
 class PriceLineRenderer extends __1.BaseRenderer {
     constructor(storage) {
         super(storage);
-        this.anim = { rate: 0 };
+        this.initContainer();
         this.lineStyle = {
             width: config_1.default.style.linesize,
             color: config_1.default.style.linecolor,
@@ -20,9 +20,13 @@ class PriceLineRenderer extends __1.BaseRenderer {
             join: 'round',
             cap: 'round',
         };
-        this.performContainer();
+        this.slideAnimation = {
+            rate: 1,
+            duration: .819,
+            ease: 'power3.out'
+        };
     }
-    performContainer() {
+    initContainer() {
         const [pricelineLatest] = this.use('pricelineLatest', () => new pixi_1.Graphics());
         const [gradientLatest] = this.use('gradientLatest', () => new pixi_1.Graphics());
         const [priceline] = this.use('priceline', () => new pixi_1.Graphics());
@@ -37,43 +41,35 @@ class PriceLineRenderer extends __1.BaseRenderer {
         var _a, _b;
         const shouldAnimate = ((_b = (_a = this.context) === null || _a === void 0 ? void 0 : _a.plotdata) === null || _b === void 0 ? void 0 : _b.xlast) !== context.plotdata.xlast;
         if (shouldAnimate) {
-            this.animateLatestLine();
+            const [line, state] = this.get('pricelineLatest');
+            state.rate = 0;
+            state.animation = pixi_1.gsap.to(state, this.slideAnimation);
+            this.createAnimationTicker(state.animation);
         }
         this.context = context;
         this.updatePriceline(context);
-        this.updateLatest(context);
+        this.updateLatestPriceline(context);
         return container;
     }
-    animateLatestLine() {
-        if (!this.context)
-            return;
-        this.performTween();
-        this.performTicker();
-    }
-    performTween() {
-        this.anim = { rate: 0 };
-        this.tween = pixi_1.gsap.to(this.anim, { rate: 1, duration: .5 });
-    }
-    performTicker() {
+    createAnimationTicker(tween) {
         const ticker = new pixi_1.Ticker();
         ticker.add(() => {
-            var _a;
-            if (!((_a = this.tween) === null || _a === void 0 ? void 0 : _a.isActive())) {
+            if (!(tween === null || tween === void 0 ? void 0 : tween.isActive())) {
                 return ticker.destroy();
             }
-            this.updateLatest(this.context);
+            this.updateLatestPriceline(this.context);
         });
         ticker.start();
     }
-    updateLatest(context) {
+    updateLatestPriceline(context) {
         const { width, height } = context.screen;
         const { xdata, xrange, ydata, yrange } = context.plotdata;
         const [xlastTwo, ylastTwo] = [xdata.slice(-2), ydata.slice(-2)];
         const [prevx, curx] = datamath_1.default.scale(xlastTwo, xrange, width);
-        const [prevy, cury] = datamath_1.default.scale(ylastTwo, yrange, height, true);
-        const to = (prev, cur) => prev + (cur - prev) * this.anim.rate;
+        const [prevy, cury] = datamath_1.default.reverseScale(ylastTwo, yrange, height);
+        const [line, linestate] = this.get('pricelineLatest');
+        const to = (prev, cur) => { var _a; return prev + (cur - prev) * ((_a = linestate === null || linestate === void 0 ? void 0 : linestate.rate) !== null && _a !== void 0 ? _a : 1); };
         const [endx, endy] = [to(prevx, curx), to(prevy, cury)];
-        const [line] = this.get('pricelineLatest');
         line
             .clear()
             .lineStyle(this.lineStyle)
@@ -93,7 +89,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
         const { width, height } = context.screen;
         const { xdata, xrange, ydata, yrange } = context.plotdata;
         const xs = datamath_1.default.scale(xdata, xrange, width);
-        const ys = datamath_1.default.scale(ydata, yrange, height, true);
+        const ys = datamath_1.default.reverseScale(ydata, yrange, height);
         const [priceline] = this.get('priceline');
         priceline
             .clear()

@@ -10,7 +10,7 @@ exports.default = {
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
     //data
-    maxdensity: 100,
+    maxdensity: 500,
     //chart
     style: {
         background: 0x22273F,

@@ -4,17 +4,13 @@ import { Container } from '../../lib/pixi';
 export declare class PriceLineRenderer extends BaseRenderer {
     static readonly PRICE_LINE_ID: symbol;
     private readonly lineStyle;
-    private readonly textStyle;
+    private readonly slideAnimation;
     private context;
-    private anim;
-    private tween;
     constructor(storage: IGraphicStorage);
-    private performContainer;
+    private initContainer;
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
-    private animateLatestLine;
-    private performTween;
-    private performTicker;
-    protected updateLatest(context: RenderingContext): void;
+    private createAnimationTicker;
+    protected updateLatestPriceline(context: RenderingContext): void;
     protected updatePriceline(context: RenderingContext): void;
 }

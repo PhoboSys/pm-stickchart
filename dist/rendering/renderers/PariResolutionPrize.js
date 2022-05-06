@@ -57,12 +57,12 @@ class PariResolutionPrize extends __1.BaseRenderer {
         const paries = {};
         for (const pari of context.paris)
             paries[pari.position] = pari;
-        if (!paries.POS) {
+        if (!paries['POS']) {
             this.clear('dividendsPos');
             this.clear('dividendsCurPos');
             this.clear('dividendsPerPos');
         }
-        if (!paries.NEG) {
+        if (!paries['NEG']) {
             this.clear('dividendsNeg');
             this.clear('dividendsCurNeg');
             this.clear('dividendsPerNeg');
