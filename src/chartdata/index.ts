@@ -145,7 +145,7 @@ export class DataBuilder {
             const ts = timestamps[idx]
             const ps = prices[idx]
 
-            if (ts >= since && ts <= until) {
+            if (ts >= since) {
 
                 tsframed.push(ts)
                 psframed.push(ps)
