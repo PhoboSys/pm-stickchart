@@ -72,10 +72,12 @@ class PariResolvedRenderer extends __1.BaseRenderer {
             },
             lose: {
                 pixi: {
-                    alpha: 0,
+                    positionY: '-=100',
+                    scale: 1.5,
+                    alpha: -1,
                 },
                 ease: 'power2.out',
-                duration: 3,
+                duration: 12,
             },
         };
         // loop
@@ -136,10 +138,12 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                     prizePos.addChild(dividendsPerPos);
                 dividendsPerPos.position.set(xpad, -dividendsPos.height);
                 dividendsPerPos.text = percent + '%';
+                dividendsPos.alpha = 5;
+                dividendsCurPos.alpha = 5;
                 if (isWinning) {
                     dividendsPos.style.fill = 0x00A573;
                     dividendsCurPos.style.fill = 0x00A573;
-                    dividendsPerPos.alpha = 1;
+                    dividendsPerPos.alpha = 5;
                 }
                 else {
                     dividendsPos.style.fill = 0xF05350;
@@ -186,10 +190,12 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                     prizeNeg.addChild(dividendsPerNeg);
                 dividendsPerNeg.position.set(xpad, dividendsNeg.height);
                 dividendsPerNeg.text = percent + '%';
+                dividendsNeg.alpha = 5;
+                dividendsCurNeg.alpha = 5;
                 if (isWinning) {
                     dividendsNeg.style.fill = 0x00A573;
                     dividendsCurNeg.style.fill = 0x00A573;
-                    dividendsPerNeg.alpha = 1;
+                    dividendsPerNeg.alpha = 5;
                 }
                 else {
                     dividendsNeg.style.fill = 0xF05350;

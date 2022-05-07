@@ -1,6 +1,10 @@
 export declare type ChartData = {
     [key: number]: number;
 };
+export declare type DataPoint = {
+    price: number;
+    timestamp: number;
+};
 export declare type DataPadding = {
     min: number;
     max: number;

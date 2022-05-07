@@ -46,7 +46,6 @@ class LatestPricePointRenderer extends __1.BaseRenderer {
         const [pulspoint, pulspointState] = this.get('pulspoint', () => __1.GraphicUtils.createCircle([0, 0], this.pulspointStyle.radius, this.pulspointStyle));
         if (pulspointState.new)
             point.addChild(pulspoint);
-        pulspoint.position.set(x, y);
         if (pulspointState.amination !== 'puls') {
             pulspointState.amination = 'puls';
             pulspointState.timeline = pixi_1.gsap.to(pulspoint, this.pulspointAnimation);

@@ -77,7 +77,6 @@ export class LatestPricePointRenderer extends BaseRenderer {
             this.pulspointStyle,
         ))
         if (pulspointState.new) point.addChild(pulspoint)
-        pulspoint.position.set(x, y)
 
         if (pulspointState.amination !== 'puls') {
             pulspointState.amination = 'puls'

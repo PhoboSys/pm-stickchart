@@ -1,14 +1,13 @@
 import { DataConverter, ChartData } from './chartdata'
 import config from './config'
 
-
 import { EChartType } from './enums'
 import { EventsProducer, ZoomEvent } from './events'
 import { Logger } from './infra'
 
 import datamath from './lib/datamath'
 import { Application, gsap } from './lib/pixi'
-import { UNIX_DAY, UNIX_MINUTE } from './lib/date-utils'
+import { nowUnixTS, UNIX_DAY, UNIX_MINUTE } from './lib/date-utils'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
@@ -37,9 +36,9 @@ export class StickChart extends EventTarget {
 
     private _context: RenderingContext | null
 
-    private timeline: any
+    private animation: any
 
-    private timeframe: number = UNIX_DAY
+    private since: number = nowUnixTS() - UNIX_DAY
 
     constructor(
         private stageElement: HTMLElement
@@ -63,8 +62,8 @@ export class StickChart extends EventTarget {
         this.addEventListener('zoom', (e: ZoomEvent) => {
 
             const zoom = e.zoom
-            const offset = Math.round(this.timeframe * zoom)
-            const timeframe = this.timeframe + offset
+            let timeframe = nowUnixTS() - this.since
+            timeframe += Math.round(timeframe * zoom)
 
             const zoominUp = zoom > 0
             const zoominDown = zoom < 0
@@ -84,11 +83,8 @@ export class StickChart extends EventTarget {
     }
 
     public setTimeframe(timeframe: number) {
-        if (validate(timeframe)) {
-            this.applyTimeframe(timeframe)
-        } else {
-            this.applyTimeframe(UNIX_DAY)
-        }
+        if (!validate(timeframe)) timeframe = UNIX_DAY
+        this.since = nowUnixTS() - timeframe
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -96,13 +92,13 @@ export class StickChart extends EventTarget {
     }
 
     private applyTimeframe(timeframe: number) {
-        this.timeframe = timeframe
+        this.since = nowUnixTS() - timeframe
         if (!this._context) return
 
         this._context.plotdata = DataConverter.plotdata(
             this._context.chartdata,
             this.application.screen,
-            this.timeframe,
+            this.since,
         )
         this.rerender('zoom')
     }
@@ -119,7 +115,7 @@ export class StickChart extends EventTarget {
         this._context.plotdata = DataConverter.plotdata(
             this._context.chartdata,
             this.application.screen,
-            this.timeframe,
+            this.since,
         )
         this.rerender('morph')
     }
@@ -149,7 +145,7 @@ export class StickChart extends EventTarget {
 
         const pipeline = this.pipelineFactory.get(context.charttype)
         const chartdata = DataConverter.chartdata(context.chartdata)
-        const plotdata = DataConverter.plotdata(chartdata, this.application.screen, this.timeframe)
+        const plotdata = DataConverter.plotdata(chartdata, this.application.screen, this.since)
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -168,6 +164,8 @@ export class StickChart extends EventTarget {
         }
 
         window.requestAnimationFrame(() => {
+            this.animation?.kill()
+            this.animation = null
 
             // Morph
             if (config.morph && this._context) {
@@ -175,28 +173,39 @@ export class StickChart extends EventTarget {
                 const aminated = DataConverter.getLatest(this._context.plotdata)
                 const target = DataConverter.getLatest(ctx.plotdata)
 
-                this.timeline?.kill()
-                this.timeline = gsap.to(
-                    aminated,
-                    {
-                        ...target,
-                        duration: 1,
-                        ease: 'power2',
-                        onUpdate: () => {
-                            if (
-                                aminated.timestamp !== target.timestamp ||
-                                aminated.price !== target.price
-                            ) {
-                                this.applyLatestPoint(aminated)
+                if (!DataConverter.isEqual(aminated, target)) {
+
+                    // morph animation
+                    this.animation = gsap.to(
+                        aminated,
+                        {
+                            ...target,
+                            duration: 1,
+                            ease: 'power2.out',
+                            onUpdate: () => {
+                                if (!DataConverter.isEqual(aminated, target)) {
+                                    this.applyLatestPoint(aminated)
+                                }
+                            },
+                            onComplete: () => {
+                                // gsap has limited precision
+                                // in order to render exactly target
+                                // we have to apply taregt in the end
+                                this.applyLatestPoint(target)
                             }
                         }
-                    }
-                )
-            } else {
+                    )
+
+                }
+            }
+
+            if (!this.animation) {
+
                 pipeline.render(
                     ctx,
                     () => Logger.info('render')
                 )
+
             }
 
             // save latest rendered context

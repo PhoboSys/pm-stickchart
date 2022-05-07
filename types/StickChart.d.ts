@@ -7,8 +7,8 @@ export declare class StickChart extends EventTarget {
     private pipelineFactory;
     private textureStorage;
     private _context;
-    private timeline;
-    private timeframe;
+    private animation;
+    private since;
     constructor(stageElement: HTMLElement);
     setTimeframe(timeframe: number): void;
     get canvas(): HTMLCanvasElement;

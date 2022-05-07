@@ -1,22 +1,13 @@
 export * from './types';
-import { ChartData, PlotData } from './types';
+import { ChartData, PlotData, DataPoint } from './types';
 export declare class DataConverter {
-    static getLatest(plotdata: PlotData): {
-        price: any;
-        timestamp: any;
-    };
+    static isEqual(start: DataPoint, end: DataPoint): boolean;
+    static getLatest(plotdata: PlotData): DataPoint;
     static fromPolyline(polyline: SVGPolylineElement): {
         xs: any;
         ys: any;
     };
     static toPolyline(plotdata: PlotData): SVGPolylineElement;
-    static fromPath(path: {
-        0: number[];
-    }): {
-        xs: number[];
-        ys: number[];
-    };
-    static toPath(plotdata: PlotData): SVGPathElement;
     static normalize(timestampsOrig: any, pricesOrig: any, screen: {
         width: any;
         height: any;
@@ -31,5 +22,5 @@ export declare class DataConverter {
     }, screen: {
         width: any;
         height: any;
-    }, timeframe: number): PlotData;
+    }, since: number): PlotData;
 }

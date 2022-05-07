@@ -25,7 +25,7 @@ class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
         this.stageElement = stageElement;
-        this.timeframe = date_utils_1.UNIX_DAY;
+        this.since = (0, date_utils_1.nowUnixTS)() - date_utils_1.UNIX_DAY;
         this.application = new pixi_1.Application({
             resizeTo: stageElement,
             antialias: config_1.default.antialias,
@@ -40,8 +40,8 @@ class StickChart extends EventTarget {
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         this.addEventListener('zoom', (e) => {
             const zoom = e.zoom;
-            const offset = Math.round(this.timeframe * zoom);
-            const timeframe = this.timeframe + offset;
+            let timeframe = (0, date_utils_1.nowUnixTS)() - this.since;
+            timeframe += Math.round(timeframe * zoom);
             const zoominUp = zoom > 0;
             const zoominDown = zoom < 0;
             const hitLower = tooSmall(timeframe) && zoominDown;
@@ -54,21 +54,18 @@ class StickChart extends EventTarget {
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
     setTimeframe(timeframe) {
-        if (validate(timeframe)) {
-            this.applyTimeframe(timeframe);
-        }
-        else {
-            this.applyTimeframe(date_utils_1.UNIX_DAY);
-        }
+        if (!validate(timeframe))
+            timeframe = date_utils_1.UNIX_DAY;
+        this.since = (0, date_utils_1.nowUnixTS)() - timeframe;
     }
     get canvas() {
         return this.application.view;
     }
     applyTimeframe(timeframe) {
-        this.timeframe = timeframe;
+        this.since = (0, date_utils_1.nowUnixTS)() - timeframe;
         if (!this._context)
             return;
-        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
+        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.since);
         this.rerender('zoom');
     }
     applyLatestPoint(latest) {
@@ -79,7 +76,7 @@ class StickChart extends EventTarget {
         const idx = timestamps.length - 1;
         timestamps[idx] = timestamp;
         prices[idx] = price;
-        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
+        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.since);
         this.rerender('morph');
     }
     rerender(reason) {
@@ -94,7 +91,7 @@ class StickChart extends EventTarget {
         var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataConverter.chartdata(context.chartdata);
-        const plotdata = chartdata_1.DataConverter.plotdata(chartdata, this.application.screen, this.timeframe);
+        const plotdata = chartdata_1.DataConverter.plotdata(chartdata, this.application.screen, this.since);
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -111,19 +108,27 @@ class StickChart extends EventTarget {
         }
         window.requestAnimationFrame(() => {
             var _a;
+            (_a = this.animation) === null || _a === void 0 ? void 0 : _a.kill();
+            this.animation = null;
             // Morph
             if (config_1.default.morph && this._context) {
                 const aminated = chartdata_1.DataConverter.getLatest(this._context.plotdata);
                 const target = chartdata_1.DataConverter.getLatest(ctx.plotdata);
-                (_a = this.timeline) === null || _a === void 0 ? void 0 : _a.kill();
-                this.timeline = pixi_1.gsap.to(aminated, Object.assign(Object.assign({}, target), { duration: 1, ease: 'power2', onUpdate: () => {
-                        if (aminated.timestamp !== target.timestamp ||
-                            aminated.price !== target.price) {
-                            this.applyLatestPoint(aminated);
-                        }
-                    } }));
+                if (!chartdata_1.DataConverter.isEqual(aminated, target)) {
+                    // morph animation
+                    this.animation = pixi_1.gsap.to(aminated, Object.assign(Object.assign({}, target), { duration: 1, ease: 'power2.out', onUpdate: () => {
+                            if (!chartdata_1.DataConverter.isEqual(aminated, target)) {
+                                this.applyLatestPoint(aminated);
+                            }
+                        }, onComplete: () => {
+                            // gsap has limited precision
+                            // in order to render exactly target
+                            // we have to apply taregt in the end
+                            this.applyLatestPoint(target);
+                        } }));
+                }
             }
-            else {
+            if (!this.animation) {
                 pipeline.render(ctx, () => infra_1.Logger.info('render'));
             }
             // save latest rendered context
