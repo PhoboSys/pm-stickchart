@@ -9,23 +9,13 @@ const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
 const infra_1 = require("./infra");
 const pixi_1 = require("./lib/pixi");
-const date_utils_1 = require("./lib/date-utils");
+const timeframe_1 = require("./lib/timeframe");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
-function validate(duration) {
-    return duration && !tooBig(duration) && !tooSmall(duration);
-}
-function tooBig(duration) {
-    return duration > date_utils_1.UNIX_DAY;
-}
-function tooSmall(duration) {
-    return duration < date_utils_1.UNIX_MINUTE * 10;
-}
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
         this.stageElement = stageElement;
-        this.since = (0, date_utils_1.nowUnixTS)() - date_utils_1.UNIX_DAY;
         this.application = new pixi_1.Application({
             resizeTo: stageElement,
             antialias: config_1.default.antialias,
@@ -38,34 +28,20 @@ class StickChart extends EventTarget {
         });
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
-        this.addEventListener('zoom', (e) => {
-            const zoom = e.zoom;
-            let timeframe = (0, date_utils_1.nowUnixTS)() - this.since;
-            timeframe += Math.round(timeframe * zoom);
-            const zoominUp = zoom > 0;
-            const zoominDown = zoom < 0;
-            const hitLower = tooSmall(timeframe) && zoominDown;
-            const hitUpper = tooBig(timeframe) && zoominUp;
-            if (!hitLower && !hitUpper) {
-                this.applyTimeframe(timeframe);
-            }
-        });
+        this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
     setTimeframe(timeframe) {
-        if (!validate(timeframe))
-            timeframe = date_utils_1.UNIX_DAY;
-        this.since = (0, date_utils_1.nowUnixTS)() - timeframe;
+        this.timeframe.save(timeframe);
     }
     get canvas() {
         return this.application.view;
     }
-    applyTimeframe(timeframe) {
-        this.since = (0, date_utils_1.nowUnixTS)() - timeframe;
+    applyTimeframe() {
         if (!this._context)
             return;
-        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.since);
+        this._context.plotdata = chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
         this.rerender('zoom');
     }
     applyLatestPoint(latest) {
@@ -76,7 +52,7 @@ class StickChart extends EventTarget {
         const idx = timestamps.length - 1;
         timestamps[idx] = timestamp;
         prices[idx] = price;
-        this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.since);
+        this._context.plotdata = chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
         this.rerender('morph');
     }
     rerender(reason) {
@@ -90,8 +66,8 @@ class StickChart extends EventTarget {
     render(context) {
         var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
-        const chartdata = chartdata_1.DataConverter.chartdata(context.chartdata);
-        const plotdata = chartdata_1.DataConverter.plotdata(chartdata, this.application.screen, this.since);
+        const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
+        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.get());
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -112,12 +88,12 @@ class StickChart extends EventTarget {
             this.animation = null;
             // Morph
             if (config_1.default.morph && this._context) {
-                const aminated = chartdata_1.DataConverter.getLatest(this._context.plotdata);
-                const target = chartdata_1.DataConverter.getLatest(ctx.plotdata);
-                if (!chartdata_1.DataConverter.isEqual(aminated, target)) {
+                const aminated = chartdata_1.DataBuilder.getLatest(this._context.plotdata);
+                const target = chartdata_1.DataBuilder.getLatest(ctx.plotdata);
+                if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
                     // morph animation
                     this.animation = pixi_1.gsap.to(aminated, Object.assign(Object.assign({}, target), { duration: 1, ease: 'power2.out', onUpdate: () => {
-                            if (!chartdata_1.DataConverter.isEqual(aminated, target)) {
+                            if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
                                 this.applyLatestPoint(aminated);
                             }
                         }, onComplete: () => {
@@ -138,6 +114,7 @@ class StickChart extends EventTarget {
     destroy() {
         this.application.destroy();
         this.eventsProducer.destroy();
+        this.timeframe.destroy();
     }
 }
 exports.StickChart = StickChart;

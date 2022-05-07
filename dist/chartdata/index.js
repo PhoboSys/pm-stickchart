@@ -17,13 +17,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataConverter = void 0;
+exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
 const config_1 = __importDefault(require("../config"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
-class DataConverter {
+class DataBuilder {
     static isEqual(start, end) {
-        return (start.timestamp === end.timestamp ||
+        return (start.timestamp === end.timestamp &&
             start.price === end.price);
     }
     static getLatest(plotdata) {
@@ -85,20 +85,21 @@ class DataConverter {
         const prices = Object.values(chartdata);
         return { timestamps, prices };
     }
-    static plotdata(chartdata, screen, since) {
+    static plotdata(chartdata, screen, timeframe) {
         const tsframed = [];
         const psframed = [];
         const { timestamps, prices } = chartdata;
+        const { since, until } = timeframe;
         for (const idx in timestamps) {
             const ts = timestamps[idx];
             const ps = prices[idx];
-            if (ts >= since) {
+            if (ts >= since && ts <= until) {
                 tsframed.push(ts);
                 psframed.push(ps);
             }
         }
-        return DataConverter.normalize(tsframed, psframed, screen);
+        return DataBuilder.normalize(tsframed, psframed, screen);
     }
 }
-exports.DataConverter = DataConverter;
+exports.DataBuilder = DataBuilder;
 //# sourceMappingURL=index.js.map

@@ -12,7 +12,6 @@ export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 export * from '@pixi-essentials/gradients'
 export { gsap } from 'gsap'
-export { MorphSVGPlugin } from 'gsap/MorphSVGPlugin'
 
 import '@pixi/graphics-extras'
 
@@ -28,8 +27,6 @@ import { ColorMatrixFilter } from '@pixi/filter-color-matrix'
 // GSAP
 import { gsap } from 'gsap'
 import { PixiPlugin } from 'gsap/PixiPlugin'
-import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin'
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 
 utils.skipHello()
 gsap.registerPlugin(PixiPlugin)

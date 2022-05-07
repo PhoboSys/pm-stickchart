@@ -26,7 +26,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MorphSVGPlugin = exports.gsap = exports.utils = exports.TextStyle = exports.Text = void 0;
+exports.gsap = exports.utils = exports.TextStyle = exports.Text = void 0;
 __exportStar(require("@pixi/constants"), exports);
 __exportStar(require("@pixi/math"), exports);
 __exportStar(require("@pixi/runner"), exports);
@@ -44,8 +44,6 @@ exports.utils = __importStar(require("@pixi/utils"));
 __exportStar(require("@pixi-essentials/gradients"), exports);
 var gsap_1 = require("gsap");
 Object.defineProperty(exports, "gsap", { enumerable: true, get: function () { return gsap_1.gsap; } });
-var MorphSVGPlugin_1 = require("gsap/MorphSVGPlugin");
-Object.defineProperty(exports, "MorphSVGPlugin", { enumerable: true, get: function () { return MorphSVGPlugin_1.MorphSVGPlugin; } });
 require("@pixi/graphics-extras");
 const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");

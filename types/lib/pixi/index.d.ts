@@ -12,5 +12,4 @@ export { Text, TextStyle } from '@pixi/text';
 export * as utils from '@pixi/utils';
 export * from '@pixi-essentials/gradients';
 export { gsap } from 'gsap';
-export { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import '@pixi/graphics-extras';

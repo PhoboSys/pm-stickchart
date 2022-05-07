@@ -6,14 +6,14 @@ import datamath from '../lib/datamath'
 
 import { ChartData, PlotData, DataPoint } from './types'
 
-export class DataConverter {
+export class DataBuilder {
 
     static isEqual(
         start: DataPoint,
         end: DataPoint,
     ): boolean {
         return (
-            start.timestamp === end.timestamp ||
+            start.timestamp === end.timestamp &&
             start.price === end.price
         )
     }
@@ -132,19 +132,20 @@ export class DataConverter {
     static plotdata(
         chartdata: { timestamps, prices },
         screen: { width, height },
-        since: number
+        timeframe: { since, until },
     ): PlotData {
 
         const tsframed: number[] = []
         const psframed: number[] = []
 
         const { timestamps, prices } = chartdata
+        const { since, until } = timeframe
         for (const idx in timestamps) {
 
             const ts = timestamps[idx]
             const ps = prices[idx]
 
-            if (ts >= since) {
+            if (ts >= since && ts <= until) {
 
                 tsframed.push(ts)
                 psframed.push(ps)
@@ -152,7 +153,7 @@ export class DataConverter {
             }
         }
 
-        return DataConverter.normalize(tsframed, psframed, screen)
+        return DataBuilder.normalize(tsframed, psframed, screen)
     }
 
 }

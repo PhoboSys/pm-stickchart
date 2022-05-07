@@ -1,6 +1,6 @@
 export * from './types';
 import { ChartData, PlotData, DataPoint } from './types';
-export declare class DataConverter {
+export declare class DataBuilder {
     static isEqual(start: DataPoint, end: DataPoint): boolean;
     static getLatest(plotdata: PlotData): DataPoint;
     static fromPolyline(polyline: SVGPolylineElement): {
@@ -22,5 +22,8 @@ export declare class DataConverter {
     }, screen: {
         width: any;
         height: any;
-    }, since: number): PlotData;
+    }, timeframe: {
+        since: any;
+        until: any;
+    }): PlotData;
 }
