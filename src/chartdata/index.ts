@@ -3,22 +3,30 @@ export * from './types'
 import config from '../config'
 
 import datamath from '../lib/datamath'
-import { MorphSVGPlugin } from '../lib/pixi'
-import { nowUnixTS } from '../lib/date-utils'
 
-import { ChartData, PlotData } from './types'
+import { ChartData, PlotData, DataPoint } from './types'
 
-export class DataConverter {
+export class DataBuilder {
+
+    static isEqual(
+        start: DataPoint,
+        end: DataPoint,
+    ): boolean {
+        return (
+            start.timestamp === end.timestamp &&
+            start.price === end.price
+        )
+    }
 
     static getLatest(
         plotdata: PlotData
-    ): { price, timestamp } {
+    ): DataPoint {
 
         const  { prices, timestamps } = plotdata
 
         return {
-            price: prices.at(-1),
-            timestamp: timestamps.at(-1),
+            price: Number(prices.at(-1)),
+            timestamp: Number(timestamps.at(-1)),
         }
     }
 
@@ -61,35 +69,6 @@ export class DataConverter {
         polyline.setAttributeNS(null, 'points', points)
 
         return polyline
-
-    }
-
-
-    static fromPath(path: { 0: number[] }) {
-
-        const points = path[0]
-
-        const xs: number[] = []
-        const ys: number[] = []
-
-        const length = points.length / 2
-        let idx = 0
-        while (idx < length) {
-            let i = idx++ * 2
-            xs.push(points[i++])
-            ys.push(points[i++])
-        }
-
-        return { xs, ys }
-    }
-
-    static toPath(
-        plotdata: PlotData
-    ) {
-
-        const polyline = DataConverter.toPolyline(plotdata)
-
-        return MorphSVGPlugin.convertToPath(polyline)[0]
 
     }
 
@@ -153,21 +132,20 @@ export class DataConverter {
     static plotdata(
         chartdata: { timestamps, prices },
         screen: { width, height },
-        timeframe: number
+        timeframe: { since, until },
     ): PlotData {
 
-
-        const now = nowUnixTS()
         const tsframed: number[] = []
         const psframed: number[] = []
 
         const { timestamps, prices } = chartdata
+        const { since, until } = timeframe
         for (const idx in timestamps) {
 
             const ts = timestamps[idx]
             const ps = prices[idx]
 
-            if (ts >= (now - timeframe)) {
+            if (ts >= since && ts <= until) {
 
                 tsframed.push(ts)
                 psframed.push(ps)
@@ -175,7 +153,7 @@ export class DataConverter {
             }
         }
 
-        return DataConverter.normalize(tsframed, psframed, screen)
+        return DataBuilder.normalize(tsframed, psframed, screen)
     }
 
 }

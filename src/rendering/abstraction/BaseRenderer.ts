@@ -1,6 +1,8 @@
 import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
 
+import { Logger } from '../../infra'
+
 import { Container } from '../../lib/pixi'
 
 export abstract class BaseRenderer implements IRenderer {
@@ -31,6 +33,7 @@ export abstract class BaseRenderer implements IRenderer {
         if (name === undefined) {
             for (const key in this.local) this.clear(key)
         } else if (name in this.local) {
+            Logger.info('clear', name)
             const [g, state] = this.local[name]
 
             g.destroy()
@@ -51,7 +54,7 @@ export abstract class BaseRenderer implements IRenderer {
             return [<T>g, state]
         }
 
-        console.log('create new', name)
+        Logger.info('get new', name)
         this.local[name] = [init(), { new: true }]
 
         return this.local[name]

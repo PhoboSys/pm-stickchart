@@ -17,18 +17,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataConverter = void 0;
+exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
 const config_1 = __importDefault(require("../config"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
-const pixi_1 = require("../lib/pixi");
-const date_utils_1 = require("../lib/date-utils");
-class DataConverter {
+class DataBuilder {
+    static isEqual(start, end) {
+        return (start.timestamp === end.timestamp &&
+            start.price === end.price);
+    }
     static getLatest(plotdata) {
         const { prices, timestamps } = plotdata;
         return {
-            price: prices.at(-1),
-            timestamp: timestamps.at(-1),
+            price: Number(prices.at(-1)),
+            timestamp: Number(timestamps.at(-1)),
         };
     }
     static fromPolyline(polyline) {
@@ -54,23 +56,6 @@ class DataConverter {
         const polyline = document.createElementNS(ns, 'polyline');
         polyline.setAttributeNS(null, 'points', points);
         return polyline;
-    }
-    static fromPath(path) {
-        const points = path[0];
-        const xs = [];
-        const ys = [];
-        const length = points.length / 2;
-        let idx = 0;
-        while (idx < length) {
-            let i = idx++ * 2;
-            xs.push(points[i++]);
-            ys.push(points[i++]);
-        }
-        return { xs, ys };
-    }
-    static toPath(plotdata) {
-        const polyline = DataConverter.toPolyline(plotdata);
-        return pixi_1.MorphSVGPlugin.convertToPath(polyline)[0];
     }
     static normalize(timestampsOrig, pricesOrig, screen) {
         const timestamps = datamath_1.default.sample(timestampsOrig, config_1.default.maxdensity);
@@ -101,20 +86,20 @@ class DataConverter {
         return { timestamps, prices };
     }
     static plotdata(chartdata, screen, timeframe) {
-        const now = (0, date_utils_1.nowUnixTS)();
         const tsframed = [];
         const psframed = [];
         const { timestamps, prices } = chartdata;
+        const { since, until } = timeframe;
         for (const idx in timestamps) {
             const ts = timestamps[idx];
             const ps = prices[idx];
-            if (ts >= (now - timeframe)) {
+            if (ts >= since && ts <= until) {
                 tsframed.push(ts);
                 psframed.push(ps);
             }
         }
-        return DataConverter.normalize(tsframed, psframed, screen);
+        return DataBuilder.normalize(tsframed, psframed, screen);
     }
 }
-exports.DataConverter = DataConverter;
+exports.DataBuilder = DataBuilder;
 //# sourceMappingURL=index.js.map
