@@ -41,7 +41,8 @@
     "@pixi/utils": "6.3.0",
     "big.js": "6.1.1",
     "debug": "4.3.2",
-    "gsap": "3.10.4"
+    "gsap": "3.10.4",
+    "lodash.throttle": "4.1.1"
   },
   "files": [
     "dist",
