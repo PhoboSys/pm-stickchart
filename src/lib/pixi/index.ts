@@ -33,7 +33,6 @@ import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 
 utils.skipHello()
 gsap.registerPlugin(PixiPlugin)
-gsap.registerPlugin(MorphSVGPlugin)
 PixiPlugin.registerPIXI({
     DisplayObject,
     Graphics,

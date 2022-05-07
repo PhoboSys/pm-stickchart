@@ -58,10 +58,8 @@ const filter_color_matrix_1 = require("@pixi/filter-color-matrix");
 // GSAP
 const gsap_2 = require("gsap");
 const PixiPlugin_1 = require("gsap/PixiPlugin");
-const MorphSVGPlugin_2 = require("gsap/MorphSVGPlugin");
 utils.skipHello();
 gsap_2.gsap.registerPlugin(PixiPlugin_1.PixiPlugin);
-gsap_2.gsap.registerPlugin(MorphSVGPlugin_2.MorphSVGPlugin);
 PixiPlugin_1.PixiPlugin.registerPIXI({
     DisplayObject: display_1.DisplayObject,
     Graphics: graphics_1.Graphics,

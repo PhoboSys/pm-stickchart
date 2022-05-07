@@ -13,7 +13,9 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
     private readonly innerPointStyle: any
 
-    private readonly outerPointAnimation: any
+    private readonly pulspointStyle: any
+
+    private readonly pulspointAnimation: any
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -28,7 +30,12 @@ export class LatestPricePointRenderer extends BaseRenderer {
             radius: 9,
         }
 
-        this.outerPointAnimation = {
+        this.pulspointStyle = {
+            color: config.style.linecolor,
+            radius: 10,
+        }
+
+        this.pulspointAnimation = {
             pixi: {
                 scale: 4,
                 alpha: -0.1,
@@ -64,18 +71,18 @@ export class LatestPricePointRenderer extends BaseRenderer {
         if (pointState.new) container.addChild(point)
         point.position.set(x, y)
 
-        const [outerpoint, outerpointState] = this.get('outerpoint', () => GraphicUtils.createCircle(
-            [x, y],
-            this.outerPointStyle.radius,
-            this.outerPointStyle,
+        const [pulspoint, pulspointState] = this.get('pulspoint', () => GraphicUtils.createCircle(
+            [0, 0],
+            this.pulspointStyle.radius,
+            this.pulspointStyle,
         ))
-        if (outerpointState.new) container.addChild(outerpoint)
-        outerpoint.position.set(x, y)
+        if (pulspointState.new) point.addChild(pulspoint)
+        pulspoint.position.set(x, y)
 
-        if (outerpointState.amination !== 'puls') {
-            outerpointState.amination = 'puls'
+        if (pulspointState.amination !== 'puls') {
+            pulspointState.amination = 'puls'
 
-            outerpointState.timeline = gsap.to(outerpoint, this.outerPointAnimation)
+            pulspointState.timeline = gsap.to(pulspoint, this.pulspointAnimation)
         }
 
         const [innerpoint, innerpointState] = this.get('innerpoint', () => GraphicUtils.createCircle(

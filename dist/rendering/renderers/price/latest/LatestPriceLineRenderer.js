@@ -16,12 +16,12 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 16,
+            paddingx: 12,
         };
         this.textCoverStyle = {
             color: config_1.default.style.linecolor,
-            paddingx: 7,
-            paddingy: 5,
+            paddingx: 8,
+            paddingy: 6,
             anchorx: 1.1,
             anchory: 0.5,
             radius: 30,
@@ -58,7 +58,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         const { anchorx, anchory } = this.textCoverStyle;
         coveredText.position.set(x - coveredText.width * anchorx, y - coveredText.height * anchory);
         const padding = coveredText.width + this.lineStyle.paddingx;
-        const [line, lineState] = this.get('line', () => __1.GraphicUtils.createLine([0, 0], [x, 0], this.lineStyle));
+        const [line, lineState] = this.get('line', () => __1.GraphicUtils.createLine([0, 0], [width, 0], this.lineStyle));
         if (lineState.new)
             container.addChild(line);
         line.position.set(0, y);

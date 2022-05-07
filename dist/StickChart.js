@@ -69,7 +69,7 @@ class StickChart extends EventTarget {
         if (!this._context)
             return;
         this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
-        this.rerender('timeframe');
+        this.rerender('zoom');
     }
     applyLatestPoint(latest) {
         if (!this._context)
@@ -80,7 +80,7 @@ class StickChart extends EventTarget {
         timestamps[idx] = timestamp;
         prices[idx] = price;
         this._context.plotdata = chartdata_1.DataConverter.plotdata(this._context.chartdata, this.application.screen, this.timeframe);
-        this.rerender('latestpoint');
+        this.rerender('morph');
     }
     rerender(reason) {
         window.requestAnimationFrame(() => {
@@ -124,8 +124,7 @@ class StickChart extends EventTarget {
                     } }));
             }
             else {
-                infra_1.Logger.info('render');
-                pipeline.render(ctx, () => this.application.render());
+                pipeline.render(ctx, () => infra_1.Logger.info('render'));
             }
             // save latest rendered context
             this._context = ctx;

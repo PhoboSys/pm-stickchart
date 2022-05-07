@@ -104,7 +104,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe,
         )
-        this.rerender('timeframe')
+        this.rerender('zoom')
     }
 
     private applyLatestPoint(latest: { price, timestamp }) {
@@ -121,7 +121,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe,
         )
-        this.rerender('latestpoint')
+        this.rerender('morph')
     }
 
     public rerender(reason: string): void {
@@ -193,10 +193,9 @@ export class StickChart extends EventTarget {
                     }
                 )
             } else {
-                Logger.info('render')
                 pipeline.render(
                     ctx,
-                    () => this.application.render()
+                    () => Logger.info('render')
                 )
             }
 

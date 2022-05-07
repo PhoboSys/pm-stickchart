@@ -22,13 +22,13 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 16,
+            paddingx: 12,
         }
 
         this.textCoverStyle = {
             color: config.style.linecolor,
-            paddingx: 7,
-            paddingy: 5,
+            paddingx: 8,
+            paddingy: 6,
             anchorx: 1.1,
             anchory: 0.5,
             radius: 30,
@@ -75,7 +75,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         ))
         if (coveredTextState.new) container.addChild(coveredText)
 
-
         const textGraphic = <Text>coveredText.getChildAt(1)
         textGraphic.text = datamath.toFixedPrecision(price, 8)
 
@@ -93,7 +92,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const padding = coveredText.width + this.lineStyle.paddingx
         const [line, lineState] = this.get('line', () => GraphicUtils.createLine(
             [0, 0],
-            [x, 0],
+            [width, 0],
             this.lineStyle,
         ))
 
