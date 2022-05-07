@@ -41,7 +41,7 @@
     "@pixi/utils": "6.3.0",
     "big.js": "6.1.1",
     "debug": "4.3.2",
-    "gsap": "file:gsap-bonus.tgz"
+    "gsap": "3.10.4"
   },
   "files": [
     "dist",
