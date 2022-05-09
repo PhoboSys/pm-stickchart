@@ -70,7 +70,7 @@ class datamath {
         if (diff.eq(0))
             return 0;
         const step = diff.round(-diff.e, big_js_1.default.roundUp).div(10);
-        return step;
+        return step.toNumber();
     }
     static roundpow2(value) {
         value--;

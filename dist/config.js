@@ -6,6 +6,10 @@ exports.default = {
         speed: 100,
         throttle: 30, // one frame
     },
+    grid: {
+        time: { max: 20, fontsize: 12 },
+        price: { max: 20, fontsize: 12 },
+    },
     //pixi
     forceCanvas: false,
     autoStart: true,
@@ -14,7 +18,7 @@ exports.default = {
     resolution: Math.ceil(window.devicePixelRatio),
     //chart morph animation
     morph: {
-        duration: 0.6819,
+        duration: 1.618,
         ease: 'power2.out',
     },
     //data

@@ -99,7 +99,7 @@ export default class datamath {
 
         const step = diff.round(-diff.e, Big.roundUp).div(10)
 
-        return step
+        return step.toNumber()
     }
 
     static roundpow2(value: number): number {
