@@ -152,8 +152,7 @@ export class StickChart extends EventTarget {
                         aminated,
                         {
                             ...target,
-                            duration: 1,
-                            ease: 'power2.out',
+                            ...config.morph,
                             onUpdate: () => {
                                 if (!DataBuilder.isEqual(aminated, target)) {
                                     this.applyLatestPoint(aminated)
@@ -161,8 +160,8 @@ export class StickChart extends EventTarget {
                             },
                             onComplete: () => {
                                 // gsap has limited precision
-                                // in order to render exactly target
-                                // we have to apply taregt in the end
+                                // in order to render exactly 'target'
+                                // we have to apply it in the end
                                 this.applyLatestPoint(target)
                             }
                         }

@@ -92,14 +92,14 @@ class StickChart extends EventTarget {
                 const target = chartdata_1.DataBuilder.getLatest(ctx.plotdata);
                 if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
                     // morph animation
-                    this.animation = pixi_1.gsap.to(aminated, Object.assign(Object.assign({}, target), { duration: 1, ease: 'power2.out', onUpdate: () => {
+                    this.animation = pixi_1.gsap.to(aminated, Object.assign(Object.assign(Object.assign({}, target), config_1.default.morph), { onUpdate: () => {
                             if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
                                 this.applyLatestPoint(aminated);
                             }
                         }, onComplete: () => {
                             // gsap has limited precision
-                            // in order to render exactly target
-                            // we have to apply taregt in the end
+                            // in order to render exactly 'target'
+                            // we have to apply it in the end
                             this.applyLatestPoint(target);
                         } }));
                 }
