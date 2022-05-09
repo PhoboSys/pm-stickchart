@@ -1,4 +1,4 @@
-import { Graphics, LineStyle, Text } from '../../lib/pixi';
+import { Graphics, LineStyle, Text, Texture } from '../../lib/pixi';
 export declare class GraphicUtils {
     static createCircle([x, y]: [number, number], radius: number, style: {
         color: any;
@@ -34,6 +34,11 @@ export declare class GraphicUtils {
     static createVerticalDashLine(x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
         gap: any;
         dash: any;
+    }): Graphics;
+    static createTexturedVerticalDashLine(x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
+        gap: any;
+        dash: any;
+        texture: Texture;
     }): Graphics;
     static createLine([x1, y1]: [number, number], [x2, y2]: [number, number], linestyle: LineStyle): Graphics;
     static createText(value: any, [x, y]: [number, number], textstyle: object, anchor: [number, number] | number): Text;

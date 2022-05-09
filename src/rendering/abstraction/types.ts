@@ -1,5 +1,5 @@
 import { PlotData } from '../../chartdata'
-import { Rectangle } from '../../lib/pixi'
+import { Rectangle, AbstractRenderer, Renderer } from '../../lib/pixi'
 
 import { ITextureStorage } from './interfaces'
 
@@ -17,6 +17,7 @@ export type RenderingContext = {
     plotdata: PlotData
     chartdata: { prices: number[], timestamps: number[] },
 
+    renderer: AbstractRenderer,
     rerender?: boolean
     mousepos?: { x: number, y: number, }
 }

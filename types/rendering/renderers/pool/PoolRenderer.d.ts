@@ -3,6 +3,7 @@ import { BaseRenderer } from '../..';
 import { Container } from '../../../lib/pixi';
 export declare class PoolRenderer extends BaseRenderer {
     static readonly POOL_ID: symbol;
+    private _context;
     private readonly openPoolStyle;
     private readonly lockPoolStyle;
     private readonly resolutionPoolStyle;
@@ -14,4 +15,9 @@ export declare class PoolRenderer extends BaseRenderer {
     private createPrice;
     private createLockLine;
     private createPoolBorder;
+    private getLevelGradientColors;
+    private updateResolutionPool;
+    private createResolutionCover;
+    private createResolutionTorus;
+    private createResolutionDash;
 }

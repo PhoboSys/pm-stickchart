@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolRenderer = void 0;
+const config_1 = __importDefault(require("../../../config"));
 const __1 = require("../..");
 const __2 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
+const poollevels_1 = require("../../../constants/poollevels");
 class PoolRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -22,7 +24,7 @@ class PoolRenderer extends __1.BaseRenderer {
         };
         const basicTorusStyle = {
             innerr: 2.5,
-            outterr: 5,
+            outerr: 5,
         };
         const basicTextNameStyle = {
             fontWeight: 600,
@@ -46,10 +48,10 @@ class PoolRenderer extends __1.BaseRenderer {
         };
         this.resolutionPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 20,
-            linestyle: Object.assign(Object.assign({}, basicLineStyle), { color: 0xF05350 }),
+            paddingBottom: 10,
+            linestyle: Object.assign({}, basicLineStyle),
             torusstyle: Object.assign(Object.assign({}, basicTorusStyle), { color: 0xF05350 }),
-            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: 0xFFFFFF }), color: 0xF05350, anchorx: 0, anchory: 0 }),
+            coveredNameStyle: Object.assign(Object.assign({}, basicCoveredTextStyle), { textstyle: Object.assign(Object.assign({}, basicTextNameStyle), { fill: config_1.default.style.background }), color: 0xF05350, anchorx: 0, anchory: 0 }),
         };
         this.openPoolStyle = {
             paddingTop: 20,
@@ -135,12 +137,11 @@ class PoolRenderer extends __1.BaseRenderer {
         const [start, startState] = this.createPoolBorder(context, 'Start', openDate, this.openPoolStyle);
         if (startState.new)
             container.addChild(start);
-        const [resolution, resolutionState] = this.createPoolBorder(context, 'Resolution', resolutionDate, this.resolutionPoolStyle);
-        if (resolutionState.new)
-            container.addChild(resolution);
+        this.updateResolutionPool(context, container);
         const [price, priceState] = this.createPrice(context, openPrice, this.openPricePointStyle);
         if (priceState.new)
             container.addChild(price);
+        this._context = context;
         return container;
     }
     createPrice(context, pricePoint, { circlstyle, linestyle, textCoverStyle }) {
@@ -199,9 +200,9 @@ class PoolRenderer extends __1.BaseRenderer {
         coveredIcon.position.set((x + coverpadding) - coveredIcon.width * anchorx, paddingTop - coveredIcon.height * anchory);
         const covery = coveredIcon.y + coveredIcon.height;
         const { torusstyle } = style;
-        const [torus, torusState] = this.get('torusLock', () => __1.GraphicUtils.createTorus([x, covery], [torusstyle.innerr, torusstyle.outterr], torusstyle));
+        const [torus, torusState] = this.get('torusLock', () => __1.GraphicUtils.createTorus([x, covery], [torusstyle.innerr, torusstyle.outerr], torusstyle));
         torus.position.set(x, covery);
-        const torusy = torus.y + torusstyle.outterr;
+        const torusy = torus.y + torusstyle.outerr;
         const { linestyle } = style;
         const { torusPadding } = linestyle;
         const [line, lineState] = this.get('lineLock', () => __1.GraphicUtils.createVerticalDashLine(0, [torusy + torusPadding, height - paddingBottom], style.linestyle));
@@ -228,9 +229,9 @@ class PoolRenderer extends __1.BaseRenderer {
         coveredName.position.set((x + coverpadding) - coveredName.width * anchorx, paddingTop - coveredName.height * anchory);
         const covery = coveredName.y + coveredName.height;
         const { torusstyle } = style;
-        const [torus, torusState] = this.get('torus' + title, () => __1.GraphicUtils.createTorus([x, covery], [torusstyle.innerr, torusstyle.outterr], torusstyle));
+        const [torus, torusState] = this.get('torus' + title, () => __1.GraphicUtils.createTorus([x, covery], [torusstyle.innerr, torusstyle.outerr], torusstyle));
         torus.position.set(x, covery);
-        const torusy = torus.y + torusstyle.outterr;
+        const torusy = torus.y + torusstyle.outerr;
         const { linestyle } = style;
         const { torusPadding } = linestyle;
         const [line, lineState] = this.get('line' + title, () => __1.GraphicUtils.createVerticalDashLine(0, [torusy + torusPadding, height - paddingBottom], style.linestyle));
@@ -243,6 +244,100 @@ class PoolRenderer extends __1.BaseRenderer {
         if (coveredNameState.new)
             poolline.addChild(coveredName);
         return [poolline, poollineState];
+    }
+    getLevelGradientColors(context) {
+        switch (context.pool.level) {
+            case poollevels_1.ROYAL:
+                return config_1.default.style.levels.royalColors;
+            case poollevels_1.SILVER:
+                return config_1.default.style.levels.silverColors;
+            case poollevels_1.GOLD:
+                return config_1.default.style.levels.goldColors;
+            default:
+                throw Error('pool level is not supported');
+        }
+    }
+    updateResolutionPool(context, container) {
+        if (this._context && this._context.screen !== context.screen) {
+            this.clear('resolutionDashLine');
+        }
+        const { timerange, } = context.plotdata;
+        const { width, } = context.screen;
+        const { paddingTop } = this.resolutionPoolStyle;
+        const [x] = datamath_1.default.scale([context.pool.resolutionDate], timerange, width);
+        const [cover, coverstate] = this.get('resolutionTextCover', () => this.createResolutionCover(context));
+        if (coverstate.new) {
+            container.addChild(cover);
+            cover.position.y = paddingTop;
+        }
+        const { linePadding } = this.resolutionPoolStyle.coveredNameStyle;
+        cover.position.x = x + linePadding;
+        const [torus, torusstate] = this.get('resolutionTorus', () => this.createResolutionTorus(context));
+        if (torusstate.new) {
+            container.addChild(torus);
+            torus.position.y = cover.position.y + cover.height;
+        }
+        torus.position.x = x;
+        const { outerr } = this.resolutionPoolStyle.torusstyle;
+        const { torusPadding } = this.resolutionPoolStyle.linestyle;
+        const linestarty = torus.position.y + outerr + torusPadding;
+        const [line, linestate] = this.get('resolutionLine', () => this.createResolutionDash(context, linestarty));
+        if (linestate.new)
+            container.addChild(line);
+        line.position.x = x;
+        return container;
+    }
+    createResolutionCover(context) {
+        const { coveredNameStyle } = this.resolutionPoolStyle;
+        const { paddingx, paddingy, radius } = coveredNameStyle;
+        const text = new pixi_1.Text('Resolution', coveredNameStyle.textstyle);
+        text.position.set(paddingx, paddingy);
+        const width = text.width + paddingx * 2;
+        const height = text.height + paddingy * 2;
+        const coverGradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0: 0,
+            y0: -height * .5,
+            x1: width,
+            y1: height * 1.5,
+            colorStops: this.getLevelGradientColors(context)
+        });
+        const cover = new pixi_1.Graphics()
+            .beginTextureFill({ texture: coverGradient })
+            .drawRoundedRect(0, 0, width, height, radius)
+            .endFill();
+        const coveredText = new pixi_1.Graphics();
+        coveredText.addChild(cover, text);
+        return coveredText;
+    }
+    createResolutionTorus(context) {
+        const { innerr, outerr } = this.resolutionPoolStyle.torusstyle;
+        const size = outerr * 2;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width: size, height: size }), {
+            x0: 0,
+            y0: size,
+            x1: size,
+            y1: 0,
+            colorStops: this.getLevelGradientColors(context)
+        });
+        const torus = new pixi_1.Graphics()
+            .beginTextureFill({ texture: gradient, })
+            .drawTorus(0, 0, innerr, outerr)
+            .endFill();
+        return torus;
+    }
+    createResolutionDash(context, starty) {
+        const { height } = context.screen;
+        const { width: linewidth } = this.resolutionPoolStyle.linestyle;
+        const [gradient] = this.get('resolutionDashGradient', () => pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ height: context.screen.height, width: linewidth }), {
+            x0: linewidth,
+            y0: height,
+            x1: 0,
+            y1: 0,
+            colorStops: this.getLevelGradientColors(context)
+        }));
+        const { paddingBottom, linestyle } = this.resolutionPoolStyle;
+        const dash = __1.GraphicUtils.createTexturedVerticalDashLine(0, [starty, height - paddingBottom], Object.assign(Object.assign({}, linestyle), { texture: gradient }));
+        return dash;
     }
 }
 exports.PoolRenderer = PoolRenderer;

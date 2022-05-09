@@ -86,6 +86,23 @@ class GraphicUtils {
         }
         return dashLine;
     }
+    static createTexturedVerticalDashLine(x, [y1, y2], linestyle) {
+        const dashLine = new pixi_1.Graphics()
+            .lineStyle(linestyle)
+            .beginTextureFill({ texture: linestyle.texture })
+            .moveTo(x, y1);
+        const maxsteps = 100;
+        const stepsize = linestyle.dash + linestyle.gap;
+        const ysteps = datamath_1.default.steps([y1 + stepsize, y2 - stepsize], stepsize, maxsteps);
+        for (const ystep of ysteps) {
+            if (ystep === y1)
+                continue;
+            dashLine
+                .lineTo(x, ystep - linestyle.gap)
+                .moveTo(x, ystep);
+        }
+        return dashLine;
+    }
     static createLine([x1, y1], [x2, y2], linestyle) {
         const line = (new pixi_1.Graphics())
             .lineStyle(linestyle)

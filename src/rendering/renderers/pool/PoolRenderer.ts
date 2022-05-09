@@ -1,18 +1,26 @@
+import config  from '../../../config'
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
 import { POOL_ROUND_TEXTURE, LOCK_ICON_TEXTURE } from '../..'
 
 import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text } from '../../../lib/pixi'
+import { Graphics, Container, Text, GradientFactory, RenderTexture, Renderer, ColorStop } from '../../../lib/pixi'
+import { ROYAL, SILVER, GOLD } from '../../../constants/poollevels'
 
 export class PoolRenderer extends BaseRenderer {
 
     static readonly POOL_ID: symbol = Symbol('POOL_ID')
 
+    private _context: RenderingContext
+
     private readonly openPoolStyle: any
+
     private readonly lockPoolStyle: any
+
     private readonly resolutionPoolStyle: any
+
     private readonly openPricePointStyle: any
+
     private readonly resolutionPricePointStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -30,7 +38,7 @@ export class PoolRenderer extends BaseRenderer {
 
         const basicTorusStyle = {
             innerr: 2.5,
-            outterr: 5,
+            outerr: 5,
         }
 
         const basicTextNameStyle = {
@@ -72,10 +80,9 @@ export class PoolRenderer extends BaseRenderer {
 
         this.resolutionPoolStyle = {
             paddingTop: 20,
-            paddingBottom: 20,
+            paddingBottom: 10,
             linestyle: {
                 ...basicLineStyle,
-                color: 0xF05350,
             },
             torusstyle: {
                 ...basicTorusStyle,
@@ -85,7 +92,7 @@ export class PoolRenderer extends BaseRenderer {
                 ...basicCoveredTextStyle,
                 textstyle: {
                     ...basicTextNameStyle,
-                    fill: 0xFFFFFF,
+                    fill: config.style.background,
                 },
                 color: 0xF05350,
                 anchorx: 0,
@@ -171,6 +178,7 @@ export class PoolRenderer extends BaseRenderer {
     ): Container {
         if (!context.pool) {
             this.clear()
+
             return container
         }
 
@@ -219,11 +227,12 @@ export class PoolRenderer extends BaseRenderer {
         const [start, startState] = this.createPoolBorder(context, 'Start', openDate, this.openPoolStyle)
         if (startState.new) container.addChild(start)
 
-        const [resolution, resolutionState] = this.createPoolBorder(context, 'Resolution', resolutionDate, this.resolutionPoolStyle)
-        if (resolutionState.new) container.addChild(resolution)
+        this.updateResolutionPool(context, container)
 
         const [price, priceState] = this.createPrice(context, openPrice, this.openPricePointStyle)
         if (priceState.new) container.addChild(price)
+
+        this._context = context
 
         return container
     }
@@ -353,7 +362,7 @@ export class PoolRenderer extends BaseRenderer {
         const { torusstyle } = style
         const [torus, torusState] = this.get('torusLock', () => GraphicUtils.createTorus(
             [x, covery],
-            [torusstyle.innerr, torusstyle.outterr],
+            [torusstyle.innerr, torusstyle.outerr],
             torusstyle,
         ))
         torus.position.set(
@@ -361,7 +370,7 @@ export class PoolRenderer extends BaseRenderer {
             covery
         )
 
-        const torusy = torus.y + torusstyle.outterr
+        const torusy = torus.y + torusstyle.outerr
         const { linestyle } = style
         const { torusPadding } = linestyle
         const [line, lineState] = this.get('lineLock', () => GraphicUtils.createVerticalDashLine(
@@ -415,7 +424,7 @@ export class PoolRenderer extends BaseRenderer {
         const { torusstyle } = style
         const [torus, torusState] = this.get('torus'+title, () => GraphicUtils.createTorus(
             [x, covery],
-            [torusstyle.innerr, torusstyle.outterr],
+            [torusstyle.innerr, torusstyle.outerr],
             torusstyle,
         ))
 
@@ -424,7 +433,7 @@ export class PoolRenderer extends BaseRenderer {
             covery
         )
 
-        const torusy = torus.y + torusstyle.outterr
+        const torusy = torus.y + torusstyle.outerr
         const { linestyle } = style
         const { torusPadding } = linestyle
         const [line, lineState] = this.get('line'+title, () => GraphicUtils.createVerticalDashLine(
@@ -444,4 +453,162 @@ export class PoolRenderer extends BaseRenderer {
 
         return [poolline, poollineState]
     }
+
+    private getLevelGradientColors(context: RenderingContext): ColorStop[] {
+        switch (context.pool.level) {
+            case ROYAL:
+                return config.style.levels.royalColors
+            case SILVER:
+                return config.style.levels.silverColors
+            case GOLD:
+                return config.style.levels.goldColors
+
+            default:
+                throw Error('pool level is not supported')
+        }
+    }
+
+    private updateResolutionPool(context: RenderingContext, container: Container): Container {
+        if (this._context && this._context.screen !== context.screen) {
+            this.clear('resolutionDashLine')
+        }
+
+        const {
+            timerange,
+        } = context.plotdata
+
+        const {
+            width,
+        } = context.screen
+
+        const { paddingTop } = this.resolutionPoolStyle
+        const [x] = datamath.scale([context.pool.resolutionDate], timerange, width)
+
+        const [cover, coverstate] = this.get<Graphics>(
+            'resolutionTextCover', () => this.createResolutionCover(context)
+        )
+        if (coverstate.new) {
+            container.addChild(cover)
+
+            cover.position.y = paddingTop
+        }
+
+        const { linePadding } = this.resolutionPoolStyle.coveredNameStyle
+        cover.position.x = x + linePadding
+
+        const [torus, torusstate] = this.get<Graphics>(
+            'resolutionTorus', () => this.createResolutionTorus(context)
+        )
+        if (torusstate.new) {
+            container.addChild(torus)
+
+            torus.position.y = cover.position.y + cover.height
+        }
+
+        torus.position.x = x
+
+        const { outerr } = this.resolutionPoolStyle.torusstyle
+        const { torusPadding } = this.resolutionPoolStyle.linestyle
+        const linestarty = torus.position.y + outerr + torusPadding
+
+        const [line, linestate] = this.get<Graphics>(
+            'resolutionLine', () => this.createResolutionDash(context, linestarty)
+        )
+        if (linestate.new) container.addChild(line)
+
+        line.position.x = x
+
+        return container
+    }
+
+    private createResolutionCover(context: RenderingContext): Graphics {
+        const { coveredNameStyle } = this.resolutionPoolStyle
+        const { paddingx, paddingy, radius } = coveredNameStyle
+
+        const text = new Text(
+            'Resolution', coveredNameStyle.textstyle)
+        text.position.set(paddingx, paddingy)
+
+        const width = text.width + paddingx * 2
+        const height = text.height + paddingy * 2
+
+        const coverGradient = GradientFactory.createLinearGradient(
+            <Renderer>context.renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0: 0,
+                y0: -height * .5,
+                x1: width,
+                y1: height * 1.5,
+                colorStops: this.getLevelGradientColors(context)
+            },
+        )
+
+        const cover = new Graphics()
+            .beginTextureFill({ texture: coverGradient })
+            .drawRoundedRect(0, 0, width, height, radius)
+            .endFill()
+
+        const coveredText = new Graphics()
+
+        coveredText.addChild(cover, text)
+
+        return coveredText
+    }
+
+    private createResolutionTorus(context: RenderingContext): Graphics {
+        const { innerr, outerr } = this.resolutionPoolStyle.torusstyle
+
+        const size = outerr * 2
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>context.renderer,
+            RenderTexture.create({ width: size, height: size }),
+            {
+                x0: 0,
+                y0: size,
+                x1: size,
+                y1: 0,
+                colorStops: this.getLevelGradientColors(context)
+            },
+        )
+
+        const torus = new Graphics()
+            .beginTextureFill({ texture: gradient,  })
+            .drawTorus!(0, 0, innerr, outerr)
+            .endFill()
+
+        return torus
+    }
+
+    private createResolutionDash(context: RenderingContext, starty: number): Graphics {
+        const { height } = context.screen
+
+        const { width: linewidth } = this.resolutionPoolStyle.linestyle
+
+        const [gradient] = this.get<RenderTexture>(
+            'resolutionDashGradient',
+            () => GradientFactory.createLinearGradient(
+                <Renderer>context.renderer,
+                RenderTexture.create({ height: context.screen.height, width: linewidth }),
+                {
+                    x0: linewidth,
+                    y0: height,
+                    x1: 0,
+                    y1: 0,
+                    colorStops: this.getLevelGradientColors(context)
+                }
+            )
+        )
+        const { paddingBottom, linestyle } = this.resolutionPoolStyle
+
+        const dash = GraphicUtils.createTexturedVerticalDashLine(
+            0,
+            [starty, height - paddingBottom],
+            { ...linestyle, texture: gradient }
+        )
+
+        return dash
+    }
+
 }

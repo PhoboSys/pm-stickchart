@@ -3,7 +3,7 @@ import { castArray } from 'lodash'
 import { Logger } from '../../infra'
 
 import datamath from '../../lib/datamath'
-import { Graphics, LineStyle, Text, TextStyle, Sprite } from '../../lib/pixi'
+import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture } from '../../lib/pixi'
 
 export class GraphicUtils {
 
@@ -150,6 +150,37 @@ export class GraphicUtils {
 
         const dashLine = new Graphics()
             .lineStyle(linestyle)
+            .moveTo(x, y1)
+
+        const maxsteps = 100
+        const stepsize = linestyle.dash + linestyle.gap
+
+        const ysteps = datamath.steps(
+            [y1 + stepsize, y2 - stepsize],
+            stepsize,
+            maxsteps,
+        )
+
+        for (const ystep of ysteps) {
+            if (ystep === y1) continue
+
+            dashLine
+                .lineTo(x, ystep - linestyle.gap)
+                .moveTo(x, ystep)
+        }
+
+        return dashLine
+    }
+
+    static createTexturedVerticalDashLine(
+        x: number,
+        [y1, y2]: [number, number],
+        linestyle: LineStyle & { gap, dash, texture: Texture },
+    ): Graphics {
+
+        const dashLine = new Graphics()
+            .lineStyle(linestyle)
+            .beginTextureFill({ texture: linestyle.texture })
             .moveTo(x, y1)
 
         const maxsteps = 100
