@@ -1,5 +1,6 @@
 import { Graphics, Container } from '../../../lib/pixi'
 import datamath from '../../../lib/datamath'
+import config from '../../../config'
 
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
@@ -25,7 +26,7 @@ export class VerticalGridRenderer extends BaseRenderer {
             fill: 0xB7BDD7,
             fontWeight: 500,
             fontFamily: 'Gilroy',
-            fontSize: 12,
+            fontSize: config.grid.time.fontsize,
         }
     }
 
@@ -37,35 +38,44 @@ export class VerticalGridRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        const result = new Graphics()
 
         const { width, height } = context.screen
         const { timerange } = context.plotdata
 
         const stepsize = context.pool.duration
-        const xsteps = datamath.steps(timerange, stepsize, 20)
-        const xs = datamath.scale(xsteps, timerange, width)
+        const timesteps = datamath.steps(timerange, stepsize, config.grid.time.max)
+        const xs = datamath.scale(timesteps, timerange, width)
 
-        for (const idx in xs) {
+        const outsideX = -100
+        let idx = 0
+        // create a set lines and texts and reuse them
+        // fix GL_OUT_OF_MEMORY
+        while (idx++ < config.grid.time.max*2) {
 
-            const x = xs[idx]
+            const x = xs[idx] || outsideX
+            const time = timesteps[idx] || 0
 
-            result.addChild(
-                GraphicUtils.createLine(
-                    [x, 0],
-                    [x, height],
-                    this.lineStyle,
-                ),
-                GraphicUtils.createText(
-                    DateUtils.formatUnixTSToHHmm(xsteps[idx]),
-                    [x, height],
-                    this.textStyle,
-                    1.1,
-                ),
-            )
+            const [line, lineState] = this.get('x_gridline'+idx, () => GraphicUtils.createLine(
+                [0, 0],
+                [0, height],
+                this.lineStyle,
+            ))
+            if (lineState.new) container.addChild(line)
+            line.position.set(x, 0)
+
+            const [text, textState] = this.get('x_gridtext'+idx, () => GraphicUtils.createText(
+                DateUtils.formatUnixTSToHHmm(time),
+                [x, height],
+                this.textStyle,
+                1.1,
+            ))
+            if (textState.new) container.addChild(text)
+            text.position.set(x, height)
+            text.text = DateUtils.formatUnixTSToHHmm(time)
+
         }
 
-        return result
+        return container
     }
 
 }

@@ -1,6 +1,8 @@
 import throttle from 'lodash.throttle'
 
 import { ZoomEvent } from '../../events'
+import config from '../../config'
+
 export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
 export const INVALID_DATE = new Date(NaN)
 
@@ -23,7 +25,10 @@ export class Timeframe {
        private readonly zoomTarget: EventTarget,
        private readonly onZoom: () => any,
     ) {
-        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom), 50)
+        this.zoomevent = throttle(
+            (e: ZoomEvent) => this.zoom(e.zoom),
+            config.zoom.throttle,
+        )
         this.zoomTarget.addEventListener('zoom', this.zoomevent)
     }
 

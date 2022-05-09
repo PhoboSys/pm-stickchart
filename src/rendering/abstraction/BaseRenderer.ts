@@ -43,19 +43,42 @@ export abstract class BaseRenderer implements IRenderer {
 
     }
 
-    protected get<T>(name: string, init: () => T): [T, any] {
+    private isEqual(deps1: any[], deps2: any[]): boolean {
+
+        if (deps1.length !== deps2.length) return false
+
+        for (const idx in deps1) {
+            const dep1 = deps1[idx]
+            const dep2 = deps2[idx]
+
+            if (dep1 !== dep2) return false
+        }
+
+        return true
+    }
+
+    protected get<T>(
+        name: string,
+        create: () => T,
+        dependencies: any[] = []
+    ): [T, any] {
 
         const stored = this.local[name]
         if (stored) {
-            const [g, state] = stored
+            const [g, state, deps] = stored
 
-            state.new = false
+            if (this.isEqual(deps, dependencies)) {
 
-            return [<T>g, state]
+                state.new = false
+                return [<T>g, state]
+
+            } else {
+                this.clear(name)
+            }
         }
 
         Logger.info('get new', name)
-        this.local[name] = [init(), { new: true }]
+        this.local[name] = [create(), { new: true }, dependencies]
 
         return this.local[name]
 

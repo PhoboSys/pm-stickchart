@@ -30,15 +30,31 @@ class BaseRenderer {
             delete this.local[name];
         }
     }
-    get(name, init) {
+    isEqual(deps1, deps2) {
+        if (deps1.length !== deps2.length)
+            return false;
+        for (const idx in deps1) {
+            const dep1 = deps1[idx];
+            const dep2 = deps2[idx];
+            if (dep1 !== dep2)
+                return false;
+        }
+        return true;
+    }
+    get(name, create, dependencies = []) {
         const stored = this.local[name];
         if (stored) {
-            const [g, state] = stored;
-            state.new = false;
-            return [g, state];
+            const [g, state, deps] = stored;
+            if (this.isEqual(deps, dependencies)) {
+                state.new = false;
+                return [g, state];
+            }
+            else {
+                this.clear(name);
+            }
         }
         infra_1.Logger.info('get new', name);
-        this.local[name] = [init(), { new: true }];
+        this.local[name] = [create(), { new: true }, dependencies];
         return this.local[name];
     }
 }

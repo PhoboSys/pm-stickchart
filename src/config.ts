@@ -1,6 +1,15 @@
 export default {
-    //events
-    zoomspeed: 100,
+
+    //zoom
+    zoom: {
+        speed: 100,
+        throttle: 30, // one frame
+    },
+
+    grid: {
+        time: { max: 20, fontsize: 12 },
+        price: { max: 20, fontsize: 12 },
+    },
 
     //pixi
     forceCanvas: false,
@@ -11,7 +20,7 @@ export default {
 
     //chart morph animation
     morph: {
-        duration: 0.6819,
+        duration: 1.618,
         ease: 'power2.out',
     },
 
