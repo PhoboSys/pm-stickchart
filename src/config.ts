@@ -1,6 +1,10 @@
 export default {
-    //events
-    zoomspeed: 100,
+
+    //zoom
+    zoom: {
+        speed: 100,
+        throttle: 30, // one frame
+    },
 
     //pixi
     forceCanvas: false,

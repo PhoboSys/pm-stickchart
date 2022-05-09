@@ -1,5 +1,8 @@
 declare const _default: {
-    zoomspeed: number;
+    zoom: {
+        speed: number;
+        throttle: number;
+    };
     forceCanvas: boolean;
     autoStart: boolean;
     autoDensity: boolean;

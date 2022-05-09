@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
-    //events
-    zoomspeed: 100,
+    //zoom
+    zoom: {
+        speed: 100,
+        throttle: 30, // one frame
+    },
     //pixi
     forceCanvas: false,
     autoStart: true,

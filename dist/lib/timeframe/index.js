@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.nowUnixTS = exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = exports.INVALID_DATE = exports.MILLISECONDS_IN_DAY = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
+const config_1 = __importDefault(require("../../config"));
 exports.MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 exports.INVALID_DATE = new Date(NaN);
 exports.UNIX_MINUTE = 60;
@@ -20,7 +21,7 @@ class Timeframe {
         this.zoomTarget = zoomTarget;
         this.onZoom = onZoom;
         this.since = nowUnixTS() - exports.UNIX_DAY;
-        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), 50);
+        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), config_1.default.zoom.throttle);
         this.zoomTarget.addEventListener('zoom', this.zoomevent);
     }
     save(timeframe) {
