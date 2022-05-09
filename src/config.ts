@@ -10,7 +10,10 @@ export default {
     resolution: Math.ceil(window.devicePixelRatio),
 
     //chart morph animation
-    morph: true,
+    morph: {
+        duration: 0.6819,
+        ease: 'power2.out',
+    },
 
     //data
     maxdensity: 500,

@@ -5,7 +5,10 @@ declare const _default: {
     autoDensity: boolean;
     antialias: boolean;
     resolution: number;
-    morph: boolean;
+    morph: {
+        duration: number;
+        ease: string;
+    };
     maxdensity: number;
     style: {
         background: number;
