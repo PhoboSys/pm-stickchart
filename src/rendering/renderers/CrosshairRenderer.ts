@@ -23,9 +23,9 @@ export class CrosshairRenderer extends BaseRenderer {
         super(storage)
 
         this.lineStyle = {
-            width: 2,
+            width: 1,
             color: 0x009797,
-            alpha: 1,
+            alpha: 0.6,
             join: 'round',
             cap: 'round',
             paddingright: 5,
