@@ -8,7 +8,7 @@ const config_1 = __importDefault(require("../config"));
 class ZoomEvent extends Event {
     constructor(inner) {
         super(ZoomEvent.NAME);
-        this.coefficient = 0.1 * (config_1.default.zoomspeed / 100);
+        this.coefficient = 0.1 * (config_1.default.zoom.speed / 100);
         this.inner = inner;
         this.zoom = this.coefficient * Math.sign(inner.deltaY);
     }

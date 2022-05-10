@@ -1,8 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
-    //events
-    zoomspeed: 100,
+    //zoom
+    zoom: {
+        speed: 100,
+        throttle: 30, // one frame
+    },
+    grid: {
+        time: { max: 20, fontsize: 12 },
+        price: { max: 20, fontsize: 12 },
+    },
     //pixi
     forceCanvas: false,
     autoStart: true,
@@ -10,7 +17,10 @@ exports.default = {
     antialias: true,
     resolution: Math.ceil(window.devicePixelRatio),
     //chart morph animation
-    morph: true,
+    morph: {
+        duration: 1.618,
+        ease: 'power2.out',
+    },
     //data
     maxdensity: 500,
     //chart

@@ -1,5 +1,6 @@
 import { Graphics, Container } from '../../../lib/pixi'
 import datamath from '../../../lib/datamath'
+import config from '../../../config'
 
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
@@ -9,6 +10,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
     static readonly HORIZONTAL_GRID_ID: symbol = Symbol('HORIZONTAL_GRID_ID')
 
     private readonly lineStyle: any
+
     private readonly textStyle: any
 
     constructor(renderer: IGraphicStorage) {
@@ -23,7 +25,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
             fill: 0xB7BDD7,
             fontWeight: 500,
             fontFamily: 'Gilroy',
-            fontSize: 12,
+            fontSize: config.grid.price.fontsize,
         }
     }
 
@@ -35,39 +37,49 @@ export class HorizontalGridRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        const result = new Graphics()
-
         const { width, height } = context.screen
         const { pricerange } = context.plotdata
 
         const stepsize = datamath.datastep(pricerange)
-        const ysteps = datamath.steps(pricerange, stepsize, 20)
-        const ys = datamath.scaleReverse(ysteps, pricerange, height)
+        const pricesteps = datamath.steps(pricerange, stepsize, config.grid.price.max)
+        const ys = datamath.scaleReverse(pricesteps, pricerange, height)
 
-        for (const idx in ys) {
+        const outsideY = -100
+        let idx = 0
+        // create a set lines and texts and reuse them
+        // fix GL_OUT_OF_MEMORY
+        while (idx++ < config.grid.price.max*2) {
 
-            const y = ys[idx]
+            let y = ys[idx] || outsideY
+            const price = pricesteps[idx] || 0
 
             // Avoid rendering over time axe text
-            // 12px size + anchor 1.1
-            if (y > (height - 12 + 12 * 1.1)) continue
+            // size + anchor=1.1
+            const timeHeight = config.grid.time.fontsize + config.grid.time.fontsize * 1.1
+            if (y > (height - timeHeight)) y = outsideY
 
-            result.addChild(
-                GraphicUtils.createLine(
-                    [0, y],
-                    [width, y],
-                    this.lineStyle,
-                ),
-                GraphicUtils.createText(
-                    datamath.toFixedScaled(ysteps[idx], stepsize),
-                    [width, y],
-                    this.textStyle,
-                    1.1,
-                ),
-            )
+            const [line, lineState] = this.get('y_gridline'+idx, () => GraphicUtils.createLine(
+                [0, 0],
+                [width, 0],
+                this.lineStyle,
+            ))
+            if (lineState.new) container.addChild(line)
+            line.position.set(0, y)
+            line.width = width
+
+            const [text, textState] = this.get('y_gridtext'+idx, () => GraphicUtils.createText(
+                datamath.toFixedScaled(price, stepsize),
+                [width, y],
+                this.textStyle,
+                1.1,
+            ))
+            if (textState.new) container.addChild(text)
+            text.position.set(width, y)
+            text.text = datamath.toFixedScaled(price, stepsize)
+
         }
 
-        return result
+        return container
     }
 
 }

@@ -1,11 +1,27 @@
 declare const _default: {
-    zoomspeed: number;
+    zoom: {
+        speed: number;
+        throttle: number;
+    };
+    grid: {
+        time: {
+            max: number;
+            fontsize: number;
+        };
+        price: {
+            max: number;
+            fontsize: number;
+        };
+    };
     forceCanvas: boolean;
     autoStart: boolean;
     autoDensity: boolean;
     antialias: boolean;
     resolution: number;
-    morph: boolean;
+    morph: {
+        duration: number;
+        ease: string;
+    };
     maxdensity: number;
     style: {
         background: number;
