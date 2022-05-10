@@ -3,7 +3,7 @@ import { BaseRenderer, GraphicUtils } from '..'
 
 import { PointermoveEvent } from '../../events'
 import datamath from '../../lib/datamath'
-import { Graphics, Container } from '../../lib/pixi'
+import { Graphics, Container, Text } from '../../lib/pixi'
 
 export class CrosshairRenderer extends BaseRenderer {
 
@@ -28,11 +28,11 @@ export class CrosshairRenderer extends BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
+            paddingright: 5,
         }
 
         this.priceCoverStyle = {
             color: 0x009797,
-            paddingright: 5,
             paddingx: 5,
             paddingy: 2.5,
             anchorx: 1,
@@ -79,35 +79,48 @@ export class CrosshairRenderer extends BaseRenderer {
         const { pricerange: [minprice, maxprice] } = this._context.plotdata
         const { x, y } = mouseEvent.position
 
-        const [vertical, verticalstate] = this.get<Graphics>('vertical', () => new Graphics())
-        if (verticalstate.new) container.addChild(vertical)
-
-        vertical
-            .clear()
-            .lineStyle(this.lineStyle)
-            .moveTo(x, 0)
-            .lineTo(x, height)
+        const [vertical, verticalState] = this.get('vertical', () => GraphicUtils.createLine(
+            [0, 0],
+            [0, height],
+            this.lineStyle,
+        ))
+        vertical.position.set(x, 0)
+        vertical.height = height
 
         const pricedif = maxprice - minprice
         const price = maxprice - datamath.scale([y], [0, height], pricedif)[0]
 
-        const { paddingright } = this.priceCoverStyle
-        const priceText = GraphicUtils.createCoveredText(
-            price.toFixed(3),
-            [width - paddingright, y],
+        const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
+            datamath.toFixedPrecision(price, 8),
+            [width, y],
             this.priceCoverStyle,
+        ))
+
+        const textGraphic = <Text>coveredText.getChildAt(1)
+        textGraphic.text = datamath.toFixedPrecision(price, 8)
+
+        const { paddingx, paddingy } = this.priceCoverStyle
+        const coverGraphic = <Graphics>coveredText.getChildAt(0)
+        coverGraphic.width = textGraphic.width + paddingx * 2
+        coverGraphic.height = textGraphic.height + paddingy * 2
+
+        const { anchorx, anchory } = this.priceCoverStyle
+        coveredText.position.set(
+            width - coveredText.width * anchorx,
+            y - coveredText.height * anchory
         )
 
-        const horizontalLine = GraphicUtils.createLine(
-            [0, y],
-            [priceText.x, y],
+        const padding = coveredText.width + this.lineStyle.paddingright
+        const [horizontal, horizontalState] = this.get('horizontal', () => GraphicUtils.createLine(
+            [0, 0],
+            [width, 0],
             this.lineStyle,
-        )
+        ))
+        horizontal.position.set(0, y)
+        horizontal.width = width - padding
 
-        const [horizontal, horizontalstate] = this.get<Graphics>('horizontal', () => new Graphics())
-        if (horizontalstate.new) container.addChild(horizontal)
-        else horizontal.removeChildren().forEach(e => e.destroy())
-
-        horizontal.addChild(horizontalLine, priceText)
+        if (horizontalState.new) container.addChild(horizontal)
+        if (verticalState.new) container.addChild(vertical)
+        if (coveredTextState.new) container.addChild(coveredText)
     }
 }
