@@ -1,6 +1,5 @@
-import { RenderingContext, DoneFunction, IGraphicStorage } from '..'
+import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
-import { localEventTarget } from '../../events'
 
 import { MouseleaveEvent } from '../../events/MouseleaveEvent'
 import { MousemoveEvent } from '../../events/MousemoveEvent'

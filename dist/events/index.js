@@ -14,11 +14,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.localEventTarget = void 0;
 __exportStar(require("./ZoomEvent"), exports);
 __exportStar(require("./MousemoveEvent"), exports);
 __exportStar(require("./CanvasErrorEvent"), exports);
 __exportStar(require("./MouseleaveEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
-exports.localEventTarget = new EventTarget();
 //# sourceMappingURL=index.js.map

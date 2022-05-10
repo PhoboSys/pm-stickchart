@@ -4,5 +4,3 @@ export * from './CanvasErrorEvent'
 export * from './MouseleaveEvent'
 
 export * from './EventsProducer'
-
-export const localEventTarget = new EventTarget()
