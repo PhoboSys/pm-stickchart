@@ -1,15 +1,22 @@
-import { ChartData, PlotData } from '../../chartdata';
+import { PlotData } from '../../chartdata';
 import { Application, Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
+import { EChartType } from '../../enums';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
     paris: any[];
-    chartdata: ChartData;
-    plotdata: PlotData;
+    resolved: any[];
     screen: Rectangle;
     textures: ITextureStorage;
+    charttype: EChartType;
+    plotdata: PlotData;
+    chartdata: {
+        prices: number[];
+        timestamps: number[];
+    };
     application: Application;
+    rerender?: boolean;
     mousepos?: {
         x: number;
         y: number;

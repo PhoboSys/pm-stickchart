@@ -58,7 +58,7 @@ class CrosshairRenderer extends __1.BaseRenderer {
             return this.clear();
         }
         const { width, height } = this._context.screen;
-        const { yrange: [minprice, maxprice] } = this._context.plotdata;
+        const { timerange: [minprice, maxprice] } = this._context.plotdata;
         const { x, y } = mouseEvent.position;
         const [vertical, verticalstate] = this.get('vertical', () => new pixi_1.Graphics());
         if (verticalstate.new)

@@ -14,14 +14,13 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./PriceLineRenderer"), exports);
-__exportStar(require("./VerticalGridRenderer"), exports);
-__exportStar(require("./HorizontalGridRenderer"), exports);
-__exportStar(require("./GridRenderer"), exports);
+__exportStar(require("./price/history/PriceLineRenderer"), exports);
+__exportStar(require("./price/latest/LatestPriceRenderer"), exports);
+__exportStar(require("./grid/GridRenderer"), exports);
 __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
-__exportStar(require("./LatestPriceRenderer"), exports);
-__exportStar(require("./PoolRenderer"), exports);
-__exportStar(require("./PariResolutionRenderer"), exports);
 __exportStar(require("./CrosshairRenderer"), exports);
+__exportStar(require("./pool/PoolRenderer"), exports);
+__exportStar(require("./pari/resolution/PariResolutionRenderer"), exports);
+__exportStar(require("./pari/resolved/PariResolvedRenderer"), exports);
 //# sourceMappingURL=index.js.map

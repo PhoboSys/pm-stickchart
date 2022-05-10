@@ -42,6 +42,15 @@ class datamath {
         }
         return result;
     }
+    static scaleReverse(data, [min, max], factor = 1) {
+        const scalesize = max - min;
+        const result = [];
+        for (const item of data) {
+            const offset = item - min;
+            result.push((1 - offset / scalesize) * factor);
+        }
+        return result;
+    }
     static range(data, minpadd = 0, maxpadd = 0) {
         const [minv, maxv] = datamath.minmax(data);
         const min = new big_js_1.default(minv);
@@ -61,7 +70,7 @@ class datamath {
         if (diff.eq(0))
             return 0;
         const step = diff.round(-diff.e, big_js_1.default.roundUp).div(10);
-        return step;
+        return step.toNumber();
     }
     static roundpow2(value) {
         value--;

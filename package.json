@@ -16,9 +16,9 @@
   "scripts": {
     "build": "tsc",
     "build:lde": "./bin/dev.sh",
-    "lint": "echo 'Truned off, use lint-orig'",
+    "lint": "echo 'truend off until fixed'",
     "lint-orig": "eslint --ext .ts .",
-    "lint-fix": "eslint '*/**/*.{js,ts}' --fix",
+    "lint-fix": "eslint --ext .ts . --fix",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },
   "dependencies": {
@@ -29,7 +29,7 @@
     "@pixi/core": "6.3.0",
     "@pixi/display": "6.3.0",
     "@pixi/graphics": "6.3.0",
-    "@pixi/graphics-extras": "^6.3.0",
+    "@pixi/graphics-extras": "6.3.0",
     "@pixi/math": "6.3.0",
     "@pixi/runner": "6.3.0",
     "@pixi/settings": "6.3.0",

@@ -1,15 +1,19 @@
 export declare type ChartData = {
     [key: number]: number;
 };
+export declare type DataPoint = {
+    price: number;
+    timestamp: number;
+};
 export declare type DataPadding = {
     min: number;
     max: number;
 };
 export declare type PlotData = {
-    xlast: number;
-    ylast: number;
-    xdata: number[];
-    ydata: number[];
-    xrange: [number, number];
-    yrange: [number, number];
+    timestamps: number[];
+    prices: number[];
+    timerange: [number, number];
+    pricerange: [number, number];
+    xs: number[];
+    ys: number[];
 };

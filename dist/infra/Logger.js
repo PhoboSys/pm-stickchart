@@ -18,8 +18,8 @@ class Logger {
     }
 }
 exports.Logger = Logger;
-Logger.ns = 'pm:';
-Logger.debuginfo = (0, debug_1.default)(Logger.ns + ':info');
-Logger.debugwarn = (0, debug_1.default)(Logger.ns + ':warn');
-Logger.debugerror = (0, debug_1.default)(Logger.ns + ':error');
+Logger.ns = 'pm:ch:';
+Logger.debuginfo = (0, debug_1.default)(Logger.ns + 'info');
+Logger.debugwarn = (0, debug_1.default)(Logger.ns + 'warn');
+Logger.debugerror = (0, debug_1.default)(Logger.ns + 'error');
 //# sourceMappingURL=Logger.js.map

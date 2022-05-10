@@ -1,6 +1,6 @@
-import { RenderingContext, DoneFunction, IGraphicStorage } from '..';
+import { RenderingContext, DoneFunction, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
-import { localEventTarget } from '../../events';
+import { localEventTarget } from '../../events'
 
 import { MouseleaveEvent } from '../../events/MouseleaveEvent'
 import { MousemoveEvent } from '../../events/MousemoveEvent'
@@ -81,7 +81,7 @@ export class CrosshairRenderer extends BaseRenderer {
         }
 
         const { width, height } = this._context.screen
-        const { yrange: [minprice, maxprice] } = this._context.plotdata
+        const { timerange: [minprice, maxprice] } = this._context.plotdata
         const { x, y } = mouseEvent.position
 
         const [vertical, verticalstate] = this.get<Graphics>('vertical', () => new Graphics())

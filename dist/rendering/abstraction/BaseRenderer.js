@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRenderer = void 0;
+const infra_1 = require("../../infra");
 class BaseRenderer {
     constructor(storage) {
         this.storage = storage;
@@ -16,24 +17,44 @@ class BaseRenderer {
         done();
     }
     clear(name) {
+        var _a;
         if (name === undefined) {
             for (const key in this.local)
                 this.clear(key);
         }
         else if (name in this.local) {
+            infra_1.Logger.info('clear', name);
             const [g, state] = this.local[name];
             g.destroy();
+            (_a = state.timeline) === null || _a === void 0 ? void 0 : _a.kill();
             delete this.local[name];
         }
     }
-    get(name, init) {
+    isEqual(deps1, deps2) {
+        if (deps1.length !== deps2.length)
+            return false;
+        for (const idx in deps1) {
+            const dep1 = deps1[idx];
+            const dep2 = deps2[idx];
+            if (dep1 !== dep2)
+                return false;
+        }
+        return true;
+    }
+    get(name, create, dependencies = []) {
         const stored = this.local[name];
         if (stored) {
-            const [g, state] = stored;
-            state.new = false;
-            return [g, state];
+            const [g, state, deps] = stored;
+            if (this.isEqual(deps, dependencies)) {
+                state.new = false;
+                return [g, state];
+            }
+            else {
+                this.clear(name);
+            }
         }
-        this.local[name] = [init(), { new: true }];
+        infra_1.Logger.info('get new', name);
+        this.local[name] = [create(), { new: true }, dependencies];
         return this.local[name];
     }
 }

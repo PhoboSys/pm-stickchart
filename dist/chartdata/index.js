@@ -17,35 +17,89 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataConverter = void 0;
+exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
 const config_1 = __importDefault(require("../config"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
-class DataConverter {
-    static convert(chartdata) {
-        const xorig = Object.keys(chartdata).map(k => Number(k));
-        const yorig = Object.values(chartdata);
-        const xlast = Number(xorig.at(-1));
-        const ylast = Number(yorig.at(-1));
-        const xdata = datamath_1.default.sample(xorig, config_1.default.maxdensity);
-        const ydata = datamath_1.default.sample(yorig, config_1.default.maxdensity);
-        // return latest price if sampled out
-        if (xdata.at(-1) !== xorig.at(-1) ||
-            ydata.at(-1) !== yorig.at(-1)) {
-            xdata.push(xlast);
-            ydata.push(ylast);
-        }
-        const xrange = datamath_1.default.range(xdata, config_1.default.padding.left, config_1.default.padding.right);
-        const yrange = datamath_1.default.range(ydata, config_1.default.padding.bottom, config_1.default.padding.top);
+class DataBuilder {
+    static isEqual(start, end) {
+        return (start.timestamp === end.timestamp &&
+            start.price === end.price);
+    }
+    static getLatest(plotdata) {
+        const { prices, timestamps } = plotdata;
         return {
-            xlast,
-            ylast,
-            xdata,
-            ydata,
-            xrange,
-            yrange,
+            price: Number(prices.at(-1)),
+            timestamp: Number(timestamps.at(-1)),
         };
     }
+    static fromPolyline(polyline) {
+        const all = polyline.getAttributeNS(null, 'points');
+        const xs = [];
+        const ys = [];
+        const points = all === null || all === void 0 ? void 0 : all.split(' ');
+        for (const point of points) {
+            const [x, y] = point.split(',');
+            xs.push(Number(x));
+            ys.push(Number(y));
+        }
+        return { xs, ys };
+    }
+    static toPolyline(plotdata) {
+        const { xs, ys } = plotdata;
+        const result = [];
+        for (const idx in xs) {
+            result.push(xs[idx] + ',' + ys[idx]);
+        }
+        const points = result.join(' ');
+        const ns = 'http://www.w3.org/2000/svg';
+        const polyline = document.createElementNS(ns, 'polyline');
+        polyline.setAttributeNS(null, 'points', points);
+        return polyline;
+    }
+    static normalize(timestampsOrig, pricesOrig, screen) {
+        const timestamps = datamath_1.default.sample(timestampsOrig, config_1.default.maxdensity);
+        const prices = datamath_1.default.sample(pricesOrig, config_1.default.maxdensity);
+        // return latest price if sampled out
+        if (timestamps.at(-1) !== timestampsOrig.at(-1) ||
+            prices.at(-1) !== pricesOrig.at(-1)) {
+            timestamps.push(Number(timestampsOrig.at(-1)));
+            prices.push(Number(pricesOrig.at(-1)));
+        }
+        const timerange = datamath_1.default.range(timestamps, config_1.default.padding.left, config_1.default.padding.right);
+        const pricerange = datamath_1.default.range(prices, config_1.default.padding.bottom, config_1.default.padding.top);
+        const { width, height } = screen;
+        const xs = datamath_1.default.scale(timestamps, timerange, width);
+        const ys = datamath_1.default.scaleReverse(prices, pricerange, height);
+        return {
+            timestamps,
+            prices,
+            timerange,
+            pricerange,
+            xs,
+            ys,
+        };
+    }
+    static chartdata(chartdata) {
+        const timestamps = Object.keys(chartdata).map(k => Number(k));
+        const prices = Object.values(chartdata);
+        return { timestamps, prices };
+    }
+    static plotdata(chartdata, screen, timeframe) {
+        const tsframed = [];
+        const psframed = [];
+        const { timestamps, prices } = chartdata;
+        const { since, until } = timeframe;
+        for (const idx in timestamps) {
+            const ts = timestamps[idx];
+            const ps = prices[idx];
+            if (ts >= since) {
+                tsframed.push(ts);
+                psframed.push(ps);
+            }
+        }
+        return DataBuilder.normalize(tsframed, psframed, screen);
+    }
 }
-exports.DataConverter = DataConverter;
+exports.DataBuilder = DataBuilder;
 //# sourceMappingURL=index.js.map

@@ -4,16 +4,18 @@ exports.LineChartRenderer = void 0;
 const __1 = require("..");
 const __2 = require("..");
 const __3 = require("..");
+const __4 = require("..");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
-            new __1.GridRenderer(renderer),
-            new __1.PriceLineRenderer(renderer),
-            new __2.PariResolutionRenderer(renderer),
-            new __2.PoolRenderer(renderer),
-            new __2.LatestPriceRenderer(renderer),
-            new __3.CrosshairRenderer(renderer),
+            new __2.GridRenderer(renderer),
+            new __2.PriceLineRenderer(renderer),
+            new __3.PariResolutionRenderer(renderer),
+            new __3.PoolRenderer(renderer),
+            new __3.LatestPriceRenderer(renderer),
+            new __4.CrosshairRenderer(renderer),
+            new __2.PariResolvedRenderer(renderer),
         ]);
     }
     render(context, done) {

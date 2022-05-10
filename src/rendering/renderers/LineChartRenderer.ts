@@ -1,9 +1,8 @@
-import { IGraphicStorage } from '..'
-import { DoneFunction, RenderingContext, IRenderer } from '..'
-import { PriceLineRenderer, GridRenderer, RenderingCompositor } from '..'
+import { IGraphicStorage, IRenderer } from '..'
+import { DoneFunction, RenderingContext, RenderingCompositor } from '..'
+import { PriceLineRenderer, GridRenderer, PariResolvedRenderer } from '..'
 import { LatestPriceRenderer, PoolRenderer, PariResolutionRenderer } from '..'
 import { CrosshairRenderer } from '..'
-
 
 export class LineChartRenderer implements IRenderer {
 
@@ -19,6 +18,7 @@ export class LineChartRenderer implements IRenderer {
             new PoolRenderer(renderer),
             new LatestPriceRenderer(renderer),
             new CrosshairRenderer(renderer),
+            new PariResolvedRenderer(renderer),
         ])
     }
 

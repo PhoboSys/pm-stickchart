@@ -7,6 +7,7 @@ export class EventsProducer {
     private readonly error: (e: Event) => void
 
     private readonly mousemove: (e: MouseEvent) => void
+
     private readonly mouseleave: (e: MouseEvent) => void
 
     constructor(

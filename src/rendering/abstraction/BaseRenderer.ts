@@ -1,6 +1,8 @@
 import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
 
+import { Logger } from '../../infra'
+
 import { Container } from '../../lib/pixi'
 
 export abstract class BaseRenderer implements IRenderer {
@@ -31,26 +33,52 @@ export abstract class BaseRenderer implements IRenderer {
         if (name === undefined) {
             for (const key in this.local) this.clear(key)
         } else if (name in this.local) {
+            Logger.info('clear', name)
             const [g, state] = this.local[name]
 
             g.destroy()
+            state.timeline?.kill()
             delete this.local[name]
         }
 
     }
 
-    protected get<T>(name: string, init: () => T): [T, any] {
+    private isEqual(deps1: any[], deps2: any[]): boolean {
+
+        if (deps1.length !== deps2.length) return false
+
+        for (const idx in deps1) {
+            const dep1 = deps1[idx]
+            const dep2 = deps2[idx]
+
+            if (dep1 !== dep2) return false
+        }
+
+        return true
+    }
+
+    protected get<T>(
+        name: string,
+        create: () => T,
+        dependencies: any[] = []
+    ): [T, any] {
 
         const stored = this.local[name]
         if (stored) {
-            const [g, state] = stored
+            const [g, state, deps] = stored
 
-            state.new = false
+            if (this.isEqual(deps, dependencies)) {
 
-            return [<T>g, state]
+                state.new = false
+                return [<T>g, state]
+
+            } else {
+                this.clear(name)
+            }
         }
 
-        this.local[name] = [init(), { new: true }]
+        Logger.info('get new', name)
+        this.local[name] = [create(), { new: true }, dependencies]
 
         return this.local[name]
 
