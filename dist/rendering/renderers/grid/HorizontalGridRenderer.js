@@ -47,6 +47,7 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
             if (lineState.new)
                 container.addChild(line);
             line.position.set(0, y);
+            line.width = width;
             const [text, textState] = this.get('y_gridtext' + idx, () => __1.GraphicUtils.createText(datamath_1.default.toFixedScaled(price, stepsize), [width, y], this.textStyle, 1.1));
             if (textState.new)
                 container.addChild(text);
