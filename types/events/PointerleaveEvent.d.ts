@@ -1,4 +1,4 @@
-export declare class PointermoveEvent extends Event {
+export declare class PointerleaveEvent extends Event {
     static readonly NAME: string;
     readonly inner: MouseEvent;
     readonly position: {

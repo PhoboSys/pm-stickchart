@@ -75,6 +75,7 @@ class StickChart extends EventTarget {
             charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+            eventTarget: this,
             chartdata,
             plotdata,
         };

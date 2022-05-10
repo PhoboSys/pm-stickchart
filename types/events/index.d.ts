@@ -1,4 +1,5 @@
 export * from './ZoomEvent';
-export * from './MousemoveEvent';
+export * from './PointermoveEvent';
+export * from './PointerleaveEvent';
 export * from './CanvasErrorEvent';
 export * from './EventsProducer';

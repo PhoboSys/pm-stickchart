@@ -49,6 +49,7 @@ export class StickChart extends EventTarget {
         this.timeframe = new Timeframe(this, () => this.applyTimeframe())
 
         const renderer = new GraphicStorage(this.application.stage)
+
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
@@ -77,6 +78,7 @@ export class StickChart extends EventTarget {
         const { price, timestamp } = latest
         const { timestamps, prices } = this._context.chartdata
         const idx = timestamps.length-1
+
         timestamps[idx] = timestamp
         prices[idx] = price
 
@@ -93,6 +95,7 @@ export class StickChart extends EventTarget {
             if (!this._context) return
 
             const pipeline = this.pipelineFactory.get(this._context.charttype)
+
             pipeline.render(
                 {
                     ...this._context,
@@ -118,7 +121,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.get()
         )
-        const ctx = {
+        const ctx: RenderingContext = {
             pool: context.pool,
             paris: context.paris,
             resolved: context.resolved,
@@ -126,6 +129,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
+            eventTarget: this,
             chartdata,
             plotdata,
         }

@@ -10,4 +10,4 @@ class PointermoveEvent extends Event {
 }
 exports.PointermoveEvent = PointermoveEvent;
 PointermoveEvent.NAME = 'pointermove';
-//# sourceMappingURL=MousemoveEvent.js.map
+//# sourceMappingURL=PointermoveEvent.js.map

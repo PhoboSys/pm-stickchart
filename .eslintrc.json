@@ -101,60 +101,13 @@
             "off"
         ],
         "padding-line-between-statements": [
-            "error",
-            {
-                "blankLine": "always",
-                "prev": "*",
-                "next": "return"
-            },
-            {
-                "blankLine": "always",
-                "prev": [
-                    "const",
-                    "let"
-                ],
-                "next": "*"
-            },
-            {
-                "blankLine": "any",
-                "prev": [
-                    "const",
-                    "let"
-                ],
-                "next": "block-like"
-            },
-            {
-                "blankLine": "any",
-                "prev": [
-                    "const",
-                    "let"
-                ],
-                "next": [
-                    "const",
-                    "let"
-                ]
-            },
-            {
-                "blankLine": "always",
-                "prev": "block-like",
-                "next": "*"
-            },
-            {
-                "blankLine": "never",
-                "prev": "case",
-                "next": "*"
-            }
+            "off"
         ],
         "object-curly-newline": [
             "off"
         ],
         "no-underscore-dangle": [
-            "error",
-            {
-                "allow": [
-                    "_id"
-                ]
-            }
+            "off"
         ],
         "@typescript-eslint/space-infix-ops": "off",
         "@typescript-eslint/consistent-type-assertions": [
