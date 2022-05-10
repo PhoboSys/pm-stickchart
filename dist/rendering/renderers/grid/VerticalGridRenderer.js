@@ -43,6 +43,7 @@ class VerticalGridRenderer extends __1.BaseRenderer {
             if (lineState.new)
                 container.addChild(line);
             line.position.set(x, 0);
+            line.height = height;
             const [text, textState] = this.get('x_gridtext' + idx, () => __1.GraphicUtils.createText(DateUtils_1.DateUtils.formatUnixTSToHHmm(time), [x, height], this.textStyle, 1.1));
             if (textState.new)
                 container.addChild(text);
