@@ -15,22 +15,12 @@ export class CrosshairRenderer extends BaseRenderer {
 
     private readonly priceCoverStyle: any
 
-    private lastContext: RenderingContext
+    private _context: RenderingContext
 
-    private lastEvent: MousemoveEvent | MouseleaveEvent
+    private eventTarget: EventTarget
 
     constructor(storage: IGraphicStorage) {
         super(storage)
-
-        localEventTarget.addEventListener(
-            'mousemove',
-            (e: MousemoveEvent) => this.handleMouseEvent(e),
-        )
-
-        localEventTarget.addEventListener(
-            'mouseleave',
-            (e: MouseleaveEvent) => this.handleMouseEvent(e),
-        )
 
         this.lineStyle = {
             width: 2,
@@ -61,38 +51,47 @@ export class CrosshairRenderer extends BaseRenderer {
         return CrosshairRenderer.CROSSHAIR_ID
     }
 
-    public render(context: RenderingContext, done: DoneFunction): void {
-        this.lastContext = context
-
-        super.render(context, done)
-    }
-
-    protected handleMouseEvent(event: MousemoveEvent | MouseleaveEvent): void {
-        this.lastEvent = event
-
-        if (!this.lastContext) return
-        this.render(this.lastContext, () => { })
-    }
-
     protected update(
         context: RenderingContext,
         container: Container,
     ): Container {
-        const { lastEvent } = this
+        this._context = context
 
-        if (!lastEvent || lastEvent instanceof MouseleaveEvent) {
-            return new Graphics()
+        if (this.eventTarget !== context.application.resizeTo) {
+            this.eventTarget = context.application.resizeTo
+
+            this.eventTarget.addEventListener('mousemove', this.handleMousemoveEvent.bind(this, container))
+            this.eventTarget.addEventListener('mouseleave', this.handleMouseleaveEvent.bind(this, container))
         }
 
-        const { width, height } = context.screen
-        const { yrange: [minprice, maxprice] } = context.plotdata
-        const { x, y } = lastEvent.position
+        return container
+    }
 
-        const verticalLine = GraphicUtils.createLine(
-            [x, 0],
-            [x, height],
-            this.lineStyle,
-        )
+    private handleMouseleaveEvent(container: Container, event: MouseEvent): void {
+        this.updatePointer(container, new MouseleaveEvent(event))
+    }
+
+    private handleMousemoveEvent(container: Container, event: MouseEvent): void {
+        this.updatePointer(container, new MousemoveEvent(event))
+    }
+
+    protected updatePointer(container: Container, mouseEvent: MouseleaveEvent | MousemoveEvent) {
+        if (mouseEvent instanceof MouseleaveEvent) {
+            return this.clear()
+        }
+
+        const { width, height } = this._context.screen
+        const { yrange: [minprice, maxprice] } = this._context.plotdata
+        const { x, y } = mouseEvent.position
+
+        const [vertical, verticalstate] = this.get<Graphics>('vertical', () => new Graphics())
+        if (verticalstate.new) container.addChild(vertical)
+
+        vertical
+            .clear()
+            .lineStyle(this.lineStyle)
+            .moveTo(x, 0)
+            .lineTo(x, height)
 
         const pricedif = maxprice - minprice
         const price = maxprice - datamath.scale([y], [0, height], pricedif)[0]
@@ -110,8 +109,10 @@ export class CrosshairRenderer extends BaseRenderer {
             this.lineStyle,
         )
 
-        const result = new Graphics()
-        result.addChild(verticalLine, priceText, horizontalLine)
-        return result
+        const [horizontal, horizontalstate] = this.get<Graphics>('horizontal', () => new Graphics())
+        if (horizontalstate.new) container.addChild(horizontal)
+        else horizontal.removeChildren().forEach(e => e.destroy())
+
+        horizontal.addChild(horizontalLine, priceText)
     }
 }

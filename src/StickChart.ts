@@ -37,7 +37,7 @@ export class StickChart extends EventTarget {
         })
 
         this.eventsProducer = new EventsProducer(
-            [this, localEventTarget],
+            this,
             this.canvas,
             stageElement,
         )
@@ -70,6 +70,7 @@ export class StickChart extends EventTarget {
             mousepos: context.mousepos,
             screen: this.application.screen,
             textures: this.textureStorage,
+            application: this.application,
         }
 
         window.requestAnimationFrame(() =>

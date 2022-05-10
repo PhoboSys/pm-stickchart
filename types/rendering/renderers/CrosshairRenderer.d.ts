@@ -1,4 +1,4 @@
-import { RenderingContext, DoneFunction, IGraphicStorage } from '..';
+import { RenderingContext, IGraphicStorage } from '..';
 import { BaseRenderer } from '..';
 import { MouseleaveEvent } from '../../events/MouseleaveEvent';
 import { MousemoveEvent } from '../../events/MousemoveEvent';
@@ -7,11 +7,12 @@ export declare class CrosshairRenderer extends BaseRenderer {
     static readonly CROSSHAIR_ID: symbol;
     private readonly lineStyle;
     private readonly priceCoverStyle;
-    private lastContext;
-    private lastEvent;
+    private _context;
+    private eventTarget;
     constructor(storage: IGraphicStorage);
     get rendererId(): symbol;
-    render(context: RenderingContext, done: DoneFunction): void;
-    protected handleMouseEvent(event: MousemoveEvent | MouseleaveEvent): void;
     protected update(context: RenderingContext, container: Container): Container;
+    private handleMouseleaveEvent;
+    private handleMousemoveEvent;
+    protected updatePointer(container: Container, mouseEvent: MouseleaveEvent | MousemoveEvent): void;
 }

@@ -1,5 +1,5 @@
 import { ChartData, PlotData } from '../../chartdata'
-import { Rectangle } from '../../lib/pixi'
+import { Application, Rectangle } from '../../lib/pixi'
 
 import { ITextureStorage } from './interfaces'
 
@@ -13,5 +13,6 @@ export type RenderingContext = {
     screen: Rectangle,
     textures: ITextureStorage,
 
+    application: Application,
     mousepos?: { x: number, y: number, }
 }
