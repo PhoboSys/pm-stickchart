@@ -20,7 +20,8 @@ class EventsProducer {
     destroy() {
         this.canvas.removeEventListener('webglcontextlost', this.error);
         this.stage.removeEventListener('wheel', this.scroll);
-        this.stage.addEventListener('pointermove', this.pointermove);
+        this.stage.removeEventListener('pointermove', this.pointermove);
+        this.stage.removeEventListener('pointerleave', this.pointerleave);
     }
 }
 exports.EventsProducer = EventsProducer;
