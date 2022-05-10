@@ -62,8 +62,8 @@ export class CrosshairRenderer extends BaseRenderer {
             this.handlePointermoveEvent = this.handlePointermoveEvent ?? handlePointermoveEvent
             this.handlePointerleaveEvent = this.handlePointerleaveEvent ?? handlePointerleaveEvent
 
-            this._context.eventTarget?.removeEventListener('pointermove', this.handlePointermoveEvent)
-            this._context.eventTarget?.removeEventListener('pointerleave', this.handlePointerleaveEvent)
+            this._context?.eventTarget.removeEventListener('pointermove', this.handlePointermoveEvent)
+            this._context?.eventTarget.removeEventListener('pointerleave', this.handlePointerleaveEvent)
 
             context.eventTarget.addEventListener('pointermove', this.handlePointermoveEvent)
             context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent)
