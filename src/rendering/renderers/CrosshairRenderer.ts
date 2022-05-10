@@ -13,6 +13,10 @@ export class CrosshairRenderer extends BaseRenderer {
 
     private readonly priceCoverStyle: any
 
+    private handlePointermoveEvent: any
+
+    private handlePointerleaveEvent: any
+
     private _context: RenderingContext
 
     constructor(storage: IGraphicStorage) {
@@ -55,11 +59,14 @@ export class CrosshairRenderer extends BaseRenderer {
             const handlePointermoveEvent = (event): void => this.updatePointer(container, event)
             const handlePointerleaveEvent = (): void => this.clear()
 
-            context.eventTarget.removeEventListener('pointermove', handlePointermoveEvent)
-            context.eventTarget.removeEventListener('pointerleave', handlePointerleaveEvent)
+            this.handlePointermoveEvent = this.handlePointermoveEvent ?? handlePointermoveEvent
+            this.handlePointerleaveEvent = this.handlePointerleaveEvent ?? handlePointerleaveEvent
 
-            context.eventTarget.addEventListener('pointermove', handlePointermoveEvent)
-            context.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent)
+            context.eventTarget.removeEventListener('pointermove', this.handlePointermoveEvent)
+            context.eventTarget.removeEventListener('pointerleave', this.handlePointerleaveEvent)
+
+            context.eventTarget.addEventListener('pointermove', this.handlePointermoveEvent)
+            context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent)
         }
 
         this._context = context

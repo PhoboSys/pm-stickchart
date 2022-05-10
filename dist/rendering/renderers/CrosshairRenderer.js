@@ -37,14 +37,16 @@ class CrosshairRenderer extends __1.BaseRenderer {
         return CrosshairRenderer.CROSSHAIR_ID;
     }
     update(context, container) {
-        var _a;
+        var _a, _b, _c;
         if (((_a = this._context) === null || _a === void 0 ? void 0 : _a.eventTarget) !== context.eventTarget) {
             const handlePointermoveEvent = (event) => this.updatePointer(container, event);
             const handlePointerleaveEvent = () => this.clear();
-            context.eventTarget.removeEventListener('pointermove', handlePointermoveEvent);
-            context.eventTarget.removeEventListener('pointerleave', handlePointerleaveEvent);
-            context.eventTarget.addEventListener('pointermove', handlePointermoveEvent);
-            context.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent);
+            this.handlePointermoveEvent = (_b = this.handlePointermoveEvent) !== null && _b !== void 0 ? _b : handlePointermoveEvent;
+            this.handlePointerleaveEvent = (_c = this.handlePointerleaveEvent) !== null && _c !== void 0 ? _c : handlePointerleaveEvent;
+            context.eventTarget.removeEventListener('pointermove', this.handlePointermoveEvent);
+            context.eventTarget.removeEventListener('pointerleave', this.handlePointerleaveEvent);
+            context.eventTarget.addEventListener('pointermove', this.handlePointermoveEvent);
+            context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent);
         }
         this._context = context;
         return container;
