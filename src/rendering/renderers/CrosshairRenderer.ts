@@ -1,8 +1,7 @@
 import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
-import { MouseleaveEvent } from '../../events/MouseleaveEvent'
-import { MousemoveEvent } from '../../events/MousemoveEvent'
+import { PointermoveEvent } from '../../events'
 import datamath from '../../lib/datamath'
 import { Graphics, Container } from '../../lib/pixi'
 
@@ -56,31 +55,25 @@ export class CrosshairRenderer extends BaseRenderer {
     ): Container {
         this._context = context
 
-        if (this.eventTarget !== context.application.resizeTo) {
-            this.eventTarget = context.application.resizeTo
+        if (this.eventTarget !== context.stageEventTarget) {
+            const handlePointermoveEvent = (event): void => this.updatePointer(container, new PointermoveEvent(event))
+            const handlePointerleaveEvent = (): void => this.clear()
 
-            this.eventTarget.addEventListener('mousemove', this.handleMousemoveEvent.bind(this, container))
-            this.eventTarget.addEventListener('mouseleave', this.handleMouseleaveEvent.bind(this, container))
+            this.eventTarget?.removeEventListener('pointermove', handlePointermoveEvent)
+            this.eventTarget?.removeEventListener('pointerleave', handlePointerleaveEvent)
+
+            this.eventTarget = context.stageEventTarget
+
+            this.eventTarget.addEventListener('pointermove', handlePointermoveEvent)
+            this.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent)
         }
 
         return container
     }
 
-    private handleMouseleaveEvent(container: Container, event: MouseEvent): void {
-        this.updatePointer(container, new MouseleaveEvent(event))
-    }
-
-    private handleMousemoveEvent(container: Container, event: MouseEvent): void {
-        this.updatePointer(container, new MousemoveEvent(event))
-    }
-
-    protected updatePointer(container: Container, mouseEvent: MouseleaveEvent | MousemoveEvent) {
-        if (mouseEvent instanceof MouseleaveEvent) {
-            return this.clear()
-        }
-
+    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void {
         const { width, height } = this._context.screen
-        const { timerange: [minprice, maxprice] } = this._context.plotdata
+        const { pricerange: [minprice, maxprice] } = this._context.plotdata
         const { x, y } = mouseEvent.position
 
         const [vertical, verticalstate] = this.get<Graphics>('vertical', () => new Graphics())

@@ -1,12 +1,12 @@
-export class MouseleaveEvent extends Event {
-    public static readonly NAME: string = 'mouseleave'
+export class PointermoveEvent extends Event {
+    public static readonly NAME: string = 'pointermove'
 
     public readonly inner: MouseEvent
 
     public readonly position: { x: number, y: number }
 
-    constructor(inner: MouseEvent) {
-        super(MouseleaveEvent.NAME)
+    constructor(inner: PointerEvent) {
+        super(PointermoveEvent.NAME)
 
         this.inner = inner
         this.position = { x: inner.offsetX, y: inner.offsetY }

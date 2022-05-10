@@ -121,7 +121,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.get()
         )
-        const ctx = {
+        const ctx: RenderingContext = {
             pool: context.pool,
             paris: context.paris,
             resolved: context.resolved,
@@ -129,7 +129,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
-            application: this.application,
+            stageEventTarget: this.application.resizeTo,
             chartdata,
             plotdata,
         }

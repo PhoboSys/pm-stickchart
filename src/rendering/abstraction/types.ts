@@ -16,7 +16,7 @@ export type RenderingContext = {
     plotdata: PlotData
     chartdata: { prices: number[], timestamps: number[] },
 
-    application: Application,
+    stageEventTarget: EventTarget,
     rerender?: boolean
     mousepos?: { x: number, y: number, }
 }
