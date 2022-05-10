@@ -15,8 +15,6 @@ export class CrosshairRenderer extends BaseRenderer {
 
     private _context: RenderingContext
 
-    private eventTarget: EventTarget
-
     constructor(storage: IGraphicStorage) {
         super(storage)
 
@@ -53,20 +51,18 @@ export class CrosshairRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        this._context = context
-
-        if (this.eventTarget !== context.stageEventTarget) {
-            const handlePointermoveEvent = (event): void => this.updatePointer(container, new PointermoveEvent(event))
+        if (this._context?.eventTarget !== context.eventTarget) {
+            const handlePointermoveEvent = (event): void => this.updatePointer(container, event)
             const handlePointerleaveEvent = (): void => this.clear()
 
-            this.eventTarget?.removeEventListener('pointermove', handlePointermoveEvent)
-            this.eventTarget?.removeEventListener('pointerleave', handlePointerleaveEvent)
+            context.eventTarget.removeEventListener('pointermove', handlePointermoveEvent)
+            context.eventTarget.removeEventListener('pointerleave', handlePointerleaveEvent)
 
-            this.eventTarget = context.stageEventTarget
-
-            this.eventTarget.addEventListener('pointermove', handlePointermoveEvent)
-            this.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent)
+            context.eventTarget.addEventListener('pointermove', handlePointermoveEvent)
+            context.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent)
         }
+
+        this._context = context
 
         return container
     }

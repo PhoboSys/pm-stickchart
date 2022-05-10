@@ -7,7 +7,6 @@ export declare class CrosshairRenderer extends BaseRenderer {
     private readonly lineStyle;
     private readonly priceCoverStyle;
     private _context;
-    private eventTarget;
     constructor(storage: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;

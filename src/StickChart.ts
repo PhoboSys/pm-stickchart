@@ -129,7 +129,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
-            stageEventTarget: this.application.resizeTo,
+            eventTarget: this,
             chartdata,
             plotdata,
         }

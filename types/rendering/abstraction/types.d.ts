@@ -15,7 +15,7 @@ export declare type RenderingContext = {
         prices: number[];
         timestamps: number[];
     };
-    stageEventTarget: EventTarget;
+    eventTarget: EventTarget;
     rerender?: boolean;
     mousepos?: {
         x: number;

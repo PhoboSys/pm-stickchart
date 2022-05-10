@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
 const __1 = require("..");
-const events_1 = require("../../events");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class CrosshairRenderer extends __1.BaseRenderer {
@@ -38,17 +37,16 @@ class CrosshairRenderer extends __1.BaseRenderer {
         return CrosshairRenderer.CROSSHAIR_ID;
     }
     update(context, container) {
-        var _a, _b;
-        this._context = context;
-        if (this.eventTarget !== context.stageEventTarget) {
-            const handlePointermoveEvent = (event) => this.updatePointer(container, new events_1.PointermoveEvent(event));
+        var _a;
+        if (((_a = this._context) === null || _a === void 0 ? void 0 : _a.eventTarget) !== context.eventTarget) {
+            const handlePointermoveEvent = (event) => this.updatePointer(container, event);
             const handlePointerleaveEvent = () => this.clear();
-            (_a = this.eventTarget) === null || _a === void 0 ? void 0 : _a.removeEventListener('pointermove', handlePointermoveEvent);
-            (_b = this.eventTarget) === null || _b === void 0 ? void 0 : _b.removeEventListener('pointerleave', handlePointerleaveEvent);
-            this.eventTarget = context.stageEventTarget;
-            this.eventTarget.addEventListener('pointermove', handlePointermoveEvent);
-            this.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent);
+            context.eventTarget.removeEventListener('pointermove', handlePointermoveEvent);
+            context.eventTarget.removeEventListener('pointerleave', handlePointerleaveEvent);
+            context.eventTarget.addEventListener('pointermove', handlePointermoveEvent);
+            context.eventTarget.addEventListener('pointerleave', handlePointerleaveEvent);
         }
+        this._context = context;
         return container;
     }
     updatePointer(container, mouseEvent) {
