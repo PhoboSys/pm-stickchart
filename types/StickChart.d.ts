@@ -10,6 +10,10 @@ export declare class StickChart extends EventTarget {
     private animation;
     private timeframe;
     constructor(stageElement: HTMLElement);
+    setScreenSize({ width, height }: {
+        width: any;
+        height: any;
+    }): void;
     setTimeframe(timeframe: number): void;
     get canvas(): HTMLCanvasElement;
     private applyTimeframe;

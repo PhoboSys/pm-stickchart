@@ -53,6 +53,10 @@ export class StickChart extends EventTarget {
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
+    public setScreenSize({ width, height }) {
+        this.application.renderer.resize(width, height)
+    }
+
     public setTimeframe(timeframe: number) {
         this.timeframe.save(timeframe)
     }
@@ -77,7 +81,7 @@ export class StickChart extends EventTarget {
 
         const { price, timestamp } = latest
         const { timestamps, prices } = this._context.chartdata
-        const idx = timestamps.length-1
+        const idx = timestamps.length - 1
 
         timestamps[idx] = timestamp
         prices[idx] = price
