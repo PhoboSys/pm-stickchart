@@ -12,9 +12,9 @@ export class PoolRenderer implements IRenderer {
         private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
+            new PoolLockRenderer(renderer),
             new PoolOpenRenderer(renderer),
             new PoolResolutionRenderer(renderer),
-            new PoolLockRenderer(renderer),
         ])
     }
 

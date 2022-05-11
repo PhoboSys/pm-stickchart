@@ -56,7 +56,7 @@ export class PoolOpenRenderer extends BaseRenderer {
             gap: 10,
             dash: 10,
             paddingTop: 5,
-            paddingBottom: 20,
+            paddingBottom: 30,
             color: 0xB7BDD7,
         }
     }
@@ -107,11 +107,11 @@ export class PoolOpenRenderer extends BaseRenderer {
 
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
         line.position.set(
             x,
             torus.position.y + this.torusStyle.outerr
         )
+        line.height = height - line.position.y - this.lineStyle.paddingBottom
 
         if (coverstate.new) container.addChild(cover)
         if (torusstate.new) container.addChild(torus)

@@ -9,9 +9,9 @@ class PoolRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
+            new PoolLockRenderer_1.PoolLockRenderer(renderer),
             new PoolOpenRenderer_1.PoolOpenRenderer(renderer),
             new PoolResolutionRenderer_1.PoolResolutionRenderer(renderer),
-            new PoolLockRenderer_1.PoolLockRenderer(renderer),
         ]);
     }
     render(context, done) {

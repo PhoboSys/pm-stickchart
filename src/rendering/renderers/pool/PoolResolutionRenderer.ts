@@ -54,7 +54,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
             dash: 10,
 
             paddingTop: 5,
-            paddingBottom: 20
+            paddingBottom: 30
         }
     }
 
@@ -138,11 +138,11 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
         line.position.set(
             x,
             torus.position.y + this.torusStyle.outerr
         )
+        line.height = height - line.position.y - this.lineStyle.paddingBottom
 
         if (coverstate.new) container.addChild(cover)
         if (torusstate.new) container.addChild(torus)
@@ -218,18 +218,18 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
     private createDash(context: RenderingContext): Container {
         const { height } = context.screen
-        const { paddingBottom, paddingTop } = this.lineStyle
+        const { paddingBottom, paddingTop, width } = this.lineStyle
 
         const [color1, color2] = this.getLevelLineColors(context)
 
         const dash1 = GraphicUtils.createVerticalDashLine(
-            -.5,
+            -width/2,
             [0, height - paddingBottom],
             { ...this.lineStyle, color: color1 }
         )
 
         const dash2 = GraphicUtils.createVerticalDashLine(
-            .5,
+            width/2,
             [0, height - paddingBottom],
             { ...this.lineStyle, color: color2 }
         )

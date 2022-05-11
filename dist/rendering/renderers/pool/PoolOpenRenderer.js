@@ -41,7 +41,7 @@ class PoolOpenRenderer extends __1.BaseRenderer {
             gap: 10,
             dash: 10,
             paddingTop: 5,
-            paddingBottom: 20,
+            paddingBottom: 30,
             color: 0xB7BDD7,
         };
     }
@@ -66,8 +66,8 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         const [torus, torusstate] = this.get('torus', () => this.createTorus());
         torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        line.height = height - line.position.y - this.lineStyle.paddingBottom;
         line.position.set(x, torus.position.y + this.torusStyle.outerr);
+        line.height = height - line.position.y - this.lineStyle.paddingBottom;
         if (coverstate.new)
             container.addChild(cover);
         if (torusstate.new)
