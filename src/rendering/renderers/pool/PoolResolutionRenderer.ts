@@ -89,11 +89,25 @@ export class PoolResolutionRenderer extends BaseRenderer {
     private getLevelGradientColors(context: RenderingContext): ColorStop[] {
         switch (context.pool.level) {
             case SILVER:
-                return config.style.levels.royalColors
-            case ROYAL:
                 return config.style.levels.silverColors
+            case ROYAL:
+                return config.style.levels.royalColors
             case GOLD:
                 return config.style.levels.goldColors
+
+            default:
+                throw Error('pool level is not supported')
+        }
+    }
+
+    private getLevelLineColor(context: RenderingContext): any {
+        switch (context.pool.level) {
+            case SILVER:
+                return config.style.levels.silverLineColor
+            case ROYAL:
+                return config.style.levels.royalLineColor
+            case GOLD:
+                return config.style.levels.goldLineColor
 
             default:
                 throw Error('pool level is not supported')
@@ -210,30 +224,12 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
     private createDash(context: RenderingContext): Graphics {
         const { height } = context.screen
-
-        const { width } = this.lineStyle
-
-        const [gradient] = this.get<RenderTexture>(
-            'resolutionDashGradient',
-            () => GradientFactory.createLinearGradient(
-                <Renderer>context.renderer,
-                RenderTexture.create({ height, width }),
-                {
-                    x0: width,
-                    y0: 0,
-                    x1: 0,
-                    y1: 0,
-                    colorStops: this.getLevelGradientColors(context)
-                }
-            )
-        )
-
         const { paddingBottom, paddingTop } = this.lineStyle
 
-        const dash = GraphicUtils.createTexturedVerticalDashLine(
+        const dash = GraphicUtils.createVerticalDashLine(
             0,
             [0, height - paddingBottom],
-            { ...this.lineStyle, texture: gradient }
+            { ...this.lineStyle, color: this.getLevelLineColor(context) }
         )
 
         dash.position.y = paddingTop

@@ -21,7 +21,7 @@ export class PoolLockRenderer extends BaseRenderer {
         super(renderer)
 
         this.coverStyle = {
-            paddingx: 10,
+            paddingx: 7,
             paddingy: 5,
 
             paddingTop: 30,

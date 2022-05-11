@@ -12,7 +12,7 @@ class PoolLockRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.coverStyle = {
-            paddingx: 10,
+            paddingx: 7,
             paddingy: 5,
             paddingTop: 30,
             paddingLeft: 10,

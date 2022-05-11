@@ -59,11 +59,23 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     getLevelGradientColors(context) {
         switch (context.pool.level) {
             case poollevels_1.SILVER:
-                return config_1.default.style.levels.royalColors;
-            case poollevels_1.ROYAL:
                 return config_1.default.style.levels.silverColors;
+            case poollevels_1.ROYAL:
+                return config_1.default.style.levels.royalColors;
             case poollevels_1.GOLD:
                 return config_1.default.style.levels.goldColors;
+            default:
+                throw Error('pool level is not supported');
+        }
+    }
+    getLevelLineColor(context) {
+        switch (context.pool.level) {
+            case poollevels_1.SILVER:
+                return config_1.default.style.levels.silverLineColor;
+            case poollevels_1.ROYAL:
+                return config_1.default.style.levels.royalLineColor;
+            case poollevels_1.GOLD:
+                return config_1.default.style.levels.goldLineColor;
             default:
                 throw Error('pool level is not supported');
         }
@@ -138,16 +150,8 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     }
     createDash(context) {
         const { height } = context.screen;
-        const { width } = this.lineStyle;
-        const [gradient] = this.get('resolutionDashGradient', () => pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ height, width }), {
-            x0: width,
-            y0: 0,
-            x1: 0,
-            y1: 0,
-            colorStops: this.getLevelGradientColors(context)
-        }));
         const { paddingBottom, paddingTop } = this.lineStyle;
-        const dash = __1.GraphicUtils.createTexturedVerticalDashLine(0, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { texture: gradient }));
+        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: this.getLevelLineColor(context) }));
         dash.position.y = paddingTop;
         return dash;
     }
