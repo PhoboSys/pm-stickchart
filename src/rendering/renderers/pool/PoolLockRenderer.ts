@@ -44,7 +44,6 @@ export class PoolLockRenderer extends BaseRenderer {
 
         this.lineStyle = {
             width: 2,
-            alpha: 0.7,
             join: 'round',
             cap: 'round',
             gap: 10,

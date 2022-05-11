@@ -32,9 +32,9 @@ declare const _default: {
         upcolor: number;
         downcolor: number;
         levels: {
-            royalLineColor: number;
-            goldLineColor: number;
-            silverLineColor: number;
+            royalLineColors: number[];
+            goldLineColors: number[];
+            silverLineColors: number[];
             royalColors: {
                 color: string;
                 offset: number;

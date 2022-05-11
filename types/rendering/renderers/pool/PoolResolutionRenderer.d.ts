@@ -12,7 +12,7 @@ export declare class PoolResolutionRenderer extends BaseRenderer {
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
     private getLevelGradientColors;
-    private getLevelLineColor;
+    private getLevelLineColors;
     private updatePoolBorder;
     private createPoolName;
     private createTorus;

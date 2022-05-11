@@ -47,8 +47,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
         }
 
         this.lineStyle = {
-            width: 2,
-            alpha: 0.7,
+            width: 1,
             join: 'round',
             cap: 'round',
             gap: 10,
@@ -100,14 +99,14 @@ export class PoolResolutionRenderer extends BaseRenderer {
         }
     }
 
-    private getLevelLineColor(context: RenderingContext): any {
+    private getLevelLineColors(context: RenderingContext): number[] {
         switch (context.pool.level) {
             case SILVER:
-                return config.style.levels.silverLineColor
+                return config.style.levels.silverLineColors
             case ROYAL:
-                return config.style.levels.royalLineColor
+                return config.style.levels.royalLineColors
             case GOLD:
-                return config.style.levels.goldLineColor
+                return config.style.levels.goldLineColors
 
             default:
                 throw Error('pool level is not supported')
@@ -143,7 +142,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
         torus.position.x = x
 
-        const [line, linestate] = this.get<Graphics>('dash', () => this.createDash(context))
+        const [line, linestate] = this.get<Container>('dash', () => this.createDash(context))
         if (linestate.new) {
 
             line.position.y += torus.position.y + this.torusStyle.outerr
@@ -222,15 +221,26 @@ export class PoolResolutionRenderer extends BaseRenderer {
         return torus
     }
 
-    private createDash(context: RenderingContext): Graphics {
+    private createDash(context: RenderingContext): Container {
         const { height } = context.screen
         const { paddingBottom, paddingTop } = this.lineStyle
 
-        const dash = GraphicUtils.createVerticalDashLine(
-            0,
+        const [color1, color2] = this.getLevelLineColors(context)
+
+        const dash1 = GraphicUtils.createVerticalDashLine(
+            -.5,
             [0, height - paddingBottom],
-            { ...this.lineStyle, color: this.getLevelLineColor(context) }
+            { ...this.lineStyle, color: color1 }
         )
+
+        const dash2 = GraphicUtils.createVerticalDashLine(
+            .5,
+            [0, height - paddingBottom],
+            { ...this.lineStyle, color: color2 }
+        )
+
+        const dash = new Container()
+        dash.addChild(dash1, dash2)
 
         dash.position.y = paddingTop
 

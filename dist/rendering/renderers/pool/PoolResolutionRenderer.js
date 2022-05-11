@@ -30,8 +30,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
             paddingTop: 5,
         };
         this.lineStyle = {
-            width: 2,
-            alpha: 0.7,
+            width: 1,
             join: 'round',
             cap: 'round',
             gap: 10,
@@ -68,14 +67,14 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
                 throw Error('pool level is not supported');
         }
     }
-    getLevelLineColor(context) {
+    getLevelLineColors(context) {
         switch (context.pool.level) {
             case poollevels_1.SILVER:
-                return config_1.default.style.levels.silverLineColor;
+                return config_1.default.style.levels.silverLineColors;
             case poollevels_1.ROYAL:
-                return config_1.default.style.levels.royalLineColor;
+                return config_1.default.style.levels.royalLineColors;
             case poollevels_1.GOLD:
-                return config_1.default.style.levels.goldLineColor;
+                return config_1.default.style.levels.goldLineColors;
             default:
                 throw Error('pool level is not supported');
         }
@@ -151,7 +150,11 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     createDash(context) {
         const { height } = context.screen;
         const { paddingBottom, paddingTop } = this.lineStyle;
-        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: this.getLevelLineColor(context) }));
+        const [color1, color2] = this.getLevelLineColors(context);
+        const dash1 = __1.GraphicUtils.createVerticalDashLine(-.5, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color1 }));
+        const dash2 = __1.GraphicUtils.createVerticalDashLine(.5, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color2 }));
+        const dash = new pixi_1.Container();
+        dash.addChild(dash1, dash2);
         dash.position.y = paddingTop;
         return dash;
     }

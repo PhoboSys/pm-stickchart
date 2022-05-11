@@ -37,9 +37,9 @@ export default {
         upcolor: 0x00A573,
         downcolor: 0xF05750,
         levels: {
-            royalLineColor: 0xDDDFDE,
-            goldLineColor: 0xFDD77E,
-            silverLineColor: 0xFFFFFF,
+            royalLineColors: [0xDDDFDE, 0xB3B7B8],
+            goldLineColors: [0xD19F37, 0xFDD77E],
+            silverLineColors: [0xFFFFFF, 0xFFFFFF],
 
             royalColors: [
                 { color: '#9CA2A2', offset: 0.17 },
