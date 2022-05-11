@@ -83,7 +83,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.resolutionDate], timerange, width);
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolName(context));
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName(context));
         cover.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
         const [torus, torusstate] = this.get('torus', () => this.createTorus(context));
         torus.position.set(x, cover.position.y + cover.height);

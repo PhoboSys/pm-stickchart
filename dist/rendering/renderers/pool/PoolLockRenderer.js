@@ -55,7 +55,7 @@ class PoolLockRenderer extends __1.BaseRenderer {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.lockDate], timerange, width);
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolIcon(context));
+        const [cover, coverstate] = this.get('icon', () => this.createPoolIcon(context));
         cover.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
         const [torus, torusstate] = this.get('torus', () => this.createTorus());
         torus.position.set(x, cover.position.y + cover.height);

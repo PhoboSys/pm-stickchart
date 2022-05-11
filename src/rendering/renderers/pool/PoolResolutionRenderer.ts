@@ -122,7 +122,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.resolutionDate], timerange, width)
 
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolName(context))
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName(context))
 
         cover.position.set(
             x + this.coverStyle.paddingLeft,

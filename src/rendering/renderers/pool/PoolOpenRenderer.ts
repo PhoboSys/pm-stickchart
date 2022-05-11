@@ -91,7 +91,7 @@ export class PoolOpenRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.openDate], timerange, width)
 
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolName())
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName())
 
         cover.position.set(
             x - this.coverStyle.paddingRight,

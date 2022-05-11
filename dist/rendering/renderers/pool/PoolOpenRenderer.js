@@ -61,7 +61,7 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.openDate], timerange, width);
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolName());
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName());
         cover.position.set(x - this.coverStyle.paddingRight, this.coverStyle.paddingTop);
         const [torus, torusstate] = this.get('torus', () => this.createTorus());
         torus.position.set(x, cover.position.y + cover.height);

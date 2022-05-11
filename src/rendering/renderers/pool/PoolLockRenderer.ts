@@ -84,7 +84,7 @@ export class PoolLockRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.lockDate], timerange, width)
 
-        const [cover, coverstate] = this.get('poolName', () => this.createPoolIcon(context))
+        const [cover, coverstate] = this.get('icon', () => this.createPoolIcon(context))
 
         cover.position.set(
             x + this.coverStyle.paddingLeft,
