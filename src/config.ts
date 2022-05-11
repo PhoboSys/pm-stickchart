@@ -38,11 +38,11 @@ export default {
         downcolor: 0xF05750,
         levels: {
             royalColors: [
-                { color: '#9CA2A2', offset: .17 },
-                { color: '#EBCEAE', offset: .5 },
-                { color: '#E4E5E9', offset: .54 },
-                { color: '#B3B7B8', offset: .70 },
-                { color: '#DEE0DF', offset: 1 },
+                { color: '#9CA2A2', offset: 0.17 },
+                { color: '#EBCEAE', offset: 0.3743 },
+                { color: '#E4E5E9', offset: 0.5467 },
+                { color: '#B3B7B8', offset: 0.7083 },
+                { color: '#DEE0DF', offset:1 },
             ],
 
             goldColors: [

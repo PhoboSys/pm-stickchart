@@ -8,6 +8,7 @@ const config_1 = __importDefault(require("../../../config"));
 const __1 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
+const poollevels_1 = require("../../../constants/poollevels");
 class PoolResolutionRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -56,17 +57,16 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         return container;
     }
     getLevelGradientColors(context) {
-        // switch (context.pool.level) {
-        //     case SILVER:
-        //         return config.style.levels.royalColors
-        //     case ROYAL:
-        //         return config.style.levels.silverColors
-        //     case GOLD:
-        //         return config.style.levels.goldColors
-        //     default:
-        //         throw Error('pool level is not supported')
-        // }
-        return config_1.default.style.levels.royalColors;
+        switch (context.pool.level) {
+            case poollevels_1.SILVER:
+                return config_1.default.style.levels.royalColors;
+            case poollevels_1.ROYAL:
+                return config_1.default.style.levels.silverColors;
+            case poollevels_1.GOLD:
+                return config_1.default.style.levels.goldColors;
+            default:
+                throw Error('pool level is not supported');
+        }
     }
     updatePoolBorder(context, container) {
         const { width, height } = context.screen;
@@ -99,18 +99,18 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         text.position.set(paddingx, paddingy);
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
-        const x0 = 0;
-        const y0 = width;
-        const x1 = width;
-        const y1 = 0;
-        const coverGradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width, height: height * 1.5 }), {
+        const angle = 100;
+        const x0 = -angle + 20;
+        const y0 = 0;
+        const x1 = width - angle;
+        const y1 = -angle;
+        const coverGradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
             x1,
             y1,
             colorStops: this.getLevelGradientColors(context)
         });
-        const sprite = new pixi_1.Sprite(coverGradient);
         const { radius } = this.coverStyle;
         const cover = new pixi_1.Graphics()
             .beginTextureFill({ texture: coverGradient })
@@ -138,10 +138,10 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     }
     createDash(context) {
         const { height } = context.screen;
-        const { width: linewidth } = this.lineStyle;
-        const [gradient] = this.get('resolutionDashGradient', () => pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ height, width: linewidth }), {
-            x0: linewidth,
-            y0: height,
+        const { width } = this.lineStyle;
+        const [gradient] = this.get('resolutionDashGradient', () => pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ height, width }), {
+            x0: width,
+            y0: 0,
             x1: 0,
             y1: 0,
             colorStops: this.getLevelGradientColors(context)

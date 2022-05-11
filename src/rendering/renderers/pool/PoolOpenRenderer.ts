@@ -30,7 +30,7 @@ export class PoolOpenRenderer extends BaseRenderer {
             color: 0x22273F,
 
             lineStyle: {
-                color: 0xFFFFFF,
+                color: 0xB7BDD7,
                 width: 2,
             }
         }
@@ -39,14 +39,14 @@ export class PoolOpenRenderer extends BaseRenderer {
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 12,
-            fill: 0xFFFFFF,
+            fill: 0xB7BDD7,
         }
 
         this.torusStyle = {
             innerr: 2.5,
             outerr: 5,
             paddingTop: 10,
-            color: 0xFFFFFF,
+            color: 0xB7BDD7,
         }
 
         this.lineStyle = {
@@ -58,7 +58,7 @@ export class PoolOpenRenderer extends BaseRenderer {
             dash: 10,
             paddingTop: 5,
             paddingBottom: 20,
-            color: 0xFFFFFF,
+            color: 0xB7BDD7,
         }
     }
 

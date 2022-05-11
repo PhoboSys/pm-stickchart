@@ -87,19 +87,17 @@ export class PoolResolutionRenderer extends BaseRenderer {
     }
 
     private getLevelGradientColors(context: RenderingContext): ColorStop[] {
-        // switch (context.pool.level) {
-        //     case SILVER:
-        //         return config.style.levels.royalColors
-        //     case ROYAL:
-        //         return config.style.levels.silverColors
-        //     case GOLD:
-        //         return config.style.levels.goldColors
+        switch (context.pool.level) {
+            case SILVER:
+                return config.style.levels.royalColors
+            case ROYAL:
+                return config.style.levels.silverColors
+            case GOLD:
+                return config.style.levels.goldColors
 
-        //     default:
-        //         throw Error('pool level is not supported')
-        // }
-
-        return config.style.levels.royalColors
+            default:
+                throw Error('pool level is not supported')
+        }
     }
 
     private updatePoolBorder(context: RenderingContext, container: Container): Container {
@@ -154,14 +152,16 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const width = text.width + paddingx * 2
         const height = text.height + paddingy * 2
 
-        const x0 = 0
-        const y0 = width
-        const x1 = width
-        const y1 = 0
+        const angle = 100
+
+        const x0 = -angle + 20
+        const y0 = 0
+        const x1 = width - angle
+        const y1 = -angle
 
         const coverGradient = GradientFactory.createLinearGradient(
             <Renderer>context.renderer,
-            RenderTexture.create({ width, height: height * 1.5 }),
+            RenderTexture.create({ width, height }),
             {
                 x0,
                 y0,
@@ -170,8 +170,6 @@ export class PoolResolutionRenderer extends BaseRenderer {
                 colorStops: this.getLevelGradientColors(context)
             },
         )
-
-        const sprite = new Sprite(coverGradient)
 
         const { radius } = this.coverStyle
         const cover = new Graphics()
@@ -213,16 +211,16 @@ export class PoolResolutionRenderer extends BaseRenderer {
     private createDash(context: RenderingContext): Graphics {
         const { height } = context.screen
 
-        const { width: linewidth } = this.lineStyle
+        const { width } = this.lineStyle
 
         const [gradient] = this.get<RenderTexture>(
             'resolutionDashGradient',
             () => GradientFactory.createLinearGradient(
                 <Renderer>context.renderer,
-                RenderTexture.create({ height, width: linewidth }),
+                RenderTexture.create({ height, width }),
                 {
-                    x0: linewidth,
-                    y0: height,
+                    x0: width,
+                    y0: 0,
                     x1: 0,
                     y1: 0,
                     colorStops: this.getLevelGradientColors(context)
