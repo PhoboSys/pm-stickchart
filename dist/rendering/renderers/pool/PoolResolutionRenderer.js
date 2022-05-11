@@ -84,24 +84,18 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.resolutionDate], timerange, width);
         const [cover, coverstate] = this.get('poolName', () => this.createPoolName(context));
-        if (coverstate.new) {
-            cover.position.y = this.coverStyle.paddingTop;
-            container.addChild(cover);
-        }
-        cover.position.x = x + this.coverStyle.paddingLeft;
+        cover.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
         const [torus, torusstate] = this.get('torus', () => this.createTorus(context));
-        if (torusstate.new) {
-            torus.position.y = cover.position.y + cover.height;
-            container.addChild(torus);
-        }
-        torus.position.x = x;
+        torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        if (linestate.new) {
-            line.position.y += torus.position.y + this.torusStyle.outerr;
-            container.addChild(line);
-        }
         line.height = height - line.position.y - this.lineStyle.paddingBottom;
-        line.position.x = x;
+        line.position.set(x, torus.position.y + this.torusStyle.outerr);
+        if (coverstate.new)
+            container.addChild(cover);
+        if (torusstate.new)
+            container.addChild(torus);
+        if (linestate.new)
+            container.addChild(line);
         return container;
     }
     createPoolName(context) {

@@ -84,36 +84,31 @@ export class PoolLockRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.lockDate], timerange, width)
 
-        const [cover, coverstate] = this.get<Container>('poolIcon', () => this.createPoolIcon(context))
-        if (coverstate.new) {
+        const [cover, coverstate] = this.get('poolName', () => this.createPoolIcon(context))
 
-            cover.position.y = this.coverStyle.paddingTop
+        cover.position.set(
+            x + this.coverStyle.paddingLeft,
+            this.coverStyle.paddingTop
+        )
 
-            container.addChild(cover)
-        }
+        const [torus, torusstate] = this.get('torus', () => this.createTorus())
 
-        cover.position.x = x + this.coverStyle.paddingLeft
+        torus.position.set(
+            x,
+            cover.position.y + cover.height
+        )
 
-        const [torus, torusstate] = this.get<Graphics>('torus', () => this.createTorus())
-        if (torusstate.new) {
-
-            torus.position.y = cover.position.y + cover.height
-
-            container.addChild(torus)
-        }
-
-        torus.position.x = x
-
-        const [line, linestate] = this.get<Graphics>('dash', () => this.createDash(context))
-        if (linestate.new) {
-
-            line.position.y += torus.position.y + this.torusStyle.outerr
-
-            container.addChild(line)
-        }
+        const [line, linestate] = this.get('dash', () => this.createDash(context))
 
         line.height = height - line.position.y - this.lineStyle.paddingBottom
-        line.position.x = x
+        line.position.set(
+            x,
+            torus.position.y + this.torusStyle.outerr
+        )
+
+        if (coverstate.new) container.addChild(cover)
+        if (torusstate.new) container.addChild(torus)
+        if (linestate.new) container.addChild(line)
 
         return container
     }
