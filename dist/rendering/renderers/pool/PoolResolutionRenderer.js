@@ -36,7 +36,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
             gap: 10,
             dash: 10,
             paddingTop: 5,
-            paddingBottom: 20
+            paddingBottom: 30
         };
     }
     get rendererId() {
@@ -88,8 +88,8 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const [torus, torusstate] = this.get('torus', () => this.createTorus(context));
         torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        line.height = height - line.position.y - this.lineStyle.paddingBottom;
         line.position.set(x, torus.position.y + this.torusStyle.outerr);
+        line.height = height - line.position.y - this.lineStyle.paddingBottom;
         if (coverstate.new)
             container.addChild(cover);
         if (torusstate.new)
@@ -143,10 +143,10 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     }
     createDash(context) {
         const { height } = context.screen;
-        const { paddingBottom, paddingTop } = this.lineStyle;
+        const { paddingBottom, paddingTop, width } = this.lineStyle;
         const [color1, color2] = this.getLevelLineColors(context);
-        const dash1 = __1.GraphicUtils.createVerticalDashLine(-.5, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color1 }));
-        const dash2 = __1.GraphicUtils.createVerticalDashLine(.5, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color2 }));
+        const dash1 = __1.GraphicUtils.createVerticalDashLine(-width / 2, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color1 }));
+        const dash2 = __1.GraphicUtils.createVerticalDashLine(width / 2, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color2 }));
         const dash = new pixi_1.Container();
         dash.addChild(dash1, dash2);
         dash.position.y = paddingTop;

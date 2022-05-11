@@ -44,12 +44,13 @@ export class PoolLockRenderer extends BaseRenderer {
 
         this.lineStyle = {
             width: 2,
+            alpha: .8,
             join: 'round',
             cap: 'round',
             gap: 10,
             dash: 10,
             paddingTop: 5,
-            paddingBottom: 20,
+            paddingBottom: 30,
             color: 0xFFA000,
         }
     }
@@ -100,11 +101,11 @@ export class PoolLockRenderer extends BaseRenderer {
 
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
         line.position.set(
             x,
             torus.position.y + this.torusStyle.outerr
         )
+        line.height = height - line.position.y - this.lineStyle.paddingBottom
 
         if (coverstate.new) container.addChild(cover)
         if (torusstate.new) container.addChild(torus)

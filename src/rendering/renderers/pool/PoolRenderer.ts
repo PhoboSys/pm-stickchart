@@ -16,9 +16,9 @@ export class PoolRenderer implements IRenderer {
         this.compositor = new RenderingCompositor([
             new PoolBackgroundRenderer(renderer),
             new PoolOpenPriceLineRenderer(renderer),
+            new PoolLockRenderer(renderer),
             new PoolOpenRenderer(renderer),
             new PoolResolutionRenderer(renderer),
-            new PoolLockRenderer(renderer),
         ])
     }
 
