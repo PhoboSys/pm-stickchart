@@ -1,5 +1,5 @@
 import { PlotData } from '../../chartdata';
-import { Rectangle, AbstractRenderer } from '../../lib/pixi';
+import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '../../enums';
 export declare type DoneFunction = () => void;
@@ -15,7 +15,6 @@ export declare type RenderingContext = {
         prices: number[];
         timestamps: number[];
     };
-    renderer: AbstractRenderer;
     rerender?: boolean;
     mousepos?: {
         x: number;

@@ -11,7 +11,6 @@ export declare class PoolResolutionRenderer extends BaseRenderer {
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
-    private getLevelGradientColors;
     private getLevelLineColors;
     private updatePoolBorder;
     private createPoolName;

@@ -3,9 +3,9 @@ import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
 
 import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, GradientFactory, RenderTexture, Renderer, ColorStop, Sprite, Rectangle } from '../../../lib/pixi'
+import { Graphics, Container, Text } from '../../../lib/pixi'
 import { ROYAL, SILVER, GOLD } from '../../../constants/poollevels'
-
+import * as TEXTURE_NAMES from '../../textures/symbols'
 export class PoolResolutionRenderer extends BaseRenderer {
 
     static readonly POOL_RESOLUTION_ID: symbol = Symbol('POOL_RESOLUTION_ID')
@@ -85,20 +85,6 @@ export class PoolResolutionRenderer extends BaseRenderer {
         return container
     }
 
-    private getLevelGradientColors(context: RenderingContext): ColorStop[] {
-        switch (context.pool.level) {
-            case SILVER:
-                return config.style.levels.silverColors
-            case ROYAL:
-                return config.style.levels.royalColors
-            case GOLD:
-                return config.style.levels.goldColors
-
-            default:
-                throw Error('pool level is not supported')
-        }
-    }
-
     private getLevelLineColors(context: RenderingContext): number[] {
         switch (context.pool.level) {
             case SILVER:
@@ -160,28 +146,12 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const width = text.width + paddingx * 2
         const height = text.height + paddingy * 2
 
-        const angle = 100
-
-        const x0 = -angle + 20
-        const y0 = 0
-        const x1 = width - angle
-        const y1 = -angle
-
-        const coverGradient = GradientFactory.createLinearGradient(
-            <Renderer>context.renderer,
-            RenderTexture.create({ width, height }),
-            {
-                x0,
-                y0,
-                x1,
-                y1,
-                colorStops: this.getLevelGradientColors(context)
-            },
-        )
+        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
+        const gradient = context.textures.get(textureName, { width, height, angle: 100 })
 
         const { radius } = this.coverStyle
         const cover = new Graphics()
-            .beginTextureFill({ texture: coverGradient })
+            .beginTextureFill({ texture: gradient })
             .drawRoundedRect(0, 0, width, height, radius)
             .endFill()
 
@@ -195,18 +165,8 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const { innerr, outerr } = this.torusStyle
 
         const size = outerr * 2
-
-        const gradient = GradientFactory.createLinearGradient(
-            <Renderer>context.renderer,
-            RenderTexture.create({ width: size, height: size }),
-            {
-                x0: 0,
-                y0: size,
-                x1: size,
-                y1: 0,
-                colorStops: this.getLevelGradientColors(context)
-            },
-        )
+        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
+        const gradient = context.textures.get(textureName, { width: size, height: size, angle: 5 })
 
         const torus = new Graphics()
             .beginTextureFill({ texture: gradient, })

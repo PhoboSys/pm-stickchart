@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,6 +32,7 @@ const __1 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const poollevels_1 = require("../../../constants/poollevels");
+const TEXTURE_NAMES = __importStar(require("../../textures/symbols"));
 class PoolResolutionRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -55,18 +79,6 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         this._lastLevel = context.pool.level;
         return container;
     }
-    getLevelGradientColors(context) {
-        switch (context.pool.level) {
-            case poollevels_1.SILVER:
-                return config_1.default.style.levels.silverColors;
-            case poollevels_1.ROYAL:
-                return config_1.default.style.levels.royalColors;
-            case poollevels_1.GOLD:
-                return config_1.default.style.levels.goldColors;
-            default:
-                throw Error('pool level is not supported');
-        }
-    }
     getLevelLineColors(context) {
         switch (context.pool.level) {
             case poollevels_1.SILVER:
@@ -104,21 +116,11 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         text.position.set(paddingx, paddingy);
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
-        const angle = 100;
-        const x0 = -angle + 20;
-        const y0 = 0;
-        const x1 = width - angle;
-        const y1 = -angle;
-        const coverGradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
-            colorStops: this.getLevelGradientColors(context)
-        });
+        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
+        const gradient = context.textures.get(textureName, { width, height, angle: 100 });
         const { radius } = this.coverStyle;
         const cover = new pixi_1.Graphics()
-            .beginTextureFill({ texture: coverGradient })
+            .beginTextureFill({ texture: gradient })
             .drawRoundedRect(0, 0, width, height, radius)
             .endFill();
         const poolname = new pixi_1.Container();
@@ -128,13 +130,8 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     createTorus(context) {
         const { innerr, outerr } = this.torusStyle;
         const size = outerr * 2;
-        const gradient = pixi_1.GradientFactory.createLinearGradient(context.renderer, pixi_1.RenderTexture.create({ width: size, height: size }), {
-            x0: 0,
-            y0: size,
-            x1: size,
-            y1: 0,
-            colorStops: this.getLevelGradientColors(context)
-        });
+        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
+        const gradient = context.textures.get(textureName, { width: size, height: size, angle: 5 });
         const torus = new pixi_1.Graphics()
             .beginTextureFill({ texture: gradient, })
             .drawTorus(0, 0, innerr, outerr)

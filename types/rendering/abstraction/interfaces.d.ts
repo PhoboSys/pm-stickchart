@@ -8,5 +8,5 @@ export interface IGraphicStorage {
     set(renderKey: symbol, container: Container): void;
 }
 export interface ITextureStorage {
-    get(name: symbol): RenderTexture;
+    get(name: symbol, params?: object): RenderTexture;
 }

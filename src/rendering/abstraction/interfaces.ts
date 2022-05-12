@@ -12,5 +12,5 @@ export interface IGraphicStorage {
 }
 
 export interface ITextureStorage {
-    get(name: symbol): RenderTexture
+    get(name: symbol, params?: object): RenderTexture
 }
