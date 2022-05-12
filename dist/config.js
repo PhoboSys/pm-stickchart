@@ -35,7 +35,7 @@ exports.default = {
         levels: {
             royalLineColors: [0xDDDFDE, 0xB3B7B8],
             goldLineColors: [0xD19F37, 0xFDD77E],
-            silverLineColors: [0xB6BBB4, 0xE4E5E9],
+            silverLineColors: [0xC4CAC3, 0xE4E5E9],
             royalColors: [
                 { color: '#9CA2A2', offset: 0.17 },
                 { color: '#EBCEAE', offset: 0.3743 },

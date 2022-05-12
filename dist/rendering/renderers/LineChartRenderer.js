@@ -4,6 +4,7 @@ exports.LineChartRenderer = void 0;
 const __1 = require("..");
 const __2 = require("..");
 const __3 = require("..");
+const __4 = require("..");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
@@ -13,6 +14,7 @@ class LineChartRenderer {
             new __3.PariResolutionRenderer(renderer),
             new __3.PoolRenderer(renderer),
             new __3.LatestPriceRenderer(renderer),
+            new __4.CrosshairRenderer(renderer),
             new __2.PariResolvedRenderer(renderer),
         ]);
     }

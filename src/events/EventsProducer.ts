@@ -1,4 +1,4 @@
-import { ZoomEvent, MousemoveEvent, CanvasErrorEvent } from '.'
+import { ZoomEvent, PointermoveEvent, CanvasErrorEvent, PointerleaveEvent } from '.'
 
 export class EventsProducer {
 
@@ -6,7 +6,9 @@ export class EventsProducer {
 
     private readonly error: (e: Event) => any
 
-    private readonly mouse: (e: MouseEvent) => any
+    private readonly pointermove: (e: PointerEvent) => any
+
+    private readonly pointerleave: (e: PointerEvent) => any
 
     constructor(
         private readonly target: EventTarget,
@@ -16,19 +18,22 @@ export class EventsProducer {
         // bind to instance
         this.scroll = (e: WheelEvent) => this.target.dispatchEvent(new ZoomEvent(e))
         this.error = (e: Event) => this.target.dispatchEvent(new CanvasErrorEvent(e))
-        this.mouse = (e: MouseEvent) => this.target.dispatchEvent(new MousemoveEvent(e))
+
+        this.pointermove = (e: PointerEvent) => this.target.dispatchEvent(new PointermoveEvent(e))
+        this.pointerleave = (e: PointerEvent) => this.target.dispatchEvent(new PointerleaveEvent(e))
 
         this.canvas.addEventListener('webglcontextlost', this.error)
         this.stage.addEventListener('wheel', this.scroll)
-        // this.stage.addEventListener('mousemove', this.mouse)
-        // this.stage.addEventListener('mouseleave', this.mouse)
+        this.stage.addEventListener('pointermove', this.pointermove)
+        this.stage.addEventListener('pointerleave', this.pointerleave)
     }
 
-    destroy(): void {
+    public destroy(): void {
         this.canvas.removeEventListener('webglcontextlost', this.error)
         this.stage.removeEventListener('wheel', this.scroll)
-        // this.stage.removeEventListener('mousemove', this.mouse)
-        // this.stage.removeEventListener('mouseleave', this.mouse)
+
+        this.stage.removeEventListener('pointermove', this.pointermove)
+        this.stage.removeEventListener('pointerleave', this.pointerleave)
     }
 
 }

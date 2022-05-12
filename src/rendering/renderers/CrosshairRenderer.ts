@@ -1,8 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '..'
+import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
+import { PointermoveEvent } from '../../events'
 import datamath from '../../lib/datamath'
-import { Graphics, Container } from '../../lib/pixi'
+import { Graphics, Container, Text } from '../../lib/pixi'
 
 export class CrosshairRenderer extends BaseRenderer {
 
@@ -12,20 +13,26 @@ export class CrosshairRenderer extends BaseRenderer {
 
     private readonly priceCoverStyle: any
 
-    constructor(renderer: IGraphicStorage) {
-        super(renderer)
+    private handlePointermoveEvent: any
+
+    private handlePointerleaveEvent: any
+
+    private _context: RenderingContext
+
+    constructor(storage: IGraphicStorage) {
+        super(storage)
 
         this.lineStyle = {
-            width: 2,
+            width: 1,
             color: 0x009797,
-            alpha: 1,
+            alpha: 0.6,
             join: 'round',
             cap: 'round',
+            paddingright: 5,
         }
 
         this.priceCoverStyle = {
             color: 0x009797,
-            paddingright: 5,
             paddingx: 5,
             paddingy: 2.5,
             anchorx: 1,
@@ -48,47 +55,72 @@ export class CrosshairRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        if (!context.mousepos) return new Graphics()
+        if (this._context?.eventTarget !== context.eventTarget) {
+            const handlePointermoveEvent = (event): void => this.updatePointer(container, event)
+            const handlePointerleaveEvent = (): void => this.clear()
 
-        const {
-            height,
-            width,
-        } = context.screen
+            this.handlePointermoveEvent = this.handlePointermoveEvent ?? handlePointermoveEvent
+            this.handlePointerleaveEvent = this.handlePointerleaveEvent ?? handlePointerleaveEvent
 
-        const {
-            timerange,
-            pricerange,
-        } = context.plotdata
+            this._context?.eventTarget.removeEventListener('pointermove', this.handlePointermoveEvent)
+            this._context?.eventTarget.removeEventListener('pointerleave', this.handlePointerleaveEvent)
 
-        const { x, y } = context.mousepos
+            context.eventTarget.addEventListener('pointermove', this.handlePointermoveEvent)
+            context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent)
+        }
 
-        const verticalLine = GraphicUtils.createLine(
-            [x, 0],
-            [x, height],
-            this.lineStyle,
-        )
+        this._context = context
 
-        const pricedif = pricerange[1] - pricerange[0]
-        const price = pricerange[1] - datamath.scale([y], [0, height], pricedif)[0]
-
-        const { paddingright } = this.priceCoverStyle
-        const priceText = GraphicUtils.createCoveredText(
-            price.toFixed(3),
-            [width - paddingright, y],
-            this.priceCoverStyle,
-        )
-
-        const horizontalLine = GraphicUtils.createLine(
-            [0, y],
-            [priceText.x, y],
-            this.lineStyle,
-        )
-
-        const result = new Graphics()
-
-        result.addChild(verticalLine, horizontalLine, priceText)
-
-        return result
+        return container
     }
 
+    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void {
+        const { width, height } = this._context.screen
+        const { pricerange: [minprice, maxprice] } = this._context.plotdata
+        const { x, y } = mouseEvent.position
+
+        const [vertical, verticalState] = this.get('vertical', () => GraphicUtils.createLine(
+            [0, 0],
+            [0, height],
+            this.lineStyle,
+        ))
+        vertical.position.set(x, 0)
+        vertical.height = height
+
+        const pricedif = maxprice - minprice
+        const price = maxprice - datamath.scale([y], [0, height], pricedif)[0]
+
+        const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
+            datamath.toFixedPrecision(price, 8),
+            [width, y],
+            this.priceCoverStyle,
+        ))
+
+        const textGraphic = <Text>coveredText.getChildAt(1)
+        textGraphic.text = datamath.toFixedPrecision(price, 8)
+
+        const { paddingx, paddingy } = this.priceCoverStyle
+        const coverGraphic = <Graphics>coveredText.getChildAt(0)
+        coverGraphic.width = textGraphic.width + paddingx * 2
+        coverGraphic.height = textGraphic.height + paddingy * 2
+
+        const { anchorx, anchory } = this.priceCoverStyle
+        coveredText.position.set(
+            width - coveredText.width * anchorx,
+            y - coveredText.height * anchory
+        )
+
+        const padding = coveredText.width + this.lineStyle.paddingright
+        const [horizontal, horizontalState] = this.get('horizontal', () => GraphicUtils.createLine(
+            [0, 0],
+            [width, 0],
+            this.lineStyle,
+        ))
+        horizontal.position.set(0, y)
+        horizontal.width = width - padding
+
+        if (horizontalState.new) container.addChild(horizontal)
+        if (verticalState.new) container.addChild(vertical)
+        if (coveredTextState.new) container.addChild(coveredText)
+    }
 }

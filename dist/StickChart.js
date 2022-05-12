@@ -32,6 +32,9 @@ class StickChart extends EventTarget {
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
+    setScreenSize({ width, height }) {
+        this.application.renderer.resize(width, height);
+    }
     setTimeframe(timeframe) {
         this.timeframe.save(timeframe);
     }
@@ -75,6 +78,7 @@ class StickChart extends EventTarget {
             charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+            eventTarget: this,
             chartdata,
             plotdata,
         };

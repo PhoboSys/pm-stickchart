@@ -53,6 +53,10 @@ export class StickChart extends EventTarget {
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
+    public setScreenSize({ width, height }) {
+        this.application.renderer.resize(width, height)
+    }
+
     public setTimeframe(timeframe: number) {
         this.timeframe.save(timeframe)
     }
@@ -121,7 +125,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.get()
         )
-        const ctx = {
+        const ctx: RenderingContext = {
             pool: context.pool,
             paris: context.paris,
             resolved: context.resolved,
@@ -129,6 +133,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
+            eventTarget: this,
             chartdata,
             plotdata,
         }
