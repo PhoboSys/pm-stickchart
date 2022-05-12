@@ -17,18 +17,19 @@ class TextureStorage {
         // pre-create
         this.get(symbols_3.LOCK_ICON_TEXTURE);
     }
-    get(name) {
-        if (!this.textures[name]) {
+    get(name, params) {
+        const key = `${name.description}_${JSON.stringify(params)}`;
+        if (!this.textures[key]) {
             infra_1.Logger.warn('Create Texture', name);
             if (this[name] instanceof Function) {
-                this.textures[name] = this[name]();
+                this.textures[key] = this[name](params);
             }
             else {
                 infra_1.Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty');
-                this.textures[name] = this.EMPTY();
+                this.textures[key] = this.EMPTY();
             }
         }
-        return this.textures[name];
+        return this.textures[key];
     }
     EMPTY() {
         return pixi_1.RenderTexture.create({
@@ -137,6 +138,48 @@ class TextureStorage {
         const blob = new Blob([svg], { type: 'image/svg+xml' });
         const url = URL.createObjectURL(blob);
         return pixi_1.RenderTexture.from(url);
+    }
+    [symbols_1.SILVER_LEVEL_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = height + height;
+        const x1 = width;
+        const y1 = 0;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0,
+            y0,
+            x1,
+            y1,
+            colorStops: config_1.default.style.levels.silverColors
+        });
+        return gradient;
+    }
+    [symbols_1.GOLD_LEVEL_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = height + height;
+        const x1 = width;
+        const y1 = 0 - height;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0,
+            y0,
+            x1,
+            y1,
+            colorStops: config_1.default.style.levels.goldColors
+        });
+        return gradient;
+    }
+    [symbols_1.ROYAL_LEVEL_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = height + height;
+        const x1 = width;
+        const y1 = 0 - height;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0,
+            y0,
+            x1,
+            y1,
+            colorStops: config_1.default.style.levels.royalColors,
+        });
+        return gradient;
     }
 }
 exports.TextureStorage = TextureStorage;

@@ -31,6 +31,23 @@ declare const _default: {
         rectunged: boolean;
         upcolor: number;
         downcolor: number;
+        levels: {
+            royalLineColors: number[];
+            goldLineColors: number[];
+            silverLineColors: number[];
+            royalColors: {
+                color: string;
+                offset: number;
+            }[];
+            goldColors: {
+                color: string;
+                offset: number;
+            }[];
+            silverColors: {
+                color: string;
+                offset: number;
+            }[];
+        };
     };
     padding: {
         left: number;

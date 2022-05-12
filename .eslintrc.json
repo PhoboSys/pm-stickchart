@@ -25,6 +25,7 @@
             "error",
             "unix"
         ],
+        "no-underscore-dangle": "off",
         "class-methods-use-this": "off",
         "comma-dangle": [
             "off"
@@ -106,9 +107,7 @@
         "object-curly-newline": [
             "off"
         ],
-        "no-underscore-dangle": [
-            "off"
-        ],
+        "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/space-infix-ops": "off",
         "@typescript-eslint/consistent-type-assertions": [
             "error",

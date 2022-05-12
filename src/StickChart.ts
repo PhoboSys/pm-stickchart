@@ -81,7 +81,7 @@ export class StickChart extends EventTarget {
 
         const { price, timestamp } = latest
         const { timestamps, prices } = this._context.chartdata
-        const idx = timestamps.length - 1
+        const idx = timestamps.length-1
 
         timestamps[idx] = timestamp
         prices[idx] = price

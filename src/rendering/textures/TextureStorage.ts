@@ -5,13 +5,13 @@ import { Application, RenderTexture, GradientFactory, Sprite } from '../../lib/p
 import { Texture, Renderer } from '../../lib/pixi'
 import { ITextureStorage } from '../abstraction'
 
-import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols'
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
 import { LOCK_ICON_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
-    private readonly textures: { [key: symbol]: RenderTexture } = {}
+    private readonly textures: { [key: string]: RenderTexture } = {}
 
     constructor(
         private readonly application: Application,
@@ -20,19 +20,20 @@ export class TextureStorage implements ITextureStorage {
         this.get(LOCK_ICON_TEXTURE)
     }
 
-    public get(name: symbol): RenderTexture {
+    public get(name: symbol, params?: object): RenderTexture {
+        const key = `${name.description}_${JSON.stringify(params)}`
 
-        if (!this.textures[name]) {
+        if (!this.textures[key]) {
             Logger.warn('Create Texture', name)
             if (this[name] instanceof Function) {
-                this.textures[name] = this[name]()
+                this.textures[key] = this[name](params)
             } else {
                 Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty')
-                this.textures[name] = this.EMPTY()
+                this.textures[key] = this.EMPTY()
             }
         }
 
-        return this.textures[name]
+        return this.textures[key]
     }
 
     private EMPTY(): RenderTexture {
@@ -181,5 +182,68 @@ export class TextureStorage implements ITextureStorage {
         const url = URL.createObjectURL(blob)
 
         return RenderTexture.from(url)
+    }
+
+    private [SILVER_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer> this.application.renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0,
+                y0,
+                x1,
+                y1,
+                colorStops: config.style.levels.silverColors
+            },
+        )
+
+        return gradient
+    }
+
+    private [GOLD_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0 - height
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer> this.application.renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0,
+                y0,
+                x1,
+                y1,
+                colorStops: config.style.levels.goldColors
+            },
+        )
+
+        return gradient
+    }
+
+    private [ROYAL_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0 - height
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer> this.application.renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0,
+                y0,
+                x1,
+                y1,
+                colorStops: config.style.levels.royalColors,
+            },
+        )
+
+        return gradient
     }
 }
