@@ -114,7 +114,7 @@ class GraphicUtils {
         const style = new pixi_1.TextStyle(textstyle);
         const text = new pixi_1.Text(String(value), style);
         text.position.set(x, y);
-        text.roundPixels = true;
+        text.roundPixels = false;
         text.resolution = Math.ceil(window.devicePixelRatio);
         text.anchor.set(...(0, lodash_1.castArray)(anchor));
         return text;
