@@ -47,6 +47,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 12,
+            fill: 0x22273F
         };
         this.torusStyle = {
             innerr: 2.5,
@@ -117,7 +118,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
-        const gradient = context.textures.get(textureName, { width, height, angle: 100 });
+        const gradient = context.textures.get(textureName, { width, height });
         const { radius } = this.coverStyle;
         const cover = new pixi_1.Graphics()
             .beginTextureFill({ texture: gradient })
@@ -131,7 +132,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const { innerr, outerr } = this.torusStyle;
         const size = outerr * 2;
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
-        const gradient = context.textures.get(textureName, { width: size, height: size, angle: 5 });
+        const gradient = context.textures.get(textureName, { width: size, height: size });
         const torus = new pixi_1.Graphics()
             .beginTextureFill({ texture: gradient, })
             .drawTorus(0, 0, innerr, outerr)

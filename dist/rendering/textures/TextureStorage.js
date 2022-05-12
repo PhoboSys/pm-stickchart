@@ -21,7 +21,6 @@ class TextureStorage {
         const key = `${name.description}_${JSON.stringify(params)}`;
         if (!this.textures[key]) {
             infra_1.Logger.warn('Create Texture', name);
-            console.log('Create Texture', key);
             if (this[name] instanceof Function) {
                 this.textures[key] = this[name](params);
             }
@@ -142,9 +141,9 @@ class TextureStorage {
     }
     [symbols_1.SILVER_LEVEL_TEXTURE]({ width, height }) {
         const x0 = 0;
-        const y0 = 0;
+        const y0 = height + height;
         const x1 = width;
-        const y1 = 0;
+        const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
@@ -154,11 +153,11 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.GOLD_LEVEL_TEXTURE]({ width, height, angle = 100 }) {
-        const x0 = -angle + 20;
-        const y0 = 0;
-        const x1 = width - angle;
-        const y1 = -angle;
+    [symbols_1.GOLD_LEVEL_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = height + height;
+        const x1 = width;
+        const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
@@ -168,18 +167,17 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.ROYAL_LEVEL_TEXTURE]({ width, height, angle = 0 }) {
-        const x0 = -angle * .8;
-        const y0 = 0;
-        const x1 = width - angle;
-        const y1 = -angle;
-        console.log(x0, y0, x1, y1);
+    [symbols_1.ROYAL_LEVEL_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = height + height;
+        const x1 = width;
+        const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
             x1,
             y1,
-            colorStops: config_1.default.style.levels.royalColors
+            colorStops: config_1.default.style.levels.royalColors,
         });
         return gradient;
     }

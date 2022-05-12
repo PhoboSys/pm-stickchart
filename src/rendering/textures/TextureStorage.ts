@@ -186,9 +186,9 @@ export class TextureStorage implements ITextureStorage {
 
     private [SILVER_LEVEL_TEXTURE]({ width, height }): RenderTexture {
         const x0 = 0
-        const y0 = 0
+        const y0 = height + height
         const x1 = width
-        const y1 = 0
+        const y1 = 0 - height
 
         const gradient = GradientFactory.createLinearGradient(
             <Renderer> this.application.renderer,
@@ -205,11 +205,11 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [GOLD_LEVEL_TEXTURE]({ width, height, angle = 100 }): RenderTexture {
-        const x0 = -angle * .8
-        const y0 = 0
-        const x1 = width - angle
-        const y1 = -angle
+    private [GOLD_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0 - height
 
         const gradient = GradientFactory.createLinearGradient(
             <Renderer> this.application.renderer,
@@ -226,11 +226,11 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [ROYAL_LEVEL_TEXTURE]({ width, height, angle = 0 }): RenderTexture {
-        const x0 = -angle * .8
-        const y0 = 0
-        const x1 = width - angle
-        const y1 = -angle
+    private [ROYAL_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0 - height
 
         const gradient = GradientFactory.createLinearGradient(
             <Renderer> this.application.renderer,
@@ -240,7 +240,7 @@ export class TextureStorage implements ITextureStorage {
                 y0,
                 x1,
                 y1,
-                colorStops: config.style.levels.royalColors
+                colorStops: config.style.levels.royalColors,
             },
         )
 

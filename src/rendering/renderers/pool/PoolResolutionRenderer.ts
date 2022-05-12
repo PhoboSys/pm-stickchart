@@ -3,7 +3,7 @@ import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
 
 import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text } from '../../../lib/pixi'
+import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
 import { ROYAL, SILVER, GOLD } from '../../../constants/poollevels'
 import * as TEXTURE_NAMES from '../../textures/symbols'
 export class PoolResolutionRenderer extends BaseRenderer {
@@ -37,6 +37,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 12,
+            fill: 0x22273F
         }
 
         this.torusStyle = {
@@ -147,7 +148,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const height = text.height + paddingy * 2
 
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
-        const gradient = context.textures.get(textureName, { width, height, angle: 100 })
+        const gradient = context.textures.get(textureName, { width, height })
 
         const { radius } = this.coverStyle
         const cover = new Graphics()
@@ -166,7 +167,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
         const size = outerr * 2
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
-        const gradient = context.textures.get(textureName, { width: size, height: size, angle: 5 })
+        const gradient = context.textures.get(textureName, { width: size, height: size })
 
         const torus = new Graphics()
             .beginTextureFill({ texture: gradient, })
