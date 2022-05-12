@@ -54,7 +54,9 @@ export default {
                 { color: '#FFD77D', offset: 1 },
             ],
             silverColors: [
-                { color: '#FFFFFF', offset: 1 },
+                { color: '#B6BBB4', offset: 0 },
+                { color: '#E4E5E9', offset: 0.5467 },
+                { color: '#C4CAC3', offset: 1 },
             ],
         },
     },

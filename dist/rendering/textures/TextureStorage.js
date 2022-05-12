@@ -143,7 +143,7 @@ class TextureStorage {
         const x0 = 0;
         const y0 = height + height;
         const x1 = width;
-        const y1 = 0 - height;
+        const y1 = 0;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
