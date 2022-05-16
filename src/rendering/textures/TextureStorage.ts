@@ -153,8 +153,8 @@ export class TextureStorage implements ITextureStorage {
         const gradient = GradientFactory.createLinearGradient(
             <Renderer>renderer,
             RenderTexture.create({
-                width: renderer.width,
-                height: renderer.height,
+                width,
+                height,
             }),
             {
                 x0, y0,
@@ -249,11 +249,11 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [LOCK_COUNTDOWN_TEXTURE]({ paddingTop }): RenderTexture {
+    private [LOCK_COUNTDOWN_TEXTURE](): RenderTexture {
         const { width, height, } = this.application.screen
 
         const x0 = 0
-        const y0 = paddingTop
+        const y0 = 0
         const x1 = 0
         const y1 = height
 

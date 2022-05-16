@@ -12,7 +12,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.style = {
-            paddingTop: 34,
+            alpha: .2,
         };
     }
     get rendererId() {
@@ -32,26 +32,25 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         const leftx = Math.max(Number(xs.at(-1)), ox);
         if (leftx > rightx)
             return this.hideContainer(container);
-        const { paddingTop } = this.style;
         const shape = [
-            0, paddingTop,
-            rightx - leftx, paddingTop,
+            0, 0,
+            rightx - leftx, 0,
             rightx - leftx, height,
             0, height,
         ];
         const [gradient, gradientState] = this.get('gradient', () => new pixi_1.Graphics()
             .beginTextureFill({
-            texture: context.textures.get(symbols_1.LOCK_COUNTDOWN_TEXTURE, this.style),
+            texture: context.textures.get(symbols_1.LOCK_COUNTDOWN_TEXTURE),
         })
             .drawPolygon(shape)
             .closePath()
             .endFill());
         gradient.position.x = leftx;
         gradient.width = rightx - leftx;
-        gradient.height = height - paddingTop;
+        gradient.height = height;
         if (gradientState.new)
             container.addChild(gradient);
-        container.alpha = .5;
+        container.alpha = this.style.alpha;
         return container;
     }
 }

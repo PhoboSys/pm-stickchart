@@ -43,7 +43,9 @@ export default {
         downcolor: 0xF05750,
         lockCountdownColors: [
             { color: '#FFA00000', offset: 0 },
-            { color: '#FFA000', offset: 0.5 },
+            { color: '#FFA00000', offset: 0.05 },
+            { color: '#FFA000FF', offset: 0.5 },
+            { color: '#FFA00000', offset: 0.95 },
             { color: '#FFA00000', offset: 1, },
         ],
         levels: {
@@ -56,7 +58,7 @@ export default {
                 { color: '#EBCEAE', offset: 0.3743 },
                 { color: '#E4E5E9', offset: 0.5467 },
                 { color: '#B3B7B8', offset: 0.7083 },
-                { color: '#DEE0DF', offset:1 },
+                { color: '#DEE0DF', offset: 1 },
             ],
 
             goldColors: [

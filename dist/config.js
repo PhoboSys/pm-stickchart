@@ -38,7 +38,9 @@ exports.default = {
         downcolor: 0xF05750,
         lockCountdownColors: [
             { color: '#FFA00000', offset: 0 },
-            { color: '#FFA000', offset: 0.5 },
+            { color: '#FFA00000', offset: 0.05 },
+            { color: '#FFA000FF', offset: 0.5 },
+            { color: '#FFA00000', offset: 0.95 },
             { color: '#FFA00000', offset: 1, },
         ],
         levels: {
