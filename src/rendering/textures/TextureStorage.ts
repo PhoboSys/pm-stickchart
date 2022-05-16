@@ -5,9 +5,11 @@ import { Application, RenderTexture, GradientFactory, Sprite } from '../../lib/p
 import { Texture, Renderer } from '../../lib/pixi'
 import { ITextureStorage } from '../abstraction'
 
-import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols'
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
 import { LOCK_ICON_TEXTURE } from './symbols'
+import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols'
+import { LEFT_OPEN_TIME_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
@@ -241,6 +243,30 @@ export class TextureStorage implements ITextureStorage {
                 x1,
                 y1,
                 colorStops: config.style.levels.royalColors,
+            },
+        )
+
+        return gradient
+    }
+
+    private [LEFT_OPEN_TIME_TEXTURE]({ paddingTop, paddingBottom }): RenderTexture {
+        const { width, height, } = this.application.screen
+
+        const x0 = 0
+        const y0 = paddingTop
+        const x1 = 0
+        const y1 = height - paddingBottom
+
+        const renderer = <Renderer> this.application.renderer
+        const gradient = GradientFactory.createLinearGradient(
+            renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0,
+                y0,
+                x1,
+                y1,
+                colorStops: config.style.openTimeLeftColors,
             },
         )
 

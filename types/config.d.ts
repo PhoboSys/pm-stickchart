@@ -31,6 +31,10 @@ declare const _default: {
         rectunged: boolean;
         upcolor: number;
         downcolor: number;
+        openTimeLeftColors: {
+            color: string;
+            offset: number;
+        }[];
         levels: {
             royalLineColors: number[];
             goldLineColors: number[];

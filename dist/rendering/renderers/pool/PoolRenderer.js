@@ -7,6 +7,7 @@ const PoolResolutionRenderer_1 = require("./PoolResolutionRenderer");
 const PoolLockRenderer_1 = require("./PoolLockRenderer");
 const PoolBackgroundRenderer_1 = require("./PoolBackgroundRenderer");
 const PoolOpenPriceLineRenderer_1 = require("./PoolOpenPriceLineRenderer");
+const PoolLeftOpenTimeRenderer_1 = require("./PoolLeftOpenTimeRenderer");
 class PoolRenderer {
     constructor(renderer) {
         this.renderer = renderer;
@@ -16,6 +17,7 @@ class PoolRenderer {
             new PoolOpenRenderer_1.PoolOpenRenderer(renderer),
             new PoolResolutionRenderer_1.PoolResolutionRenderer(renderer),
             new PoolOpenPriceLineRenderer_1.PoolOpenPriceLineRenderer(renderer),
+            new PoolLeftOpenTimeRenderer_1.PoolLeftOpenTimeRenderer(renderer)
         ]);
     }
     render(context, done) {

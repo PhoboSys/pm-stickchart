@@ -32,6 +32,11 @@ exports.default = {
         rectunged: false,
         upcolor: 0x00A573,
         downcolor: 0xF05750,
+        openTimeLeftColors: [
+            { color: '#C4C4C400', offset: 0 },
+            { color: '#FFA00000', offset: 0.01 },
+            { color: '#FFA00080', offset: 1, },
+        ],
         levels: {
             royalLineColors: [0xDDDFDE, 0xB3B7B8],
             goldLineColors: [0xD19F37, 0xFDD77E],
