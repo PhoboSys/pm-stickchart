@@ -46,7 +46,7 @@ export default {
             { color: '#FFA00000', offset: 0.05 },
             { color: '#FFA000FF', offset: 0.5 },
             { color: '#FFA00000', offset: 0.95 },
-            { color: '#FFA00000', offset: 1, },
+            { color: '#FFA00000', offset: 1 },
         ],
         levels: {
             royalLineColors: [0xDDDFDE, 0xB3B7B8],
