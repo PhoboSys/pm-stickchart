@@ -23,6 +23,10 @@ declare const _default: {
         ease: string;
     };
     maxdensity: number;
+    price: {
+        showSymbols: boolean;
+        precision: number;
+    };
     style: {
         background: number;
         backgroundAlpha: number;
@@ -31,6 +35,10 @@ declare const _default: {
         rectunged: boolean;
         upcolor: number;
         downcolor: number;
+        lockCountdownColors: {
+            color: string;
+            offset: number;
+        }[];
         levels: {
             royalLineColors: number[];
             goldLineColors: number[];

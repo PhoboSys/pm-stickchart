@@ -1,9 +1,11 @@
 import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
-import { PointermoveEvent } from '../../events'
+import { PointerleaveEvent, PointermoveEvent } from '../../events'
 import datamath from '../../lib/datamath'
 import { Graphics, Container, Text } from '../../lib/pixi'
+import ui from '../../lib/ui/index'
+import { USD } from '../../constants/currencies'
 
 export class CrosshairRenderer extends BaseRenderer {
 
@@ -18,6 +20,8 @@ export class CrosshairRenderer extends BaseRenderer {
     private handlePointerleaveEvent: any
 
     private _context: RenderingContext
+
+    private _position: { x: number, y: number } | null
 
     constructor(storage: IGraphicStorage) {
         super(storage)
@@ -71,13 +75,19 @@ export class CrosshairRenderer extends BaseRenderer {
 
         this._context = context
 
+        this.updatePointer(container)
+
         return container
     }
 
-    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void {
+    protected updatePointer(container: Container, event?: PointermoveEvent): void {
+        if (event) this._position = event.position
+
+        if (!this._position) return
+
         const { width, height } = this._context.screen
         const { pricerange: [minprice, maxprice] } = this._context.plotdata
-        const { x, y } = mouseEvent.position
+        const { x, y } = this._position
 
         const [vertical, verticalState] = this.get('vertical', () => GraphicUtils.createLine(
             [0, 0],
@@ -91,13 +101,13 @@ export class CrosshairRenderer extends BaseRenderer {
         const price = maxprice - datamath.scale([y], [0, height], pricedif)[0]
 
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
-            datamath.toFixedPrecision(price, 8),
+            ui.currency(price, USD),
             [width, y],
             this.priceCoverStyle,
         ))
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = datamath.toFixedPrecision(price, 8)
+        textGraphic.text = ui.currency(price, USD)
 
         const { paddingx, paddingy } = this.priceCoverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)
@@ -122,5 +132,11 @@ export class CrosshairRenderer extends BaseRenderer {
         if (horizontalState.new) container.addChild(horizontal)
         if (verticalState.new) container.addChild(vertical)
         if (coveredTextState.new) container.addChild(coveredText)
+    }
+
+    protected clear(name?: string): void {
+        if (!name) this._position = null
+
+        super.clear(name)
     }
 }

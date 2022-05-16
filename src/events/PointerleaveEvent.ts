@@ -1,7 +1,7 @@
 export class PointerleaveEvent extends Event {
     public static readonly NAME: string = 'pointerleave'
 
-    public readonly inner: MouseEvent
+    public readonly inner: PointerEvent
 
     public readonly position: { x: number, y: number }
 

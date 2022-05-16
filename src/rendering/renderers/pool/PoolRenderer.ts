@@ -5,6 +5,7 @@ import { PoolResolutionRenderer } from './PoolResolutionRenderer'
 import { PoolLockRenderer } from './PoolLockRenderer'
 import { PoolBackgroundRenderer } from './PoolBackgroundRenderer'
 import { PoolOpenPriceLineRenderer } from './PoolOpenPriceLineRenderer'
+import { PoolLockCountdownRenderer } from './PoolLockCountdownRenderer'
 
 export class PoolRenderer implements IRenderer {
 
@@ -18,6 +19,7 @@ export class PoolRenderer implements IRenderer {
             new PoolLockRenderer(renderer),
             new PoolOpenRenderer(renderer),
             new PoolResolutionRenderer(renderer),
+            new PoolLockCountdownRenderer(renderer),
             new PoolOpenPriceLineRenderer(renderer),
         ])
     }

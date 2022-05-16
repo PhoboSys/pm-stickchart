@@ -1,5 +1,5 @@
-import { ChartData, PlotData } from '../../chartdata'
-import { Application, Rectangle } from '../../lib/pixi'
+import { PlotData } from '../../chartdata'
+import { Rectangle } from '../../lib/pixi'
 import { ITextureStorage } from './interfaces'
 
 import { EChartType } from '../../enums'
@@ -18,5 +18,4 @@ export type RenderingContext = {
 
     eventTarget: EventTarget,
     rerender?: boolean
-    mousepos?: { x: number, y: number, }
 }

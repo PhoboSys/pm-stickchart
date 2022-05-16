@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
 const __1 = require("..");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
+const index_1 = __importDefault(require("../../lib/ui/index"));
+const currencies_1 = require("../../constants/currencies");
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(storage) {
         super(storage);
@@ -48,20 +50,25 @@ class CrosshairRenderer extends __1.BaseRenderer {
             context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent);
         }
         this._context = context;
+        this.updatePointer(container);
         return container;
     }
-    updatePointer(container, mouseEvent) {
+    updatePointer(container, event) {
+        if (event)
+            this._position = event.position;
+        if (!this._position)
+            return;
         const { width, height } = this._context.screen;
         const { pricerange: [minprice, maxprice] } = this._context.plotdata;
-        const { x, y } = mouseEvent.position;
+        const { x, y } = this._position;
         const [vertical, verticalState] = this.get('vertical', () => __1.GraphicUtils.createLine([0, 0], [0, height], this.lineStyle));
         vertical.position.set(x, 0);
         vertical.height = height;
         const pricedif = maxprice - minprice;
         const price = maxprice - datamath_1.default.scale([y], [0, height], pricedif)[0];
-        const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [width, y], this.priceCoverStyle));
+        const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(index_1.default.currency(price, currencies_1.USD), [width, y], this.priceCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = datamath_1.default.toFixedPrecision(price, 8);
+        textGraphic.text = index_1.default.currency(price, currencies_1.USD);
         const { paddingx, paddingy } = this.priceCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;
@@ -78,6 +85,11 @@ class CrosshairRenderer extends __1.BaseRenderer {
             container.addChild(vertical);
         if (coveredTextState.new)
             container.addChild(coveredText);
+    }
+    clear(name) {
+        if (!name)
+            this._position = null;
+        super.clear(name);
     }
 }
 exports.CrosshairRenderer = CrosshairRenderer;

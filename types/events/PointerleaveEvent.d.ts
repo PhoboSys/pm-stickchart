@@ -1,6 +1,6 @@
 export declare class PointerleaveEvent extends Event {
     static readonly NAME: string;
-    readonly inner: MouseEvent;
+    readonly inner: PointerEvent;
     readonly position: {
         x: number;
         y: number;

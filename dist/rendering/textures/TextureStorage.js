@@ -10,6 +10,8 @@ const pixi_1 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
 const symbols_3 = require("./symbols");
+const symbols_4 = require("./symbols");
+const symbols_5 = require("./symbols");
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -139,7 +141,7 @@ class TextureStorage {
         const url = URL.createObjectURL(blob);
         return pixi_1.RenderTexture.from(url);
     }
-    [symbols_1.SILVER_LEVEL_TEXTURE]({ width, height }) {
+    [symbols_4.SILVER_LEVEL_TEXTURE]({ width, height }) {
         const x0 = 0;
         const y0 = height + height;
         const x1 = width;
@@ -153,7 +155,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.GOLD_LEVEL_TEXTURE]({ width, height }) {
+    [symbols_4.GOLD_LEVEL_TEXTURE]({ width, height }) {
         const x0 = 0;
         const y0 = height + height;
         const x1 = width;
@@ -167,7 +169,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.ROYAL_LEVEL_TEXTURE]({ width, height }) {
+    [symbols_4.ROYAL_LEVEL_TEXTURE]({ width, height }) {
         const x0 = 0;
         const y0 = height + height;
         const x1 = width;
@@ -178,6 +180,22 @@ class TextureStorage {
             x1,
             y1,
             colorStops: config_1.default.style.levels.royalColors,
+        });
+        return gradient;
+    }
+    [symbols_5.LOCK_COUNTDOWN_TEXTURE]({ paddingTop }) {
+        const { width, height, } = this.application.screen;
+        const x0 = 0;
+        const y0 = paddingTop;
+        const x1 = 0;
+        const y1 = height;
+        const renderer = this.application.renderer;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0,
+            y0,
+            x1,
+            y1,
+            colorStops: config_1.default.style.lockCountdownColors,
         });
         return gradient;
     }

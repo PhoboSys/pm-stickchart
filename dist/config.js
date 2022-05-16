@@ -23,6 +23,10 @@ exports.default = {
     },
     //data
     maxdensity: 500,
+    price: {
+        showSymbols: true,
+        precision: 8,
+    },
     //chart
     style: {
         background: 0x000000,
@@ -32,6 +36,11 @@ exports.default = {
         rectunged: false,
         upcolor: 0x00A573,
         downcolor: 0xF05750,
+        lockCountdownColors: [
+            { color: '#FFA00000', offset: 0 },
+            { color: '#FFA000', offset: 0.5 },
+            { color: '#FFA00000', offset: 1, },
+        ],
         levels: {
             royalLineColors: [0xDDDFDE, 0xB3B7B8],
             goldLineColors: [0xD19F37, 0xFDD77E],

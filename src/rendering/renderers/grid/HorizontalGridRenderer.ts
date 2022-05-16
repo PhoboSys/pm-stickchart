@@ -1,9 +1,11 @@
-import { Graphics, Container } from '../../../lib/pixi'
+import { Container } from '../../../lib/pixi'
 import datamath from '../../../lib/datamath'
 import config from '../../../config'
 
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
+import ui from '../../../lib/ui/index'
+import { USD } from '../../../constants/currencies'
 
 export class HorizontalGridRenderer extends BaseRenderer {
 
@@ -75,7 +77,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
             ))
             if (textState.new) container.addChild(text)
             text.position.set(width, y)
-            text.text = datamath.toFixedScaled(price, stepsize)
+            text.text = ui.currency(price, USD)
 
         }
 

@@ -4,6 +4,8 @@ import { BaseRenderer, GraphicUtils } from '../..'
 
 import datamath from '../../../lib/datamath'
 import { Graphics, Container, Text } from '../../../lib/pixi'
+import ui from '../../../lib/ui/index'
+import { USD } from '../../../constants/currencies'
 export class PoolOpenPriceLineRenderer extends BaseRenderer {
 
     static readonly POOL_OPEN_PRICE_LINE_ID: symbol = Symbol('POOL_OPEN_PRICE_LINE_ID')
@@ -96,7 +98,7 @@ export class PoolOpenPriceLineRenderer extends BaseRenderer {
         const [point, pointstate] = this.get('point', () => this.createPricePoint())
         point.position.set(x, y)
 
-        const priceValue = datamath.toFixedPrecision(openDataPoint.value, 8)
+        const priceValue = ui.currency(openDataPoint.value, USD)
         const [coveredText, coveredTextState] = this.get('cover', () => this.createPriceText(priceValue))
 
         const textGraphic = <Text>coveredText.getChildAt(1)

@@ -9,8 +9,10 @@ export declare class CrosshairRenderer extends BaseRenderer {
     private handlePointermoveEvent;
     private handlePointerleaveEvent;
     private _context;
+    private _position;
     constructor(storage: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
-    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void;
+    protected updatePointer(container: Container, event?: PointermoveEvent): void;
+    protected clear(name?: string): void;
 }
