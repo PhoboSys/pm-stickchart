@@ -13,10 +13,10 @@ class PoolRenderer {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
             new PoolBackgroundRenderer_1.PoolBackgroundRenderer(renderer),
+            new PoolLockCountdownRenderer_1.PoolLockCountdownRenderer(renderer),
             new PoolLockRenderer_1.PoolLockRenderer(renderer),
             new PoolOpenRenderer_1.PoolOpenRenderer(renderer),
             new PoolResolutionRenderer_1.PoolResolutionRenderer(renderer),
-            new PoolLockCountdownRenderer_1.PoolLockCountdownRenderer(renderer),
             new PoolOpenPriceLineRenderer_1.PoolOpenPriceLineRenderer(renderer),
         ]);
     }
