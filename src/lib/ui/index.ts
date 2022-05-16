@@ -16,7 +16,7 @@ export default class ui {
         return symb + datamath.toFixedPrecision(price,  config.price.precision)
     }
 
-    static currencyScaled(price, currently, scale: number,): string {
+    static currencyScaled(price, currently, scale: number): string {
         const symbols = {
             [USD]: '$'
         }
