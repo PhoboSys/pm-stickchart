@@ -4,6 +4,8 @@ import config from '../../../../config'
 
 import datamath from '../../../../lib/datamath'
 import { Graphics, Container, Text } from '../../../../lib/pixi'
+import ui from '../../../../lib/ui/index'
+import { USD } from '../../../../constants/currencies'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 
@@ -76,7 +78,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         if (coveredTextState.new) container.addChild(coveredText)
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = `$${datamath.toFixedPrecision(price, 8)}`
+        textGraphic.text = ui.currency(price, USD)
 
         const { paddingx, paddingy } = this.textCoverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

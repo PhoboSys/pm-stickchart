@@ -23,6 +23,10 @@ declare const _default: {
         ease: string;
     };
     maxdensity: number;
+    price: {
+        showSymbols: boolean;
+        precision: number;
+    };
     style: {
         background: number;
         backgroundAlpha: number;

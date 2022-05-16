@@ -7,6 +7,8 @@ exports.HorizontalGridRenderer = void 0;
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const config_1 = __importDefault(require("../../../config"));
 const __1 = require("../..");
+const index_1 = __importDefault(require("../../../lib/ui/index"));
+const currencies_1 = require("../../../constants/currencies");
 class HorizontalGridRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -52,7 +54,7 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
             if (textState.new)
                 container.addChild(text);
             text.position.set(width, y);
-            text.text = `$${datamath_1.default.toFixedScaled(price, stepsize)}`;
+            text.text = index_1.default.currency(price, currencies_1.USD);
         }
         return container;
     }

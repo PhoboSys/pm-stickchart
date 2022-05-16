@@ -27,6 +27,11 @@ export default {
     //data
     maxdensity: 500,
 
+    price: {
+        showSymbols: true,
+        precision: 8,
+    },
+
     //chart
     style: {
         background: 0x000000,

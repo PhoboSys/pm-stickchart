@@ -7,6 +7,8 @@ exports.CrosshairRenderer = void 0;
 const __1 = require("..");
 const events_1 = require("../../events");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
+const index_1 = __importDefault(require("../../lib/ui/index"));
+const currencies_1 = require("../../constants/currencies");
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(storage) {
         super(storage);
@@ -71,7 +73,7 @@ class CrosshairRenderer extends __1.BaseRenderer {
         const price = maxprice - datamath_1.default.scale([y], [0, height], pricedif)[0];
         const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [width, y], this.priceCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = `$${datamath_1.default.toFixedPrecision(price, 8)}`;
+        textGraphic.text = index_1.default.currency(price, currencies_1.USD);
         const { paddingx, paddingy } = this.priceCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;

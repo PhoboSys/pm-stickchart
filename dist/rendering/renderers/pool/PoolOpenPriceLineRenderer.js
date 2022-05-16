@@ -7,6 +7,8 @@ exports.PoolOpenPriceLineRenderer = void 0;
 const __1 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
+const index_1 = __importDefault(require("../../../lib/ui/index"));
+const currencies_1 = require("../../../constants/currencies");
 class PoolOpenPriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -63,7 +65,7 @@ class PoolOpenPriceLineRenderer extends __1.BaseRenderer {
         const priceValue = datamath_1.default.toFixedPrecision(openDataPoint.value, 8);
         const [coveredText, coveredTextState] = this.get('cover', () => this.createPriceText(priceValue));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = `$${priceValue}`;
+        textGraphic.text = index_1.default.currency(openDataPoint.value, currencies_1.USD);
         const { paddingx, paddingy } = this.coverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         const coverWidth = textGraphic.width + paddingx * 2;
