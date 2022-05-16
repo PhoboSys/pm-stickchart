@@ -100,7 +100,7 @@ export class PoolOpenPriceLineRenderer extends BaseRenderer {
         const [coveredText, coveredTextState] = this.get('cover', () => this.createPriceText(priceValue))
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = priceValue
+        textGraphic.text = `$${priceValue}`
 
         const { paddingx, paddingy } = this.coverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

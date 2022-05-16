@@ -63,7 +63,7 @@ class PoolOpenPriceLineRenderer extends __1.BaseRenderer {
         const priceValue = datamath_1.default.toFixedPrecision(openDataPoint.value, 8);
         const [coveredText, coveredTextState] = this.get('cover', () => this.createPriceText(priceValue));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = priceValue;
+        textGraphic.text = `$${priceValue}`;
         const { paddingx, paddingy } = this.coverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         const coverWidth = textGraphic.width + paddingx * 2;

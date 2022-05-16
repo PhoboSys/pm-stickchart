@@ -97,7 +97,7 @@ export class CrosshairRenderer extends BaseRenderer {
         ))
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = datamath.toFixedPrecision(price, 8)
+        textGraphic.text = `$${datamath.toFixedPrecision(price, 8)}`
 
         const { paddingx, paddingy } = this.priceCoverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

@@ -76,7 +76,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         if (coveredTextState.new) container.addChild(coveredText)
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = datamath.toFixedPrecision(price, 8)
+        textGraphic.text = `$${datamath.toFixedPrecision(price, 8)}`
 
         const { paddingx, paddingy } = this.textCoverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

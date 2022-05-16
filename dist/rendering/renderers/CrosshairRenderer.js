@@ -61,7 +61,7 @@ class CrosshairRenderer extends __1.BaseRenderer {
         const price = maxprice - datamath_1.default.scale([y], [0, height], pricedif)[0];
         const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [width, y], this.priceCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = datamath_1.default.toFixedPrecision(price, 8);
+        textGraphic.text = `$${datamath_1.default.toFixedPrecision(price, 8)}`;
         const { paddingx, paddingy } = this.priceCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;
