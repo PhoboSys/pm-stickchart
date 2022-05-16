@@ -50,11 +50,12 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
                 container.addChild(line);
             line.position.set(0, y);
             line.width = width;
-            const [text, textState] = this.get('y_gridtext' + idx, () => __1.GraphicUtils.createText(datamath_1.default.toFixedScaled(price, stepsize), [width, y], this.textStyle, 1.1));
+            const priceValue = index_1.default.currencyScaled(price, currencies_1.USD, stepsize);
+            const [text, textState] = this.get('y_gridtext' + idx, () => __1.GraphicUtils.createText(priceValue, [width, y], this.textStyle, 1.1));
             if (textState.new)
                 container.addChild(text);
             text.position.set(width, y);
-            text.text = index_1.default.currency(price, currencies_1.USD);
+            text.text = priceValue;
         }
         return container;
     }
