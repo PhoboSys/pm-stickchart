@@ -19,8 +19,8 @@ export class PoolRenderer implements IRenderer {
             new PoolLockRenderer(renderer),
             new PoolOpenRenderer(renderer),
             new PoolResolutionRenderer(renderer),
+            new PoolLeftOpenTimeRenderer(renderer),
             new PoolOpenPriceLineRenderer(renderer),
-            new PoolLeftOpenTimeRenderer(renderer)
         ])
     }
 

@@ -16,8 +16,8 @@ class PoolRenderer {
             new PoolLockRenderer_1.PoolLockRenderer(renderer),
             new PoolOpenRenderer_1.PoolOpenRenderer(renderer),
             new PoolResolutionRenderer_1.PoolResolutionRenderer(renderer),
+            new PoolLeftOpenTimeRenderer_1.PoolLeftOpenTimeRenderer(renderer),
             new PoolOpenPriceLineRenderer_1.PoolOpenPriceLineRenderer(renderer),
-            new PoolLeftOpenTimeRenderer_1.PoolLeftOpenTimeRenderer(renderer)
         ]);
     }
     render(context, done) {
