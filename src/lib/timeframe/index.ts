@@ -58,7 +58,7 @@ export class Timeframe {
     }
 
     private tooSmall(timeframe) {
-        return timeframe < UNIX_MINUTE * 10
+        return timeframe < UNIX_MINUTE * 5
     }
 
     private zoom(zoom: number) {

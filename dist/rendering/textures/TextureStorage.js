@@ -115,8 +115,8 @@ class TextureStorage {
         const bottomcolor = '#F07750' + '00';
         const { renderer } = this.application;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
-            width: renderer.width,
-            height: renderer.height,
+            width,
+            height,
         }), {
             x0, y0,
             x1, y1,
@@ -183,10 +183,10 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_5.LOCK_COUNTDOWN_TEXTURE]({ paddingTop }) {
+    [symbols_5.LOCK_COUNTDOWN_TEXTURE]() {
         const { width, height, } = this.application.screen;
         const x0 = 0;
-        const y0 = paddingTop;
+        const y0 = 0;
         const x1 = 0;
         const y1 = height;
         const renderer = this.application.renderer;

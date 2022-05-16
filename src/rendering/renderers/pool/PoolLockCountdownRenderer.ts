@@ -15,7 +15,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         super(renderer)
 
         this.style = {
-            paddingTop: 34,
+            alpha: .2,
         }
     }
 
@@ -47,11 +47,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         const leftx = Math.max(Number(xs.at(-1)), ox)
         if (leftx > rightx) return this.hideContainer(container)
 
-        const { paddingTop } = this.style
-
         const shape = [
-            0, paddingTop,
-            rightx - leftx, paddingTop,
+            0, 0,
+            rightx - leftx, 0,
             rightx - leftx, height,
             0, height,
         ]
@@ -60,7 +58,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
             'gradient',
             () => new Graphics()
                 .beginTextureFill({
-                    texture: context.textures.get(LOCK_COUNTDOWN_TEXTURE, this.style),
+                    texture: context.textures.get(LOCK_COUNTDOWN_TEXTURE),
                 })
                 .drawPolygon(shape)
                 .closePath()
@@ -70,10 +68,10 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         gradient.position.x = leftx
 
         gradient.width = rightx - leftx
-        gradient.height = height - paddingTop
+        gradient.height = height
 
         if (gradientState.new) container.addChild(gradient)
-        container.alpha = .5
+        container.alpha = this.style.alpha
 
         return container
     }

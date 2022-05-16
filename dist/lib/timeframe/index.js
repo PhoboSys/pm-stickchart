@@ -44,7 +44,7 @@ class Timeframe {
         return timeframe > exports.UNIX_DAY;
     }
     tooSmall(timeframe) {
-        return timeframe < exports.UNIX_MINUTE * 10;
+        return timeframe < exports.UNIX_MINUTE * 5;
     }
     zoom(zoom) {
         const now = nowUnixTS();
