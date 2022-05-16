@@ -1,6 +1,5 @@
 import { RenderingContext, IGraphicStorage } from '..';
 import { BaseRenderer } from '..';
-import { PointermoveEvent } from '../../events';
 import { Container } from '../../lib/pixi';
 export declare class CrosshairRenderer extends BaseRenderer {
     static readonly CROSSHAIR_ID: symbol;
@@ -9,8 +8,9 @@ export declare class CrosshairRenderer extends BaseRenderer {
     private handlePointermoveEvent;
     private handlePointerleaveEvent;
     private _context;
+    private _event;
     constructor(storage: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
-    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void;
+    protected updatePointer(container: Container): void;
 }

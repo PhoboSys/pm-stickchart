@@ -1,7 +1,7 @@
 import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
-import { PointermoveEvent } from '../../events'
+import { PointerleaveEvent, PointermoveEvent } from '../../events'
 import datamath from '../../lib/datamath'
 import { Graphics, Container, Text } from '../../lib/pixi'
 
@@ -18,6 +18,8 @@ export class CrosshairRenderer extends BaseRenderer {
     private handlePointerleaveEvent: any
 
     private _context: RenderingContext
+
+    private _event: PointerleaveEvent | PointermoveEvent
 
     constructor(storage: IGraphicStorage) {
         super(storage)
@@ -56,8 +58,17 @@ export class CrosshairRenderer extends BaseRenderer {
         container: Container,
     ): Container {
         if (this._context?.eventTarget !== context.eventTarget) {
-            const handlePointermoveEvent = (event): void => this.updatePointer(container, event)
-            const handlePointerleaveEvent = (): void => this.clear()
+            const handlePointermoveEvent = (event): void => {
+                this._event = event
+
+                this.updatePointer(container)
+            }
+
+            const handlePointerleaveEvent = (event): void => {
+                this._event = event
+
+                this.clear()
+            }
 
             this.handlePointermoveEvent = this.handlePointermoveEvent ?? handlePointermoveEvent
             this.handlePointerleaveEvent = this.handlePointerleaveEvent ?? handlePointerleaveEvent
@@ -71,13 +82,17 @@ export class CrosshairRenderer extends BaseRenderer {
 
         this._context = context
 
+        this.updatePointer(container)
+
         return container
     }
 
-    protected updatePointer(container: Container, mouseEvent: PointermoveEvent): void {
+    protected updatePointer(container: Container): void {
+        if (!this._event || this._event instanceof PointerleaveEvent) return this.clear()
+
         const { width, height } = this._context.screen
         const { pricerange: [minprice, maxprice] } = this._context.plotdata
-        const { x, y } = mouseEvent.position
+        const { x, y } = this._event.position
 
         const [vertical, verticalState] = this.get('vertical', () => GraphicUtils.createLine(
             [0, 0],

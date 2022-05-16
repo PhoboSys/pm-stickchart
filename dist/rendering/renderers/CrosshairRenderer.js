@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
 const __1 = require("..");
+const events_1 = require("../../events");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(storage) {
@@ -38,8 +39,14 @@ class CrosshairRenderer extends __1.BaseRenderer {
     update(context, container) {
         var _a, _b, _c, _d, _e;
         if (((_a = this._context) === null || _a === void 0 ? void 0 : _a.eventTarget) !== context.eventTarget) {
-            const handlePointermoveEvent = (event) => this.updatePointer(container, event);
-            const handlePointerleaveEvent = () => this.clear();
+            const handlePointermoveEvent = (event) => {
+                this._event = event;
+                this.updatePointer(container);
+            };
+            const handlePointerleaveEvent = (event) => {
+                this._event = event;
+                this.clear();
+            };
             this.handlePointermoveEvent = (_b = this.handlePointermoveEvent) !== null && _b !== void 0 ? _b : handlePointermoveEvent;
             this.handlePointerleaveEvent = (_c = this.handlePointerleaveEvent) !== null && _c !== void 0 ? _c : handlePointerleaveEvent;
             (_d = this._context) === null || _d === void 0 ? void 0 : _d.eventTarget.removeEventListener('pointermove', this.handlePointermoveEvent);
@@ -48,12 +55,15 @@ class CrosshairRenderer extends __1.BaseRenderer {
             context.eventTarget.addEventListener('pointerleave', this.handlePointerleaveEvent);
         }
         this._context = context;
+        this.updatePointer(container);
         return container;
     }
-    updatePointer(container, mouseEvent) {
+    updatePointer(container) {
+        if (!this._event || this._event instanceof events_1.PointerleaveEvent)
+            return this.clear();
         const { width, height } = this._context.screen;
         const { pricerange: [minprice, maxprice] } = this._context.plotdata;
-        const { x, y } = mouseEvent.position;
+        const { x, y } = this._event.position;
         const [vertical, verticalState] = this.get('vertical', () => __1.GraphicUtils.createLine([0, 0], [0, height], this.lineStyle));
         vertical.position.set(x, 0);
         vertical.height = height;
