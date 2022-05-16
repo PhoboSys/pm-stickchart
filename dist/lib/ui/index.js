@@ -17,6 +17,15 @@ class ui {
             symb = '';
         return symb + datamath_1.default.toFixedPrecision(price, config_1.default.price.precision);
     }
+    static currencyScaled(price, currently, scale) {
+        const symbols = {
+            [currencies_1.USD]: '$'
+        };
+        let symb = symbols[currently] || '';
+        if (!config_1.default.price.showSymbols)
+            symb = '';
+        return symb + datamath_1.default.toFixedScaled(price, scale);
+    }
 }
 exports.default = ui;
 //# sourceMappingURL=index.js.map

@@ -69,15 +69,16 @@ export class HorizontalGridRenderer extends BaseRenderer {
             line.position.set(0, y)
             line.width = width
 
+            const priceValue = ui.currencyScaled(price, USD, stepsize)
             const [text, textState] = this.get('y_gridtext'+idx, () => GraphicUtils.createText(
-                datamath.toFixedScaled(price, stepsize),
+                priceValue,
                 [width, y],
                 this.textStyle,
                 1.1,
             ))
             if (textState.new) container.addChild(text)
             text.position.set(width, y)
-            text.text = ui.currency(price, USD)
+            text.text = priceValue
 
         }
 
