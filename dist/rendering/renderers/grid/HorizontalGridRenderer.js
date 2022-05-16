@@ -52,7 +52,7 @@ class HorizontalGridRenderer extends __1.BaseRenderer {
             if (textState.new)
                 container.addChild(text);
             text.position.set(width, y);
-            text.text = datamath_1.default.toFixedScaled(price, stepsize);
+            text.text = `$${datamath_1.default.toFixedScaled(price, stepsize)}`;
         }
         return container;
     }

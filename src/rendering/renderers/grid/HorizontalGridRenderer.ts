@@ -75,7 +75,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
             ))
             if (textState.new) container.addChild(text)
             text.position.set(width, y)
-            text.text = datamath.toFixedScaled(price, stepsize)
+            text.text = `$${datamath.toFixedScaled(price, stepsize)}`
 
         }
 

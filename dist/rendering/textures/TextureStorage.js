@@ -183,19 +183,19 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_5.LEFT_OPEN_TIME_TEXTURE]({ paddingTop, paddingBottom }) {
+    [symbols_5.LOCK_COUNTDOWN_TEXTURE]({ paddingTop }) {
         const { width, height, } = this.application.screen;
         const x0 = 0;
         const y0 = paddingTop;
         const x1 = 0;
-        const y1 = height - paddingBottom;
+        const y1 = height;
         const renderer = this.application.renderer;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0,
             y0,
             x1,
             y1,
-            colorStops: config_1.default.style.openTimeLeftColors,
+            colorStops: config_1.default.style.lockCountdownColors,
         });
         return gradient;
     }

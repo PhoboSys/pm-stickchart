@@ -9,7 +9,7 @@ import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
 import { LOCK_ICON_TEXTURE } from './symbols'
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols'
-import { LEFT_OPEN_TIME_TEXTURE } from './symbols'
+import { LOCK_COUNTDOWN_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
@@ -249,13 +249,13 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [LEFT_OPEN_TIME_TEXTURE]({ paddingTop, paddingBottom }): RenderTexture {
+    private [LOCK_COUNTDOWN_TEXTURE]({ paddingTop }): RenderTexture {
         const { width, height, } = this.application.screen
 
         const x0 = 0
         const y0 = paddingTop
         const x1 = 0
-        const y1 = height - paddingBottom
+        const y1 = height
 
         const renderer = <Renderer> this.application.renderer
         const gradient = GradientFactory.createLinearGradient(
@@ -266,7 +266,7 @@ export class TextureStorage implements ITextureStorage {
                 y0,
                 x1,
                 y1,
-                colorStops: config.style.openTimeLeftColors,
+                colorStops: config.style.lockCountdownColors,
             },
         )
 

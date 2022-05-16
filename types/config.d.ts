@@ -31,7 +31,7 @@ declare const _default: {
         rectunged: boolean;
         upcolor: number;
         downcolor: number;
-        openTimeLeftColors: {
+        lockCountdownColors: {
             color: string;
             offset: number;
         }[];
