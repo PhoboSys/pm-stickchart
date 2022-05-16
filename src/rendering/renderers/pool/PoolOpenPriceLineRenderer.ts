@@ -98,11 +98,11 @@ export class PoolOpenPriceLineRenderer extends BaseRenderer {
         const [point, pointstate] = this.get('point', () => this.createPricePoint())
         point.position.set(x, y)
 
-        const priceValue = datamath.toFixedPrecision(openDataPoint.value, 8)
+        const priceValue = ui.currency(openDataPoint.value, USD)
         const [coveredText, coveredTextState] = this.get('cover', () => this.createPriceText(priceValue))
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = ui.currency(openDataPoint.value, USD)
+        textGraphic.text = priceValue
 
         const { paddingx, paddingy } = this.coverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

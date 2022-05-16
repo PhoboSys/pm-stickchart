@@ -17,8 +17,4 @@ export declare type RenderingContext = {
     };
     eventTarget: EventTarget;
     rerender?: boolean;
-    mousepos?: {
-        x: number;
-        y: number;
-    };
 };
