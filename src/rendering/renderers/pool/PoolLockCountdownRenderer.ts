@@ -135,9 +135,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
         gradient.width = rightx - leftx
         gradient.height = height
+        gradient.alpha = this.style.alpha
 
         if (gradientState.new) container.addChild(gradient)
-        container.alpha = this.style.alpha
 
         return container
     }

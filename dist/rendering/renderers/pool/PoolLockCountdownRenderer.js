@@ -92,9 +92,9 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         gradient.position.x = leftx;
         gradient.width = rightx - leftx;
         gradient.height = height;
+        gradient.alpha = this.style.alpha;
         if (gradientState.new)
             container.addChild(gradient);
-        container.alpha = this.style.alpha;
         return container;
     }
     updateText(context, container) {
