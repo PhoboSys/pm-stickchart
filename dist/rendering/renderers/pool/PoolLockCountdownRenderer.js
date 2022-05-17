@@ -14,20 +14,20 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.style = {
-            alpha: .2,
+            alpha: .3,
         };
         this.postextStyle = {
             fill: 0xFFA000,
             fontWeight: 400,
             fontFamily: 'Gilroy',
-            fontSize: 15,
+            fontSize: 16,
             paddingBottom: 5,
         };
         this.countdowntextStyle = {
             fill: 0xFFA000,
             fontWeight: 400,
             fontFamily: 'Gilroy',
-            fontSize: 20,
+            fontSize: 32,
             paddingBottom: 10,
         };
     }
