@@ -5,8 +5,11 @@ class DateUtils {
     static unixTStoDate(timestamp) {
         return new Date(timestamp * 1000);
     }
-    static unixTSNow() {
-        return Date.now() / 1000;
+    static nowUnixTS() {
+        return Math.floor(Date.now() / 1000);
+    }
+    static toUnixTS(timestamp) {
+        return Math.floor(timestamp / 1000);
     }
     static formatUnixTSToHHmm(timestamp) {
         const date = DateUtils.unixTStoDate(timestamp);

@@ -1,6 +1,7 @@
 export declare class DateUtils {
     static unixTStoDate(timestamp: number): Date;
-    static unixTSNow(): number;
+    static nowUnixTS(): number;
+    static toUnixTS(timestamp: number): number;
     static formatUnixTSToHHmm(timestamp: number): string;
     static formatSecondsToMMSS(seconds: number): string;
 }

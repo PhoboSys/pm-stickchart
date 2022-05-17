@@ -3,8 +3,12 @@ export class DateUtils {
         return new Date(timestamp * 1000)
     }
 
-    static unixTSNow(): number {
-        return Date.now() / 1000
+    static nowUnixTS(): number {
+        return Math.floor(Date.now() / 1000)
+    }
+
+    static toUnixTS(timestamp: number): number {
+        return Math.floor(timestamp / 1000)
     }
 
     static formatUnixTSToHHmm(timestamp: number): string {

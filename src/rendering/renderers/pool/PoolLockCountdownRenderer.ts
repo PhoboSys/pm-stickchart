@@ -19,7 +19,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
     private _context: RenderingContext
 
-    private _countdownTicker = new Ticker()
+    private _countdownTimerID
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -43,33 +43,33 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
             fontSize: 20,
             paddingBottom: 10,
         }
-
-        this.setupCountdownTicker()
     }
 
     public get rendererId(): symbol {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID
     }
 
-    private setupCountdownTicker(): void {
-        this._countdownTicker.minFPS = 1
-        this._countdownTicker.maxFPS = 1
+    private startCountdownTimer(): void {
+        if (this._countdownTimerID) return
 
-        this._countdownTicker.add(
-            () => {
-                const { lockDate } = this._context.pool
-                if (DateUtils.unixTSNow() > lockDate)
-                    return this._countdownTicker.stop()
+        const timer = (): void => {
+            const { lockDate } = this._context.pool
+            if (DateUtils.nowUnixTS() > lockDate) {
 
-                this.updateCountdown()
+                clearTimeout(this._countdownTimerID)
+                this._countdownTimerID = null
+
+                return
             }
-        )
-    }
 
-    private startCountdownTicker(): void {
-        if (this._countdownTicker.started) return
+            this.updateCountdown()
 
-        this._countdownTicker.start()
+            clearTimeout(this._countdownTimerID)
+            const firein =
+                DateUtils.toUnixTS(Date.now() + config.countdownPeriod) * 1000 - Date.now()
+            this._countdownTimerID = setTimeout(timer, firein)
+        }
+        timer()
     }
 
     private hideContainer(container: Container): Container {
@@ -85,14 +85,15 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         if (!context.pool) return this.hideContainer(container)
 
         const { lockDate } = context.pool
-        if (DateUtils.unixTSNow() > lockDate) return this.hideContainer(container)
-
-        this._context = context
-        container.alpha = 1
-        this.startCountdownTicker()
+        if (DateUtils.nowUnixTS() > lockDate) return this.hideContainer(container)
 
         this.updateBackground(context, container)
         this.updateText(context, container)
+
+        this._context = context
+        this.startCountdownTimer()
+
+        container.alpha = 1
 
         return container
     }
@@ -160,7 +161,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         const { top, bottom } = config.padding
         const y = height / (1 + top + bottom) * top
 
-        const countdownValue = DateUtils.formatSecondsToMMSS(lockDate - DateUtils.unixTSNow())
+        const countdownValue = DateUtils.formatSecondsToMMSS(lockDate - DateUtils.nowUnixTS())
         const [countdowntext, countdownstate] = this.get(
             'countdownText',
             () => new Text(countdownValue, this.countdowntextStyle)
@@ -207,7 +208,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         )
 
         const { lockDate } = this._context.pool
-        const countdownSeconds = lockDate - DateUtils.unixTSNow()
+        const countdownSeconds = lockDate - DateUtils.nowUnixTS()
 
         countdowntext.text = DateUtils.formatSecondsToMMSS(countdownSeconds)
     }

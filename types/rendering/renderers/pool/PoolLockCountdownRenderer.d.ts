@@ -7,11 +7,10 @@ export declare class PoolLockCountdownRenderer extends BaseRenderer {
     private readonly postextStyle;
     private readonly countdowntextStyle;
     private _context;
-    private _countdownTicker;
+    private _countdownTimerID;
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    private setupCountdownTicker;
-    private startCountdownTicker;
+    private startCountdownTimer;
     private hideContainer;
     protected update(context: RenderingContext, container: Container): Container;
     protected updateBackground(context: RenderingContext, container: Container): Container;
