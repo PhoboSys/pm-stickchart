@@ -102,7 +102,6 @@ export class DataBuilder {
             config.padding.top,
         )
 
-
         const { width, height } = screen
         const xs = datamath.scale(timestamps, timerange, width)
         const ys = datamath.scaleReverse(prices, pricerange, height)

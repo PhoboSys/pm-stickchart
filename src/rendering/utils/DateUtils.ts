@@ -3,6 +3,10 @@ export class DateUtils {
         return new Date(timestamp * 1000)
     }
 
+    static unixTSNow(): number {
+        return Date.now() / 1000
+    }
+
     static formatUnixTSToHHmm(timestamp: number): string {
         const date = DateUtils.unixTStoDate(timestamp)
 
@@ -12,4 +16,12 @@ export class DateUtils {
         return `${hh}:${mm}`
     }
 
+    static formatSecondsToMMSS(seconds: number): string {
+        const mm = Math.floor(seconds / 60)
+        if (mm === 0) return seconds.toFixed(0)
+
+        const ss = (seconds % 60).toFixed(0).padStart(2, '0')
+
+        return `${mm}:${ss}`
+    }
 }

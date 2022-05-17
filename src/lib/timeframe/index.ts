@@ -12,7 +12,7 @@ export const UNIX_DAY = 24 * UNIX_HOUR
 export const UNIX_WEEK = 7 * UNIX_DAY
 
 export function nowUnixTS() {
-  return Math.floor(Date.now() / 1000)
+    return Math.floor(Date.now() / 1000)
 }
 
 export class Timeframe {
@@ -21,9 +21,9 @@ export class Timeframe {
 
     private readonly zoomevent: any
 
-    constructor (
-       private readonly zoomTarget: EventTarget,
-       private readonly onZoom: () => any,
+    constructor(
+        private readonly zoomTarget: EventTarget,
+        private readonly onZoom: () => any,
     ) {
         this.zoomevent = throttle(
             (e: ZoomEvent) => this.zoom(e.zoom),
