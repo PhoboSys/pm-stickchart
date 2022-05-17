@@ -22,7 +22,6 @@ declare const _default: {
         duration: number;
         ease: string;
     };
-    countdownPeriod: number;
     maxdensity: number;
     price: {
         showSymbols: boolean;

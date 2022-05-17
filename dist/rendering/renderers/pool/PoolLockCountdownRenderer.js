@@ -34,22 +34,15 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
     get rendererId() {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID;
     }
-    startCountdownTimer() {
-        if (this._countdownTimerID)
-            return;
-        const timer = () => {
-            const { lockDate } = this._context.pool;
-            if (DateUtils_1.DateUtils.nowUnixTS() > lockDate) {
-                clearTimeout(this._countdownTimerID);
-                this._countdownTimerID = null;
-                return;
-            }
-            this.updateCountdown();
-            clearTimeout(this._countdownTimerID);
-            const firein = DateUtils_1.DateUtils.toUnixTS(Date.now() + config_1.default.countdownPeriod) * 1000 - Date.now();
-            this._countdownTimerID = setTimeout(timer, firein);
-        };
-        timer();
+    clearVisitPeriod() {
+        clearTimeout(this._TIMERID);
+    }
+    visitPeriod(visitor, period = 1000) {
+        visitor();
+        this.clearVisitPeriod();
+        const now = Date.now();
+        const firein = Math.floor((now + period) / 1000) * 1000 - now;
+        this._TIMERID = setTimeout(() => this.visitPeriod(visitor, period), firein);
     }
     hideContainer(container) {
         container.alpha = 0;
@@ -63,8 +56,8 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             return this.hideContainer(container);
         this.updateBackground(context, container);
         this.updateText(context, container);
-        this._context = context;
-        this.startCountdownTimer();
+        this._lockDate = context.pool.lockDate;
+        this.visitPeriod(() => this.updateCountdown());
         container.alpha = 1;
         return container;
     }
@@ -130,9 +123,10 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return container;
     }
     updateCountdown() {
+        if (this._lockDate < DateUtils_1.DateUtils.nowUnixTS())
+            return this.clearVisitPeriod();
         const [countdowntext] = this.get('countdownText', () => new pixi_1.Text(''));
-        const { lockDate } = this._context.pool;
-        const countdownSeconds = lockDate - DateUtils_1.DateUtils.nowUnixTS();
+        const countdownSeconds = this._lockDate - DateUtils_1.DateUtils.nowUnixTS();
         countdowntext.text = DateUtils_1.DateUtils.formatSecondsToMMSS(countdownSeconds);
     }
 }

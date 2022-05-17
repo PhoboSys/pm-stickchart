@@ -17,9 +17,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
     private readonly countdowntextStyle: any
 
-    private _context: RenderingContext
+    private _lockDate: number
 
-    private _countdownTimerID
+    private _TIMERID: any
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -49,27 +49,18 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID
     }
 
-    private startCountdownTimer(): void {
-        if (this._countdownTimerID) return
+    private clearVisitPeriod(): void {
+        clearTimeout(this._TIMERID)
+    }
 
-        const timer = (): void => {
-            const { lockDate } = this._context.pool
-            if (DateUtils.nowUnixTS() > lockDate) {
+    private visitPeriod(visitor, period = 1000): void {
+        visitor()
 
-                clearTimeout(this._countdownTimerID)
-                this._countdownTimerID = null
+        this.clearVisitPeriod()
 
-                return
-            }
-
-            this.updateCountdown()
-
-            clearTimeout(this._countdownTimerID)
-            const firein =
-                DateUtils.toUnixTS(Date.now() + config.countdownPeriod) * 1000 - Date.now()
-            this._countdownTimerID = setTimeout(timer, firein)
-        }
-        timer()
+        const now = Date.now()
+        const firein = Math.floor((now + period) / 1000) * 1000 - now
+        this._TIMERID = setTimeout(() => this.visitPeriod(visitor, period), firein)
     }
 
     private hideContainer(container: Container): Container {
@@ -90,8 +81,8 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         this.updateBackground(context, container)
         this.updateText(context, container)
 
-        this._context = context
-        this.startCountdownTimer()
+        this._lockDate = context.pool.lockDate
+        this.visitPeriod(() => this.updateCountdown())
 
         container.alpha = 1
 
@@ -202,13 +193,14 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
     }
 
     protected updateCountdown(): void {
+        if (this._lockDate < DateUtils.nowUnixTS()) return this.clearVisitPeriod()
+
         const [countdowntext] = this.get(
             'countdownText',
             () => new Text('')
         )
 
-        const { lockDate } = this._context.pool
-        const countdownSeconds = lockDate - DateUtils.nowUnixTS()
+        const countdownSeconds = this._lockDate - DateUtils.nowUnixTS()
 
         countdowntext.text = DateUtils.formatSecondsToMMSS(countdownSeconds)
     }

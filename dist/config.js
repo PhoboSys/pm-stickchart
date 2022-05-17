@@ -21,7 +21,6 @@ exports.default = {
         duration: 1.618,
         ease: 'power2.out',
     },
-    countdownPeriod: 1000,
     //data
     maxdensity: 500,
     price: {
