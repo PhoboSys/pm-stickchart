@@ -17,9 +17,11 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
     private readonly countdowntextStyle: any
 
-    private _lockDate: number
+    private _visit: (() => void) | null
 
     private _TIMERID: any
+
+    private _lockDate: number
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -43,28 +45,28 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
             fontSize: 32,
             paddingBottom: 10,
         }
+
+        this._visitor()
     }
 
     public get rendererId(): symbol {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID
     }
 
-    private clearVisitPeriod(): void {
-        clearTimeout(this._TIMERID)
-    }
-
-    private visitPeriod(visitor, period = 1000): void {
-        visitor()
-
-        this.clearVisitPeriod()
+    private _visitor(period = 1000): void {
+        if (this._visit) this._visit()
 
         const now = Date.now()
         const firein = Math.floor((now + period) / 1000) * 1000 - now
-        this._TIMERID = setTimeout(() => this.visitPeriod(visitor, period), firein)
+
+        clearTimeout(this._TIMERID)
+        this._TIMERID = setTimeout(() => this._visitor(period), firein)
     }
 
-    private hideContainer(container: Container): Container {
+    private hideContainerAndDestroyVisitor(container: Container): Container {
         container.alpha = 0
+
+        this._visit = null
 
         return container
     }
@@ -73,16 +75,14 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container
     ): Container {
-        if (!context.pool) return this.hideContainer(container)
-
-        const { lockDate } = context.pool
-        if (DateUtils.nowUnixTS() > lockDate) return this.hideContainer(container)
+        const hasExpired = context.pool?.lockDate < DateUtils.nowUnixTS()
+        if (!context.pool || hasExpired) return this.hideContainerAndDestroyVisitor(container)
 
         this.updateBackground(context, container)
         this.updateText(context, container)
 
         this._lockDate = context.pool.lockDate
-        this.visitPeriod(() => this.updateCountdown())
+        this._visit = () => this.updateCountdown(container)
 
         container.alpha = 1
 
@@ -93,6 +93,8 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
+        if (context.pool.lockDate < DateUtils.nowUnixTS()) return container
+
         const {
             width,
             height,
@@ -103,7 +105,6 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
         const [ox, rightx] = datamath.scale([openDate, lockDate], timerange, width)
         const leftx = Math.max(Number(xs.at(-1)), ox)
-        if (leftx > rightx) return this.hideContainer(container)
 
         const shape = [
             0, 0,
@@ -138,6 +139,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
+        if (context.pool.lockDate < DateUtils.nowUnixTS())
+            return this.hideContainerAndDestroyVisitor(container)
+
         const {
             height,
             width
@@ -192,8 +196,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         return container
     }
 
-    protected updateCountdown(): void {
-        if (this._lockDate < DateUtils.nowUnixTS()) return this.clearVisitPeriod()
+    protected updateCountdown(container: Container): Container {
+        if (this._lockDate < DateUtils.nowUnixTS())
+            return this.hideContainerAndDestroyVisitor(container)
 
         const [countdowntext] = this.get(
             'countdownText',
@@ -203,6 +208,8 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         const countdownSeconds = this._lockDate - DateUtils.nowUnixTS()
 
         countdowntext.text = DateUtils.formatSecondsToMMSS(countdownSeconds)
+
+        return container
     }
 
 }

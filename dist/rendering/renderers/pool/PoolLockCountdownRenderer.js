@@ -30,45 +30,44 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             fontSize: 32,
             paddingBottom: 10,
         };
+        this._visitor();
     }
     get rendererId() {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID;
     }
-    clearVisitPeriod() {
-        clearTimeout(this._TIMERID);
-    }
-    visitPeriod(visitor, period = 1000) {
-        visitor();
-        this.clearVisitPeriod();
+    _visitor(period = 1000) {
+        if (this._visit)
+            this._visit();
         const now = Date.now();
         const firein = Math.floor((now + period) / 1000) * 1000 - now;
-        this._TIMERID = setTimeout(() => this.visitPeriod(visitor, period), firein);
+        clearTimeout(this._TIMERID);
+        this._TIMERID = setTimeout(() => this._visitor(period), firein);
     }
-    hideContainer(container) {
+    hideContainerAndDestroyVisitor(container) {
         container.alpha = 0;
+        this._visit = null;
         return container;
     }
     update(context, container) {
-        if (!context.pool)
-            return this.hideContainer(container);
-        const { lockDate } = context.pool;
-        if (DateUtils_1.DateUtils.nowUnixTS() > lockDate)
-            return this.hideContainer(container);
+        var _a;
+        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < DateUtils_1.DateUtils.nowUnixTS();
+        if (!context.pool || hasExpired)
+            return this.hideContainerAndDestroyVisitor(container);
         this.updateBackground(context, container);
         this.updateText(context, container);
         this._lockDate = context.pool.lockDate;
-        this.visitPeriod(() => this.updateCountdown());
+        this._visit = () => this.updateCountdown(container);
         container.alpha = 1;
         return container;
     }
     updateBackground(context, container) {
+        if (context.pool.lockDate < DateUtils_1.DateUtils.nowUnixTS())
+            return container;
         const { width, height, } = context.screen;
         const { lockDate, openDate } = context.pool;
         const { timerange, xs } = context.plotdata;
         const [ox, rightx] = datamath_1.default.scale([openDate, lockDate], timerange, width);
         const leftx = Math.max(Number(xs.at(-1)), ox);
-        if (leftx > rightx)
-            return this.hideContainer(container);
         const shape = [
             0, 0,
             rightx - leftx, 0,
@@ -91,6 +90,8 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return container;
     }
     updateText(context, container) {
+        if (context.pool.lockDate < DateUtils_1.DateUtils.nowUnixTS())
+            return this.hideContainerAndDestroyVisitor(container);
         const { height, width } = context.screen;
         const { lockDate, openDate } = context.pool;
         const { timerange } = context.plotdata;
@@ -122,12 +123,13 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         }
         return container;
     }
-    updateCountdown() {
+    updateCountdown(container) {
         if (this._lockDate < DateUtils_1.DateUtils.nowUnixTS())
-            return this.clearVisitPeriod();
+            return this.hideContainerAndDestroyVisitor(container);
         const [countdowntext] = this.get('countdownText', () => new pixi_1.Text(''));
         const countdownSeconds = this._lockDate - DateUtils_1.DateUtils.nowUnixTS();
         countdowntext.text = DateUtils_1.DateUtils.formatSecondsToMMSS(countdownSeconds);
+        return container;
     }
 }
 exports.PoolLockCountdownRenderer = PoolLockCountdownRenderer;
