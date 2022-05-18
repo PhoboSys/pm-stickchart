@@ -19,10 +19,6 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
     private _visit: (() => void) | null
 
-    private _TIMERID: any
-
-    private _lockDate: number
-
     constructor(renderer: IGraphicStorage) {
         super(renderer)
 
@@ -54,13 +50,18 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
     }
 
     private _visitor(period = 1000): void {
-        if (this._visit) this._visit()
+        let TIMERID
 
-        const now = Date.now()
-        const firein = Math.floor((now + period) / 1000) * 1000 - now
+        const timer = () => {
+            if (this._visit) this._visit()
 
-        clearTimeout(this._TIMERID)
-        this._TIMERID = setTimeout(() => this._visitor(period), firein)
+            const now = Date.now()
+            const firein = Math.floor((now + period) / 1000) * 1000 - now
+
+            clearTimeout(TIMERID)
+            TIMERID = setTimeout(() => this._visitor(period), firein)
+        }
+        timer()
     }
 
     private hideContainerAndDestroyVisitor(container: Container): Container {
@@ -81,8 +82,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         this.updateBackground(context, container)
         this.updateText(context, container)
 
-        this._lockDate = context.pool.lockDate
-        this._visit = () => this.updateCountdown(container)
+        this._visit = () => this.updateText(context, container)
 
         container.alpha = 1
 
@@ -137,6 +137,9 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
+        const hasExpired = context.pool?.lockDate < DateUtils.nowUnixTS()
+        if (hasExpired) return this.hideContainerAndDestroyVisitor(container)
+
         const {
             height,
             width
@@ -190,21 +193,4 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
         return container
     }
-
-    protected updateCountdown(container: Container): Container {
-        if (this._lockDate < DateUtils.nowUnixTS())
-            return this.hideContainerAndDestroyVisitor(container)
-
-        const [countdowntext] = this.get(
-            'countdownText',
-            () => new Text('')
-        )
-
-        const countdownSeconds = this._lockDate - DateUtils.nowUnixTS()
-
-        countdowntext.text = DateUtils.formatSecondsToMMSS(countdownSeconds)
-
-        return container
-    }
-
 }

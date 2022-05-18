@@ -36,12 +36,16 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID;
     }
     _visitor(period = 1000) {
-        if (this._visit)
-            this._visit();
-        const now = Date.now();
-        const firein = Math.floor((now + period) / 1000) * 1000 - now;
-        clearTimeout(this._TIMERID);
-        this._TIMERID = setTimeout(() => this._visitor(period), firein);
+        let TIMERID;
+        const timer = () => {
+            if (this._visit)
+                this._visit();
+            const now = Date.now();
+            const firein = Math.floor((now + period) / 1000) * 1000 - now;
+            clearTimeout(TIMERID);
+            TIMERID = setTimeout(() => this._visitor(period), firein);
+        };
+        timer();
     }
     hideContainerAndDestroyVisitor(container) {
         container.alpha = 0;
@@ -55,8 +59,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             return this.hideContainerAndDestroyVisitor(container);
         this.updateBackground(context, container);
         this.updateText(context, container);
-        this._lockDate = context.pool.lockDate;
-        this._visit = () => this.updateCountdown(container);
+        this._visit = () => this.updateText(context, container);
         container.alpha = 1;
         return container;
     }
@@ -88,6 +91,10 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return container;
     }
     updateText(context, container) {
+        var _a;
+        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < DateUtils_1.DateUtils.nowUnixTS();
+        if (hasExpired)
+            return this.hideContainerAndDestroyVisitor(container);
         const { height, width } = context.screen;
         const { lockDate, openDate } = context.pool;
         const { timerange } = context.plotdata;
@@ -117,14 +124,6 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             postext.mask = boundary;
             countdowntext.mask = boundary;
         }
-        return container;
-    }
-    updateCountdown(container) {
-        if (this._lockDate < DateUtils_1.DateUtils.nowUnixTS())
-            return this.hideContainerAndDestroyVisitor(container);
-        const [countdowntext] = this.get('countdownText', () => new pixi_1.Text(''));
-        const countdownSeconds = this._lockDate - DateUtils_1.DateUtils.nowUnixTS();
-        countdowntext.text = DateUtils_1.DateUtils.formatSecondsToMMSS(countdownSeconds);
         return container;
     }
 }
