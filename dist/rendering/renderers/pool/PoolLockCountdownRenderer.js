@@ -61,8 +61,6 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return container;
     }
     updateBackground(context, container) {
-        if (context.pool.lockDate < DateUtils_1.DateUtils.nowUnixTS())
-            return container;
         const { width, height, } = context.screen;
         const { lockDate, openDate } = context.pool;
         const { timerange, xs } = context.plotdata;
@@ -90,8 +88,6 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         return container;
     }
     updateText(context, container) {
-        if (context.pool.lockDate < DateUtils_1.DateUtils.nowUnixTS())
-            return this.hideContainerAndDestroyVisitor(container);
         const { height, width } = context.screen;
         const { lockDate, openDate } = context.pool;
         const { timerange } = context.plotdata;

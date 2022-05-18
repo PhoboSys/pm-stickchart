@@ -93,8 +93,6 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        if (context.pool.lockDate < DateUtils.nowUnixTS()) return container
-
         const {
             width,
             height,
@@ -139,9 +137,6 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         context: RenderingContext,
         container: Container,
     ): Container {
-        if (context.pool.lockDate < DateUtils.nowUnixTS())
-            return this.hideContainerAndDestroyVisitor(container)
-
         const {
             height,
             width
