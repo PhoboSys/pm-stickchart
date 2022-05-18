@@ -30,26 +30,22 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             fontSize: 32,
             paddingBottom: 10,
         };
-        this._visitor();
+        this.countdown();
     }
     get rendererId() {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID;
     }
-    _visitor(period = 1000) {
-        let TIMERID;
-        const timer = () => {
-            if (this._visit)
-                this._visit();
-            const now = Date.now();
-            const firein = Math.floor((now + period) / 1000) * 1000 - now;
-            clearTimeout(TIMERID);
-            TIMERID = setTimeout(() => this._visitor(period), firein);
-        };
-        timer();
+    countdown() {
+        if (this._countdownTick)
+            this._countdownTick();
+        const period = 1000;
+        const now = Date.now();
+        const firein = Math.floor((now + period) / 1000) * 1000 - now;
+        setTimeout(() => this.countdown(), firein);
     }
     hideContainerAndDestroyVisitor(container) {
         container.alpha = 0;
-        this._visit = null;
+        this._countdownTick = null;
         return container;
     }
     update(context, container) {
@@ -59,7 +55,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
             return this.hideContainerAndDestroyVisitor(container);
         this.updateBackground(context, container);
         this.updateText(context, container);
-        this._visit = () => this.updateText(context, container);
+        this._countdownTick = () => this.updateText(context, container);
         container.alpha = 1;
         return container;
     }

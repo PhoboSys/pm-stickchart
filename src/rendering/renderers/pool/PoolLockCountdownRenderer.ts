@@ -17,7 +17,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
 
     private readonly countdowntextStyle: any
 
-    private _visit: (() => void) | null
+    private _countdownTick: (() => void) | null
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -42,32 +42,27 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
             paddingBottom: 10,
         }
 
-        this._visitor()
+        this.countdown()
     }
 
     public get rendererId(): symbol {
         return PoolLockCountdownRenderer.POOL_LOCK_COUNTDOWN_ID
     }
 
-    private _visitor(period = 1000): void {
-        let TIMERID
+    private countdown(): void {
+        if (this._countdownTick) this._countdownTick()
 
-        const timer = () => {
-            if (this._visit) this._visit()
+        const period = 1000
+        const now = Date.now()
+        const firein = Math.floor((now + period) / 1000) * 1000 - now
 
-            const now = Date.now()
-            const firein = Math.floor((now + period) / 1000) * 1000 - now
-
-            clearTimeout(TIMERID)
-            TIMERID = setTimeout(() => this._visitor(period), firein)
-        }
-        timer()
+        setTimeout(() => this.countdown(), firein)
     }
 
     private hideContainerAndDestroyVisitor(container: Container): Container {
         container.alpha = 0
 
-        this._visit = null
+        this._countdownTick = null
 
         return container
     }
@@ -82,7 +77,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         this.updateBackground(context, container)
         this.updateText(context, container)
 
-        this._visit = () => this.updateText(context, container)
+        this._countdownTick = () => this.updateText(context, container)
 
         container.alpha = 1
 
