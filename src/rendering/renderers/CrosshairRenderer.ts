@@ -6,6 +6,7 @@ import datamath from '../../lib/datamath'
 import { Graphics, Container, Text } from '../../lib/pixi'
 import ui from '../../lib/ui/index'
 import { USD } from '../../constants/currencies'
+import { DateUtils } from '../utils/DateUtils'
 
 export class CrosshairRenderer extends BaseRenderer {
 
@@ -14,6 +15,8 @@ export class CrosshairRenderer extends BaseRenderer {
     private readonly lineStyle: any
 
     private readonly priceCoverStyle: any
+
+    private readonly timeCoverStyle: any
 
     private handlePointermoveEvent: any
 
@@ -32,7 +35,8 @@ export class CrosshairRenderer extends BaseRenderer {
             alpha: 0.6,
             join: 'round',
             cap: 'round',
-            paddingright: 5,
+            paddingRight: 5,
+            paddingBottom: 5,
         }
 
         this.priceCoverStyle = {
@@ -41,6 +45,21 @@ export class CrosshairRenderer extends BaseRenderer {
             paddingy: 2.5,
             anchorx: 1,
             anchory: 0.5,
+            radius: 30,
+            textstyle: {
+                fill: 0xFFFFFF,
+                fontWeight: 600,
+                fontFamily: 'Gilroy',
+                fontSize: 13,
+            },
+        }
+
+        this.timeCoverStyle = {
+            color: 0x009797,
+            paddingx: 5,
+            paddingy: 2.5,
+            anchorx: .5,
+            anchory: 1,
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -85,26 +104,74 @@ export class CrosshairRenderer extends BaseRenderer {
 
         if (!this._position) return
 
+        this.updateVertical(container)
+        this.updateHorizontal(container)
+    }
+
+    protected updateVertical(container: Container): void {
+        const { width, height } = this._context.screen
+        const { timerange: [mintime, maxtime] } = this._context.plotdata
+        const { x } = this._position!
+
+        const timedif = maxtime - mintime
+        const time = mintime + datamath.scale([x], [0, width], timedif)[0]
+        const timeValue = DateUtils.formatUnixTSToHHmm(time)
+
+        const [coveredText, coveredTextState] = this.get(
+            'timeCoveredText',
+            () => GraphicUtils.createCoveredText(
+                timeValue,
+                [x, height],
+                this.timeCoverStyle,
+            )
+        )
+
+        const textGraphic = <Text>coveredText.getChildAt(1)
+        textGraphic.text = timeValue
+
+        const { paddingx, paddingy } = this.timeCoverStyle
+        const coverGraphic = <Graphics>coveredText.getChildAt(0)
+        coverGraphic.width = textGraphic.width + paddingx * 2
+        coverGraphic.height = textGraphic.height + paddingy * 2
+
+        const { anchorx, anchory } = this.timeCoverStyle
+        coveredText.position.set(
+            x - coveredText.width * anchorx,
+            height - coveredText.height * anchory
+        )
+
+        const padding = coveredText.height + this.lineStyle.paddingBottom
+        const [horizontal, horizontalState] = this.get(
+            'vertical',
+            () => GraphicUtils.createLine(
+                [0, 0],
+                [0, height],
+                this.lineStyle,
+            )
+        )
+        horizontal.position.set(x, 0)
+        horizontal.height = height - padding
+
+        if (horizontalState.new) container.addChild(horizontal)
+        if (coveredTextState.new) container.addChild(coveredText)
+    }
+
+    protected updateHorizontal(container: Container): void {
         const { width, height } = this._context.screen
         const { pricerange: [minprice, maxprice] } = this._context.plotdata
-        const { x, y } = this._position
-
-        const [vertical, verticalState] = this.get('vertical', () => GraphicUtils.createLine(
-            [0, 0],
-            [0, height],
-            this.lineStyle,
-        ))
-        vertical.position.set(x, 0)
-        vertical.height = height
+        const { y } = this._position!
 
         const pricedif = maxprice - minprice
-        const price = maxprice - datamath.scale([y], [0, height], pricedif)[0]
+        const price = minprice + datamath.scaleReverse([y], [0, height], pricedif)[0]
 
-        const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
-            ui.currency(price, USD),
-            [width, y],
-            this.priceCoverStyle,
-        ))
+        const [coveredText, coveredTextState] = this.get(
+            'priceCoveredText',
+            () => GraphicUtils.createCoveredText(
+                ui.currency(price, USD),
+                [width, y],
+                this.priceCoverStyle,
+            )
+        )
 
         const textGraphic = <Text>coveredText.getChildAt(1)
         textGraphic.text = ui.currency(price, USD)
@@ -120,7 +187,7 @@ export class CrosshairRenderer extends BaseRenderer {
             y - coveredText.height * anchory
         )
 
-        const padding = coveredText.width + this.lineStyle.paddingright
+        const padding = coveredText.width + this.lineStyle.paddingRight
         const [horizontal, horizontalState] = this.get('horizontal', () => GraphicUtils.createLine(
             [0, 0],
             [width, 0],
@@ -130,7 +197,6 @@ export class CrosshairRenderer extends BaseRenderer {
         horizontal.width = width - padding
 
         if (horizontalState.new) container.addChild(horizontal)
-        if (verticalState.new) container.addChild(vertical)
         if (coveredTextState.new) container.addChild(coveredText)
     }
 
