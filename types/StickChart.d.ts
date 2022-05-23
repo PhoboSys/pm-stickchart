@@ -6,8 +6,8 @@ export declare class StickChart extends EventTarget {
     private eventsProducer;
     private pipelineFactory;
     private textureStorage;
+    private morphController;
     private _context;
-    private animation;
     private timeframe;
     constructor(stageElement: HTMLElement);
     setScreenSize({ width, height }: {
