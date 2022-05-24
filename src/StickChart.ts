@@ -2,10 +2,10 @@ import { DataBuilder, ChartData } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
-import { EventsProducer, ZoomEvent } from './events'
+import { EventsProducer } from './events'
 import { Logger } from './infra'
+import MorphController from './lib/morph'
 
-import datamath from './lib/datamath'
 import { Application, gsap } from './lib/pixi'
 import { Timeframe } from './lib/timeframe'
 
@@ -22,9 +22,9 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
-    private _context: RenderingContext | null
+    private morphController: MorphController
 
-    private animation: any
+    private _context: RenderingContext | null
 
     private timeframe: Timeframe
 
@@ -47,6 +47,9 @@ export class StickChart extends EventTarget {
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
         this.timeframe = new Timeframe(this, () => this.applyTimeframe())
+        this.morphController = new MorphController(
+            (point) => this.applyLatestPoint(point)
+        )
 
         const renderer = new GraphicStorage(this.application.stage)
 
@@ -144,41 +147,9 @@ export class StickChart extends EventTarget {
         }
 
         window.requestAnimationFrame(() => {
-            this.animation?.kill()
-            this.animation = null
+            this.morphController.perform(this._context?.plotdata, ctx.plotdata)
 
-            // Morph
-            if (config.morph && this._context) {
-
-                const aminated = DataBuilder.getLatest(this._context.plotdata)
-                const target = DataBuilder.getLatest(ctx.plotdata)
-
-                if (!DataBuilder.isEqual(aminated, target)) {
-
-                    // morph animation
-                    this.animation = gsap.to(
-                        aminated,
-                        {
-                            ...target,
-                            ...config.morph,
-                            onUpdate: () => {
-                                if (!DataBuilder.isEqual(aminated, target)) {
-                                    this.applyLatestPoint(aminated)
-                                }
-                            },
-                            onComplete: () => {
-                                // gsap has limited precision
-                                // in order to render exactly 'target'
-                                // we have to apply it in the end
-                                this.applyLatestPoint(target)
-                            }
-                        }
-                    )
-
-                }
-            }
-
-            if (!this.animation) {
+            if (!this.morphController.isActive) {
 
                 pipeline.render(
                     ctx,

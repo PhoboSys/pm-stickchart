@@ -8,6 +8,7 @@ const chartdata_1 = require("./chartdata");
 const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
 const infra_1 = require("./infra");
+const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const rendering_1 = require("./rendering");
@@ -29,6 +30,7 @@ class StickChart extends EventTarget {
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
+        this.morphController = new morph_1.default((point) => this.applyLatestPoint(point));
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -88,27 +90,8 @@ class StickChart extends EventTarget {
         }
         window.requestAnimationFrame(() => {
             var _a;
-            (_a = this.animation) === null || _a === void 0 ? void 0 : _a.kill();
-            this.animation = null;
-            // Morph
-            if (config_1.default.morph && this._context) {
-                const aminated = chartdata_1.DataBuilder.getLatest(this._context.plotdata);
-                const target = chartdata_1.DataBuilder.getLatest(ctx.plotdata);
-                if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
-                    // morph animation
-                    this.animation = pixi_1.gsap.to(aminated, Object.assign(Object.assign(Object.assign({}, target), config_1.default.morph), { onUpdate: () => {
-                            if (!chartdata_1.DataBuilder.isEqual(aminated, target)) {
-                                this.applyLatestPoint(aminated);
-                            }
-                        }, onComplete: () => {
-                            // gsap has limited precision
-                            // in order to render exactly 'target'
-                            // we have to apply it in the end
-                            this.applyLatestPoint(target);
-                        } }));
-                }
-            }
-            if (!this.animation) {
+            this.morphController.perform((_a = this._context) === null || _a === void 0 ? void 0 : _a.plotdata, ctx.plotdata);
+            if (!this.morphController.isActive) {
                 pipeline.render(ctx, () => infra_1.Logger.info('render'));
             }
             // save latest rendered context
