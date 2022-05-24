@@ -9,5 +9,6 @@ export default class MorphController {
     private _performNew;
     private _perform;
     private _create;
+    private _clear;
     private _kill;
 }

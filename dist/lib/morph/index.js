@@ -15,7 +15,7 @@ class MorphController {
     }
     perform(lastplot, currentplot) {
         if (!(lastplot && currentplot && config_1.default.morph))
-            return this._kill();
+            return this._clear();
         if (!this._lastTarget)
             return this._performNew(lastplot, currentplot);
         return this._perform(currentplot);
@@ -46,6 +46,8 @@ class MorphController {
                     this._onUpdate(animated);
                 }
             }, onInterrupt: () => {
+                if (!this._lastTarget)
+                    return;
                 // completes last animation on kill
                 // to avoid animation glitching
                 this._onUpdate(target);
@@ -55,6 +57,11 @@ class MorphController {
                 // we have to apply it in the end
                 this._onUpdate(target);
             } }));
+        return this;
+    }
+    _clear() {
+        this._lastTarget = null;
+        this._kill();
         return this;
     }
     _kill() {

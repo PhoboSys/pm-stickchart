@@ -7,7 +7,7 @@ import { DataBuilder } from '../../chartdata'
 export default class MorphController {
     private anim: gsap.core.Tween | null
 
-    private _lastTarget: DataPoint
+    private _lastTarget: DataPoint | null
 
     constructor(
         private _onUpdate: (point: DataPoint) => void
@@ -20,7 +20,7 @@ export default class MorphController {
     }
 
     public perform(lastplot?: PlotData, currentplot?: PlotData): this {
-        if (!(lastplot && currentplot && config.morph)) return this._kill()
+        if (!(lastplot && currentplot && config.morph)) return this._clear()
 
         if (!this._lastTarget)
             return this._performNew(lastplot, currentplot)
@@ -43,7 +43,7 @@ export default class MorphController {
 
     private _perform(currentplot: PlotData): this {
         const target = DataBuilder.getLatest(currentplot)
-        const lastTarget = this._lastTarget
+        const lastTarget = this._lastTarget!
 
         if (DataBuilder.isEqual(lastTarget, target)) return this
 
@@ -68,9 +68,10 @@ export default class MorphController {
                     }
                 },
                 onInterrupt: () => {
+                    if (!this._lastTarget) return
+
                     // completes last animation on kill
                     // to avoid animation glitching
-
                     this._onUpdate(target)
                 },
                 onComplete: () => {
@@ -81,6 +82,13 @@ export default class MorphController {
                 }
             }
         )
+
+        return this
+    }
+
+    private _clear(): this {
+        this._lastTarget = null
+        this._kill()
 
         return this
     }
