@@ -11,6 +11,7 @@ import { Timeframe } from './lib/timeframe'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
+import { ERenderMode } from './enums/ERenderMode'
 
 export class StickChart extends EventTarget {
 
@@ -128,6 +129,9 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.get()
         )
+        const renderMode = this.application.screen.width < 700 ?
+            ERenderMode.MOBILE() : ERenderMode.NORMAL()
+
         const ctx: RenderingContext = {
             pool: context.pool,
             paris: context.paris,
@@ -136,6 +140,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
+            renderMode,
             eventTarget: this,
             chartdata,
             plotdata,

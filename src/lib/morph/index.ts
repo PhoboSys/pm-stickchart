@@ -79,6 +79,9 @@ export default class MorphController {
                     // in order to render exactly 'target'
                     // we have to apply it in the end
                     this._onUpdate(target)
+
+                    // to free memory and to allow StickChart.render
+                    this._kill()
                 }
             }
         )

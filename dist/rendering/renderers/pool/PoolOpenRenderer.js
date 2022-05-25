@@ -57,11 +57,14 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         this.updatePoolBorder(context, container);
         return container;
     }
+    onSetRenderMod(context, container) {
+        this.clear('cover');
+    }
     updatePoolBorder(context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.openDate], timerange, width);
-        const [cover, coverstate] = this.get('cover', () => this.createPoolName());
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName(context));
         cover.position.set(x - this.coverStyle.paddingRight, this.coverStyle.paddingTop);
         const [torus, torusstate] = this.get('torus', () => this.createTorus());
         torus.position.set(x, cover.position.y + cover.height);
@@ -76,23 +79,30 @@ class PoolOpenRenderer extends __1.BaseRenderer {
             container.addChild(line);
         return container;
     }
-    createPoolName() {
-        const { paddingx, paddingy } = this.coverStyle;
-        const text = new pixi_1.Text('Open', this.textStyle);
-        text.position.set(paddingx, paddingy);
-        const width = text.width + paddingx * 2;
-        const height = text.height + paddingy * 2;
-        const { radius, color } = this.coverStyle;
-        const cover = new pixi_1.Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill();
-        text.position.x = -width + paddingx;
-        cover.position.x = -width;
-        const poolname = new pixi_1.Container();
-        poolname.addChild(cover, text);
-        return poolname;
+    createPoolName(context) {
+        return context.renderMode.when({
+            MOBILE: () => {
+                return new pixi_1.Container();
+            },
+            NORMAL: () => {
+                const { paddingx, paddingy } = this.coverStyle;
+                const text = new pixi_1.Text('Open', this.textStyle);
+                text.position.set(paddingx, paddingy);
+                const width = text.width + paddingx * 2;
+                const height = text.height + paddingy * 2;
+                const { radius, color } = this.coverStyle;
+                const cover = new pixi_1.Graphics()
+                    .beginFill(color)
+                    .lineStyle(this.coverStyle.lineStyle)
+                    .drawRoundedRect(0, 0, width, height, radius)
+                    .endFill();
+                text.position.x = -width + paddingx;
+                cover.position.x = -width;
+                const poolname = new pixi_1.Container();
+                poolname.addChild(cover, text);
+                return poolname;
+            }
+        });
     }
     createTorus() {
         const { innerr, outerr, color } = this.torusStyle;

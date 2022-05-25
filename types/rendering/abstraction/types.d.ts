@@ -1,7 +1,7 @@
 import { PlotData } from '../../chartdata';
 import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
-import { EChartType } from '../../enums';
+import { EChartType, ERenderMode } from '../../enums';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
@@ -15,6 +15,7 @@ export declare type RenderingContext = {
         prices: number[];
         timestamps: number[];
     };
+    renderMode: ERenderMode;
     eventTarget: EventTarget;
     rerender?: boolean;
 };
