@@ -82,6 +82,10 @@ export class PoolOpenRenderer extends BaseRenderer {
         return container
     }
 
+    protected onSetRenderMod(context: RenderingContext, container: Container): void {
+        this.clear('cover')
+    }
+
     private updatePoolBorder(context: RenderingContext, container: Container): Container {
         const {
             width,
@@ -91,7 +95,7 @@ export class PoolOpenRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.openDate], timerange, width)
 
-        const [cover, coverstate] = this.get('cover', () => this.createPoolName())
+        const [cover, coverstate] = this.get('cover', () => this.createPoolName(context))
 
         cover.position.set(
             x - this.coverStyle.paddingRight,
@@ -120,29 +124,36 @@ export class PoolOpenRenderer extends BaseRenderer {
         return container
     }
 
-    private createPoolName(): Container {
-        const { paddingx, paddingy } = this.coverStyle
+    private createPoolName(context: RenderingContext): Container {
+        return context.renderMode.when({
+            MOBILE: () => {
+                return new Container()
+            },
+            NORMAL: () => {
+                const { paddingx, paddingy } = this.coverStyle
 
-        const text = new Text('Open', this.textStyle)
-        text.position.set(paddingx, paddingy)
+                const text = new Text('Open', this.textStyle)
+                text.position.set(paddingx, paddingy)
 
-        const width = text.width + paddingx * 2
-        const height = text.height + paddingy * 2
+                const width = text.width + paddingx * 2
+                const height = text.height + paddingy * 2
 
-        const { radius, color } = this.coverStyle
-        const cover = new Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill()
+                const { radius, color } = this.coverStyle
+                const cover = new Graphics()
+                    .beginFill(color)
+                    .lineStyle(this.coverStyle.lineStyle)
+                    .drawRoundedRect(0, 0, width, height, radius)
+                    .endFill()
 
-        text.position.x = -width + paddingx
-        cover.position.x = -width
+                text.position.x = -width + paddingx
+                cover.position.x = -width
 
-        const poolname = new Container()
-        poolname.addChild(cover, text)
+                const poolname = new Container()
+                poolname.addChild(cover, text)
 
-        return poolname
+                return poolname
+            }
+        })
     }
 
     private createTorus(): Graphics {

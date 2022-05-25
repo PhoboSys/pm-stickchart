@@ -10,6 +10,7 @@ export declare class PoolOpenRenderer extends BaseRenderer {
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
+    protected onSetRenderMod(context: RenderingContext, container: Container): void;
     private updatePoolBorder;
     private createPoolName;
     private createTorus;

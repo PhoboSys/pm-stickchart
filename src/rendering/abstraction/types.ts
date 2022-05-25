@@ -2,7 +2,7 @@ import { PlotData } from '../../chartdata'
 import { Rectangle } from '../../lib/pixi'
 import { ITextureStorage } from './interfaces'
 
-import { EChartType } from '../../enums'
+import { EChartType, ERenderMode } from '../../enums'
 
 export type DoneFunction = () => void
 
@@ -16,6 +16,7 @@ export type RenderingContext = {
     plotdata: PlotData
     chartdata: { prices: number[], timestamps: number[] },
 
+    renderMode: ERenderMode,
     eventTarget: EventTarget,
     rerender?: boolean
 }

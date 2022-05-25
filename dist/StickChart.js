@@ -13,6 +13,7 @@ const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
+const ERenderMode_1 = require("./enums/ERenderMode");
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
@@ -73,6 +74,8 @@ class StickChart extends EventTarget {
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
         const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.get());
+        const renderMode = this.application.screen.width < 700 ?
+            ERenderMode_1.ERenderMode.MOBILE() : ERenderMode_1.ERenderMode.NORMAL();
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -80,6 +83,7 @@ class StickChart extends EventTarget {
             charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+            renderMode,
             eventTarget: this,
             chartdata,
             plotdata,
