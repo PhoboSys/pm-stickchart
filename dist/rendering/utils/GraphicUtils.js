@@ -28,11 +28,23 @@ class GraphicUtils {
         torus.position.set(x, y);
         return torus;
     }
-    static createRoundedRect([x, y], [width, height], radius, style) {
+    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }) {
         const rect = new pixi_1.Graphics()
-            .beginFill(style.fill)
-            .lineStyle(style.linestyle)
-            .drawRoundedRect(0, 0, width, height, radius)
+            .lineStyle(Object.assign({ width: 1 }, (lineStyle !== null && lineStyle !== void 0 ? lineStyle : {})));
+        if (texture)
+            rect.beginTextureFill({ texture, alpha });
+        else
+            rect.beginFill(color, alpha);
+        rect
+            .lineTo(0, r1)
+            .arcTo(0, 0, r1, 0, r1)
+            .lineTo(width - r2, 0)
+            .arcTo(width, 0, width, r2, r2)
+            .lineTo(width, height - r3)
+            .arcTo(width, height, width - r3, height, r3)
+            .lineTo(r4, height)
+            .arcTo(0, height, 0, height - r4, r4)
+            .closePath()
             .endFill();
         rect.position.set(x, y);
         return rect;
@@ -45,10 +57,11 @@ class GraphicUtils {
         icon.scale.set(scale);
         const coverwidth = icon.width + paddingx * 2;
         const coverheight = icon.height + paddingy * 2;
-        const cover = GraphicUtils.createRoundedRect([0, 0], [coverwidth, coverheight], style.radius, {
-            fill: style.color,
-            linestyle: style.linestyle,
-        });
+        const cover = new pixi_1.Graphics()
+            .beginFill(style.color)
+            .lineStyle(style.linestyle)
+            .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
+            .endFill();
         const result = new pixi_1.Graphics();
         result.addChild(cover, icon);
         const { anchorx, anchory } = style;
@@ -60,10 +73,11 @@ class GraphicUtils {
         const text = GraphicUtils.createText(value, [paddingx, paddingy], style.textstyle, [0, 0]);
         const coverwidth = text.width + paddingx * 2;
         const coverheight = text.height + paddingy * 2;
-        const cover = GraphicUtils.createRoundedRect([0, 0], [coverwidth, coverheight], style.radius, {
-            fill: style.color,
-            linestyle: style.linestyle,
-        });
+        const cover = new pixi_1.Graphics()
+            .beginFill(style.color)
+            .lineStyle(style.linestyle)
+            .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
+            .endFill();
         const coveredText = new pixi_1.Graphics();
         coveredText.addChild(cover, text);
         const { anchorx, anchory } = style;

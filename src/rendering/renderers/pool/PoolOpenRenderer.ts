@@ -10,8 +10,6 @@ export class PoolOpenRenderer extends BaseRenderer {
 
     private lineStyle: any
 
-    private torusStyle: any
-
     private textStyle: any
 
     private coverStyle: any
@@ -26,27 +24,15 @@ export class PoolOpenRenderer extends BaseRenderer {
             paddingTop: 30,
             paddingRight: 10,
 
-            radius: 8,
-            color: 0x22273F,
-
-            lineStyle: {
-                color: 0xB7BDD7,
-                width: 2,
-            }
+            radiuses: [8, 8, 2, 8],
+            color: 0xB7BDD7,
         }
 
         this.textStyle = {
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 12,
-            fill: 0xB7BDD7,
-        }
-
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-            paddingTop: 10,
-            color: 0xB7BDD7,
+            fill: 0x22273F,
         }
 
         this.lineStyle = {
@@ -55,8 +41,6 @@ export class PoolOpenRenderer extends BaseRenderer {
             cap: 'round',
             gap: 10,
             dash: 10,
-            paddingTop: 5,
-            paddingBottom: 30,
             color: 0xB7BDD7,
         }
     }
@@ -98,23 +82,12 @@ export class PoolOpenRenderer extends BaseRenderer {
             this.coverStyle.paddingTop
         )
 
-        const [torus, torusstate] = this.get('torus', () => this.createTorus())
-
-        torus.position.set(
-            x,
-            cover.position.y + cover.height
-        )
-
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.position.set(
-            x,
-            torus.position.y + this.torusStyle.outerr
-        )
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
+        line.position.x = x
+        line.height = height
 
         if (coverstate.new) container.addChild(cover)
-        if (torusstate.new) container.addChild(torus)
         if (linestate.new) container.addChild(line)
 
         return container
@@ -129,12 +102,13 @@ export class PoolOpenRenderer extends BaseRenderer {
         const width = text.width + paddingx * 2
         const height = text.height + paddingy * 2
 
-        const { radius, color } = this.coverStyle
-        const cover = new Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill()
+        const { radiuses, color } = this.coverStyle
+        const cover = GraphicUtils.createRoundedRect(
+            [0, 0],
+            [width, height],
+            radiuses,
+            { color }
+        )
 
         text.position.x = -width + paddingx
         cover.position.x = -width
@@ -145,29 +119,14 @@ export class PoolOpenRenderer extends BaseRenderer {
         return poolname
     }
 
-    private createTorus(): Graphics {
-        const { innerr, outerr, color } = this.torusStyle
-
-        const torus = new Graphics()
-            .beginFill(color)
-            .drawTorus!(0, 0, innerr, outerr)
-            .endFill()
-
-        return torus
-    }
-
     private createDash(context: RenderingContext): Graphics {
         const { height } = context.screen
 
-        const { paddingBottom, paddingTop } = this.lineStyle
-
         const dash = GraphicUtils.createVerticalDashLine(
             0,
-            [0, height - paddingBottom],
+            [0, height],
             this.lineStyle
         )
-
-        dash.position.y = paddingTop
 
         return dash
     }

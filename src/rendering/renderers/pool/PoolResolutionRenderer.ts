@@ -14,8 +14,6 @@ export class PoolResolutionRenderer extends BaseRenderer {
 
     private lineStyle: any
 
-    private torusStyle: any
-
     private textStyle: any
 
     private coverStyle: any
@@ -30,7 +28,7 @@ export class PoolResolutionRenderer extends BaseRenderer {
             paddingTop: 30,
             paddingLeft: 10,
 
-            radius: 8,
+            radiuses: [8, 8, 8, 2],
         }
 
         this.textStyle = {
@@ -40,22 +38,12 @@ export class PoolResolutionRenderer extends BaseRenderer {
             fill: 0x22273F
         }
 
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-
-            paddingTop: 5,
-        }
-
         this.lineStyle = {
             width: 1,
             join: 'round',
             cap: 'round',
             gap: 10,
             dash: 10,
-
-            paddingTop: 5,
-            paddingBottom: 30
         }
     }
 
@@ -116,23 +104,12 @@ export class PoolResolutionRenderer extends BaseRenderer {
             this.coverStyle.paddingTop
         )
 
-        const [torus, torusstate] = this.get('torus', () => this.createTorus(context))
-
-        torus.position.set(
-            x,
-            cover.position.y + cover.height
-        )
-
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.position.set(
-            x,
-            torus.position.y + this.torusStyle.outerr
-        )
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
+        line.position.x = x
+        line.height = height
 
         if (coverstate.new) container.addChild(cover)
-        if (torusstate.new) container.addChild(torus)
         if (linestate.new) container.addChild(line)
 
         return container
@@ -150,11 +127,13 @@ export class PoolResolutionRenderer extends BaseRenderer {
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
         const gradient = context.textures.get(textureName, { width, height })
 
-        const { radius } = this.coverStyle
-        const cover = new Graphics()
-            .beginTextureFill({ texture: gradient })
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill()
+        const { radiuses } = this.coverStyle
+        const cover = GraphicUtils.createRoundedRect(
+            [0, 0],
+            [width, height],
+            radiuses,
+            { texture: gradient }
+        )
 
         const poolname = new Container()
         poolname.addChild(cover, text)
@@ -162,43 +141,26 @@ export class PoolResolutionRenderer extends BaseRenderer {
         return poolname
     }
 
-    private createTorus(context: RenderingContext): Graphics {
-        const { innerr, outerr } = this.torusStyle
-
-        const size = outerr * 2
-        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`]
-        const gradient = context.textures.get(textureName, { width: size, height: size })
-
-        const torus = new Graphics()
-            .beginTextureFill({ texture: gradient, })
-            .drawTorus!(0, 0, innerr, outerr)
-            .endFill()
-
-        return torus
-    }
-
     private createDash(context: RenderingContext): Container {
         const { height } = context.screen
-        const { paddingBottom, paddingTop, width } = this.lineStyle
+        const { width } = this.lineStyle
 
         const [color1, color2] = this.getLevelLineColors(context)
 
         const dash1 = GraphicUtils.createVerticalDashLine(
             -width/2,
-            [0, height - paddingBottom],
+            [0, height],
             { ...this.lineStyle, color: color1 }
         )
 
         const dash2 = GraphicUtils.createVerticalDashLine(
             width/2,
-            [0, height - paddingBottom],
+            [0, height],
             { ...this.lineStyle, color: color2 }
         )
 
         const dash = new Container()
         dash.addChild(dash1, dash2)
-
-        dash.position.y = paddingTop
 
         return dash
     }

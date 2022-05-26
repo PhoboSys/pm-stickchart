@@ -11,8 +11,6 @@ export class PoolLockRenderer extends BaseRenderer {
 
     private lineStyle: any
 
-    private torusStyle: any
-
     private iconStyle: any
 
     private coverStyle: any
@@ -27,7 +25,7 @@ export class PoolLockRenderer extends BaseRenderer {
             paddingTop: 30,
             paddingLeft: 10,
 
-            radius: 8,
+            radiuses: [8, 8, 8, 2],
             color: 0xFFA000,
         }
 
@@ -35,23 +33,15 @@ export class PoolLockRenderer extends BaseRenderer {
             size: 13,
         }
 
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-            paddingTop: 10,
-            color: 0xFFA000,
-        }
-
         this.lineStyle = {
             width: 2,
             alpha: .8,
             join: 'round',
             cap: 'round',
+            color: 0xFFA000,
+
             gap: 10,
             dash: 10,
-            paddingTop: 5,
-            paddingBottom: 30,
-            color: 0xFFA000,
         }
     }
 
@@ -92,23 +82,12 @@ export class PoolLockRenderer extends BaseRenderer {
             this.coverStyle.paddingTop
         )
 
-        const [torus, torusstate] = this.get('torus', () => this.createTorus())
-
-        torus.position.set(
-            x,
-            cover.position.y + cover.height
-        )
-
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
-        line.position.set(
-            x,
-            torus.position.y + this.torusStyle.outerr
-        )
-        line.height = height - line.position.y - this.lineStyle.paddingBottom
+        line.position.x = x
+        line.height = height
 
         if (coverstate.new) container.addChild(cover)
-        if (torusstate.new) container.addChild(torus)
         if (linestate.new) container.addChild(line)
 
         return container
@@ -124,12 +103,13 @@ export class PoolLockRenderer extends BaseRenderer {
         const width = lockIcon.width + paddingx * 2
         const height = lockIcon.height + paddingy * 2
 
-        const { radius, color } = this.coverStyle
-        const cover = new Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill()
+        const { radiuses, color } = this.coverStyle
+        const cover = GraphicUtils.createRoundedRect(
+            [0, 0],
+            [width, height],
+            radiuses,
+            { color }
+        )
 
         const lockPool = new Container()
         lockPool.addChild(cover, lockIcon)
@@ -137,29 +117,14 @@ export class PoolLockRenderer extends BaseRenderer {
         return lockPool
     }
 
-    private createTorus(): Graphics {
-        const { innerr, outerr, color } = this.torusStyle
-
-        const torus = new Graphics()
-            .beginFill(color)
-            .drawTorus!(0, 0, innerr, outerr)
-            .endFill()
-
-        return torus
-    }
-
     private createDash(context: RenderingContext): Graphics {
         const { height } = context.screen
 
-        const { paddingBottom, paddingTop } = this.lineStyle
-
         const dash = GraphicUtils.createVerticalDashLine(
             0,
-            [0, height - paddingBottom],
+            [0, height],
             this.lineStyle
         )
-
-        dash.position.y = paddingTop
 
         return dash
     }

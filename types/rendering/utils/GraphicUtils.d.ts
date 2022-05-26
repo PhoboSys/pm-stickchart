@@ -6,9 +6,11 @@ export declare class GraphicUtils {
     static createTorus([x, y]: [number, number], [innerr, outerr]: [number, number], style: {
         color: any;
     }): Graphics;
-    static createRoundedRect([x, y]: [number, number], [width, height]: [number, number], radius: number, style: {
-        fill: any;
-        linestyle: any;
+    static createRoundedRect([x, y]: [number, number], [width, height]: [number, number], [r1, r2, r3, r4]: [number, number, number, number], { texture, color, lineStyle, alpha }: {
+        texture?: any;
+        color?: any;
+        lineStyle?: any;
+        alpha?: any;
     }): Graphics;
     static createCoveredIcon([x, y]: [number, number], style: {
         iconstyle: any;
