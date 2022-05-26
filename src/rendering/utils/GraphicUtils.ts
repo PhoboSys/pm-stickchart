@@ -43,13 +43,29 @@ export class GraphicUtils {
     static createRoundedRect(
         [x, y]: [number, number],
         [width, height]: [number, number],
-        radius: number,
-        style: { fill, linestyle },
+        [r1, r2, r3, r4]: [number, number, number, number],
+        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? }
     ): Graphics {
         const rect = new Graphics()
-            .beginFill(style.fill)
-            .lineStyle(style.linestyle)
-            .drawRoundedRect(0, 0, width, height, radius)
+            .lineStyle({ width: 1, ...(lineStyle ?? {}) })
+
+        if (texture) rect.beginTextureFill({ texture, alpha })
+        else rect.beginFill(color, alpha)
+
+        rect
+            .lineTo(0, r1)
+            .arcTo(0, 0, r1, 0, r1)
+
+            .lineTo(width - r2, 0)
+            .arcTo(width, 0, width, r2, r2)
+
+            .lineTo(width, height - r3)
+            .arcTo(width, height, width - r3, height, r3)
+
+            .lineTo(r4, height)
+            .arcTo(0, height, 0, height - r4, r4)
+
+            .closePath()
             .endFill()
 
         rect.position.set(x, y)
@@ -78,15 +94,11 @@ export class GraphicUtils {
         const coverwidth = icon.width + paddingx * 2
         const coverheight = icon.height + paddingy * 2
 
-        const cover = GraphicUtils.createRoundedRect(
-            [0, 0],
-            [coverwidth, coverheight],
-            style.radius,
-            {
-                fill: style.color,
-                linestyle: style.linestyle,
-            },
-        )
+        const cover = new Graphics()
+            .beginFill(style.color)
+            .lineStyle(style.linestyle)
+            .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
+            .endFill()
 
         const result = new Graphics()
 
@@ -119,15 +131,11 @@ export class GraphicUtils {
         const coverwidth = text.width + paddingx * 2
         const coverheight = text.height + paddingy * 2
 
-        const cover = GraphicUtils.createRoundedRect(
-            [0, 0],
-            [coverwidth, coverheight],
-            style.radius,
-            {
-                fill: style.color,
-                linestyle: style.linestyle,
-            },
-        )
+        const cover = new Graphics()
+            .beginFill(style.color)
+            .lineStyle(style.linestyle)
+            .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
+            .endFill()
 
         const coveredText = new Graphics()
 

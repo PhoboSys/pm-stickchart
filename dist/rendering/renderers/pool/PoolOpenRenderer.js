@@ -15,24 +15,14 @@ class PoolOpenRenderer extends __1.BaseRenderer {
             paddingy: 4,
             paddingTop: 30,
             paddingRight: 10,
-            radius: 8,
-            color: 0x22273F,
-            lineStyle: {
-                color: 0xB7BDD7,
-                width: 2,
-            }
+            radiuses: [8, 8, 2, 8],
+            color: 0xB7BDD7,
         };
         this.textStyle = {
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 12,
-            fill: 0xB7BDD7,
-        };
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-            paddingTop: 10,
-            color: 0xB7BDD7,
+            fill: 0x22273F,
         };
         this.lineStyle = {
             width: 2,
@@ -40,8 +30,6 @@ class PoolOpenRenderer extends __1.BaseRenderer {
             cap: 'round',
             gap: 10,
             dash: 10,
-            paddingTop: 5,
-            paddingBottom: 30,
             color: 0xB7BDD7,
         };
     }
@@ -63,15 +51,11 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([context.pool.openDate], timerange, width);
         const [cover, coverstate] = this.get('cover', () => this.createPoolName());
         cover.position.set(x - this.coverStyle.paddingRight, this.coverStyle.paddingTop);
-        const [torus, torusstate] = this.get('torus', () => this.createTorus());
-        torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        line.position.set(x, torus.position.y + this.torusStyle.outerr);
-        line.height = height - line.position.y - this.lineStyle.paddingBottom;
+        line.position.x = x;
+        line.height = height;
         if (coverstate.new)
             container.addChild(cover);
-        if (torusstate.new)
-            container.addChild(torus);
         if (linestate.new)
             container.addChild(line);
         return container;
@@ -82,31 +66,17 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         text.position.set(paddingx, paddingy);
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
-        const { radius, color } = this.coverStyle;
-        const cover = new pixi_1.Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill();
+        const { radiuses, color } = this.coverStyle;
+        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         text.position.x = -width + paddingx;
         cover.position.x = -width;
         const poolname = new pixi_1.Container();
         poolname.addChild(cover, text);
         return poolname;
     }
-    createTorus() {
-        const { innerr, outerr, color } = this.torusStyle;
-        const torus = new pixi_1.Graphics()
-            .beginFill(color)
-            .drawTorus(0, 0, innerr, outerr)
-            .endFill();
-        return torus;
-    }
     createDash(context) {
         const { height } = context.screen;
-        const { paddingBottom, paddingTop } = this.lineStyle;
-        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height - paddingBottom], this.lineStyle);
-        dash.position.y = paddingTop;
+        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
         return dash;
     }
 }

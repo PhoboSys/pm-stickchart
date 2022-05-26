@@ -5,7 +5,6 @@ export declare class PoolResolutionRenderer extends BaseRenderer {
     static readonly POOL_RESOLUTION_ID: symbol;
     private _lastLevel;
     private lineStyle;
-    private torusStyle;
     private textStyle;
     private coverStyle;
     constructor(renderer: IGraphicStorage);
@@ -14,6 +13,5 @@ export declare class PoolResolutionRenderer extends BaseRenderer {
     private getLevelLineColors;
     private updatePoolBorder;
     private createPoolName;
-    private createTorus;
     private createDash;
 }

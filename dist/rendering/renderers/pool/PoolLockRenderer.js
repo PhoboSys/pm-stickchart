@@ -16,28 +16,20 @@ class PoolLockRenderer extends __1.BaseRenderer {
             paddingy: 5,
             paddingTop: 30,
             paddingLeft: 10,
-            radius: 8,
+            radiuses: [8, 8, 8, 2],
             color: 0xFFA000,
         };
         this.iconStyle = {
             size: 13,
-        };
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-            paddingTop: 10,
-            color: 0xFFA000,
         };
         this.lineStyle = {
             width: 2,
             alpha: .8,
             join: 'round',
             cap: 'round',
+            color: 0xFFA000,
             gap: 10,
             dash: 10,
-            paddingTop: 5,
-            paddingBottom: 30,
-            color: 0xFFA000,
         };
     }
     get rendererId() {
@@ -58,15 +50,11 @@ class PoolLockRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([context.pool.lockDate], timerange, width);
         const [cover, coverstate] = this.get('icon', () => this.createPoolIcon(context));
         cover.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
-        const [torus, torusstate] = this.get('torus', () => this.createTorus());
-        torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        line.position.set(x, torus.position.y + this.torusStyle.outerr);
-        line.height = height - line.position.y - this.lineStyle.paddingBottom;
+        line.position.x = x;
+        line.height = height;
         if (coverstate.new)
             container.addChild(cover);
-        if (torusstate.new)
-            container.addChild(torus);
         if (linestate.new)
             container.addChild(line);
         return container;
@@ -78,29 +66,15 @@ class PoolLockRenderer extends __1.BaseRenderer {
         lockIcon.position.set(paddingx, paddingy);
         const width = lockIcon.width + paddingx * 2;
         const height = lockIcon.height + paddingy * 2;
-        const { radius, color } = this.coverStyle;
-        const cover = new pixi_1.Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill();
+        const { radiuses, color } = this.coverStyle;
+        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         const lockPool = new pixi_1.Container();
         lockPool.addChild(cover, lockIcon);
         return lockPool;
     }
-    createTorus() {
-        const { innerr, outerr, color } = this.torusStyle;
-        const torus = new pixi_1.Graphics()
-            .beginFill(color)
-            .drawTorus(0, 0, innerr, outerr)
-            .endFill();
-        return torus;
-    }
     createDash(context) {
         const { height } = context.screen;
-        const { paddingBottom, paddingTop } = this.lineStyle;
-        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height - paddingBottom], this.lineStyle);
-        dash.position.y = paddingTop;
+        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
         return dash;
     }
 }

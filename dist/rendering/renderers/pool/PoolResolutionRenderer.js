@@ -41,7 +41,7 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
             paddingy: 5,
             paddingTop: 30,
             paddingLeft: 10,
-            radius: 8,
+            radiuses: [8, 8, 8, 2],
         };
         this.textStyle = {
             fontWeight: 600,
@@ -49,19 +49,12 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
             fontSize: 12,
             fill: 0x22273F
         };
-        this.torusStyle = {
-            innerr: 2.5,
-            outerr: 5,
-            paddingTop: 5,
-        };
         this.lineStyle = {
             width: 1,
             join: 'round',
             cap: 'round',
             gap: 10,
             dash: 10,
-            paddingTop: 5,
-            paddingBottom: 30
         };
     }
     get rendererId() {
@@ -98,15 +91,11 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const [x] = datamath_1.default.scale([context.pool.resolutionDate], timerange, width);
         const [cover, coverstate] = this.get('cover', () => this.createPoolName(context));
         cover.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
-        const [torus, torusstate] = this.get('torus', () => this.createTorus(context));
-        torus.position.set(x, cover.position.y + cover.height);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
-        line.position.set(x, torus.position.y + this.torusStyle.outerr);
-        line.height = height - line.position.y - this.lineStyle.paddingBottom;
+        line.position.x = x;
+        line.height = height;
         if (coverstate.new)
             container.addChild(cover);
-        if (torusstate.new)
-            container.addChild(torus);
         if (linestate.new)
             container.addChild(line);
         return container;
@@ -119,35 +108,20 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
         const height = text.height + paddingy * 2;
         const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
         const gradient = context.textures.get(textureName, { width, height });
-        const { radius } = this.coverStyle;
-        const cover = new pixi_1.Graphics()
-            .beginTextureFill({ texture: gradient })
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill();
+        const { radiuses } = this.coverStyle;
+        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { texture: gradient });
         const poolname = new pixi_1.Container();
         poolname.addChild(cover, text);
         return poolname;
     }
-    createTorus(context) {
-        const { innerr, outerr } = this.torusStyle;
-        const size = outerr * 2;
-        const textureName = TEXTURE_NAMES[`${context.pool.level}_LEVEL_TEXTURE`];
-        const gradient = context.textures.get(textureName, { width: size, height: size });
-        const torus = new pixi_1.Graphics()
-            .beginTextureFill({ texture: gradient, })
-            .drawTorus(0, 0, innerr, outerr)
-            .endFill();
-        return torus;
-    }
     createDash(context) {
         const { height } = context.screen;
-        const { paddingBottom, paddingTop, width } = this.lineStyle;
+        const { width } = this.lineStyle;
         const [color1, color2] = this.getLevelLineColors(context);
-        const dash1 = __1.GraphicUtils.createVerticalDashLine(-width / 2, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color1 }));
-        const dash2 = __1.GraphicUtils.createVerticalDashLine(width / 2, [0, height - paddingBottom], Object.assign(Object.assign({}, this.lineStyle), { color: color2 }));
+        const dash1 = __1.GraphicUtils.createVerticalDashLine(-width / 2, [0, height], Object.assign(Object.assign({}, this.lineStyle), { color: color1 }));
+        const dash2 = __1.GraphicUtils.createVerticalDashLine(width / 2, [0, height], Object.assign(Object.assign({}, this.lineStyle), { color: color2 }));
         const dash = new pixi_1.Container();
         dash.addChild(dash1, dash2);
-        dash.position.y = paddingTop;
         return dash;
     }
 }
