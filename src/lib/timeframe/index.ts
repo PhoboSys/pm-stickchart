@@ -11,13 +11,15 @@ export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
 export const UNIX_WEEK = 7 * UNIX_DAY
 
+export const FRAME_HIGH_LIMIT  = UNIX_DAY
+export const FRAME_LOW_LIMIT = UNIX_MINUTE * 5
+
 export function nowUnixTS() {
     return Math.floor(Date.now() / 1000)
 }
 
 export class Timeframe {
-
-    private since: number = nowUnixTS() - UNIX_DAY
+    private timeframe: number
 
     private readonly zoomevent: any
 
@@ -32,49 +34,41 @@ export class Timeframe {
         this.zoomTarget.addEventListener('zoom', this.zoomevent)
     }
 
-    public save(timeframe) {
-        if (!this.validate(timeframe)) timeframe = UNIX_DAY
-        this.since = nowUnixTS() - timeframe
+    public save(timeframe): void {
+        this.timeframe = this.getValid(timeframe)
     }
 
     public get() {
-        return { since: this.since, until: nowUnixTS() }
+        const until = nowUnixTS()
+        const since = until - this.timeframe
+
+        return { since, until }
     }
 
-    public destroy() {
+    public destroy(): void {
         this.zoomTarget.removeEventListener('zoom', this.zoomevent)
     }
 
-    private validate(timeframe) {
-        return (
-            timeframe &&
-            !this.tooBig(timeframe) &&
-            !this.tooSmall(timeframe)
-        )
+    private getValid(timeframe): number {
+        if (!timeframe || this.tooBig(timeframe)) return FRAME_HIGH_LIMIT
+
+        if (this.tooSmall(timeframe)) return FRAME_LOW_LIMIT
+
+        return timeframe
     }
 
-    private tooBig(timeframe) {
-        return timeframe > UNIX_DAY
+    private tooBig(timeframe): boolean {
+        return timeframe > FRAME_HIGH_LIMIT
     }
 
-    private tooSmall(timeframe) {
-        return timeframe < UNIX_MINUTE * 5
+    private tooSmall(timeframe): boolean {
+        return timeframe < FRAME_LOW_LIMIT
     }
 
-    private zoom(zoom: number) {
-        const now = nowUnixTS()
-        let timeframe = now - this.since
-        timeframe += Math.round(timeframe * zoom)
+    private zoom(zoom: number): void {
+        const zommedFrame = Math.round(this.timeframe * (1 + zoom))
 
-        const zoominUp = zoom > 0
-        const zoominDown = zoom < 0
-
-        const hitLower = this.tooSmall(timeframe) && zoominDown
-        const hitUpper = this.tooBig(timeframe) && zoominUp
-
-        if (!hitLower && !hitUpper) {
-            this.since = now - timeframe
-            this.onZoom()
-        }
+        this.save(zommedFrame)
+        this.onZoom()
     }
 }

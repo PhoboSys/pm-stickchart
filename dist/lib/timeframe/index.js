@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Timeframe = exports.nowUnixTS = exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = exports.INVALID_DATE = exports.MILLISECONDS_IN_DAY = void 0;
+exports.Timeframe = exports.nowUnixTS = exports.FRAME_LOW_LIMIT = exports.FRAME_HIGH_LIMIT = exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = exports.INVALID_DATE = exports.MILLISECONDS_IN_DAY = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
 const config_1 = __importDefault(require("../../config"));
 exports.MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
@@ -12,6 +12,8 @@ exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.UNIX_WEEK = 7 * exports.UNIX_DAY;
+exports.FRAME_HIGH_LIMIT = exports.UNIX_DAY;
+exports.FRAME_LOW_LIMIT = exports.UNIX_MINUTE * 5;
 function nowUnixTS() {
     return Math.floor(Date.now() / 1000);
 }
@@ -20,44 +22,37 @@ class Timeframe {
     constructor(zoomTarget, onZoom) {
         this.zoomTarget = zoomTarget;
         this.onZoom = onZoom;
-        this.since = nowUnixTS() - exports.UNIX_DAY;
         this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), config_1.default.zoom.throttle);
         this.zoomTarget.addEventListener('zoom', this.zoomevent);
     }
     save(timeframe) {
-        if (!this.validate(timeframe))
-            timeframe = exports.UNIX_DAY;
-        this.since = nowUnixTS() - timeframe;
+        this.timeframe = this.getValid(timeframe);
     }
     get() {
-        return { since: this.since, until: nowUnixTS() };
+        const until = nowUnixTS();
+        const since = until - this.timeframe;
+        return { since, until };
     }
     destroy() {
         this.zoomTarget.removeEventListener('zoom', this.zoomevent);
     }
-    validate(timeframe) {
-        return (timeframe &&
-            !this.tooBig(timeframe) &&
-            !this.tooSmall(timeframe));
+    getValid(timeframe) {
+        if (!timeframe || this.tooBig(timeframe))
+            return exports.FRAME_HIGH_LIMIT;
+        if (this.tooSmall(timeframe))
+            return exports.FRAME_LOW_LIMIT;
+        return timeframe;
     }
     tooBig(timeframe) {
-        return timeframe > exports.UNIX_DAY;
+        return timeframe > exports.FRAME_HIGH_LIMIT;
     }
     tooSmall(timeframe) {
-        return timeframe < exports.UNIX_MINUTE * 5;
+        return timeframe < exports.FRAME_LOW_LIMIT;
     }
     zoom(zoom) {
-        const now = nowUnixTS();
-        let timeframe = now - this.since;
-        timeframe += Math.round(timeframe * zoom);
-        const zoominUp = zoom > 0;
-        const zoominDown = zoom < 0;
-        const hitLower = this.tooSmall(timeframe) && zoominDown;
-        const hitUpper = this.tooBig(timeframe) && zoominUp;
-        if (!hitLower && !hitUpper) {
-            this.since = now - timeframe;
-            this.onZoom();
-        }
+        const zommedFrame = Math.round(this.timeframe * (1 + zoom));
+        this.save(zommedFrame);
+        this.onZoom();
     }
 }
 exports.Timeframe = Timeframe;

@@ -4,11 +4,13 @@ export declare const UNIX_MINUTE = 60;
 export declare const UNIX_HOUR: number;
 export declare const UNIX_DAY: number;
 export declare const UNIX_WEEK: number;
+export declare const FRAME_HIGH_LIMIT: number;
+export declare const FRAME_LOW_LIMIT: number;
 export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly zoomTarget;
     private readonly onZoom;
-    private since;
+    private timeframe;
     private readonly zoomevent;
     constructor(zoomTarget: EventTarget, onZoom: () => any);
     save(timeframe: any): void;
@@ -17,7 +19,7 @@ export declare class Timeframe {
         until: number;
     };
     destroy(): void;
-    private validate;
+    private getValid;
     private tooBig;
     private tooSmall;
     private zoom;
