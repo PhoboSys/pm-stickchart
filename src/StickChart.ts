@@ -11,6 +11,7 @@ import { Timeframe } from './lib/timeframe'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
+import { DisplayQuery } from './lib/dispayquery/index'
 
 export class StickChart extends EventTarget {
 
@@ -136,6 +137,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
 
+            displayQuery: DisplayQuery.build(this.application),
             eventTarget: this,
             chartdata,
             plotdata,

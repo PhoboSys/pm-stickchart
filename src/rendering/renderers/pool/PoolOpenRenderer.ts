@@ -4,35 +4,39 @@ import { BaseRenderer, GraphicUtils } from '../..'
 
 import datamath from '../../../lib/datamath'
 import { Graphics, Container, Text } from '../../../lib/pixi'
+import { DisplayQuery } from '../../../lib/dispayquery/index'
 export class PoolOpenRenderer extends BaseRenderer {
 
     static readonly POOL_OPEN_ID: symbol = Symbol('POOL_OPEN_ID')
 
+    private poolnameStyle: any
+
     private lineStyle: any
-
-    private textStyle: any
-
-    private coverStyle: any
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
 
-        this.coverStyle = {
-            paddingx: 10,
-            paddingy: 4,
+        this.poolnameStyle = {
+            default: {
+                cover: {
+                    paddingx: 10,
+                    paddingy: 4,
 
-            paddingTop: 30,
-            paddingRight: 10,
+                    paddingTop: 30,
+                    paddingRight: 10,
 
-            radiuses: [8, 8, 2, 8],
-            color: 0xB7BDD7,
-        }
+                    radiuses: [8, 8, 2, 8],
+                    color: 0xB7BDD7,
+                },
+                text: {
+                    fontWeight: 600,
+                    fontFamily: 'Gilroy',
+                    fontSize: 12,
+                    fill: 0x22273F,
+                }
+            },
 
-        this.textStyle = {
-            fontWeight: 600,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-            fill: 0x22273F,
+            'width < 600': { display: false },
         }
 
         this.lineStyle = {
@@ -61,12 +65,35 @@ export class PoolOpenRenderer extends BaseRenderer {
 
         container.alpha = 1
 
-        this.updatePoolBorder(context, container)
+        this.updatePoolName(context, container)
+        this.updateDashLine(context, container)
 
         return container
     }
 
-    private updatePoolBorder(context: RenderingContext, container: Container): Container {
+    private updatePoolName(context: RenderingContext, container: Container): void {
+        const { width } = context.screen
+
+        const { timerange } = context.plotdata
+        const [x] = datamath.scale([context.pool.openDate], timerange, width)
+
+        const style = DisplayQuery.apply(this.poolnameStyle, context.displayQuery)
+        const [poolname, poolstate] = this.get(
+            'poolname',
+            () => this.createPoolName(style),
+            Object.values(style)
+        )
+
+        const { paddingRight, paddingTop } = style.cover
+        poolname.position.set(
+            x - paddingRight,
+            paddingTop
+        )
+
+        if (poolstate.new) container.addChild(poolname)
+    }
+
+    private updateDashLine(context: RenderingContext, container: Container): void {
         const {
             width,
             height
@@ -75,34 +102,26 @@ export class PoolOpenRenderer extends BaseRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([context.pool.openDate], timerange, width)
 
-        const [cover, coverstate] = this.get('cover', () => this.createPoolName())
-
-        cover.position.set(
-            x - this.coverStyle.paddingRight,
-            this.coverStyle.paddingTop
-        )
-
         const [line, linestate] = this.get('dash', () => this.createDash(context))
 
         line.position.x = x
         line.height = height
 
-        if (coverstate.new) container.addChild(cover)
         if (linestate.new) container.addChild(line)
-
-        return container
     }
 
-    private createPoolName(): Container {
-        const { paddingx, paddingy } = this.coverStyle
+    private createPoolName(style): Container {
+        if (!style.display) return new Container
 
-        const text = new Text('Open', this.textStyle)
+        const { paddingx, paddingy } = style.cover
+
+        const text = new Text('Open', style.text)
         text.position.set(paddingx, paddingy)
 
         const width = text.width + paddingx * 2
         const height = text.height + paddingy * 2
 
-        const { radiuses, color } = this.coverStyle
+        const { radiuses, color } = style.cover
         const cover = GraphicUtils.createRoundedRect(
             [0, 0],
             [width, height],

@@ -2,6 +2,7 @@ import { PlotData } from '../../chartdata';
 import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '../../enums';
+import { DisplayQueryConfig } from '../../lib/dispayquery/index';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     pool: any;
@@ -15,6 +16,7 @@ export declare type RenderingContext = {
         prices: number[];
         timestamps: number[];
     };
+    displayQuery: DisplayQueryConfig;
     eventTarget: EventTarget;
     rerender?: boolean;
 };

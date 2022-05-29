@@ -7,22 +7,28 @@ exports.PoolOpenRenderer = void 0;
 const __1 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
+const index_1 = require("../../../lib/dispayquery/index");
 class PoolOpenRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
-        this.coverStyle = {
-            paddingx: 10,
-            paddingy: 4,
-            paddingTop: 30,
-            paddingRight: 10,
-            radiuses: [8, 8, 2, 8],
-            color: 0xB7BDD7,
-        };
-        this.textStyle = {
-            fontWeight: 600,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-            fill: 0x22273F,
+        this.poolnameStyle = {
+            default: {
+                cover: {
+                    paddingx: 10,
+                    paddingy: 4,
+                    paddingTop: 30,
+                    paddingRight: 10,
+                    radiuses: [8, 8, 2, 8],
+                    color: 0xB7BDD7,
+                },
+                text: {
+                    fontWeight: 600,
+                    fontFamily: 'Gilroy',
+                    fontSize: 12,
+                    fill: 0x22273F,
+                }
+            },
+            'width < 600': { display: false },
         };
         this.lineStyle = {
             width: 2,
@@ -42,31 +48,40 @@ class PoolOpenRenderer extends __1.BaseRenderer {
             return container;
         }
         container.alpha = 1;
-        this.updatePoolBorder(context, container);
+        this.updatePoolName(context, container);
+        this.updateDashLine(context, container);
         return container;
     }
-    updatePoolBorder(context, container) {
+    updatePoolName(context, container) {
+        const { width } = context.screen;
+        const { timerange } = context.plotdata;
+        const [x] = datamath_1.default.scale([context.pool.openDate], timerange, width);
+        const style = index_1.DisplayQuery.apply(this.poolnameStyle, context.displayQuery);
+        const [poolname, poolstate] = this.get('poolname', () => this.createPoolName(style), Object.values(style));
+        const { paddingRight, paddingTop } = style.cover;
+        poolname.position.set(x - paddingRight, paddingTop);
+        if (poolstate.new)
+            container.addChild(poolname);
+    }
+    updateDashLine(context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([context.pool.openDate], timerange, width);
-        const [cover, coverstate] = this.get('cover', () => this.createPoolName());
-        cover.position.set(x - this.coverStyle.paddingRight, this.coverStyle.paddingTop);
         const [line, linestate] = this.get('dash', () => this.createDash(context));
         line.position.x = x;
         line.height = height;
-        if (coverstate.new)
-            container.addChild(cover);
         if (linestate.new)
             container.addChild(line);
-        return container;
     }
-    createPoolName() {
-        const { paddingx, paddingy } = this.coverStyle;
-        const text = new pixi_1.Text('Open', this.textStyle);
+    createPoolName(style) {
+        if (!style.display)
+            return new pixi_1.Container;
+        const { paddingx, paddingy } = style.cover;
+        const text = new pixi_1.Text('Open', style.text);
         text.position.set(paddingx, paddingy);
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
-        const { radiuses, color } = this.coverStyle;
+        const { radiuses, color } = style.cover;
         const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         text.position.x = -width + paddingx;
         cover.position.x = -width;
