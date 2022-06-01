@@ -30,7 +30,7 @@ class GraphicUtils {
     }
     static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }) {
         const rect = new pixi_1.Graphics()
-            .lineStyle(Object.assign({ width: 1 }, (lineStyle !== null && lineStyle !== void 0 ? lineStyle : {})));
+            .lineStyle(Object.assign({ width: 1, alpha: 0 }, (lineStyle !== null && lineStyle !== void 0 ? lineStyle : {})));
         if (texture)
             rect.beginTextureFill({ texture, alpha });
         else

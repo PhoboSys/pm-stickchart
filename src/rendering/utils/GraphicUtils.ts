@@ -47,7 +47,7 @@ export class GraphicUtils {
         { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? }
     ): Graphics {
         const rect = new Graphics()
-            .lineStyle({ width: 1, ...(lineStyle ?? {}) })
+            .lineStyle({ width: 1, alpha: 0, ...(lineStyle ?? {}) })
 
         if (texture) rect.beginTextureFill({ texture, alpha })
         else rect.beginFill(color, alpha)
