@@ -13,6 +13,7 @@ const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
+const index_1 = require("./lib/dispayquery/index");
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
@@ -80,6 +81,7 @@ class StickChart extends EventTarget {
             charttype: context.charttype,
             screen: this.application.screen,
             textures: this.textureStorage,
+            displayQuery: index_1.DisplayQuery.build(this.application),
             eventTarget: this,
             chartdata,
             plotdata,
