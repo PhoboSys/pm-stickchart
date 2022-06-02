@@ -2,7 +2,6 @@ import throttle from 'lodash.throttle'
 
 import { ZoomEvent } from '../../events'
 import config from '../../config'
-import { time } from 'console'
 
 export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
 export const INVALID_DATE = new Date(NaN)
@@ -58,10 +57,7 @@ export class Timeframe {
 
     public actualize(): this {
         const currentDuration = nowUnixTS() - this.since
-        console.log(currentDuration)
         const maxDuration = this.getValid(this._lastDuration * SHRINK_RATE)
-
-        console.log('last', maxDuration)
 
         if (currentDuration < maxDuration) return this
         this.since = nowUnixTS() - this._lastDuration

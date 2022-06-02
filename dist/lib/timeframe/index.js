@@ -42,9 +42,7 @@ class Timeframe {
     }
     actualize() {
         const currentDuration = nowUnixTS() - this.since;
-        console.log(currentDuration);
         const maxDuration = this.getValid(this._lastDuration * exports.SHRINK_RATE);
-        console.log('last', maxDuration);
         if (currentDuration < maxDuration)
             return this;
         this.since = nowUnixTS() - this._lastDuration;
