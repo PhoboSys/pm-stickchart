@@ -181,7 +181,7 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                     prizeNeg.addChild(dividendsNeg);
                 dividendsNeg.position.set(xpad, 0);
                 dividendsNeg.text = String(prize);
-                const [dividendsCurNeg, dividendsCurNegState] = this.get('dividendsCurNeg', () => __1.GraphicUtils.createText('ETH', [0, 0], this.subtextstyle, [0, -0.3]));
+                const [dividendsCurNeg, dividendsCurNegState] = this.get('dividendsCurNeg', () => __1.GraphicUtils.createText(pari.currency, [0, 0], this.subtextstyle, [0, -0.3]));
                 if (dividendsCurNegState.new)
                     prizeNeg.addChild(dividendsCurNeg);
                 dividendsCurNeg.position.set(xpad + dividendsNeg.width + gap, 0);

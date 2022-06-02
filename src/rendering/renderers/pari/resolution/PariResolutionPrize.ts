@@ -174,7 +174,7 @@ export class PariResolutionPrize extends BaseRenderer {
                 const [dividendsCurNeg, dividendsCurNegState] = this.get(
                     'dividendsCurNeg',
                     () => GraphicUtils.createText(
-                        'ETH',
+                        pari.currency,
                         [x, y],
                         this.subtextstyle,
                         [0, -0.3],
