@@ -72,7 +72,7 @@ class StickChart extends EventTarget {
         var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
-        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.get());
+        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.actualize().get());
         const ctx = {
             pool: context.pool,
             paris: context.paris,
