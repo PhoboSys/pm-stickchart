@@ -1,4 +1,4 @@
-import { DataBuilder, ChartData } from './chartdata'
+import { DataBuilder, ChartData, DataPoint } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
@@ -22,7 +22,7 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
-    private morphController: MorphController
+    private morphController: MorphController<DataPoint>
 
     private _context: RenderingContext | null
 
@@ -46,9 +46,14 @@ export class StickChart extends EventTarget {
 
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
-        this.timeframe = new Timeframe(this, () => this.applyTimeframe())
+        this.timeframe = new Timeframe(
+            this,
+            () => this.applyTimeframe(),
+        )
         this.morphController = new MorphController(
-            (point) => this.applyLatestPoint(point)
+            DataBuilder.isEqual,
+            (point) => this.applyLatestPoint(point),
+            config.morph,
         )
 
         const renderer = new GraphicStorage(this.application.stage)
@@ -147,7 +152,13 @@ export class StickChart extends EventTarget {
         }
 
         window.requestAnimationFrame(() => {
-            this.morphController.perform(this._context?.plotdata, ctx.plotdata)
+            const latestPoint = (_context) =>
+                _context ? DataBuilder.getLatest(_context.plotdata) : undefined
+
+            this.morphController.perform(
+                latestPoint(this._context),
+                latestPoint(ctx)
+            )
 
             if (!this.morphController.isActive) {
 

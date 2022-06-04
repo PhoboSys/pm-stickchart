@@ -1,61 +1,57 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("../../config"));
 const pixi_1 = require("../pixi");
-const chartdata_1 = require("../../chartdata");
 class MorphController {
-    constructor(_onUpdate) {
+    constructor(_isEqual, _onUpdate, config) {
+        this._isEqual = _isEqual;
         this._onUpdate = _onUpdate;
+        this.config = config;
     }
     get isActive() {
         return !!this.anim;
     }
-    perform(lastplot, currentplot) {
-        if (!(lastplot && currentplot && config_1.default.morph))
+    performNew(from, to) {
+        if (!this.config)
             return this._clear();
-        if (!this._lastTarget)
-            return this._performNew(lastplot, currentplot);
-        return this._perform(currentplot);
-    }
-    _performNew(lastplot, currentplot) {
-        const target = chartdata_1.DataBuilder.getLatest(currentplot);
-        const animated = chartdata_1.DataBuilder.getLatest(lastplot);
         this
             ._kill()
-            ._create({ animated, target }, config_1.default.morph);
-        this._lastTarget = target;
+            ._create({ from, to });
+        this._lastTarget = to;
         return this;
     }
-    _perform(currentplot) {
-        const target = chartdata_1.DataBuilder.getLatest(currentplot);
+    perform(from, to) {
+        if (!(from && to && this.config))
+            return this._clear();
+        if (!this._lastTarget)
+            return this.performNew(from, to);
+        return this._perform(to);
+    }
+    _perform(target) {
         const lastTarget = this._lastTarget;
-        if (chartdata_1.DataBuilder.isEqual(lastTarget, target))
+        if (this._isEqual(lastTarget, target))
             return this;
         this
             ._kill()
-            ._create({ animated: Object.assign({}, lastTarget), target }, config_1.default.morph);
+            ._create({ from: lastTarget, to: target });
         this._lastTarget = target;
         return this;
     }
-    _create({ animated, target }, animConfig) {
-        this.anim = pixi_1.gsap.to(animated, Object.assign(Object.assign(Object.assign({}, target), animConfig), { onUpdate: () => {
-                if (!chartdata_1.DataBuilder.isEqual(animated, target)) {
-                    this._onUpdate(animated);
+    _create({ from, to }) {
+        this.anim = pixi_1.gsap.to(from, Object.assign(Object.assign(Object.assign({}, to), this.config), { onUpdate: () => {
+                if (!this._isEqual(from, to)) {
+                    this._onUpdate(from);
                 }
             }, onInterrupt: () => {
                 if (!this._lastTarget)
                     return;
                 // completes last animation on kill
                 // to avoid animation glitching
-                this._onUpdate(target);
+                this._onUpdate(to);
             }, onComplete: () => {
                 // gsap has limited precision
                 // in order to render exactly 'target'
                 // we have to apply it in the end
-                this._onUpdate(target);
+                this._onUpdate(to);
                 // to free memory and to allow StickChart.render
                 this._kill();
             } }));

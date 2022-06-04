@@ -1,70 +1,65 @@
-import config from '../../config'
-
 import { gsap } from '../pixi'
-import { DataPoint, PlotData } from '../../chartdata/types'
-import { DataBuilder } from '../../chartdata'
 
-export default class MorphController {
+export default class MorphController<TargetType extends object> {
     private anim: gsap.core.Tween | null
 
-    private _lastTarget: DataPoint | null
+    private _lastTarget: TargetType | null
 
     constructor(
-        private _onUpdate: (point: DataPoint) => void
-    ) {
+        private _isEqual: (v1: TargetType, v2: TargetType) => boolean,
+        private _onUpdate: (v: TargetType) => void,
 
-    }
+        private config?,
+    ) {}
 
     public get isActive(): boolean {
         return !!this.anim
     }
 
-    public perform(lastplot?: PlotData, currentplot?: PlotData): this {
-        if (!(lastplot && currentplot && config.morph)) return this._clear()
+    public performNew(from: TargetType, to: TargetType): this {
+        if (!this.config) return this._clear()
+
+        this
+            ._kill()
+            ._create({ from, to })
+
+        this._lastTarget = to
+
+        return this
+    }
+
+    public perform(from?: TargetType, to?: TargetType): this {
+        if (!(from && to && this.config)) return this._clear()
 
         if (!this._lastTarget)
-            return this._performNew(lastplot, currentplot)
+            return this.performNew(from, to)
 
-        return this._perform(currentplot)
+        return this._perform(to)
     }
 
-    private _performNew(lastplot: PlotData, currentplot: PlotData): this {
-        const target = DataBuilder.getLatest(currentplot)
-        const animated = DataBuilder.getLatest(lastplot)
-
-        this
-            ._kill()
-            ._create({ animated, target }, config.morph)
-
-        this._lastTarget = target
-
-        return this
-    }
-
-    private _perform(currentplot: PlotData): this {
-        const target = DataBuilder.getLatest(currentplot)
+    private _perform(target: TargetType): this {
         const lastTarget = this._lastTarget!
 
-        if (DataBuilder.isEqual(lastTarget, target)) return this
+        if (this._isEqual(lastTarget, target)) return this
 
         this
             ._kill()
-            ._create({ animated: { ...lastTarget }, target }, config.morph)
+            ._create({ from: lastTarget, to: target })
 
         this._lastTarget = target
 
         return this
     }
 
-    private _create({ animated, target }, animConfig): this {
+    private _create({ from, to }): this {
         this.anim = gsap.to(
-            animated,
+            from,
             {
-                ...target,
-                ...animConfig,
+                ...to,
+                ...this.config,
                 onUpdate: () => {
-                    if (!DataBuilder.isEqual(animated, target)) {
-                        this._onUpdate(animated)
+                    if (!this._isEqual(from, to)) {
+                        this._onUpdate(from)
                     }
                 },
                 onInterrupt: () => {
@@ -72,13 +67,13 @@ export default class MorphController {
 
                     // completes last animation on kill
                     // to avoid animation glitching
-                    this._onUpdate(target)
+                    this._onUpdate(to)
                 },
                 onComplete: () => {
                     // gsap has limited precision
                     // in order to render exactly 'target'
                     // we have to apply it in the end
-                    this._onUpdate(target)
+                    this._onUpdate(to)
 
                     // to free memory and to allow StickChart.render
                     this._kill()

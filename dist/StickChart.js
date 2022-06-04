@@ -30,7 +30,7 @@ class StickChart extends EventTarget {
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
-        this.morphController = new morph_1.default((point) => this.applyLatestPoint(point));
+        this.morphController = new morph_1.default(chartdata_1.DataBuilder.isEqual, (point) => this.applyLatestPoint(point), config_1.default.morph);
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -89,8 +89,8 @@ class StickChart extends EventTarget {
             this._context = null;
         }
         window.requestAnimationFrame(() => {
-            var _a;
-            this.morphController.perform((_a = this._context) === null || _a === void 0 ? void 0 : _a.plotdata, ctx.plotdata);
+            const latestPoint = (_context) => _context ? chartdata_1.DataBuilder.getLatest(_context.plotdata) : undefined;
+            this.morphController.perform(latestPoint(this._context), latestPoint(ctx));
             if (!this.morphController.isActive) {
                 pipeline.render(ctx, () => infra_1.Logger.info('render'));
             }

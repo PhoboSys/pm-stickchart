@@ -1,12 +1,13 @@
-import { DataPoint, PlotData } from '../../chartdata/types';
-export default class MorphController {
+export default class MorphController<TargetType extends object> {
+    private _isEqual;
     private _onUpdate;
+    private config?;
     private anim;
     private _lastTarget;
-    constructor(_onUpdate: (point: DataPoint) => void);
+    constructor(_isEqual: (v1: TargetType, v2: TargetType) => boolean, _onUpdate: (v: TargetType) => void, config?: any);
     get isActive(): boolean;
-    perform(lastplot?: PlotData, currentplot?: PlotData): this;
-    private _performNew;
+    performNew(from: TargetType, to: TargetType): this;
+    perform(from?: TargetType, to?: TargetType): this;
     private _perform;
     private _create;
     private _clear;
