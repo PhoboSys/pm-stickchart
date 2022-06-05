@@ -16,18 +16,26 @@ export const UNIX_WEEK = 7 * UNIX_DAY
 export const MAX_FRAME_DURATION = UNIX_DAY
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
 
-export const SHRINK_RATE = 3
+export const MAX_EXPAND_RATION = 3
 
-export function nowUnixTS() {
+export function nowUnixTS(): number {
     return Math.floor(Date.now() / 1000)
 }
 
-type FrameValue = { value: number }
+class FrameValue {
+    constructor(
+        public value: number,
+    ) {}
+
+    static isEqual(v1: FrameValue, v2: FrameValue): boolean {
+        return v1.value === v2.value
+    }
+}
 
 export class Timeframe {
     private _morphController: MorphController<FrameValue>
 
-    private lastDuration: number = UNIX_DAY
+    private _timerfamePreffered: number = UNIX_DAY
 
     private since: number = nowUnixTS() - UNIX_DAY
 
@@ -44,7 +52,7 @@ export class Timeframe {
         this.zoomTarget.addEventListener('zoom', this.zoomevent)
 
         this._morphController = new MorphController<FrameValue>(
-            (v1, v2) => v1.value === v2.value,
+            FrameValue.isEqual,
             ({ value }) => {
                 this.since = value
 
@@ -58,7 +66,7 @@ export class Timeframe {
         timeframe = this.getValid(timeframe)
 
         this.since = nowUnixTS() - timeframe
-        this.lastDuration = timeframe
+        this._timerfamePreffered = timeframe
 
         return this
     }
@@ -72,13 +80,13 @@ export class Timeframe {
     }
 
     public actualize(): this {
-        const currentDuration = (nowUnixTS() - this.since)
-        const maxDuration = this.getValid(this.lastDuration * SHRINK_RATE)
+        const timeframeNow = (nowUnixTS() - this.since)
+        const timeframeMax = this.getValid(this._timerfamePreffered * MAX_EXPAND_RATION)
 
-        if (currentDuration < maxDuration) return this
+        if (timeframeNow < timeframeMax) return this
 
-        const from: FrameValue = { value: this.since }
-        const to: FrameValue = { value: nowUnixTS() - this.lastDuration }
+        const from: FrameValue = new FrameValue(this.since)
+        const to: FrameValue = new FrameValue(nowUnixTS() - this._timerfamePreffered)
         this._morphController.performNew(from, to)
 
         return this
@@ -102,12 +110,12 @@ export class Timeframe {
     private zoom(zoom: number): void {
         const now = nowUnixTS()
 
-        let duration = now - this.since
-        duration += Math.round(duration * zoom)
-        const vduration = this.getValid(duration)
+        let timeframe = now - this.since
+        timeframe += Math.round(timeframe * zoom)
+        timeframe = this.getValid(timeframe)
 
-        this.since = now - vduration
-        this.lastDuration = vduration
-        if (duration === vduration) this._update()
+        this.since = now - timeframe
+        this._timerfamePreffered = timeframe
+        this._update()
     }
 }

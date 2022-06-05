@@ -6,13 +6,13 @@ export declare const UNIX_DAY: number;
 export declare const UNIX_WEEK: number;
 export declare const MAX_FRAME_DURATION: number;
 export declare const MIN_FRAME_DURATION: number;
-export declare const SHRINK_RATE = 3;
+export declare const MAX_EXPAND_RATION = 3;
 export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly zoomTarget;
     private readonly _update;
     private _morphController;
-    private lastDuration;
+    private _timerfamePreffered;
     private since;
     private readonly zoomevent;
     constructor(zoomTarget: EventTarget, _update: () => any);

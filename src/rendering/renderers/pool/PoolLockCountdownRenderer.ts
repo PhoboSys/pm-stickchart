@@ -149,7 +149,7 @@ export class PoolLockCountdownRenderer extends BaseRenderer {
         const { top, bottom } = config.padding
         const y = height / (1 + top + bottom) * top
 
-        const countdownValue = DateUtils.formatSecondsToMMSS(lockDate - DateUtils.nowUnixTS())
+        const countdownValue = DateUtils.formatSecondsToMMSS(lockDate - DateUtils.nowUnixTS() + 1)
         const [countdowntext, countdownstate] = this.get(
             'countdownText',
             () => new Text(countdownValue, this.countdowntextStyle)

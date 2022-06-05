@@ -98,7 +98,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         const x = leftx + (rightx - leftx) / 2;
         const { top, bottom } = config_1.default.padding;
         const y = height / (1 + top + bottom) * top;
-        const countdownValue = DateUtils_1.DateUtils.formatSecondsToMMSS(lockDate - DateUtils_1.DateUtils.nowUnixTS());
+        const countdownValue = DateUtils_1.DateUtils.formatSecondsToMMSS(lockDate - DateUtils_1.DateUtils.nowUnixTS() + 1);
         const [countdowntext, countdownstate] = this.get('countdownText', () => new pixi_1.Text(countdownValue, this.countdowntextStyle));
         if (countdownstate.new)
             countdownstate.height = countdowntext.height;
