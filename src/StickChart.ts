@@ -6,7 +6,7 @@ import { EventsProducer } from './events'
 import { Logger } from './infra'
 import MorphController from './lib/morph'
 
-import { Application, gsap } from './lib/pixi'
+import { Application } from './lib/pixi'
 import { Timeframe } from './lib/timeframe'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'

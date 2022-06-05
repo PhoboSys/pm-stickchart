@@ -10,11 +10,12 @@ export declare const SHRINK_RATE = 3;
 export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly zoomTarget;
-    private readonly onZoom;
-    private _lastDuration;
+    private readonly _update;
+    private _morphController;
+    private lastDuration;
     private since;
     private readonly zoomevent;
-    constructor(zoomTarget: EventTarget, onZoom: () => any);
+    constructor(zoomTarget: EventTarget, _update: () => any);
     save(timeframe: any): this;
     get(): {
         since: number;
