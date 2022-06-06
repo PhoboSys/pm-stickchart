@@ -1,5 +1,6 @@
 import { ChartData } from './chartdata';
 import { EChartType } from './enums';
+import EventTarget from '@ungap/event-target';
 export declare class StickChart extends EventTarget {
     private stageElement;
     private application;
