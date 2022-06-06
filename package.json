@@ -39,6 +39,7 @@
     "@pixi/utils": "6.3.0",
     "@pixi/filter-blur": "6.3.0",
     "@pixi/filter-color-matrix": "6.3.0",
+    "@ungap/event-target": "0.2.3",
     "core-js": "3.22.5",
     "lodash.throttle": "4.1.1",
     "gsap": "3.10.4",

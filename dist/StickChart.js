@@ -11,9 +11,10 @@ const infra_1 = require("./infra");
 const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
+const event_target_1 = __importDefault(require("@ungap/event-target"));
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
-class StickChart extends EventTarget {
+class StickChart extends event_target_1.default {
     constructor(stageElement) {
         super();
         this.stageElement = stageElement;

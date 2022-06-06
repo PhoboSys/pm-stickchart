@@ -8,6 +8,7 @@ import MorphController from './lib/morph'
 
 import { Application, gsap } from './lib/pixi'
 import { Timeframe } from './lib/timeframe'
+import EventTarget from '@ungap/event-target'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
