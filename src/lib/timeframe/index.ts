@@ -59,7 +59,7 @@ export class Timeframe {
 
         if (timeframeNow < timeframeMax) return timeframeNow
 
-        return MAX_FRAME_DURATION
+        return this._timerfamePreffered
     }
 
     public get() {

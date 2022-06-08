@@ -42,7 +42,7 @@ class Timeframe {
         const timeframeMax = this.getValid(this._timerfamePreffered * exports.MAX_EXPAND_RATION);
         if (timeframeNow < timeframeMax)
             return timeframeNow;
-        return exports.MAX_FRAME_DURATION;
+        return this._timerfamePreffered;
     }
     get() {
         return { since: this.since, until: nowUnixTS() };
