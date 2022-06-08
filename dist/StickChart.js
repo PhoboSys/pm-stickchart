@@ -8,11 +8,11 @@ const chartdata_1 = require("./chartdata");
 const config_1 = __importDefault(require("./config"));
 const events_1 = require("./events");
 const infra_1 = require("./infra");
-const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const rendering_1 = require("./rendering");
 const rendering_2 = require("./rendering");
+const index_1 = require("./lib/animation/index");
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
@@ -30,7 +30,7 @@ class StickChart extends EventTarget {
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
-        this.morphController = new morph_1.default(chartdata_1.DataBuilder.isEqual, (point) => this.applyLatestPoint(point), config_1.default.morph);
+        this.morphController = new index_1.AnimationController(config_1.default.morph.duration, config_1.default.morph.ease);
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -72,7 +72,7 @@ class StickChart extends EventTarget {
         var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
-        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.actualize().get());
+        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.get());
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -89,8 +89,26 @@ class StickChart extends EventTarget {
             this._context = null;
         }
         window.requestAnimationFrame(() => {
-            const latestPoint = (_context) => _context ? chartdata_1.DataBuilder.getLatest(_context.plotdata) : undefined;
-            this.morphController.perform(latestPoint(this._context), latestPoint(ctx));
+            var _a, _b;
+            const lastPoint = chartdata_1.DataBuilder.getLatest(ctx.plotdata);
+            const hasAddedNewPoint = !chartdata_1.DataBuilder.isEqual((_b = (_a = this.morphAnimation) === null || _a === void 0 ? void 0 : _a.to) !== null && _b !== void 0 ? _b : {}, lastPoint);
+            if (this._context && ctx && hasAddedNewPoint) {
+                this.morphController
+                    .forceEnd()
+                    .removeListenerAll()
+                    .reset();
+                const animated = chartdata_1.DataBuilder.getLatest(this._context.plotdata);
+                const { timeframeNow, timeframeExpected } = this.timeframe;
+                if (timeframeNow !== timeframeExpected) {
+                    new index_1.ValueTween(timeframeNow, timeframeExpected)
+                        .animateWith(this.morphController)
+                        .addListener((timeframe) => this.timeframe.save(timeframe));
+                }
+                this.morphAnimation = new index_1.Tween(animated, lastPoint)
+                    .animateWith(this.morphController)
+                    .addListener((point) => this.applyLatestPoint(point));
+                this.morphController.start();
+            }
             if (!this.morphController.isActive) {
                 pipeline.render(ctx, () => infra_1.Logger.info('render'));
             }

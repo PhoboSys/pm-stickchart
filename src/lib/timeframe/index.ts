@@ -22,19 +22,7 @@ export function nowUnixTS(): number {
     return Math.floor(Date.now() / 1000)
 }
 
-class FrameValue {
-    constructor(
-        public value: number,
-    ) {}
-
-    static isEqual(v1: FrameValue, v2: FrameValue): boolean {
-        return v1.value === v2.value
-    }
-}
-
 export class Timeframe {
-    private _morphController: MorphController<FrameValue>
-
     private _timerfamePreffered: number = UNIX_DAY
 
     private since: number = nowUnixTS() - UNIX_DAY
@@ -50,16 +38,6 @@ export class Timeframe {
             config.zoom.throttle,
         )
         this.zoomTarget.addEventListener('zoom', this.zoomevent)
-
-        this._morphController = new MorphController<FrameValue>(
-            FrameValue.isEqual,
-            ({ value }) => {
-                this.since = value
-
-                _update()
-            },
-            config.morph,
-        )
     }
 
     public save(timeframe): this {
@@ -69,6 +47,19 @@ export class Timeframe {
         this._timerfamePreffered = timeframe
 
         return this
+    }
+
+    public get timeframeNow(): number {
+        return nowUnixTS() - this.since
+    }
+
+    public get timeframeExpected(): number {
+        const timeframeNow = (nowUnixTS() - this.since)
+        const timeframeMax = this.getValid(this._timerfamePreffered * MAX_EXPAND_RATION)
+
+        if (timeframeNow < timeframeMax) return timeframeNow
+
+        return MAX_FRAME_DURATION
     }
 
     public get() {
@@ -85,9 +76,7 @@ export class Timeframe {
 
         if (timeframeNow < timeframeMax) return this
 
-        const from: FrameValue = new FrameValue(this.since)
-        const to: FrameValue = new FrameValue(nowUnixTS() - this._timerfamePreffered)
-        this._morphController.performNew(from, to)
+        this.save(this._timerfamePreffered)
 
         return this
     }

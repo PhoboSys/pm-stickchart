@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.nowUnixTS = exports.MAX_EXPAND_RATION = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = exports.INVALID_DATE = exports.MILLISECONDS_IN_DAY = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
 const config_1 = __importDefault(require("../../config"));
-const morph_1 = __importDefault(require("../morph"));
 exports.MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 exports.INVALID_DATE = new Date(NaN);
 exports.UNIX_MINUTE = 60;
@@ -20,14 +19,6 @@ function nowUnixTS() {
     return Math.floor(Date.now() / 1000);
 }
 exports.nowUnixTS = nowUnixTS;
-class FrameValue {
-    constructor(value) {
-        this.value = value;
-    }
-    static isEqual(v1, v2) {
-        return v1.value === v2.value;
-    }
-}
 class Timeframe {
     constructor(zoomTarget, _update) {
         this.zoomTarget = zoomTarget;
@@ -36,16 +27,22 @@ class Timeframe {
         this.since = nowUnixTS() - exports.UNIX_DAY;
         this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), config_1.default.zoom.throttle);
         this.zoomTarget.addEventListener('zoom', this.zoomevent);
-        this._morphController = new morph_1.default(FrameValue.isEqual, ({ value }) => {
-            this.since = value;
-            _update();
-        }, config_1.default.morph);
     }
     save(timeframe) {
         timeframe = this.getValid(timeframe);
         this.since = nowUnixTS() - timeframe;
         this._timerfamePreffered = timeframe;
         return this;
+    }
+    get timeframeNow() {
+        return nowUnixTS() - this.since;
+    }
+    get timeframeExpected() {
+        const timeframeNow = (nowUnixTS() - this.since);
+        const timeframeMax = this.getValid(this._timerfamePreffered * exports.MAX_EXPAND_RATION);
+        if (timeframeNow < timeframeMax)
+            return timeframeNow;
+        return exports.MAX_FRAME_DURATION;
     }
     get() {
         return { since: this.since, until: nowUnixTS() };
@@ -58,9 +55,7 @@ class Timeframe {
         const timeframeMax = this.getValid(this._timerfamePreffered * exports.MAX_EXPAND_RATION);
         if (timeframeNow < timeframeMax)
             return this;
-        const from = new FrameValue(this.since);
-        const to = new FrameValue(nowUnixTS() - this._timerfamePreffered);
-        this._morphController.performNew(from, to);
+        this.save(this._timerfamePreffered);
         return this;
     }
     getValid(timeframe) {

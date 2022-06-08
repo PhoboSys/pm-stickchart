@@ -7,6 +7,7 @@ export declare class StickChart extends EventTarget {
     private pipelineFactory;
     private textureStorage;
     private morphController;
+    private morphAnimation;
     private _context;
     private timeframe;
     constructor(stageElement: HTMLElement);

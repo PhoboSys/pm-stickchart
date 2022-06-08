@@ -1,16 +1,16 @@
-import { DataBuilder, ChartData, DataPoint } from './chartdata'
+import { DataBuilder, ChartData } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
 import { EventsProducer } from './events'
 import { Logger } from './infra'
-import MorphController from './lib/morph'
 
 import { Application } from './lib/pixi'
 import { Timeframe } from './lib/timeframe'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
+import { AnimationController, Tween, ValueTween } from './lib/animation/index'
 
 export class StickChart extends EventTarget {
 
@@ -22,7 +22,9 @@ export class StickChart extends EventTarget {
 
     private textureStorage: TextureStorage
 
-    private morphController: MorphController<DataPoint>
+    private morphController: AnimationController
+
+    private morphAnimation: Tween | null
 
     private _context: RenderingContext | null
 
@@ -50,10 +52,9 @@ export class StickChart extends EventTarget {
             this,
             () => this.applyTimeframe(),
         )
-        this.morphController = new MorphController(
-            DataBuilder.isEqual,
-            (point) => this.applyLatestPoint(point),
-            config.morph,
+        this.morphController = new AnimationController(
+            config.morph.duration,
+            config.morph.ease,
         )
 
         const renderer = new GraphicStorage(this.application.stage)
@@ -131,7 +132,7 @@ export class StickChart extends EventTarget {
         const plotdata = DataBuilder.plotdata(
             chartdata,
             this.application.screen,
-            this.timeframe.actualize().get()
+            this.timeframe.get()
         )
         const ctx: RenderingContext = {
             pool: context.pool,
@@ -152,13 +153,30 @@ export class StickChart extends EventTarget {
         }
 
         window.requestAnimationFrame(() => {
-            const latestPoint = (_context) =>
-                _context ? DataBuilder.getLatest(_context.plotdata) : undefined
+            const lastPoint = DataBuilder.getLatest(ctx.plotdata)
+            const hasAddedNewPoint = !DataBuilder.isEqual(this.morphAnimation?.to ?? {}, lastPoint)
 
-            this.morphController.perform(
-                latestPoint(this._context),
-                latestPoint(ctx)
-            )
+            if (this._context && ctx && hasAddedNewPoint) {
+                this.morphController
+                    .forceEnd()
+                    .removeListenerAll()
+                    .reset()
+
+                const animated = DataBuilder.getLatest(this._context.plotdata)
+
+                const { timeframeNow, timeframeExpected } = this.timeframe
+                if (timeframeNow !== timeframeExpected) {
+                    new ValueTween(timeframeNow, timeframeExpected)
+                        .animateWith(this.morphController)
+                        .addListener((timeframe) => this.timeframe.save(timeframe))
+                }
+
+                this.morphAnimation = new Tween(animated, lastPoint)
+                    .animateWith(this.morphController)
+                    .addListener((point) => this.applyLatestPoint(point))
+
+                this.morphController.start()
+            }
 
             if (!this.morphController.isActive) {
 

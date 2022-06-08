@@ -11,12 +11,13 @@ export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly zoomTarget;
     private readonly _update;
-    private _morphController;
     private _timerfamePreffered;
     private since;
     private readonly zoomevent;
     constructor(zoomTarget: EventTarget, _update: () => any);
     save(timeframe: any): this;
+    get timeframeNow(): number;
+    get timeframeExpected(): number;
     get(): {
         since: number;
         until: number;
