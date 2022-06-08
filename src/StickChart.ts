@@ -162,8 +162,6 @@ export class StickChart extends EventTarget {
                     .removeListenerAll()
                     .reset()
 
-                const animated = DataBuilder.getLatest(this._context.plotdata)
-
                 const { timeframeNow, timeframeExpected } = this.timeframe
                 if (timeframeNow !== timeframeExpected) {
                     new ValueTween(timeframeNow, timeframeExpected)
@@ -171,6 +169,7 @@ export class StickChart extends EventTarget {
                         .addListener((timeframe) => this.timeframe.save(timeframe))
                 }
 
+                const animated = DataBuilder.getLatest(this._context.plotdata)
                 this.morphAnimation = new Tween(animated, lastPoint)
                     .animateWith(this.morphController)
                     .addListener((point) => this.applyLatestPoint(point))

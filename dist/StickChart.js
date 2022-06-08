@@ -97,13 +97,13 @@ class StickChart extends EventTarget {
                     .forceEnd()
                     .removeListenerAll()
                     .reset();
-                const animated = chartdata_1.DataBuilder.getLatest(this._context.plotdata);
                 const { timeframeNow, timeframeExpected } = this.timeframe;
                 if (timeframeNow !== timeframeExpected) {
                     new index_1.ValueTween(timeframeNow, timeframeExpected)
                         .animateWith(this.morphController)
                         .addListener((timeframe) => this.timeframe.save(timeframe));
                 }
+                const animated = chartdata_1.DataBuilder.getLatest(this._context.plotdata);
                 this.morphAnimation = new index_1.Tween(animated, lastPoint)
                     .animateWith(this.morphController)
                     .addListener((point) => this.applyLatestPoint(point));
