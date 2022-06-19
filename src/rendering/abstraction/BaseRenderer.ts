@@ -1,9 +1,9 @@
 import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
 
-import { Logger } from '../../infra'
+import { Logger } from '@infra'
 
-import { Container } from '../../lib/pixi'
+import { Container } from '@lib/pixi'
 
 export abstract class BaseRenderer implements IRenderer {
 
@@ -70,6 +70,7 @@ export abstract class BaseRenderer implements IRenderer {
             if (this.isEqual(deps, dependencies)) {
 
                 state.new = false
+
                 return [<T>g, state]
 
             } else {

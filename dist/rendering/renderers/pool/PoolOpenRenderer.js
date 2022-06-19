@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolOpenRenderer = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-class PoolOpenRenderer extends __1.BaseRenderer {
+class PoolOpenRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.coverStyle = {
@@ -67,7 +67,7 @@ class PoolOpenRenderer extends __1.BaseRenderer {
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
         const { radiuses, color } = this.coverStyle;
-        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
+        const cover = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         text.position.x = -width + paddingx;
         cover.position.x = -width;
         const poolname = new pixi_1.Container();
@@ -76,7 +76,7 @@ class PoolOpenRenderer extends __1.BaseRenderer {
     }
     createDash(context) {
         const { height } = context.screen;
-        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
+        const dash = _rendering_1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
         return dash;
     }
 }

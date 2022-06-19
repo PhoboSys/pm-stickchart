@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionBackground = void 0;
 const pixi_1 = require("../../../../lib/pixi");
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
-const __1 = require("../../..");
-const __2 = require("../../..");
-class PariResolutionBackground extends __1.BaseRenderer {
+const _rendering_1 = require("../../../index.js");
+const _rendering_2 = require("../../../index.js");
+const _constants_1 = require("../../../../constants/index.js");
+class PariResolutionBackground extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
     }
@@ -37,9 +38,9 @@ class PariResolutionBackground extends __1.BaseRenderer {
         const paris = {};
         for (const pari of context.paris)
             paris[pari.position] = pari;
-        if (!paris['POS'])
+        if (!paris[_constants_1.POS])
             this.clear('gradientPos');
-        if (!paris['NEG'])
+        if (!paris[_constants_1.NEG])
             this.clear('gradientNeg');
         const anim = {
             high: {
@@ -73,8 +74,8 @@ class PariResolutionBackground extends __1.BaseRenderer {
         // pool
         const { pool } = context;
         for (const pari of context.paris) {
-            if (pari.position === 'POS') {
-                const [gradientPos, statepos] = this.get('gradientPos', () => new pixi_1.Sprite(context.textures.get(__2.UP_WAGET_TEXTURE)));
+            if (pari.position === _constants_1.POS) {
+                const [gradientPos, statepos] = this.get('gradientPos', () => new pixi_1.Sprite(context.textures.get(_rendering_2.UP_WAGET_TEXTURE)));
                 if (statepos.new)
                     container.addChild(gradientPos);
                 gradientPos.position.set(ox, y);
@@ -111,8 +112,8 @@ class PariResolutionBackground extends __1.BaseRenderer {
                     }
                 }
             }
-            if (pari.position === 'NEG') {
-                const [gradientNeg, stateneg] = this.get('gradientNeg', () => new pixi_1.Sprite(context.textures.get(__2.DOWN_WAGET_TEXTURE)));
+            if (pari.position === _constants_1.NEG) {
+                const [gradientNeg, stateneg] = this.get('gradientNeg', () => new pixi_1.Sprite(context.textures.get(_rendering_2.DOWN_WAGET_TEXTURE)));
                 if (stateneg.new)
                     container.addChild(gradientNeg);
                 gradientNeg.position.set(ox, y);

@@ -1,5 +1,5 @@
-import { IGraphicStorage, RenderingContext } from '../..';
-import { BaseRenderer } from '../..';
+import { IGraphicStorage, RenderingContext } from '@rendering';
+import { BaseRenderer } from '@rendering';
 import { Container } from '../../../lib/pixi';
 export declare class PoolOpenRenderer extends BaseRenderer {
     static readonly POOL_OPEN_ID: symbol;

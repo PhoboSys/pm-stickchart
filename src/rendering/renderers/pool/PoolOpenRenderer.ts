@@ -1,9 +1,8 @@
-import config from '../../../config'
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer, GraphicUtils } from '../..'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text } from '../../../lib/pixi'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Text } from '@lib/pixi'
 export class PoolOpenRenderer extends BaseRenderer {
 
     static readonly POOL_OPEN_ID: symbol = Symbol('POOL_OPEN_ID')

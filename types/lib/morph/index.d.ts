@@ -1,4 +1,4 @@
-import { DataPoint, PlotData } from '../../chartdata/types';
+import { DataPoint, PlotData } from '@chartdata';
 export default class MorphController {
     private _onUpdate;
     private anim;

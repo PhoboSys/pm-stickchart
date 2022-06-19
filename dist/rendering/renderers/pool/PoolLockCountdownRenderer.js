@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolLockCountdownRenderer = void 0;
-const config_1 = __importDefault(require("../../../config"));
-const __1 = require("../..");
+const _config_1 = __importDefault(require("../../../config.js"));
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const symbols_1 = require("../../textures/symbols");
-const DateUtils_1 = require("../../utils/DateUtils");
-class PoolLockCountdownRenderer extends __1.BaseRenderer {
+const _rendering_2 = require("../../index.js");
+const _rendering_3 = require("../../index.js");
+class PoolLockCountdownRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.style = {
@@ -50,7 +50,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
     }
     update(context, container) {
         var _a;
-        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < DateUtils_1.DateUtils.nowUnixTS();
+        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < _rendering_3.DateUtils.nowUnixTS();
         if (!context.pool || hasExpired)
             return this.hideContainerAndDestroyVisitor(container);
         this.updateBackground(context, container);
@@ -73,7 +73,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         ];
         const [gradient, gradientState] = this.get('gradient', () => new pixi_1.Graphics()
             .beginTextureFill({
-            texture: context.textures.get(symbols_1.LOCK_COUNTDOWN_TEXTURE),
+            texture: context.textures.get(_rendering_2.LOCK_COUNTDOWN_TEXTURE),
         })
             .drawPolygon(shape)
             .closePath()
@@ -88,7 +88,7 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
     }
     updateText(context, container) {
         var _a;
-        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < DateUtils_1.DateUtils.nowUnixTS();
+        const hasExpired = ((_a = context.pool) === null || _a === void 0 ? void 0 : _a.lockDate) < _rendering_3.DateUtils.nowUnixTS();
         if (hasExpired)
             return this.hideContainerAndDestroyVisitor(container);
         const { height, width } = context.screen;
@@ -96,9 +96,9 @@ class PoolLockCountdownRenderer extends __1.BaseRenderer {
         const { timerange } = context.plotdata;
         const [leftx, rightx] = datamath_1.default.scale([openDate, lockDate], timerange, width);
         const x = leftx + (rightx - leftx) / 2;
-        const { top, bottom } = config_1.default.padding;
+        const { top, bottom } = _config_1.default.padding;
         const y = height / (1 + top + bottom) * top;
-        const countdownValue = DateUtils_1.DateUtils.formatSecondsToMMSS(lockDate - DateUtils_1.DateUtils.nowUnixTS() + 1);
+        const countdownValue = _rendering_3.DateUtils.formatSecondsToMMSS(lockDate - _rendering_3.DateUtils.nowUnixTS() + 1);
         const [countdowntext, countdownstate] = this.get('countdownText', () => new pixi_1.Text(countdownValue, this.countdowntextStyle));
         if (countdownstate.new)
             countdownstate.height = countdowntext.height;

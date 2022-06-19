@@ -1,8 +1,8 @@
 export * from './types'
 
-import config from '../config'
+import config from '@config'
 
-import datamath from '../lib/datamath'
+import datamath from '@lib/datamath'
 
 import { ChartData, PlotData, DataPoint } from './types'
 

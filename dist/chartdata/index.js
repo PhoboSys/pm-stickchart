@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
-const config_1 = __importDefault(require("../config"));
+const _config_1 = __importDefault(require("../config.js"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
 class DataBuilder {
     static isEqual(start, end) {
@@ -58,16 +58,16 @@ class DataBuilder {
         return polyline;
     }
     static normalize(timestampsOrig, pricesOrig, screen) {
-        const timestamps = datamath_1.default.sample(timestampsOrig, config_1.default.maxdensity);
-        const prices = datamath_1.default.sample(pricesOrig, config_1.default.maxdensity);
+        const timestamps = datamath_1.default.sample(timestampsOrig, _config_1.default.maxdensity);
+        const prices = datamath_1.default.sample(pricesOrig, _config_1.default.maxdensity);
         // return latest price if sampled out
         if (timestamps.at(-1) !== timestampsOrig.at(-1) ||
             prices.at(-1) !== pricesOrig.at(-1)) {
             timestamps.push(Number(timestampsOrig.at(-1)));
             prices.push(Number(pricesOrig.at(-1)));
         }
-        const timerange = datamath_1.default.range(timestamps, config_1.default.padding.left, config_1.default.padding.right);
-        const pricerange = datamath_1.default.range(prices, config_1.default.padding.bottom, config_1.default.padding.top);
+        const timerange = datamath_1.default.range(timestamps, _config_1.default.padding.left, _config_1.default.padding.right);
+        const pricerange = datamath_1.default.range(prices, _config_1.default.padding.bottom, _config_1.default.padding.top);
         const { width, height } = screen;
         const xs = datamath_1.default.scale(timestamps, timerange, width);
         const ys = datamath_1.default.scaleReverse(prices, pricerange, height);

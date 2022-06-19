@@ -1,11 +1,12 @@
-import config from '../../../config'
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer, GraphicUtils } from '../..'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text } from '../../../lib/pixi'
-import ui from '../../../lib/ui/index'
-import { USD } from '../../../constants/currencies'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Text } from '@lib/pixi'
+import ui from '@lib/ui/index'
+
+import { USD } from '@constants'
+
 export class PoolOpenPriceLineRenderer extends BaseRenderer {
 
     static readonly POOL_OPEN_PRICE_LINE_ID: symbol = Symbol('POOL_OPEN_PRICE_LINE_ID')

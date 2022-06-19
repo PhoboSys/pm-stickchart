@@ -1,10 +1,10 @@
-import { Graphics, Container } from '../../../lib/pixi'
-import datamath from '../../../lib/datamath'
-import config from '../../../config'
+import { Container } from '@lib/pixi'
+import datamath from '@lib/datamath'
+import config from '@config'
 
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer, GraphicUtils } from '../..'
-import { DateUtils } from '../../utils/DateUtils';
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
+import { DateUtils } from '@rendering'
 
 export class VerticalGridRenderer extends BaseRenderer {
 

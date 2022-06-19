@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolRenderer = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const PoolOpenRenderer_1 = require("./PoolOpenRenderer");
 const PoolResolutionRenderer_1 = require("./PoolResolutionRenderer");
 const PoolLockRenderer_1 = require("./PoolLockRenderer");
@@ -11,7 +11,7 @@ const PoolLockCountdownRenderer_1 = require("./PoolLockCountdownRenderer");
 class PoolRenderer {
     constructor(renderer) {
         this.renderer = renderer;
-        this.compositor = new __1.RenderingCompositor([
+        this.compositor = new _rendering_1.RenderingCompositor([
             new PoolBackgroundRenderer_1.PoolBackgroundRenderer(renderer),
             new PoolLockRenderer_1.PoolLockRenderer(renderer),
             new PoolOpenRenderer_1.PoolOpenRenderer(renderer),

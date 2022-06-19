@@ -14,7 +14,7 @@
     "lde-link-stickchart": "./bin/stickchart-link.sh"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "build:lde": "./bin/dev.sh",
     "lint": "echo 'truend off until fixed'",
     "lint-orig": "eslint --ext .ts .",
@@ -28,6 +28,8 @@
     "@pixi/constants": "6.3.0",
     "@pixi/core": "6.3.0",
     "@pixi/display": "6.3.0",
+    "@pixi/filter-blur": "6.3.0",
+    "@pixi/filter-color-matrix": "6.3.0",
     "@pixi/graphics": "6.3.0",
     "@pixi/graphics-extras": "6.3.0",
     "@pixi/math": "6.3.0",
@@ -37,13 +39,11 @@
     "@pixi/text": "6.3.0",
     "@pixi/ticker": "6.3.0",
     "@pixi/utils": "6.3.0",
-    "@pixi/filter-blur": "6.3.0",
-    "@pixi/filter-color-matrix": "6.3.0",
-    "core-js": "3.22.5",
-    "lodash.throttle": "4.1.1",
-    "gsap": "3.10.4",
     "big.js": "6.1.1",
-    "debug": "4.3.2"
+    "core-js": "3.22.5",
+    "debug": "4.3.2",
+    "gsap": "3.10.4",
+    "lodash.throttle": "4.1.1"
   },
   "files": [
     "dist",
@@ -60,6 +60,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "16.2.0",
     "eslint-plugin-import": "2.25.4",
+    "tsc-alias": "^1.6.11",
     "typescript": "^4.6.3"
   },
   "repository": {

@@ -1,9 +1,9 @@
-import { Graphics, Container, Sprite, gsap } from '../../../../lib/pixi'
-import datamath from '../../../../lib/datamath'
+import { Container } from '@lib/pixi'
+import datamath from '@lib/datamath'
 
-import { IGraphicStorage, RenderingContext } from '../../..'
-import { BaseRenderer, GraphicUtils } from '../../..'
-import { DateUtils } from '../../../utils'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
+import { NEG, POS } from '@constants'
 
 export class PariResolutionPrize extends BaseRenderer {
 
@@ -14,7 +14,9 @@ export class PariResolutionPrize extends BaseRenderer {
     }
 
     private readonly textstyle: any
+
     private readonly subtextstyle: any
+
     private readonly textstylePrecent: any
 
     constructor(renderer: IGraphicStorage) {
@@ -54,6 +56,7 @@ export class PariResolutionPrize extends BaseRenderer {
             !context.paris?.length
         ) {
             this.clear()
+
             return container
         }
 
@@ -78,12 +81,12 @@ export class PariResolutionPrize extends BaseRenderer {
         // clear
         const paris = {}
         for (const pari of context.paris) paris[pari.position] = pari
-        if (!paris['POS']) {
+        if (!paris[POS]) {
             this.clear('dividendsPos')
             this.clear('dividendsCurPos')
             this.clear('dividendsPerPos')
         }
-        if (!paris['NEG']) {
+        if (!paris[NEG]) {
             this.clear('dividendsNeg')
             this.clear('dividendsCurNeg')
             this.clear('dividendsPerNeg')
@@ -104,7 +107,7 @@ export class PariResolutionPrize extends BaseRenderer {
             const percent = datamath.profitPercent(prize, pari.wager, 2)
             const isWinning = prize !== 0
 
-            if (pari.position === 'POS') {
+            if (pari.position === POS) {
 
                 const [dividendsPos, dividendsPosState] = this.get(
                     'dividendsPos',
@@ -156,7 +159,7 @@ export class PariResolutionPrize extends BaseRenderer {
 
             }
 
-            if (pari.position === 'NEG') {
+            if (pari.position === NEG) {
 
                 const [dividendsNeg, dividendsNegState] = this.get(
                     'dividendsNeg',

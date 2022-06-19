@@ -1,12 +1,13 @@
 import { RenderingContext, IGraphicStorage } from '..'
 import { BaseRenderer, GraphicUtils } from '..'
 
-import { PointerleaveEvent, PointermoveEvent } from '../../events'
-import datamath from '../../lib/datamath'
-import { Graphics, Container, Text } from '../../lib/pixi'
-import ui from '../../lib/ui/index'
-import { USD } from '../../constants/currencies'
-import { DateUtils } from '../utils/DateUtils'
+import datamath from '@lib/datamath'
+import ui from '@lib/ui'
+import { Graphics, Container, Text } from '@lib/pixi'
+
+import { PointermoveEvent } from '@events'
+import { USD } from '@constants'
+import { DateUtils } from '@rendering'
 
 export class CrosshairRenderer extends BaseRenderer {
 
