@@ -1,16 +1,16 @@
-import { DataBuilder, ChartData } from './chartdata'
-import config from './config'
+import { DataBuilder, ChartData } from '@chartdata'
+import config from '@config'
 
-import { EChartType } from './enums'
-import { EventsProducer } from './events'
-import { Logger } from './infra'
-import MorphController from './lib/morph'
+import { EChartType } from '@enums'
+import { Logger } from '@infra'
+import { EventsProducer } from '@events'
 
-import { Application, gsap } from './lib/pixi'
-import { Timeframe } from './lib/timeframe'
+import MorphController from '@lib/morph'
+import { Application } from '@lib/pixi'
+import { Timeframe } from '@lib/timeframe'
 
-import { RenderingPipelineFactory, RenderingContext } from './rendering'
-import { TextureStorage, GraphicStorage } from './rendering'
+import { RenderingPipelineFactory, RenderingContext } from '@rendering'
+import { TextureStorage, GraphicStorage } from '@rendering'
 
 export class StickChart extends EventTarget {
 

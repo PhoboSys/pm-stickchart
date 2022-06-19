@@ -1,11 +1,12 @@
-import { Container } from '../../../lib/pixi'
-import datamath from '../../../lib/datamath'
-import config from '../../../config'
+import { Container } from '@lib/pixi'
+import datamath from '@lib/datamath'
+import config from '@config'
 
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer, GraphicUtils } from '../..'
-import ui from '../../../lib/ui/index'
-import { USD } from '../../../constants/currencies'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
+
+import ui from '@lib/ui/index'
+import { USD } from '@constants'
 
 export class HorizontalGridRenderer extends BaseRenderer {
 

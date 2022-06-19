@@ -1,5 +1,6 @@
-import { IGraphicStorage, RenderingCompositor } from '../..'
-import { RenderingContext, DoneFunction, IRenderer } from '../..'
+import { IGraphicStorage, RenderingCompositor } from '@rendering'
+import { RenderingContext, DoneFunction, IRenderer } from '@rendering'
+
 import { PoolOpenRenderer } from './PoolOpenRenderer'
 import { PoolResolutionRenderer } from './PoolResolutionRenderer'
 import { PoolLockRenderer } from './PoolLockRenderer'

@@ -27,12 +27,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolResolutionRenderer = void 0;
-const config_1 = __importDefault(require("../../../config"));
 const __1 = require("../..");
+const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const poollevels_1 = require("../../../constants/poollevels");
-const TEXTURE_NAMES = __importStar(require("../../textures/symbols"));
+const _constants_1 = require("../../../constants/index.js");
+const TEXTURE_NAMES = __importStar(require("../../index.js"));
 class PoolResolutionRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -75,12 +75,12 @@ class PoolResolutionRenderer extends __1.BaseRenderer {
     }
     getLevelLineColors(context) {
         switch (context.pool.level) {
-            case poollevels_1.SILVER:
-                return config_1.default.style.levels.silverLineColors;
-            case poollevels_1.ROYAL:
-                return config_1.default.style.levels.royalLineColors;
-            case poollevels_1.GOLD:
-                return config_1.default.style.levels.goldLineColors;
+            case _constants_1.SILVER:
+                return _config_1.default.style.levels.silverLineColors;
+            case _constants_1.ROYAL:
+                return _config_1.default.style.levels.royalLineColors;
+            case _constants_1.GOLD:
+                return _config_1.default.style.levels.goldLineColors;
             default:
                 throw Error('pool level is not supported');
         }

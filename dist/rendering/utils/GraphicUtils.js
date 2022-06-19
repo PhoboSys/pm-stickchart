@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraphicUtils = void 0;
 const lodash_1 = require("lodash");
-const infra_1 = require("../../infra");
+const _infra_1 = require("../../infra/index.js");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 class GraphicUtils {
@@ -23,7 +23,7 @@ class GraphicUtils {
         if (torus.drawTorus)
             torus.drawTorus(0, 0, innerr, outerr);
         else
-            infra_1.Logger.error('drawTorus is not supported install @pixi/graphics-extras');
+            _infra_1.Logger.error('drawTorus is not supported install @pixi/graphics-extras');
         torus.endFill();
         torus.position.set(x, y);
         return torus;

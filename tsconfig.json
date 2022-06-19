@@ -13,25 +13,34 @@
     "baseUrl": "./",
     "paths": {
       "@src/*": [
-        "src/*"
+        "./src/*"
       ],
-      "@interfaces/*": [
-        "src/data/interfaces/*"
+      "@chartdata/*": [
+        "src/chartdata/*"
       ],
-      "@builders/*": [
-        "src/builders/*"
+      "@chartdata": [
+        "src/chartdata/index.ts"
       ],
-      "@store/*": [
-        "src/store/*"
+      "@lib/*": [
+        "src/lib/*"
       ],
-      "@core/*": [
-        "src/core/*"
+      "@enums": [
+        "src/enums/index.ts"
       ],
-      "@types/*": [
-        "src/data/aliases/*"
+      "@events": [
+        "src/events/index.ts"
       ],
-      "@utils/*": [
-        "src/utils/*"
+      "@infra": [
+        "src/infra/index.ts"
+      ],
+      "@config": [
+        "src/config.ts"
+      ],
+      "@rendering": [
+        "src/rendering/index.ts"
+      ],
+      "@constants": [
+        "src/constants/index.ts"
       ],
     },
     "jsx": "react"

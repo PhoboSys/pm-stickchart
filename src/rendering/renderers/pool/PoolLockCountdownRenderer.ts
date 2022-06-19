@@ -1,11 +1,11 @@
-import config from '../../../config'
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer } from '../..'
+import config from '@config'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Rectangle, Ticker } from '../../../lib/pixi'
-import { LOCK_COUNTDOWN_TEXTURE } from '../../textures/symbols'
-import { DateUtils } from '../../utils/DateUtils'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Text } from '@lib/pixi'
+import { LOCK_COUNTDOWN_TEXTURE } from '@rendering'
+import { DateUtils } from '@rendering'
 
 export class PoolLockCountdownRenderer extends BaseRenderer {
 

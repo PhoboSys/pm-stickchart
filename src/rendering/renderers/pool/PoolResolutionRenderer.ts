@@ -1,11 +1,11 @@
-import config from '../../../config'
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
-import { ROYAL, SILVER, GOLD } from '../../../constants/poollevels'
-import * as TEXTURE_NAMES from '../../textures/symbols'
+import config from '@config'
+import datamath from '@lib/datamath'
+import { Container, Text } from '@lib/pixi'
+import { ROYAL, SILVER, GOLD } from '@constants'
+import * as TEXTURE_NAMES from '@rendering'
 export class PoolResolutionRenderer extends BaseRenderer {
 
     static readonly POOL_RESOLUTION_ID: symbol = Symbol('POOL_RESOLUTION_ID')

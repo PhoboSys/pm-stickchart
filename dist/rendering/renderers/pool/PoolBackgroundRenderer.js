@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolBackgroundRenderer = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const symbols_1 = require("../../textures/symbols");
-class PoolBackgroundRenderer extends __1.BaseRenderer {
+const _rendering_2 = require("../../index.js");
+class PoolBackgroundRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
     }
@@ -39,7 +39,7 @@ class PoolBackgroundRenderer extends __1.BaseRenderer {
         gradient
             .clear()
             .beginTextureFill({
-            texture: context.textures.get(symbols_1.POOL_ROUND_TEXTURE),
+            texture: context.textures.get(_rendering_2.POOL_ROUND_TEXTURE),
             alpha: 0.07,
         })
             .drawPolygon(shape)

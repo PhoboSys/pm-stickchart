@@ -1,6 +1,6 @@
-import { IGraphicStorage } from '../../..'
-import { DoneFunction, RenderingContext, IRenderer } from '../../..'
-import { RenderingCompositor } from '../../..'
+import { IGraphicStorage } from '@rendering'
+import { DoneFunction, RenderingContext, IRenderer } from '@rendering'
+import { RenderingCompositor } from '@rendering'
 
 import { PariResolutionBackground } from './PariResolutionBackground'
 import { PariResolutionPrize } from './PariResolutionPrize'
@@ -9,8 +9,8 @@ export class PariResolutionRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
-    constructor (
-       private readonly renderer: IGraphicStorage
+    constructor(
+        private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
             new PariResolutionBackground(renderer),

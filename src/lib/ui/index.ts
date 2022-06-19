@@ -1,6 +1,6 @@
-import config from '../../config'
-import { USD } from '../../constants/currencies'
-import datamath from '../datamath'
+import config from '@config'
+import { USD } from '@constants'
+import datamath from '@lib/datamath'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default class ui {

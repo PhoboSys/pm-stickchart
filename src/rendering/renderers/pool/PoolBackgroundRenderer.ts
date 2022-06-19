@@ -1,9 +1,9 @@
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer } from '../..'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container } from '../../../lib/pixi'
-import { POOL_ROUND_TEXTURE } from '../../textures/symbols'
+import datamath from '@lib/datamath'
+import { Graphics, Container } from '@lib/pixi'
+import { POOL_ROUND_TEXTURE } from '@rendering'
 export class PoolBackgroundRenderer extends BaseRenderer {
 
     static readonly POOL_BACKGROUND_ID: symbol = Symbol('POOL_BACKGROUND_ID')

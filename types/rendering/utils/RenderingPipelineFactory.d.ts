@@ -1,5 +1,5 @@
 import { IRenderer, IGraphicStorage } from '..';
-import { EChartType } from '../../enums/EChartType';
+import { EChartType } from '@enums';
 export declare class RenderingPipelineFactory {
     private readonly renderer;
     private pipelines;

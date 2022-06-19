@@ -1,5 +1,5 @@
-import { RenderingContext } from '../..';
-import { IGraphicStorage, IRenderer, DoneFunction } from '../..';
+import { RenderingContext } from '@rendering';
+import { IGraphicStorage, IRenderer, DoneFunction } from '@rendering';
 export declare class GridRenderer implements IRenderer {
     private readonly renderer;
     private readonly compositor;

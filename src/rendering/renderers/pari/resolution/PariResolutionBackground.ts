@@ -1,11 +1,11 @@
-import { Graphics, Container, Sprite, gsap } from '../../../../lib/pixi'
-import datamath from '../../../../lib/datamath'
+import { Container, Sprite, gsap } from '@lib/pixi'
+import datamath from '@lib/datamath'
 
-import { IGraphicStorage, RenderingContext } from '../../..'
-import { BaseRenderer, GraphicUtils } from '../../..'
-import { DateUtils } from '../../../utils'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer } from '@rendering'
 
-import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from '../../..'
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from '@rendering'
+import { POS, NEG } from '@constants'
 
 export class PariResolutionBackground extends BaseRenderer {
 
@@ -31,6 +31,7 @@ export class PariResolutionBackground extends BaseRenderer {
             !context.paris?.length
         ) {
             this.clear()
+
             return container
         }
 
@@ -51,8 +52,8 @@ export class PariResolutionBackground extends BaseRenderer {
         // clear if one dissapeared
         const paris = {}
         for (const pari of context.paris) paris[pari.position] = pari
-        if (!paris['POS']) this.clear('gradientPos')
-        if (!paris['NEG']) this.clear('gradientNeg')
+        if (!paris[POS]) this.clear('gradientPos')
+        if (!paris[NEG]) this.clear('gradientNeg')
 
         const anim = {
             high: {
@@ -88,7 +89,7 @@ export class PariResolutionBackground extends BaseRenderer {
         const { pool } = context
         for (const pari of context.paris) {
 
-            if (pari.position === 'POS') {
+            if (pari.position === POS) {
 
                 const [gradientPos, statepos] = this.get('gradientPos', () => new Sprite(context.textures.get(UP_WAGET_TEXTURE)))
                 if (statepos.new) container.addChild(gradientPos)
@@ -142,7 +143,7 @@ export class PariResolutionBackground extends BaseRenderer {
                 }
             }
 
-            if (pari.position === 'NEG') {
+            if (pari.position === NEG) {
 
                 const [gradientNeg, stateneg] = this.get('gradientNeg', () => new Sprite(context.textures.get(DOWN_WAGET_TEXTURE)))
                 if (stateneg.new) container.addChild(gradientNeg)

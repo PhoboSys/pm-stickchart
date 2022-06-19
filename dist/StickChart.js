@@ -4,35 +4,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
-const chartdata_1 = require("./chartdata");
-const config_1 = __importDefault(require("./config"));
-const events_1 = require("./events");
-const infra_1 = require("./infra");
+const _chartdata_1 = require("./chartdata/index.js");
+const _config_1 = __importDefault(require("./config.js"));
+const _infra_1 = require("./infra/index.js");
+const _events_1 = require("./events/index.js");
 const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
-const rendering_1 = require("./rendering");
-const rendering_2 = require("./rendering");
+const _rendering_1 = require("./rendering/index.js");
+const _rendering_2 = require("./rendering/index.js");
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
         this.stageElement = stageElement;
         this.application = new pixi_1.Application({
             resizeTo: stageElement,
-            antialias: config_1.default.antialias,
-            resolution: config_1.default.resolution,
-            autoDensity: config_1.default.autoDensity,
-            autoStart: config_1.default.autoStart,
-            forceCanvas: config_1.default.forceCanvas,
-            backgroundColor: config_1.default.style.background,
-            backgroundAlpha: config_1.default.style.backgroundAlpha,
+            antialias: _config_1.default.antialias,
+            resolution: _config_1.default.resolution,
+            autoDensity: _config_1.default.autoDensity,
+            autoStart: _config_1.default.autoStart,
+            forceCanvas: _config_1.default.forceCanvas,
+            backgroundColor: _config_1.default.style.background,
+            backgroundAlpha: _config_1.default.style.backgroundAlpha,
         });
-        this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
-        this.textureStorage = new rendering_2.TextureStorage(this.application);
+        this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement);
+        this.textureStorage = new _rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
         this.morphController = new morph_1.default((point) => this.applyLatestPoint(point));
-        const renderer = new rendering_2.GraphicStorage(this.application.stage);
-        this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
+        const renderer = new _rendering_2.GraphicStorage(this.application.stage);
+        this.pipelineFactory = new _rendering_1.RenderingPipelineFactory(renderer);
     }
     setScreenSize({ width, height }) {
         this.application.renderer.resize(width, height);
@@ -46,7 +46,7 @@ class StickChart extends EventTarget {
     applyTimeframe() {
         if (!this._context)
             return;
-        this._context.plotdata = chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
         this.rerender('zoom');
     }
     applyLatestPoint(latest) {
@@ -57,7 +57,7 @@ class StickChart extends EventTarget {
         const idx = timestamps.length - 1;
         timestamps[idx] = timestamp;
         prices[idx] = price;
-        this._context.plotdata = chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
         this.rerender('morph');
     }
     rerender(reason) {
@@ -65,14 +65,14 @@ class StickChart extends EventTarget {
             if (!this._context)
                 return;
             const pipeline = this.pipelineFactory.get(this._context.charttype);
-            pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => infra_1.Logger.info('re-render', reason));
+            pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => _infra_1.Logger.info('re-render', reason));
         });
     }
     render(context) {
         var _a;
         const pipeline = this.pipelineFactory.get(context.charttype);
-        const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
-        const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.actualize().get());
+        const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
+        const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.actualize().get());
         const ctx = {
             pool: context.pool,
             paris: context.paris,
@@ -92,7 +92,7 @@ class StickChart extends EventTarget {
             var _a;
             this.morphController.perform((_a = this._context) === null || _a === void 0 ? void 0 : _a.plotdata, ctx.plotdata);
             if (!this.morphController.isActive) {
-                pipeline.render(ctx, () => infra_1.Logger.info('render'));
+                pipeline.render(ctx, () => _infra_1.Logger.info('render'));
             }
             // save latest rendered context
             this._context = ctx;

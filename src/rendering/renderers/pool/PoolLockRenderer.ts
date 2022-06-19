@@ -1,10 +1,9 @@
-import config from '../../../config'
-import { IGraphicStorage, RenderingContext } from '../..'
-import { BaseRenderer, GraphicUtils } from '../..'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
-import { LOCK_ICON_TEXTURE } from '../../textures/symbols'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Text, Sprite } from '@lib/pixi'
+import { LOCK_ICON_TEXTURE } from '@rendering'
 export class PoolLockRenderer extends BaseRenderer {
 
     static readonly POOL_LOCK_ID: symbol = Symbol('POOL_LOCK_ID')

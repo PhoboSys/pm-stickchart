@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRenderer = void 0;
-const infra_1 = require("../../infra");
+const _infra_1 = require("../../infra/index.js");
 class BaseRenderer {
     constructor(storage) {
         this.storage = storage;
@@ -23,7 +23,7 @@ class BaseRenderer {
                 this.clear(key);
         }
         else if (name in this.local) {
-            infra_1.Logger.info('clear', name);
+            _infra_1.Logger.info('clear', name);
             const [g, state] = this.local[name];
             g.destroy();
             (_a = state.timeline) === null || _a === void 0 ? void 0 : _a.kill();
@@ -53,7 +53,7 @@ class BaseRenderer {
                 this.clear(name);
             }
         }
-        infra_1.Logger.info('get new', name);
+        _infra_1.Logger.info('get new', name);
         this.local[name] = [create(), { new: true }, dependencies];
         return this.local[name];
     }

@@ -1,9 +1,8 @@
-import { Graphics, Container, Sprite, gsap } from '../../../../lib/pixi'
-import datamath from '../../../../lib/datamath'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
 
-import { IGraphicStorage, RenderingContext } from '../../..'
-import { BaseRenderer, GraphicUtils } from '../../..'
-import { DateUtils } from '../../../utils'
+import { Container, gsap } from '@lib/pixi'
+import datamath from '@lib/datamath'
 
 export class PariResolvedRenderer extends BaseRenderer {
 
@@ -14,7 +13,9 @@ export class PariResolvedRenderer extends BaseRenderer {
     }
 
     private readonly textstyle: any
+
     private readonly subtextstyle: any
+
     private readonly textstylePrecent: any
 
     constructor(renderer: IGraphicStorage) {
@@ -44,6 +45,7 @@ export class PariResolvedRenderer extends BaseRenderer {
     }
 
     private renderedMetaId: any
+
     private unresolvedParis: any = {}
 
     protected update(
@@ -55,6 +57,7 @@ export class PariResolvedRenderer extends BaseRenderer {
             !context.paris?.length && !context.resolved?.length
         ) {
             this.clear()
+
             return container
         }
 

@@ -1,4 +1,4 @@
-import { Container, RenderTexture } from '../../lib/pixi'
+import { Container, RenderTexture } from '@lib/pixi'
 
 import { DoneFunction, RenderingContext } from './types'
 

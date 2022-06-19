@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolLockRenderer = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const symbols_1 = require("../../textures/symbols");
-class PoolLockRenderer extends __1.BaseRenderer {
+const _rendering_2 = require("../../index.js");
+class PoolLockRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.coverStyle = {
@@ -61,20 +61,20 @@ class PoolLockRenderer extends __1.BaseRenderer {
     }
     createPoolIcon(context) {
         const { paddingx, paddingy } = this.coverStyle;
-        const lockIcon = new pixi_1.Sprite(context.textures.get(symbols_1.LOCK_ICON_TEXTURE));
+        const lockIcon = new pixi_1.Sprite(context.textures.get(_rendering_2.LOCK_ICON_TEXTURE));
         lockIcon.scale.set(this.iconStyle.size / lockIcon.height);
         lockIcon.position.set(paddingx, paddingy);
         const width = lockIcon.width + paddingx * 2;
         const height = lockIcon.height + paddingy * 2;
         const { radiuses, color } = this.coverStyle;
-        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
+        const cover = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         const lockPool = new pixi_1.Container();
         lockPool.addChild(cover, lockIcon);
         return lockPool;
     }
     createDash(context) {
         const { height } = context.screen;
-        const dash = __1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
+        const dash = _rendering_1.GraphicUtils.createVerticalDashLine(0, [0, height], this.lineStyle);
         return dash;
     }
 }

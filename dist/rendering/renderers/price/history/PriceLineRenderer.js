@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PriceLineRenderer = void 0;
-const __1 = require("../../..");
-const __2 = require("../../..");
-const config_1 = __importDefault(require("../../../../config"));
+const _rendering_1 = require("../../../index.js");
+const _rendering_2 = require("../../../index.js");
+const _config_1 = __importDefault(require("../../../../config.js"));
 const pixi_1 = require("../../../../lib/pixi");
-class PriceLineRenderer extends __1.BaseRenderer {
+class PriceLineRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.lineStyle = {
-            width: config_1.default.style.linesize,
-            color: config_1.default.style.linecolor,
+            width: _config_1.default.style.linesize,
+            color: _config_1.default.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
@@ -44,7 +44,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
                 shape.push(x, y);
             }
             else if (+idx + 1 === xs.length) {
-                if (config_1.default.style.rectunged) {
+                if (_config_1.default.style.rectunged) {
                     line.lineTo(x, prevY);
                     shape.push(x, prevY);
                 }
@@ -53,7 +53,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
                 prevY = y;
             }
             else {
-                if (config_1.default.style.rectunged) {
+                if (_config_1.default.style.rectunged) {
                     line.lineTo(x, prevY);
                     shape.push(x, prevY);
                 }
@@ -71,7 +71,7 @@ class PriceLineRenderer extends __1.BaseRenderer {
         gradient
             .clear()
             .beginTextureFill({
-            texture: context.textures.get(__2.PRICE_LINE_TEXTURE),
+            texture: context.textures.get(_rendering_2.PRICE_LINE_TEXTURE),
             alpha: 0.5,
         })
             .drawPolygon(shape)

@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolvedRenderer = void 0;
+const _rendering_1 = require("../../../index.js");
 const pixi_1 = require("../../../../lib/pixi");
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
-const __1 = require("../../..");
-class PariResolvedRenderer extends __1.BaseRenderer {
+class PariResolvedRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.unresolvedParis = {};
@@ -124,16 +124,16 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                             } }));
                     }
                 }
-                const [dividendsPos, dividendsPosState] = this.get('dividendsPos', () => __1.GraphicUtils.createText(prize, [0, 0], this.textstyle, [0, 1.25]));
+                const [dividendsPos, dividendsPosState] = this.get('dividendsPos', () => _rendering_1.GraphicUtils.createText(prize, [0, 0], this.textstyle, [0, 1.25]));
                 if (dividendsPosState.new)
                     prizePos.addChild(dividendsPos);
                 dividendsPos.position.set(xpad, 0);
                 dividendsPos.text = String(prize);
-                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => __1.GraphicUtils.createText(pari.currency, [0, 0], this.subtextstyle, [0, 1.25]));
+                const [dividendsCurPos, dividendsCurPosState] = this.get('dividendsCurPos', () => _rendering_1.GraphicUtils.createText(pari.currency, [0, 0], this.subtextstyle, [0, 1.25]));
                 if (dividendsCurPosState.new)
                     prizePos.addChild(dividendsCurPos);
                 dividendsCurPos.position.set(xpad + dividendsPos.width + gap, 0);
-                const [dividendsPerPos, dividendsPerPosState] = this.get('dividendsPerPos', () => __1.GraphicUtils.createText(percent + '%', [0, 0], this.textstylePrecent, [0, 1.25]));
+                const [dividendsPerPos, dividendsPerPosState] = this.get('dividendsPerPos', () => _rendering_1.GraphicUtils.createText(percent + '%', [0, 0], this.textstylePrecent, [0, 1.25]));
                 if (dividendsPerPosState.new)
                     prizePos.addChild(dividendsPerPos);
                 dividendsPerPos.position.set(xpad, -dividendsPos.height);
@@ -176,16 +176,16 @@ class PariResolvedRenderer extends __1.BaseRenderer {
                             } }));
                     }
                 }
-                const [dividendsNeg, dividendsNegState] = this.get('dividendsNeg', () => __1.GraphicUtils.createText(prize, [0, 0], this.textstyle, [0, -0.3]));
+                const [dividendsNeg, dividendsNegState] = this.get('dividendsNeg', () => _rendering_1.GraphicUtils.createText(prize, [0, 0], this.textstyle, [0, -0.3]));
                 if (dividendsNegState.new)
                     prizeNeg.addChild(dividendsNeg);
                 dividendsNeg.position.set(xpad, 0);
                 dividendsNeg.text = String(prize);
-                const [dividendsCurNeg, dividendsCurNegState] = this.get('dividendsCurNeg', () => __1.GraphicUtils.createText(pari.currency, [0, 0], this.subtextstyle, [0, -0.3]));
+                const [dividendsCurNeg, dividendsCurNegState] = this.get('dividendsCurNeg', () => _rendering_1.GraphicUtils.createText(pari.currency, [0, 0], this.subtextstyle, [0, -0.3]));
                 if (dividendsCurNegState.new)
                     prizeNeg.addChild(dividendsCurNeg);
                 dividendsCurNeg.position.set(xpad + dividendsNeg.width + gap, 0);
-                const [dividendsPerNeg, dividendsPerNegState] = this.get('dividendsPerNeg', () => __1.GraphicUtils.createText(percent + '%', [0, 0], this.textstylePrecent, [0, -0.3]));
+                const [dividendsPerNeg, dividendsPerNegState] = this.get('dividendsPerNeg', () => _rendering_1.GraphicUtils.createText(percent + '%', [0, 0], this.textstylePrecent, [0, -0.3]));
                 if (dividendsPerNegState.new)
                     prizeNeg.addChild(dividendsPerNeg);
                 dividendsPerNeg.position.set(xpad, dividendsNeg.height);
