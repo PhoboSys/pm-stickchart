@@ -1,7 +1,7 @@
 export declare type ChartData = {
     [key: number]: number;
 };
-export declare type DataPoint = {
+export declare type PricePoint = {
     price: number;
     timestamp: number;
 };
@@ -14,6 +14,8 @@ export declare type PlotData = {
     prices: number[];
     timerange: [number, number];
     pricerange: [number, number];
+    paddingX: [number, number];
+    paddingY: [number, number];
     xs: number[];
     ys: number[];
 };

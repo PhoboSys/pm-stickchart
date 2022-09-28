@@ -4,9 +4,11 @@ import { ITextureStorage } from './interfaces';
 import { EChartType } from '../../enums';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
-    pool: any;
+    metapool: any;
+    pools: any[];
     paris: any[];
     resolved: any[];
+    settlements: any;
     screen: Rectangle;
     textures: ITextureStorage;
     charttype: EChartType;

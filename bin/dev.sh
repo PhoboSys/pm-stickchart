@@ -9,7 +9,7 @@ START_SCRIPT='
       -n "Lint,Node"             \
       -c "cyan.bold,green.bold"  \
       "npm run lint"             \
-      "rm -rf dist/ && npm run build"
+      "npm run build"
   '
 
 if [ "$WATCH_FILES" = "true" ]; then

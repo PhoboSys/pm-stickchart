@@ -11,11 +11,10 @@ class LineChartRenderer {
         this.compositor = new __1.RenderingCompositor([
             new __2.GridRenderer(renderer),
             new __2.PriceLineRenderer(renderer),
-            new __3.PariResolutionRenderer(renderer),
-            new __3.PoolRenderer(renderer),
+            new __3.Pool(renderer),
             new __3.LatestPriceRenderer(renderer),
             new __4.CrosshairRenderer(renderer),
-            new __2.PariResolvedRenderer(renderer),
+            new __3.Pari(renderer),
         ]);
     }
     render(context, done) {

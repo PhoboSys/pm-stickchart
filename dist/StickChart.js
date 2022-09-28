@@ -27,10 +27,11 @@ class StickChart extends EventTarget {
             backgroundColor: config_1.default.style.background,
             backgroundAlpha: config_1.default.style.backgroundAlpha,
         });
+        this.application.renderer.addSystem(pixi_1.EventSystem, 'events');
         this.eventsProducer = new events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
-        this.morphController = new morph_1.default((point) => this.applyLatestPoint(point));
+        this.morphController = new morph_1.default(point => this.applyLatestPoint(point));
         const renderer = new rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -70,12 +71,18 @@ class StickChart extends EventTarget {
     }
     render(context) {
         var _a;
+        if (!context.metapool) {
+            infra_1.Logger.error('Cannot initiate chart "metapool" is not provided!');
+            return;
+        }
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = chartdata_1.DataBuilder.chartdata(context.chartdata);
         const plotdata = chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.actualize().get());
         const ctx = {
-            pool: context.pool,
+            metapool: context.metapool,
+            pools: context.pools,
             paris: context.paris,
+            settlements: context.settlements,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,
@@ -84,7 +91,7 @@ class StickChart extends EventTarget {
             chartdata,
             plotdata,
         };
-        if (context.pool.metaid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.pool.metaid)) {
+        if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
             // clear context if metaid changed
             this._context = null;
         }

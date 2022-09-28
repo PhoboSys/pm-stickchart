@@ -35,15 +35,15 @@ class PariResolvedRenderer extends __1.BaseRenderer {
     }
     update(context, container) {
         var _a, _b, _c, _d;
-        if (!context.pool ||
+        if (!context.metapool ||
             !((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length) && !((_b = context.resolved) === null || _b === void 0 ? void 0 : _b.length)) {
             this.clear();
             return container;
         }
         // clear if pool changed
-        if (this.renderedMetaId !== context.pool.metaid) {
+        if (this.renderedMetapoolid !== context.metapool.metapoolid) {
             this.clear();
-            this.renderedMetaId = context.pool.metaid;
+            this.renderedMetapoolid = context.metapool.metapoolid;
             this.unresolvedParis = {};
         }
         // create Paris for render

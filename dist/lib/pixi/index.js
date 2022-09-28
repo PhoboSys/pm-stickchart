@@ -37,6 +37,8 @@ __exportStar(require("@pixi/app"), exports);
 __exportStar(require("@pixi/graphics"), exports);
 __exportStar(require("@pixi/display"), exports);
 __exportStar(require("@pixi/sprite"), exports);
+__exportStar(require("@pixi/events"), exports);
+__exportStar(require("@pixi/extensions"), exports);
 var text_1 = require("@pixi/text");
 Object.defineProperty(exports, "Text", { enumerable: true, get: function () { return text_1.Text; } });
 Object.defineProperty(exports, "TextStyle", { enumerable: true, get: function () { return text_1.TextStyle; } });
@@ -45,7 +47,6 @@ __exportStar(require("@pixi-essentials/gradients"), exports);
 var gsap_1 = require("gsap");
 Object.defineProperty(exports, "gsap", { enumerable: true, get: function () { return gsap_1.gsap; } });
 require("@pixi/graphics-extras");
-const app_1 = require("@pixi/app");
 const core_1 = require("@pixi/core");
 const ticker_1 = require("@pixi/ticker");
 const utils = __importStar(require("@pixi/utils"));
@@ -53,6 +54,7 @@ const graphics_1 = require("@pixi/graphics");
 const display_1 = require("@pixi/display");
 const filter_blur_1 = require("@pixi/filter-blur");
 const filter_color_matrix_1 = require("@pixi/filter-color-matrix");
+const extensions_1 = require("@pixi/extensions");
 // GSAP
 const gsap_2 = require("gsap");
 const PixiPlugin_1 = require("gsap/PixiPlugin");
@@ -66,6 +68,7 @@ PixiPlugin_1.PixiPlugin.registerPIXI({
         ColorMatrixFilter: filter_color_matrix_1.ColorMatrixFilter
     }
 });
-core_1.Renderer.registerPlugin('batch', core_1.BatchRenderer);
-app_1.Application.registerPlugin(ticker_1.TickerPlugin);
+extensions_1.extensions.add(ticker_1.TickerPlugin, core_1.BatchRenderer);
+// Renderer.registerPlugin('batch', BatchRenderer)
+// Application.registerPlugin(TickerPlugin)
 //# sourceMappingURL=index.js.map

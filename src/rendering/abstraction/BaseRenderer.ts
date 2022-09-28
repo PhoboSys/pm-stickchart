@@ -3,15 +3,19 @@ import { RenderingContext, DoneFunction } from '..'
 
 import { Logger } from '../../infra'
 
-import { Container } from '../../lib/pixi'
+import { Container, gsap } from '../../lib/pixi'
+import { isFunction } from '../../lib/utils'
 
 export abstract class BaseRenderer implements IRenderer {
 
     private local: { [key: string]: any } = {}
+    private stateprefix: string = ''
 
     constructor(
         protected readonly storage: IGraphicStorage,
     ) { }
+
+    protected get animations(): any { return { } }
 
     public render(
         context: RenderingContext,
@@ -28,18 +32,59 @@ export abstract class BaseRenderer implements IRenderer {
         done()
     }
 
+    protected rebind(...path): void {
+        this.stateprefix = (path || []).join('>')
+    }
+
     protected clear(name?: string): void {
 
         if (name === undefined) {
-            for (const key in this.local) this.clear(key)
-        } else if (name in this.local) {
-            Logger.info('clear', name)
-            const [g, state] = this.local[name]
+            for (const key in this.local) {
+                if (key.indexOf(this.stateprefix) === 0) {
+                    this.clear(key.substr(this.stateprefix.length))
+                }
+            }
+        } else {
+            name = this.stateprefix + name
+            if (name in this.local) {
+                Logger.info('clear', name)
+                const [g, state] = this.local[name]
 
-            g.destroy()
-            state.timeline?.kill()
-            delete this.local[name]
+                g.destroy()
+                state.timeline?.kill()
+                delete this.local[name]
+            }
         }
+
+    }
+
+    protected get<T>(
+        name: string,
+        create: () => T,
+        dependencies: any[] = []
+    ): [T, any, any[]] {
+        const bindname = this.stateprefix + name
+
+        const stored = this.local[bindname]
+        if (stored) {
+            const [g, state, deps] = stored
+
+            if (this.isEqual(deps, dependencies)) {
+
+                state.new = false
+                return [<T>g, state, dependencies]
+
+            } else {
+
+                this.clear(name)
+
+            }
+        }
+
+        Logger.info('get new', bindname)
+        this.local[bindname] = [create(), { new: true }, dependencies]
+
+        return this.local[bindname]
 
     }
 
@@ -57,30 +102,29 @@ export abstract class BaseRenderer implements IRenderer {
         return true
     }
 
-    protected get<T>(
+    protected animate(
         name: string,
-        create: () => T,
-        dependencies: any[] = []
-    ): [T, any] {
+        animation: string,
+        method: string = 'to',
+    ): void {
 
-        const stored = this.local[name]
-        if (stored) {
-            const [g, state, deps] = stored
+        const config = this.animations[animation]
+        if (!config) return
 
-            if (this.isEqual(deps, dependencies)) {
+        const bindname = this.stateprefix + name
+        const got = this.local[bindname]
+        if (!got) return
 
-                state.new = false
-                return [<T>g, state]
+        const [target, state] = got
 
-            } else {
-                this.clear(name)
-            }
+        if (state.animation !== animation) {
+            state.animation = animation
+
+            if (config.clear) state.timeline?.clear()
+            state.timeline = state.timeline || gsap.timeline()
+            if (isFunction(state.timeline[method])) state.timeline[method](target, { ...config })
+            else Logger.warn('amination method "%s" unknown', method)
         }
-
-        Logger.info('get new', name)
-        this.local[name] = [create(), { new: true }, dependencies]
-
-        return this.local[name]
 
     }
 

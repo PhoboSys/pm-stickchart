@@ -1,16 +1,16 @@
 import config from '../../config'
 
 import { gsap } from '../pixi'
-import { DataPoint, PlotData } from '../../chartdata/types'
+import { PricePoint, PlotData } from '../../chartdata/types'
 import { DataBuilder } from '../../chartdata'
 
 export default class MorphController {
     private anim: gsap.core.Tween | null
 
-    private _lastTarget: DataPoint | null
+    private _lastTarget: PricePoint | null
 
     constructor(
-        private _onUpdate: (point: DataPoint) => void
+        private _onUpdate: (point: PricePoint) => void
     ) {
 
     }

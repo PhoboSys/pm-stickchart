@@ -6,9 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
 const __1 = require("..");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
-const index_1 = __importDefault(require("../../lib/ui/index"));
+const ui_1 = __importDefault(require("../../lib/ui"));
 const currencies_1 = require("../../constants/currencies");
-const DateUtils_1 = require("../utils/DateUtils");
 class CrosshairRenderer extends __1.BaseRenderer {
     constructor(storage) {
         super(storage);
@@ -82,11 +81,11 @@ class CrosshairRenderer extends __1.BaseRenderer {
         const { timerange: [mintime, maxtime] } = this._context.plotdata;
         const { x } = this._position;
         const timedif = maxtime - mintime;
-        const time = mintime + datamath_1.default.scale([x], [0, width], timedif)[0];
-        const timeValue = DateUtils_1.DateUtils.formatUnixTSToHHmm(time);
-        const [coveredText, coveredTextState] = this.get('timeCoveredText', () => __1.GraphicUtils.createCoveredText(timeValue, [x, height], this.timeCoverStyle));
+        const [timestamp] = datamath_1.default.scale([x], [0, width], timedif);
+        const time24 = ui_1.default.time24(mintime + timestamp);
+        const [coveredText, coveredTextState] = this.get('timeCoveredText', () => __1.GraphicUtils.createCoveredText(time24, [x, height], this.timeCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = timeValue;
+        textGraphic.text = time24;
         const { paddingx, paddingy } = this.timeCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;
@@ -108,9 +107,9 @@ class CrosshairRenderer extends __1.BaseRenderer {
         const { y } = this._position;
         const pricedif = maxprice - minprice;
         const price = minprice + datamath_1.default.scaleReverse([y], [0, height], pricedif)[0];
-        const [coveredText, coveredTextState] = this.get('priceCoveredText', () => __1.GraphicUtils.createCoveredText(index_1.default.currency(price, currencies_1.USD), [width, y], this.priceCoverStyle));
+        const [coveredText, coveredTextState] = this.get('priceCoveredText', () => __1.GraphicUtils.createCoveredText(ui_1.default.currency(price, currencies_1.USD), [width, y], this.priceCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = index_1.default.currency(price, currencies_1.USD);
+        textGraphic.text = ui_1.default.currency(price, currencies_1.USD);
         const { paddingx, paddingy } = this.priceCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;

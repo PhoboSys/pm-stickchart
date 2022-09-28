@@ -1,7 +1,7 @@
 import { IGraphicStorage, RenderingContext } from '../..';
 import { BaseRenderer } from '../..';
 import { Container } from '../../../lib/pixi';
-export declare class PoolLockCountdownRenderer extends BaseRenderer {
+export declare class PoolLockCountdown extends BaseRenderer {
     static readonly POOL_LOCK_COUNTDOWN_ID: symbol;
     private readonly style;
     constructor(renderer: IGraphicStorage);

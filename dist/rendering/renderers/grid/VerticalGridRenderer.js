@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VerticalGridRenderer = void 0;
-const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const config_1 = __importDefault(require("../../../config"));
+const datamath_1 = __importDefault(require("../../../lib/datamath"));
+const ui_1 = __importDefault(require("../../../lib/ui"));
 const __1 = require("../..");
-const DateUtils_1 = require("../../utils/DateUtils");
 class VerticalGridRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -29,7 +29,7 @@ class VerticalGridRenderer extends __1.BaseRenderer {
     update(context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
-        const stepsize = context.pool.duration;
+        const stepsize = context.metapool.schedule;
         const timesteps = datamath_1.default.steps(timerange, stepsize, config_1.default.grid.time.max);
         const xs = datamath_1.default.scale(timesteps, timerange, width);
         const outsideX = -100;
@@ -44,11 +44,12 @@ class VerticalGridRenderer extends __1.BaseRenderer {
                 container.addChild(line);
             line.position.set(x, 0);
             line.height = height;
-            const [text, textState] = this.get('x_gridtext' + idx, () => __1.GraphicUtils.createText(DateUtils_1.DateUtils.formatUnixTSToHHmm(time), [x, height], this.textStyle, 1.1));
+            const time24 = ui_1.default.time24(time);
+            const [text, textState] = this.get('x_gridtext' + idx, () => __1.GraphicUtils.createText(time24, [x, height], this.textStyle, 1.1));
             if (textState.new)
                 container.addChild(text);
             text.position.set(x, height);
-            text.text = DateUtils_1.DateUtils.formatUnixTSToHHmm(time);
+            text.text = time24;
         }
         return container;
     }

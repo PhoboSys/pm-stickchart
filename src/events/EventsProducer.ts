@@ -34,6 +34,9 @@ export class EventsProducer {
 
         this.stage.removeEventListener('pointermove', this.pointermove)
         this.stage.removeEventListener('pointerleave', this.pointerleave)
+
+        this.target.removeEventListener('poolhover', null)
+        this.target.removeEventListener('poolunhover', null)
     }
 
 }

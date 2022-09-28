@@ -33,8 +33,11 @@ declare const _default: {
         linesize: number;
         linecolor: number;
         rectunged: boolean;
-        upcolor: number;
-        downcolor: number;
+        resolution: {
+            upcolor: number;
+            downcolor: number;
+            zerocolor: number;
+        };
         lockCountdownColors: {
             color: string;
             offset: number;

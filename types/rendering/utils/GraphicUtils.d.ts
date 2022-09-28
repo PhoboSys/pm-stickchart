@@ -43,5 +43,5 @@ export declare class GraphicUtils {
         texture: Texture;
     }): Graphics;
     static createLine([x1, y1]: [number, number], [x2, y2]: [number, number], linestyle: LineStyle): Graphics;
-    static createText(value: any, [x, y]: [number, number], textstyle: object, anchor: [number, number] | number): Text;
+    static createText(value: any, [x, y]: [number, number], textstyle: object, anchor?: [number, number] | number): Text;
 }

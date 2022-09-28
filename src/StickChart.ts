@@ -6,8 +6,9 @@ import { EventsProducer } from './events'
 import { Logger } from './infra'
 import MorphController from './lib/morph'
 
-import { Application, gsap } from './lib/pixi'
+import { Application, EventSystem, gsap } from './lib/pixi'
 import { Timeframe } from './lib/timeframe'
+import { orderBy } from './lib/utils'
 
 import { RenderingPipelineFactory, RenderingContext } from './rendering'
 import { TextureStorage, GraphicStorage } from './rendering'
@@ -43,13 +44,12 @@ export class StickChart extends EventTarget {
             backgroundColor: config.style.background,
             backgroundAlpha: config.style.backgroundAlpha,
         })
+        this.application.renderer.addSystem(EventSystem, 'events')
 
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
         this.timeframe = new Timeframe(this, () => this.applyTimeframe())
-        this.morphController = new MorphController(
-            (point) => this.applyLatestPoint(point)
-        )
+        this.morphController = new MorphController(point => this.applyLatestPoint(point))
 
         const renderer = new GraphicStorage(this.application.stage)
 
@@ -116,10 +116,16 @@ export class StickChart extends EventTarget {
     public render(context: {
         chartdata: ChartData,
         charttype: EChartType,
+        metapool: any,
+        pools: any[],
         paris: any[],
         resolved: any[],
-        pool: any,
+        settlements: any,
     }): void {
+        if (!context.metapool) {
+            Logger.error('Cannot initiate chart "metapool" is not provided!')
+            return
+        }
 
         const pipeline = this.pipelineFactory.get(context.charttype)
         const chartdata = DataBuilder.chartdata(context.chartdata)
@@ -129,8 +135,10 @@ export class StickChart extends EventTarget {
             this.timeframe.actualize().get()
         )
         const ctx: RenderingContext = {
-            pool: context.pool,
+            metapool: context.metapool,
+            pools: context.pools,
             paris: context.paris,
+            settlements: context.settlements,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,
@@ -141,7 +149,7 @@ export class StickChart extends EventTarget {
             plotdata,
         }
 
-        if (context.pool.metaid !== this._context?.pool.metaid) {
+        if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
             // clear context if metaid changed
             this._context = null
         }

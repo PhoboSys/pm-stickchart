@@ -4,13 +4,13 @@ import config from '../config'
 
 import datamath from '../lib/datamath'
 
-import { ChartData, PlotData, DataPoint } from './types'
+import { ChartData, PlotData, PricePoint } from './types'
 
 export class DataBuilder {
 
     static isEqual(
-        start: DataPoint,
-        end: DataPoint,
+        start: PricePoint,
+        end: PricePoint,
     ): boolean {
         return (
             start.timestamp === end.timestamp &&
@@ -19,14 +19,15 @@ export class DataBuilder {
     }
 
     static getLatest(
-        plotdata: PlotData
-    ): DataPoint {
+        plotdata: PlotData,
+        back: number = 1
+    ): PricePoint {
 
-        const  { prices, timestamps } = plotdata
+        const { prices, timestamps } = plotdata
 
         return {
-            price: Number(prices.at(-1)),
-            timestamp: Number(timestamps.at(-1)),
+            price: Number(prices.at(-1*back)),
+            timestamp: Number(timestamps.at(-1*back)),
         }
     }
 
@@ -106,12 +107,27 @@ export class DataBuilder {
         const xs = datamath.scale(timestamps, timerange, width)
         const ys = datamath.scaleReverse(prices, pricerange, height)
 
+        const unpheight = height / (1 + config.padding.top + config.padding.bottom)
+        const paddingY: [number, number] = [
+            unpheight * config.padding.top,
+            unpheight * (1 + config.padding.bottom)
+        ]
+
+        const unpwidth = width / (1 + config.padding.left + config.padding.right)
+        const paddingX: [number, number] = [
+            unpwidth * config.padding.left,
+            unpwidth * (1 + config.padding.right)
+        ]
+
         return {
             timestamps,
             prices,
 
             timerange,
             pricerange,
+
+            paddingX,
+            paddingY,
 
             xs,
             ys,

@@ -8,6 +8,8 @@ export * from '@pixi/app'
 export * from '@pixi/graphics'
 export * from '@pixi/display'
 export * from '@pixi/sprite'
+export * from '@pixi/events'
+export * from '@pixi/extensions'
 export { Text, TextStyle } from '@pixi/text'
 export * as utils from '@pixi/utils'
 export * from '@pixi-essentials/gradients'
@@ -23,6 +25,7 @@ import { Graphics } from '@pixi/graphics'
 import { DisplayObject } from '@pixi/display'
 import { BlurFilter } from '@pixi/filter-blur'
 import { ColorMatrixFilter } from '@pixi/filter-color-matrix'
+import { extensions } from '@pixi/extensions'
 
 // GSAP
 import { gsap } from 'gsap'
@@ -39,5 +42,6 @@ PixiPlugin.registerPIXI({
     }
 })
 
-Renderer.registerPlugin('batch', BatchRenderer)
-Application.registerPlugin(TickerPlugin)
+extensions.add(TickerPlugin, BatchRenderer)
+// Renderer.registerPlugin('batch', BatchRenderer)
+// Application.registerPlugin(TickerPlugin)

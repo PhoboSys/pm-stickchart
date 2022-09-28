@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariResolutionPrize = void 0;
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
 const __1 = require("../../..");
+const utils_1 = require("../../../../lib/utils");
 class PariResolutionPrize extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -33,18 +34,22 @@ class PariResolutionPrize extends __1.BaseRenderer {
     }
     update(context, container) {
         var _a;
-        if (!context.pool ||
-            !context.pool.openPrice ||
+        if (!context.metapool ||
+            (0, utils_1.isEmpty)(context.pools) ||
             !((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length)) {
             this.clear();
             return container;
         }
         // clear if pool changed
-        if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
+        if (this.renderedMetapoolid && this.renderedMetapoolid !== context.metapool.metapoolid) {
             this.clear();
         }
-        this.renderedMetaId = context.pool.metaid;
-        const { resolutionDate, openPrice } = context.pool;
+        this.renderedMetapoolid = context.metapool.metapoolid;
+        // const { resolutionDate, openPrice } = context.pool
+        const { resolutionDate, openPrice } = {
+            resolutionDate: Date.now(),
+            openPrice: { value: 1000, timestamp: Date.now() }
+        };
         const { width, height } = context.screen;
         const { timerange, pricerange } = context.plotdata;
         const [x] = datamath_1.default.scale([resolutionDate], timerange, width);
@@ -67,7 +72,8 @@ class PariResolutionPrize extends __1.BaseRenderer {
             this.clear('dividendsPerNeg');
         }
         // loop
-        const { pool } = context;
+        // const { pool } = context
+        const pool = { resolution: 'UP', positiveFund: 1000, negativeFund: 1000 };
         for (const pari of context.paris) {
             const prize = datamath_1.default.returnPrize({
                 wager: pari.wager,

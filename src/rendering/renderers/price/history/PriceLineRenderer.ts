@@ -9,20 +9,12 @@ export class PriceLineRenderer extends BaseRenderer {
 
     static readonly PRICE_LINE_ID: symbol = Symbol('PRICE_LINE_ID')
 
-    private readonly lineStyle: any
-
-    private readonly textStyle: any
-
-    constructor(renderer: IGraphicStorage) {
-        super(renderer)
-
-        this.lineStyle = {
-            width: config.style.linesize,
-            color: config.style.linecolor,
-            alpha: 1,
-            join: 'round',
-            cap: 'round',
-        }
+    private readonly lineStyle: any = {
+        width: config.style.linesize,
+        color: config.style.linecolor,
+        alpha: 1,
+        join: 'round',
+        cap: 'round',
     }
 
     public get rendererId(): symbol {

@@ -1,10 +1,11 @@
+import config from '../../../config'
+
 import { Graphics, Container } from '../../../lib/pixi'
 import datamath from '../../../lib/datamath'
-import config from '../../../config'
+import ui from '../../../lib/ui'
 
 import { IGraphicStorage, RenderingContext } from '../..'
 import { BaseRenderer, GraphicUtils } from '../..'
-import { DateUtils } from '../../utils/DateUtils';
 
 export class VerticalGridRenderer extends BaseRenderer {
 
@@ -42,7 +43,7 @@ export class VerticalGridRenderer extends BaseRenderer {
         const { width, height } = context.screen
         const { timerange } = context.plotdata
 
-        const stepsize = context.pool.duration
+        const stepsize = context.metapool.schedule
         const timesteps = datamath.steps(timerange, stepsize, config.grid.time.max)
         const xs = datamath.scale(timesteps, timerange, width)
 
@@ -64,15 +65,16 @@ export class VerticalGridRenderer extends BaseRenderer {
             line.position.set(x, 0)
             line.height = height
 
+            const time24 = ui.time24(time)
             const [text, textState] = this.get('x_gridtext'+idx, () => GraphicUtils.createText(
-                DateUtils.formatUnixTSToHHmm(time),
+                time24,
                 [x, height],
                 this.textStyle,
                 1.1,
             ))
             if (textState.new) container.addChild(text)
             text.position.set(x, height)
-            text.text = DateUtils.formatUnixTSToHHmm(time)
+            text.text = time24
 
         }
 

@@ -3,7 +3,7 @@ import datamath from '../../../../lib/datamath'
 
 import { IGraphicStorage, RenderingContext } from '../../..'
 import { BaseRenderer, GraphicUtils } from '../../..'
-import { DateUtils } from '../../../utils'
+import { isEmpty, nowUnixTS } from '../../../../lib/utils'
 
 import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from '../../..'
 
@@ -15,7 +15,7 @@ export class PariResolutionBackground extends BaseRenderer {
         return PariResolutionBackground.PARI_RESOLUTION_ID
     }
 
-    private renderedMetaId: any
+    private renderedMetapoolid: any
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
@@ -26,8 +26,8 @@ export class PariResolutionBackground extends BaseRenderer {
         container: Container,
     ): Container {
         if (
-            !context.pool ||
-            !context.pool.openPrice ||
+            !context.metapool ||
+            isEmpty(context.pools) ||
             !context.paris?.length
         ) {
             this.clear()
@@ -35,12 +35,17 @@ export class PariResolutionBackground extends BaseRenderer {
         }
 
         // clear if pool metaid changed
-        if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
+        if (this.renderedMetapoolid && this.renderedMetapoolid !== context.metapool.metapoolid) {
             this.clear()
         }
-        this.renderedMetaId = context.pool.metaid
+        this.renderedMetapoolid = context.metapool.metapoolid
 
-        const { openDate, resolutionDate, openPrice } = context.pool
+        // const { openDate, resolutionDate, openPrice } = context.po/ol
+        const { openDate, resolutionDate, openPrice } = {
+            openDate: Date.now(),
+            resolutionDate: Date.now(),
+            openPrice: { value: 1000, timestamp: Date.now() }
+        }
 
         const { width, height } = context.screen
         const { timerange, pricerange } = context.plotdata
@@ -85,7 +90,8 @@ export class PariResolutionBackground extends BaseRenderer {
         }
 
         // pool
-        const { pool } = context
+        // const { pool } = context
+        const pool = { resolution: 'UP', resolutionDate: Date.now() }
         for (const pari of context.paris) {
 
             if (pari.position === 'POS') {
@@ -106,7 +112,7 @@ export class PariResolutionBackground extends BaseRenderer {
                         gradientPos.height = anim.high.pixi.height
                     }
 
-                    if (pool.settling) {
+                    if (pool.resolutionDate <= nowUnixTS()) {
 
                         if (statepos.animation !== 'settle') {
                             statepos.animation = 'settle'
@@ -157,7 +163,7 @@ export class PariResolutionBackground extends BaseRenderer {
                         gradientNeg.height = anim.high.pixi.height
                     }
 
-                    if (pool.settling) {
+                    if (pool.resolutionDate <= nowUnixTS()) {
 
                         if (stateneg.animation !== 'settle') {
                             stateneg.animation = 'settle'

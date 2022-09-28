@@ -9,8 +9,8 @@ const __2 = require("../../..");
 const config_1 = __importDefault(require("../../../../config"));
 const pixi_1 = require("../../../../lib/pixi");
 class PriceLineRenderer extends __1.BaseRenderer {
-    constructor(renderer) {
-        super(renderer);
+    constructor() {
+        super(...arguments);
         this.lineStyle = {
             width: config_1.default.style.linesize,
             color: config_1.default.style.linecolor,

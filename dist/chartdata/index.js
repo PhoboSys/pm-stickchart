@@ -26,11 +26,11 @@ class DataBuilder {
         return (start.timestamp === end.timestamp &&
             start.price === end.price);
     }
-    static getLatest(plotdata) {
+    static getLatest(plotdata, back = 1) {
         const { prices, timestamps } = plotdata;
         return {
-            price: Number(prices.at(-1)),
-            timestamp: Number(timestamps.at(-1)),
+            price: Number(prices.at(-1 * back)),
+            timestamp: Number(timestamps.at(-1 * back)),
         };
     }
     static fromPolyline(polyline) {
@@ -71,11 +71,23 @@ class DataBuilder {
         const { width, height } = screen;
         const xs = datamath_1.default.scale(timestamps, timerange, width);
         const ys = datamath_1.default.scaleReverse(prices, pricerange, height);
+        const unpheight = height / (1 + config_1.default.padding.top + config_1.default.padding.bottom);
+        const paddingY = [
+            unpheight * config_1.default.padding.top,
+            unpheight * (1 + config_1.default.padding.bottom)
+        ];
+        const unpwidth = width / (1 + config_1.default.padding.left + config_1.default.padding.right);
+        const paddingX = [
+            unpwidth * config_1.default.padding.left,
+            unpwidth * (1 + config_1.default.padding.right)
+        ];
         return {
             timestamps,
             prices,
             timerange,
             pricerange,
+            paddingX,
+            paddingY,
             xs,
             ys,
         };

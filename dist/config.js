@@ -34,8 +34,11 @@ exports.default = {
         linesize: 3,
         linecolor: 0x009797,
         rectunged: false,
-        upcolor: 0x00A573,
-        downcolor: 0xF05750,
+        resolution: {
+            upcolor: 0x00A573,
+            downcolor: 0xF05750,
+            zerocolor: 0x007397,
+        },
         lockCountdownColors: [
             { color: '#FFA00000', offset: 0 },
             { color: '#FFA00000', offset: 0.05 },

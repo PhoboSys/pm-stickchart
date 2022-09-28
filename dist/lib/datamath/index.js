@@ -144,48 +144,6 @@ class datamath {
         }
         return result;
     }
-    static returnPrize(args) {
-        const { positiveFund, negativeFund, wager, position, resolution, precision, } = args;
-        let prize = 0;
-        const win = resolution === position;
-        const neutral = resolution === 'NEU';
-        if (neutral)
-            prize = wager;
-        if (win && position === 'POS') {
-            prize = datamath.dividends(positiveFund, negativeFund, wager);
-        }
-        if (win && position === 'NEG') {
-            prize = datamath.dividends(negativeFund, positiveFund, wager);
-        }
-        const result = new big_js_1.default(prize);
-        return result.round(precision, big_js_1.default.roundDown).toNumber();
-    }
-    static dividends(pool1v, pool2v, wagerv, vigorishv = 0.01) {
-        const pool1 = new big_js_1.default(pool1v);
-        const pool2 = new big_js_1.default(pool2v);
-        const wager = new big_js_1.default(wagerv);
-        const vigorish = new big_js_1.default(vigorishv);
-        if (pool1.eq(0))
-            return 0;
-        if (pool2.eq(0))
-            return wager;
-        const totalfund = pool1.plus(pool2);
-        const result = totalfund.times(wager.div(pool1));
-        const commision = result.times(vigorish);
-        return result
-            .minus(commision)
-            .toNumber() || 0;
-    }
-    static profitPercent(wagerv, basev, precision, multiplicator = 100) {
-        const wager = new big_js_1.default(wagerv);
-        const base = new big_js_1.default(basev);
-        return wager
-            .div(base)
-            .times(multiplicator)
-            .minus(multiplicator)
-            .round(precision, big_js_1.default.roundDown)
-            .toNumber() || 0;
-    }
 }
 exports.default = datamath;
 //# sourceMappingURL=index.js.map

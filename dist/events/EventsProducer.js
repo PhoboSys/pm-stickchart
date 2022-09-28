@@ -22,6 +22,8 @@ class EventsProducer {
         this.stage.removeEventListener('wheel', this.scroll);
         this.stage.removeEventListener('pointermove', this.pointermove);
         this.stage.removeEventListener('pointerleave', this.pointerleave);
+        this.target.removeEventListener('poolhover', null);
+        this.target.removeEventListener('poolunhover', null);
     }
 }
 exports.EventsProducer = EventsProducer;

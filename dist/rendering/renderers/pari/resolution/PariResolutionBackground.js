@@ -7,6 +7,7 @@ exports.PariResolutionBackground = void 0;
 const pixi_1 = require("../../../../lib/pixi");
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
 const __1 = require("../../..");
+const utils_1 = require("../../../../lib/utils");
 const __2 = require("../../..");
 class PariResolutionBackground extends __1.BaseRenderer {
     constructor(renderer) {
@@ -17,18 +18,23 @@ class PariResolutionBackground extends __1.BaseRenderer {
     }
     update(context, container) {
         var _a, _b, _c;
-        if (!context.pool ||
-            !context.pool.openPrice ||
+        if (!context.metapool ||
+            (0, utils_1.isEmpty)(context.pools) ||
             !((_a = context.paris) === null || _a === void 0 ? void 0 : _a.length)) {
             this.clear();
             return container;
         }
         // clear if pool metaid changed
-        if (this.renderedMetaId && this.renderedMetaId !== context.pool.metaid) {
+        if (this.renderedMetapoolid && this.renderedMetapoolid !== context.metapool.metapoolid) {
             this.clear();
         }
-        this.renderedMetaId = context.pool.metaid;
-        const { openDate, resolutionDate, openPrice } = context.pool;
+        this.renderedMetapoolid = context.metapool.metapoolid;
+        // const { openDate, resolutionDate, openPrice } = context.po/ol
+        const { openDate, resolutionDate, openPrice } = {
+            openDate: Date.now(),
+            resolutionDate: Date.now(),
+            openPrice: { value: 1000, timestamp: Date.now() }
+        };
         const { width, height } = context.screen;
         const { timerange, pricerange } = context.plotdata;
         const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], timerange, width);
@@ -71,7 +77,8 @@ class PariResolutionBackground extends __1.BaseRenderer {
             }
         };
         // pool
-        const { pool } = context;
+        // const { pool } = context
+        const pool = { resolution: 'UP', resolutionDate: Date.now() };
         for (const pari of context.paris) {
             if (pari.position === 'POS') {
                 const [gradientPos, statepos] = this.get('gradientPos', () => new pixi_1.Sprite(context.textures.get(__2.UP_WAGET_TEXTURE)));
@@ -87,7 +94,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
                         gradientPos.alpha = anim.high.pixi.alpha;
                         gradientPos.height = anim.high.pixi.height;
                     }
-                    if (pool.settling) {
+                    if (pool.resolutionDate <= (0, utils_1.nowUnixTS)()) {
                         if (statepos.animation !== 'settle') {
                             statepos.animation = 'settle';
                             statepos.timeline = pixi_1.gsap.to(gradientPos, anim.settle);
@@ -122,7 +129,7 @@ class PariResolutionBackground extends __1.BaseRenderer {
                         gradientNeg.alpha = anim.high.pixi.alpha;
                         gradientNeg.height = anim.high.pixi.height;
                     }
-                    if (pool.settling) {
+                    if (pool.resolutionDate <= (0, utils_1.nowUnixTS)()) {
                         if (stateneg.animation !== 'settle') {
                             stateneg.animation = 'settle';
                             stateneg.timeline = pixi_1.gsap.to(gradientNeg, anim.settle);

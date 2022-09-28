@@ -2,7 +2,7 @@ export type ChartData = {
     [key: number]: number
 }
 
-export type DataPoint = {
+export type PricePoint = {
     price: number,
     timestamp: number,
 }
@@ -18,6 +18,9 @@ export type PlotData = {
 
     timerange: [number, number],
     pricerange: [number, number],
+
+    paddingX: [number, number],
+    paddingY: [number, number],
 
     xs: number[],
     ys: number[],

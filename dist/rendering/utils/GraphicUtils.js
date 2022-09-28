@@ -36,7 +36,7 @@ class GraphicUtils {
         else
             rect.beginFill(color, alpha);
         rect
-            .lineTo(0, r1)
+            .moveTo(0, r1)
             .arcTo(0, 0, r1, 0, r1)
             .lineTo(width - r2, 0)
             .arcTo(width, 0, width, r2, r2)
@@ -124,7 +124,7 @@ class GraphicUtils {
             .lineTo(x2, y2);
         return line;
     }
-    static createText(value, [x, y], textstyle, anchor) {
+    static createText(value, [x, y], textstyle, anchor = 0) {
         const style = new pixi_1.TextStyle(textstyle);
         const text = new pixi_1.Text(String(value), style);
         text.position.set(x, y);

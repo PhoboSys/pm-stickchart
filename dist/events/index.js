@@ -18,5 +18,7 @@ __exportStar(require("./ZoomEvent"), exports);
 __exportStar(require("./PointermoveEvent"), exports);
 __exportStar(require("./PointerleaveEvent"), exports);
 __exportStar(require("./CanvasErrorEvent"), exports);
+__exportStar(require("./PoolUnhoverEvent"), exports);
+__exportStar(require("./PoolHoverEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map

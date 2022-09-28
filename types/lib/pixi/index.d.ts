@@ -8,6 +8,8 @@ export * from '@pixi/app';
 export * from '@pixi/graphics';
 export * from '@pixi/display';
 export * from '@pixi/sprite';
+export * from '@pixi/events';
+export * from '@pixi/extensions';
 export { Text, TextStyle } from '@pixi/text';
 export * as utils from '@pixi/utils';
 export * from '@pixi-essentials/gradients';

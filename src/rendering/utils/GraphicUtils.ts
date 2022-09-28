@@ -53,7 +53,7 @@ export class GraphicUtils {
         else rect.beginFill(color, alpha)
 
         rect
-            .lineTo(0, r1)
+            .moveTo(0, r1)
             .arcTo(0, 0, r1, 0, r1)
 
             .lineTo(width - r2, 0)
@@ -229,7 +229,7 @@ export class GraphicUtils {
         value: any,
         [x, y]: [number, number],
         textstyle: object,
-        anchor: [number, number] | number,
+        anchor: [number, number] | number = 0,
     ): Text {
 
         const style = new TextStyle(textstyle)

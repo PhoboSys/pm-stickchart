@@ -1,8 +1,8 @@
 export * from './types';
-import { ChartData, PlotData, DataPoint } from './types';
+import { ChartData, PlotData, PricePoint } from './types';
 export declare class DataBuilder {
-    static isEqual(start: DataPoint, end: DataPoint): boolean;
-    static getLatest(plotdata: PlotData): DataPoint;
+    static isEqual(start: PricePoint, end: PricePoint): boolean;
+    static getLatest(plotdata: PlotData, back?: number): PricePoint;
     static fromPolyline(polyline: SVGPolylineElement): {
         xs: any;
         ys: any;
