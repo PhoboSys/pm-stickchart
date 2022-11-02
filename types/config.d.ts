@@ -1,4 +1,7 @@
 declare const _default: {
+    performance: {
+        renderMs: number;
+    };
     zoom: {
         speed: number;
         throttle: number;
@@ -23,6 +26,12 @@ declare const _default: {
         ease: string;
     };
     maxdensity: number;
+    ui: {
+        precision: {
+            erc20: number;
+            percent: number;
+        };
+    };
     price: {
         showSymbols: boolean;
         precision: number;

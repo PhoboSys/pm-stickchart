@@ -9,8 +9,8 @@ const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const __1 = require("../..");
 class VerticalGridRenderer extends __1.BaseRenderer {
-    constructor(renderer) {
-        super(renderer);
+    constructor() {
+        super(...arguments);
         this.lineStyle = {
             width: 1,
             color: 0x303550,
@@ -37,15 +37,16 @@ class VerticalGridRenderer extends __1.BaseRenderer {
         // create a set lines and texts and reuse them
         // fix GL_OUT_OF_MEMORY
         while (idx++ < config_1.default.grid.time.max * 2) {
+            this.rebind(idx);
             const x = xs[idx] || outsideX;
             const time = timesteps[idx] || 0;
-            const [line, lineState] = this.get('x_gridline' + idx, () => __1.GraphicUtils.createLine([0, 0], [0, height], this.lineStyle));
+            const [line, lineState] = this.get('x_gridline', () => __1.GraphicUtils.createLine([0, 0], [0, height], this.lineStyle));
             if (lineState.new)
                 container.addChild(line);
             line.position.set(x, 0);
             line.height = height;
             const time24 = ui_1.default.time24(time);
-            const [text, textState] = this.get('x_gridtext' + idx, () => __1.GraphicUtils.createText(time24, [x, height], this.textStyle, 1.1));
+            const [text, textState] = this.get('x_gridtext', () => __1.GraphicUtils.createText(time24, [x, height], this.textStyle, 1.1));
             if (textState.new)
                 container.addChild(text);
             text.position.set(x, height);

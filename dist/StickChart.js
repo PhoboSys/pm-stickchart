@@ -53,11 +53,10 @@ class StickChart extends EventTarget {
     applyLatestPoint(latest) {
         if (!this._context)
             return;
-        const { price, timestamp } = latest;
         const { timestamps, prices } = this._context.chartdata;
         const idx = timestamps.length - 1;
-        timestamps[idx] = timestamp;
-        prices[idx] = price;
+        timestamps[idx] = latest.timestamp;
+        prices[idx] = latest.value;
         this._context.plotdata = chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.get());
         this.rerender('morph');
     }

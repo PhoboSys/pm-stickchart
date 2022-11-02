@@ -1,4 +1,4 @@
-import { DataBuilder, ChartData } from './chartdata'
+import { DataBuilder, ChartData, PricePoint } from './chartdata'
 import config from './config'
 
 import { EChartType } from './enums'
@@ -56,11 +56,11 @@ export class StickChart extends EventTarget {
         this.pipelineFactory = new RenderingPipelineFactory(renderer)
     }
 
-    public setScreenSize({ width, height }) {
+    public setScreenSize({ width, height }): void {
         this.application.renderer.resize(width, height)
     }
 
-    public setTimeframe(timeframe: number) {
+    public setTimeframe(timeframe: number): void {
         this.timeframe.save(timeframe)
     }
 
@@ -79,15 +79,14 @@ export class StickChart extends EventTarget {
         this.rerender('zoom')
     }
 
-    private applyLatestPoint(latest: { price, timestamp }) {
+    private applyLatestPoint(latest: PricePoint): void {
         if (!this._context) return
 
-        const { price, timestamp } = latest
         const { timestamps, prices } = this._context.chartdata
         const idx = timestamps.length-1
 
-        timestamps[idx] = timestamp
-        prices[idx] = price
+        timestamps[idx] = latest.timestamp
+        prices[idx] = latest.value
 
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,

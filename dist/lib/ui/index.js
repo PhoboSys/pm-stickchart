@@ -14,6 +14,19 @@ exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.UNIX_WEEK = 7 * exports.UNIX_DAY;
 // eslint-disable-next-line @typescript-eslint/naming-convention
 class ui {
+    static percent(amount) {
+        if (!amount)
+            return '';
+        let s = '+';
+        if (amount < 0)
+            s = '';
+        return s + datamath_1.default.percent(amount, config_1.default.ui.precision.percent) + '%';
+    }
+    static erc20(amount) {
+        if (!amount)
+            return '0';
+        return datamath_1.default.round(amount, config_1.default.ui.precision.erc20).toString();
+    }
     static currency(price, currently = '') {
         let symb = '';
         if (currently && config_1.default.price.showSymbols) {

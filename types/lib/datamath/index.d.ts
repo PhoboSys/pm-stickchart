@@ -7,6 +7,8 @@ export default class datamath {
     static range(data: number[], minpadd?: number, maxpadd?: number): [number, number];
     static datastep([minv, maxv]: [number, number]): number;
     static roundpow2(value: number): number;
+    static percent(value: number, significant: number): number;
+    static round(value: number, significant: number): number;
     static precision(value: number, significant: number): number;
     static toFixedPrecision(value: number, significant: number): string;
     static toFixedScaled(value: number, stepsize: number): string;

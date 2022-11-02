@@ -14,7 +14,7 @@ export class DataBuilder {
     ): boolean {
         return (
             start.timestamp === end.timestamp &&
-            start.price === end.price
+            start.value === end.value
         )
     }
 
@@ -26,7 +26,7 @@ export class DataBuilder {
         const { prices, timestamps } = plotdata
 
         return {
-            price: Number(prices.at(-1*back)),
+            value: Number(prices.at(-1*back)),
             timestamp: Number(timestamps.at(-1*back)),
         }
     }

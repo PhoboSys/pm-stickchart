@@ -9,6 +9,7 @@ const positions_1 = require("../../constants/positions");
 const utils_1 = require("../../lib/utils");
 const ONE = (0, big_js_1.default)(1);
 const ZERO = (0, big_js_1.default)(0);
+const VIGORISH = (0, big_js_1.default)(0.01);
 function __inNotZeroNumbers(...args) {
     for (let num of args) {
         if (!Number(num))
@@ -16,60 +17,58 @@ function __inNotZeroNumbers(...args) {
     }
     return true;
 }
-function __futureReturn(prizefunds, wager, vigorish = 0.01) {
-    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager, vigorish))
+function __futureReturn(prizefunds, wager) {
+    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager))
         return (0, utils_1.mapValues)(prizefunds, () => ZERO);
     wager = (0, big_js_1.default)(wager);
-    vigorish = (0, big_js_1.default)(vigorish);
     prizefunds = (0, utils_1.mapValues)(prizefunds, prizefund => (0, big_js_1.default)(prizefund));
     const result = {};
     for (const position in prizefunds) {
         result[position] = wager.plus(prizefunds[positions_1.PRIZEFUNDS.TOTAL])
             .times(wager.div(wager.plus(prizefunds[position])))
-            .times(ONE.minus(vigorish));
+            .times(ONE.minus(VIGORISH));
     }
     return result;
 }
-function futureReturn(prizefunds, wager, vigorish = 0.01) {
-    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager, vigorish), ret => ret.toString());
+function futureReturn(prizefunds, wager) {
+    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager), ret => ret.toString());
 }
 exports.futureReturn = futureReturn;
-function futureProfit(prizefunds, wager, vigorish = 0.01) {
-    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager, vigorish), ret => ret.minus(wager).toString());
+function futureProfit(prizefunds, wager) {
+    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager), ret => ret.minus(wager).toString());
 }
 exports.futureProfit = futureProfit;
-function futureProfitPercent(prizefunds, wager, vigorish = 0.01) {
-    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager, vigorish))
+function futureProfitPercent(prizefunds, wager) {
+    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager))
         return (0, utils_1.mapValues)(prizefunds, () => ZERO.toString());
     wager = (0, big_js_1.default)(wager);
-    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager, vigorish), ret => ret.div(wager).minus(1).toString());
+    return (0, utils_1.mapValues)(__futureReturn(prizefunds, wager), ret => ret.div(wager).minus(1).toString());
 }
 exports.futureProfitPercent = futureProfitPercent;
-function __actualReturn(prizefunds, wager, position, vigorish = 0.01) {
-    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], position, wager, vigorish))
+function __actualReturn(prizefunds, wager, position) {
+    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], position, wager))
         return ZERO;
     wager = (0, big_js_1.default)(wager);
-    vigorish = (0, big_js_1.default)(vigorish);
     prizefunds = (0, utils_1.mapValues)(prizefunds, prizefund => (0, big_js_1.default)(prizefund));
     const result = prizefunds[positions_1.PRIZEFUNDS.TOTAL]
         .times(wager.div(prizefunds[position]))
-        .times(ONE.minus(vigorish));
+        .times(ONE.minus(VIGORISH));
     return result;
 }
-function actualReturn(prizefunds, wager, position, vigorish = 0.01) {
-    const result = __actualReturn(prizefunds, wager, position, vigorish);
+function actualReturn(prizefunds, wager, position) {
+    const result = __actualReturn(prizefunds, wager, position);
     return result.toString();
 }
 exports.actualReturn = actualReturn;
-function actualProfit(prizefunds, wager, position, vigorish = 0.01) {
-    const result = __actualReturn(prizefunds, wager, position, vigorish);
+function actualProfit(prizefunds, wager, position) {
+    const result = __actualReturn(prizefunds, wager, position);
     return result.minus(wager).toString();
 }
 exports.actualProfit = actualProfit;
-function actualProfitPercent(prizefunds, wager, position, vigorish = 0.01) {
-    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager, position, vigorish))
+function actualProfitPercent(prizefunds, wager, position) {
+    if (!__inNotZeroNumbers(prizefunds[positions_1.PRIZEFUNDS.TOTAL], wager, position))
         return ZERO.toString();
-    const result = __actualReturn(prizefunds, wager, position, vigorish);
+    const result = __actualReturn(prizefunds, wager, position);
     wager = (0, big_js_1.default)(wager);
     return result.div(wager).minus(1).toString();
 }

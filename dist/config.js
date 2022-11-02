@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
+    performance: {
+        renderMs: 3
+    },
     //zoom
     zoom: {
         speed: 100,
@@ -23,6 +26,12 @@ exports.default = {
     },
     //data
     maxdensity: 500,
+    ui: {
+        precision: {
+            erc20: 7,
+            percent: 2,
+        }
+    },
     price: {
         showSymbols: true,
         precision: 8,

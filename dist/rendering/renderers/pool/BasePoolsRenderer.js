@@ -40,11 +40,11 @@ class BasePoolsRenderer extends __1.BaseRenderer {
     getPoolResolutionByPrice(pool, resolutionPrice) {
         if (!resolutionPrice)
             return enums_1.EPosition.Undefined;
-        if (resolutionPrice.price === pool.openPriceValue)
+        if (resolutionPrice.value === pool.openPriceValue)
             return enums_1.EPosition.Zero;
-        if (resolutionPrice.price > pool.openPriceValue)
+        if (resolutionPrice.value > pool.openPriceValue)
             return enums_1.EPosition.Up;
-        if (resolutionPrice.price < pool.openPriceValue)
+        if (resolutionPrice.value < pool.openPriceValue)
             return enums_1.EPosition.Down;
         return enums_1.EPosition.Undefined;
     }
@@ -65,14 +65,14 @@ class BasePoolsRenderer extends __1.BaseRenderer {
         const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]);
         if (isResolveReady) {
             return {
-                price: context.settlements[pool.poolid].resolutionPrice.value,
+                value: context.settlements[pool.poolid].resolutionPrice.value,
                 timestamp: context.settlements[pool.poolid].resolutionPrice.timestamp,
             };
         }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;
         if (isResolved) {
             return {
-                price: pool.resolutionPriceValue,
+                value: pool.resolutionPriceValue,
                 timestamp: pool.resolutionPriceTimestamp,
             };
         }

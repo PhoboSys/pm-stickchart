@@ -2,7 +2,7 @@ export declare type ChartData = {
     [key: number]: number;
 };
 export declare type PricePoint = {
-    price: number;
+    value: number;
     timestamp: number;
 };
 export declare type DataPadding = {

@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRenderer = void 0;
+const config_1 = __importDefault(require("../../config"));
 const infra_1 = require("../../infra");
 const pixi_1 = require("../../lib/pixi");
 const utils_1 = require("../../lib/utils");
@@ -12,19 +16,24 @@ class BaseRenderer {
     }
     get animations() { return {}; }
     render(context, done) {
+        const start = Date.now();
         const container = this.storage.get(this.rendererId);
         const newcontainer = this.update(context, container);
         if (newcontainer !== container) {
             this.storage.set(this.rendererId, newcontainer);
-            this.local = {};
+            this.rebind();
+            this.clear();
         }
+        const took = Date.now() - start;
+        if (took > config_1.default.performance.renderMs)
+            infra_1.Logger.warn('[Violation] Render took ' + took + 'ms', this.rendererId);
         done();
     }
     rebind(...path) {
         this.stateprefix = (path || []).join('>');
     }
     clear(name) {
-        var _a;
+        var _a, _b, _c;
         if (name === undefined) {
             for (const key in this.local) {
                 if (key.indexOf(this.stateprefix) === 0) {
@@ -36,12 +45,17 @@ class BaseRenderer {
             name = this.stateprefix + name;
             if (name in this.local) {
                 infra_1.Logger.info('clear', name);
-                const [g, state] = this.local[name];
-                g.destroy();
-                (_a = state.timeline) === null || _a === void 0 ? void 0 : _a.kill();
+                const [item, state] = this.local[name];
+                (_a = item.destroy) === null || _a === void 0 ? void 0 : _a.call(item);
+                (_c = (_b = state.timeline) === null || _b === void 0 ? void 0 : _b.kill) === null || _c === void 0 ? void 0 : _c.call(_b);
                 delete this.local[name];
             }
         }
+    }
+    read(name) {
+        const bindname = this.stateprefix + name;
+        const got = this.local[bindname];
+        return got || [];
     }
     get(name, create, dependencies = []) {
         const bindname = this.stateprefix + name;
@@ -71,13 +85,12 @@ class BaseRenderer {
         }
         return true;
     }
-    animate(name, animation, method = 'to') {
+    animate(name, animation) {
         var _a;
         const config = this.animations[animation];
         if (!config)
             return;
-        const bindname = this.stateprefix + name;
-        const got = this.local[bindname];
+        const got = this.read(name);
         if (!got)
             return;
         const [target, state] = got;
@@ -86,6 +99,9 @@ class BaseRenderer {
             if (config.clear)
                 (_a = state.timeline) === null || _a === void 0 ? void 0 : _a.clear();
             state.timeline = state.timeline || pixi_1.gsap.timeline();
+            let method = 'to';
+            if (state.new && config.new)
+                method = config.new;
             if ((0, utils_1.isFunction)(state.timeline[method]))
                 state.timeline[method](target, Object.assign({}, config));
             else

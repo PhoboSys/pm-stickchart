@@ -24,12 +24,12 @@ const datamath_1 = __importDefault(require("../lib/datamath"));
 class DataBuilder {
     static isEqual(start, end) {
         return (start.timestamp === end.timestamp &&
-            start.price === end.price);
+            start.value === end.value);
     }
     static getLatest(plotdata, back = 1) {
         const { prices, timestamps } = plotdata;
         return {
-            price: Number(prices.at(-1 * back)),
+            value: Number(prices.at(-1 * back)),
             timestamp: Number(timestamps.at(-1 * back)),
         };
     }

@@ -11,6 +11,21 @@ export const UNIX_WEEK = 7 * UNIX_DAY
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default class ui {
 
+    static percent(amount): string {
+        if (!amount) return ''
+
+        let s = '+'
+        if (amount < 0) s = ''
+
+        return s + datamath.percent(amount, config.ui.precision.percent) + '%'
+    }
+
+    static erc20(amount): string {
+        if (!amount) return '0'
+
+        return datamath.round(amount, config.ui.precision.erc20).toString()
+    }
+
     static currency(price, currently = ''): string {
         let symb = ''
         if (currently && config.price.showSymbols) {

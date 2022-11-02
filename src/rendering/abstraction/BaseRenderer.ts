@@ -1,6 +1,7 @@
 import { IRenderer, IGraphicStorage } from '..'
 import { RenderingContext, DoneFunction } from '..'
 
+import cfg from '../../config'
 import { Logger } from '../../infra'
 
 import { Container, gsap } from '../../lib/pixi'
@@ -22,12 +23,18 @@ export abstract class BaseRenderer implements IRenderer {
         done: DoneFunction,
     ): void {
 
+        const start = Date.now()
+
         const container = this.storage.get(this.rendererId)
         const newcontainer = this.update(context, container)
         if (newcontainer !== container) {
             this.storage.set(this.rendererId, newcontainer)
-            this.local = {}
+            this.rebind()
+            this.clear()
         }
+
+        const took = Date.now() - start
+        if (took > cfg.performance.renderMs) Logger.warn('[Violation] Render took ' + took + 'ms', this.rendererId)
 
         done()
     }
@@ -48,14 +55,22 @@ export abstract class BaseRenderer implements IRenderer {
             name = this.stateprefix + name
             if (name in this.local) {
                 Logger.info('clear', name)
-                const [g, state] = this.local[name]
+                const [item, state] = this.local[name]
 
-                g.destroy()
-                state.timeline?.kill()
+                item.destroy?.()
+                state.timeline?.kill?.()
                 delete this.local[name]
             }
         }
 
+    }
+
+    protected read(
+        name: string,
+    ): [any, any, any[]] {
+        const bindname = this.stateprefix + name
+        const got = this.local[bindname]
+        return got || []
     }
 
     protected get<T>(
@@ -105,14 +120,12 @@ export abstract class BaseRenderer implements IRenderer {
     protected animate(
         name: string,
         animation: string,
-        method: string = 'to',
     ): void {
 
         const config = this.animations[animation]
         if (!config) return
 
-        const bindname = this.stateprefix + name
-        const got = this.local[bindname]
+        const got = this.read(name)
         if (!got) return
 
         const [target, state] = got
@@ -122,6 +135,9 @@ export abstract class BaseRenderer implements IRenderer {
 
             if (config.clear) state.timeline?.clear()
             state.timeline = state.timeline || gsap.timeline()
+
+            let method = 'to'
+            if (state.new && config.new) method = config.new
             if (isFunction(state.timeline[method])) state.timeline[method](target, { ...config })
             else Logger.warn('amination method "%s" unknown', method)
         }

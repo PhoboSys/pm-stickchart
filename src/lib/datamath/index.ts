@@ -114,6 +114,18 @@ export default class datamath {
         return value
     }
 
+    static percent(value: number, significant: number): number {
+        const v = new Big(value)
+
+        return v.times(100).round(significant, Big.roundDown).toNumber()
+    }
+
+    static round(value: number, significant: number): number {
+        const v = new Big(value)
+
+        return v.round(significant, Big.roundDown).toNumber()
+    }
+
     static precision(value: number, significant: number): number {
 
         const v = new Big(value)

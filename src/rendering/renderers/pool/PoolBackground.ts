@@ -33,6 +33,7 @@ export class PoolBackground extends BasePoolsRenderer {
             duration: 0.5,
             ease: 'power2.out',
             delay: 0.5,
+            new: 'set'
         }
     }
 
@@ -113,8 +114,6 @@ export class PoolBackground extends BasePoolsRenderer {
             }
         } else if (this.isActualPool(pool)) {
             group.alpha = 0.15
-        } else if (group.alpha !== 0) {
-            this.animate('group', 'fadeout')
         }
 
     }

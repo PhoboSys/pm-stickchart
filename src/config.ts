@@ -1,5 +1,9 @@
 export default {
 
+    performance: {
+        renderMs: 3
+    },
+
     //zoom
     zoom: {
         speed: 100,
@@ -26,6 +30,13 @@ export default {
 
     //data
     maxdensity: 500,
+
+    ui: {
+        precision: {
+            erc20: 7,
+            percent: 2,
+        }
+    },
 
     price: {
         showSymbols: true,

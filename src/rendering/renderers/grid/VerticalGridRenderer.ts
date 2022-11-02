@@ -11,24 +11,17 @@ export class VerticalGridRenderer extends BaseRenderer {
 
     static readonly VERTICAL_GRID_ID: symbol = Symbol('VERTICAL_GRID_ID')
 
-    private readonly lineStyle: any
+    private readonly lineStyle: any = {
+        width: 1,
+        color: 0x303550,
+        alpha: 1,
+    }
 
-    private readonly textStyle: any
-
-    constructor(renderer: IGraphicStorage) {
-        super(renderer)
-
-        this.lineStyle = {
-            width: 1,
-            color: 0x303550,
-            alpha: 1,
-        }
-        this.textStyle = {
-            fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
-            fontSize: config.grid.time.fontsize,
-        }
+    private readonly textStyle: any = {
+        fill: 0xB7BDD7,
+        fontWeight: 500,
+        fontFamily: 'Gilroy',
+        fontSize: config.grid.time.fontsize,
     }
 
     public get rendererId(): symbol {
@@ -52,11 +45,12 @@ export class VerticalGridRenderer extends BaseRenderer {
         // create a set lines and texts and reuse them
         // fix GL_OUT_OF_MEMORY
         while (idx++ < config.grid.time.max*2) {
+            this.rebind(idx)
 
             const x = xs[idx] || outsideX
             const time = timesteps[idx] || 0
 
-            const [line, lineState] = this.get('x_gridline'+idx, () => GraphicUtils.createLine(
+            const [line, lineState] = this.get('x_gridline', () => GraphicUtils.createLine(
                 [0, 0],
                 [0, height],
                 this.lineStyle,
@@ -66,7 +60,7 @@ export class VerticalGridRenderer extends BaseRenderer {
             line.height = height
 
             const time24 = ui.time24(time)
-            const [text, textState] = this.get('x_gridtext'+idx, () => GraphicUtils.createText(
+            const [text, textState] = this.get('x_gridtext', () => GraphicUtils.createText(
                 time24,
                 [x, height],
                 this.textStyle,

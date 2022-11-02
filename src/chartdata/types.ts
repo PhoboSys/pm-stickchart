@@ -3,7 +3,7 @@ export type ChartData = {
 }
 
 export type PricePoint = {
-    price: number,
+    value: number,
     timestamp: number,
 }
 

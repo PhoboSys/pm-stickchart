@@ -5,6 +5,8 @@ import { mapValues } from '../../lib/utils'
 const ONE = Big(1)
 const ZERO = Big(0)
 
+const VIGORISH = Big(0.01)
+
 function __inNotZeroNumbers(...args) {
   for (let num of args) {
     if (!Number(num)) return false
@@ -12,11 +14,10 @@ function __inNotZeroNumbers(...args) {
   return true
 }
 
-function __futureReturn(prizefunds, wager, vigorish = 0.01) {
-  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager, vigorish)) return mapValues(prizefunds, () => ZERO)
+function __futureReturn(prizefunds, wager) {
+  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager)) return mapValues(prizefunds, () => ZERO)
 
   wager = Big(wager)
-  vigorish = Big(vigorish)
   prizefunds = mapValues(prizefunds, prizefund => Big(prizefund))
 
   const result = { }
@@ -29,7 +30,7 @@ function __futureReturn(prizefunds, wager, vigorish = 0.01) {
         )
       )
       .times(
-        ONE.minus(vigorish)
+        ONE.minus(VIGORISH)
       )
 
   }
@@ -37,27 +38,26 @@ function __futureReturn(prizefunds, wager, vigorish = 0.01) {
   return result
 }
 
-export function futureReturn(prizefunds, wager, vigorish = 0.01) {
-  return mapValues(__futureReturn(prizefunds, wager, vigorish), ret => ret.toString())
+export function futureReturn(prizefunds, wager) {
+  return mapValues(__futureReturn(prizefunds, wager), ret => ret.toString())
 }
 
-export function futureProfit(prizefunds, wager, vigorish = 0.01) {
-  return mapValues(__futureReturn(prizefunds, wager, vigorish), ret => ret.minus(wager).toString())
+export function futureProfit(prizefunds, wager) {
+  return mapValues(__futureReturn(prizefunds, wager), ret => ret.minus(wager).toString())
 }
 
-export function futureProfitPercent(prizefunds, wager, vigorish = 0.01) {
-  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager, vigorish)) return mapValues(prizefunds, () => ZERO.toString())
+export function futureProfitPercent(prizefunds, wager) {
+  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager)) return mapValues(prizefunds, () => ZERO.toString())
 
   wager = Big(wager)
-  return mapValues(__futureReturn(prizefunds, wager, vigorish), ret => ret.div(wager).minus(1).toString())
+  return mapValues(__futureReturn(prizefunds, wager), ret => ret.div(wager).minus(1).toString())
 }
 
 
-function __actualReturn(prizefunds, wager, position, vigorish = 0.01) {
-  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], position, wager, vigorish)) return ZERO
+function __actualReturn(prizefunds, wager, position) {
+  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], position, wager)) return ZERO
 
   wager = Big(wager)
-  vigorish = Big(vigorish)
   prizefunds = mapValues(prizefunds, prizefund => Big(prizefund))
 
   const result = prizefunds[PRIZEFUNDS.TOTAL]
@@ -65,27 +65,27 @@ function __actualReturn(prizefunds, wager, position, vigorish = 0.01) {
       wager.div(prizefunds[position])
     )
     .times(
-      ONE.minus(vigorish)
+      ONE.minus(VIGORISH)
     )
 
   return result
 }
 
-export function actualReturn(prizefunds, wager, position, vigorish = 0.01) {
-  const result = __actualReturn(prizefunds, wager, position, vigorish)
+export function actualReturn(prizefunds, wager, position) {
+  const result = __actualReturn(prizefunds, wager, position)
   return result.toString()
 }
 
-export function actualProfit(prizefunds, wager, position, vigorish = 0.01) {
-  const result = __actualReturn(prizefunds, wager, position, vigorish)
+export function actualProfit(prizefunds, wager, position) {
+  const result = __actualReturn(prizefunds, wager, position)
 
   return result.minus(wager).toString()
 }
 
-export function actualProfitPercent(prizefunds, wager, position, vigorish = 0.01) {
-  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager, position, vigorish)) return ZERO.toString()
+export function actualProfitPercent(prizefunds, wager, position) {
+  if (!__inNotZeroNumbers(prizefunds[PRIZEFUNDS.TOTAL], wager, position)) return ZERO.toString()
 
-  const result = __actualReturn(prizefunds, wager, position, vigorish)
+  const result = __actualReturn(prizefunds, wager, position)
 
   wager = Big(wager)
   return result.div(wager).minus(1).toString()

@@ -60,9 +60,9 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): EPosition {
 
         if (!resolutionPrice) return EPosition.Undefined
-        if (resolutionPrice.price === pool.openPriceValue) return EPosition.Zero
-        if (resolutionPrice.price > pool.openPriceValue) return EPosition.Up
-        if (resolutionPrice.price < pool.openPriceValue) return EPosition.Down
+        if (resolutionPrice.value === pool.openPriceValue) return EPosition.Zero
+        if (resolutionPrice.value > pool.openPriceValue) return EPosition.Up
+        if (resolutionPrice.value < pool.openPriceValue) return EPosition.Down
 
         return EPosition.Undefined
     }
@@ -96,7 +96,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         const isResolveReady = !pool.resolved && context.settlements?.[pool.poolid]
         if (isResolveReady) {
             return {
-                price: context.settlements[pool.poolid].resolutionPrice.value,
+                value: context.settlements[pool.poolid].resolutionPrice.value,
                 timestamp: context.settlements[pool.poolid].resolutionPrice.timestamp,
             }
         }
@@ -104,7 +104,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue
         if (isResolved) {
             return {
-                price: pool.resolutionPriceValue,
+                value: pool.resolutionPriceValue,
                 timestamp: pool.resolutionPriceTimestamp,
             }
         }

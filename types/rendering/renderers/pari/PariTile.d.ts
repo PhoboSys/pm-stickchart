@@ -11,6 +11,8 @@ export declare class PariTile extends BaseParisRenderer {
     private prizeStyle;
     private profitStyle;
     private titleprofitStyle;
+    private configAnimations;
+    protected get animations(): any;
     protected updatePari(pool: any, pari: any, context: RenderingContext, container: Container): void;
     private updateTile;
     private getPositionIconTextureName;

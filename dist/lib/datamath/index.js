@@ -82,6 +82,14 @@ class datamath {
         value++;
         return value;
     }
+    static percent(value, significant) {
+        const v = new big_js_1.default(value);
+        return v.times(100).round(significant, big_js_1.default.roundDown).toNumber();
+    }
+    static round(value, significant) {
+        const v = new big_js_1.default(value);
+        return v.round(significant, big_js_1.default.roundDown).toNumber();
+    }
     static precision(value, significant) {
         const v = new big_js_1.default(value);
         return v.prec(significant).toNumber();

@@ -98,7 +98,7 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x1, x2] = datamath_1.default.scale([pool.openPriceTimestamp, resolution.timestamp], timerange, width);
-        const [y1, y2] = datamath_1.default.scaleReverse([pool.openPriceValue, resolution.price], pricerange, height);
+        const [y1, y2] = datamath_1.default.scaleReverse([pool.openPriceValue, resolution.value], pricerange, height);
         const [group, groupstate] = this.get('group', () => new pixi_1.Graphics());
         if (groupstate.new)
             container.addChild(group);
