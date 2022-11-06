@@ -7,6 +7,12 @@ export type PricePoint = {
     timestamp: number,
 }
 
+export type PricefeedPoint = {
+    value: number,
+    timestamp: number,
+    roundid: string,
+}
+
 export type DataPadding = {
     min: number,
     max: number

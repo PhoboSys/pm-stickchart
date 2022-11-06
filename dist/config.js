@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     performance: {
-        renderMs: 3
+        renderMs: 5
     },
     //zoom
     zoom: {
         speed: 100,
-        throttle: 30, // one frame
+        throttle: 30, // once per frame
     },
     grid: {
         time: { max: 20, fontsize: 12 },
@@ -78,10 +78,10 @@ exports.default = {
         },
     },
     padding: {
-        left: -0.1,
-        right: 0.3819,
-        top: 0.2,
-        bottom: 0.3819, // % golden
+        left: -20,
+        right: 250,
+        top: 90,
+        bottom: 150, // px
     },
 };
 //# sourceMappingURL=config.js.map

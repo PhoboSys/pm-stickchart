@@ -60,26 +60,30 @@ class DataBuilder {
     static normalize(timestampsOrig, pricesOrig, screen) {
         const timestamps = datamath_1.default.sample(timestampsOrig, config_1.default.maxdensity);
         const prices = datamath_1.default.sample(pricesOrig, config_1.default.maxdensity);
+        const { width, height } = screen;
         // return latest price if sampled out
         if (timestamps.at(-1) !== timestampsOrig.at(-1) ||
             prices.at(-1) !== pricesOrig.at(-1)) {
             timestamps.push(Number(timestampsOrig.at(-1)));
             prices.push(Number(pricesOrig.at(-1)));
         }
-        const timerange = datamath_1.default.range(timestamps, config_1.default.padding.left, config_1.default.padding.right);
-        const pricerange = datamath_1.default.range(prices, config_1.default.padding.bottom, config_1.default.padding.top);
-        const { width, height } = screen;
+        const unwidth = width - (config_1.default.padding.left + config_1.default.padding.right);
+        const paddingLeft = config_1.default.padding.left / width;
+        const paddingRight = config_1.default.padding.right / width;
+        const timerange = datamath_1.default.range(timestamps, paddingLeft, paddingRight);
+        const unheight = height - (config_1.default.padding.top + config_1.default.padding.bottom);
+        const paddingBottom = config_1.default.padding.bottom / unheight;
+        const paddingTop = config_1.default.padding.top / unheight;
+        const pricerange = datamath_1.default.range(prices, paddingBottom, paddingTop);
         const xs = datamath_1.default.scale(timestamps, timerange, width);
         const ys = datamath_1.default.scaleReverse(prices, pricerange, height);
-        const unpheight = height / (1 + config_1.default.padding.top + config_1.default.padding.bottom);
         const paddingY = [
-            unpheight * config_1.default.padding.top,
-            unpheight * (1 + config_1.default.padding.bottom)
+            config_1.default.padding.top,
+            height - config_1.default.padding.bottom
         ];
-        const unpwidth = width / (1 + config_1.default.padding.left + config_1.default.padding.right);
         const paddingX = [
-            unpwidth * config_1.default.padding.left,
-            unpwidth * (1 + config_1.default.padding.right)
+            config_1.default.padding.left,
+            width - config_1.default.padding.right
         ];
         return {
             timestamps,

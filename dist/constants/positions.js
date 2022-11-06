@@ -11,5 +11,6 @@ exports.PRIZEFUNDS = {
     DOWN: 1,
     UP: 2,
     EQUAL: 3,
+    WITHDRAWN: -2,
 };
 //# sourceMappingURL=positions.js.map

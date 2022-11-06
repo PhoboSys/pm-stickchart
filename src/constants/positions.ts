@@ -9,5 +9,6 @@ export const PRIZEFUNDS = {
   DOWN: 1,
   UP: 2,
   EQUAL: 3,
+  WITHDRAWN: -2,
 }
 

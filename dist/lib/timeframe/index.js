@@ -25,7 +25,7 @@ class Timeframe {
         this.onZoom = onZoom;
         this._timerfamePreffered = exports.UNIX_DAY;
         this.since = nowUnixTS() - exports.UNIX_DAY;
-        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), config_1.default.zoom.throttle);
+        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom), config_1.default.zoom.throttle, { trailing: false });
         this.zoomTarget.addEventListener('zoom', this.zoomevent);
     }
     save(timeframe) {

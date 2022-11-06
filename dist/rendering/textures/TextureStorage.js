@@ -90,7 +90,7 @@ class TextureStorage {
     }
     [symbols_2.PRICE_LINE_TEXTURE]() {
         const x0 = 0;
-        const y0 = 0 + this.application.screen.height * config_1.default.padding.top;
+        const y0 = 0 + config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
         const top = '#' + config_1.default.style.linecolor.toString(16).padStart(6, '0');
@@ -110,20 +110,18 @@ class TextureStorage {
         return gradient;
     }
     [symbols_2.POOL_ROUND_TEXTURE]() {
-        const { width, height } = this.application.screen;
-        const { padding } = config_1.default;
-        const x0 = width - width * padding.right - width / 100;
-        const y0 = 0 + height * padding.top;
-        const x1 = width - width * padding.right + width / 100;
-        const y1 = height;
+        const x0 = 0;
+        const y0 = 0 + config_1.default.padding.top;
+        const x1 = 0;
+        const y1 = this.application.screen.height;
         const topcolor = '#00A573' + '00';
         const middlecolor1 = '#00A573';
         const middlecolor2 = '#F07750';
         const bottomcolor = '#F07750' + '00';
         const { renderer } = this.application;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
-            width,
-            height,
+            width: renderer.width,
+            height: renderer.height,
         }), {
             x0, y0,
             x1, y1,

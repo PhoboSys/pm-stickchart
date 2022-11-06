@@ -85,7 +85,7 @@ class BaseRenderer {
         }
         return true;
     }
-    animate(name, animation) {
+    animate(name, animation, vars = {}) {
         var _a;
         const config = this.animations[animation];
         if (!config)
@@ -103,7 +103,7 @@ class BaseRenderer {
             if (state.new && config.new)
                 method = config.new;
             if ((0, utils_1.isFunction)(state.timeline[method]))
-                state.timeline[method](target, Object.assign({}, config));
+                state.timeline[method](target, Object.assign(Object.assign({}, config), vars));
             else
                 infra_1.Logger.warn('amination method "%s" unknown', method);
         }

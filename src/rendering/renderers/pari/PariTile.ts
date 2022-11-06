@@ -6,7 +6,7 @@ import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
 import { isEmpty, forEach } from '../../../lib/utils'
 import ui from '../../../lib/ui'
 import { actualReturn, actualProfitPercent } from '../../../lib/calc-utils'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
+import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } from '../../../events'
 
 import { GraphicUtils } from '../..'
 import { EPosition } from '../../../enums'
@@ -23,12 +23,44 @@ export class PariTile extends BaseParisRenderer {
         return PariTile.PARI_TILE_ID
     }
 
+    private buttonStyle: any = {
+
+        [EPosition.Undefined]: {
+            size: 50,
+            color: 0xFFA000,
+            offset: [30, 0],
+            outside: [1, 0.5]
+        },
+
+        [EPosition.Up]: {
+            size: 50,
+            color: 0xFFA000,
+            offset: [30, 0],
+            outside: [1, 0.5]
+        },
+
+        [EPosition.Down]: {
+            size: 50,
+            color: 0xFFA000,
+            offset: [30, 0],
+            outside: [1, 0.5]
+        },
+
+        [EPosition.Zero]: {
+            size: 50,
+            color: 0xFFA000,
+            offset: [30, 0],
+            outside: [1, 0.5]
+        }
+
+    }
+
     private backgroundStyle: any = {
 
         [EPosition.Undefined]: {
-            anchor: [0, 1],
-            offset: [3, -10],
-            radiuses: [20, 20, 20, 20],
+            anchor: [-1, 1],
+            offset: [-3, -10],
+            radiuses: [20, 0, 0, 20],
             color: 0x22273F,
             width: 300,
             height: 62,
@@ -40,9 +72,9 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Up]: {
-            anchor: [0, 1],
-            offset: [3, -10],
-            radiuses: [20, 20, 20, 20],
+            anchor: [-1, 1],
+            offset: [-3, -10],
+            radiuses: [20, 0, 0, 20],
             color: 0x22273F,
             width: 300,
             height: 62,
@@ -54,9 +86,9 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Down]: {
-            anchor: [0, -1],
-            offset: [3, -10],
-            radiuses: [20, 20, 20, 20],
+            anchor: [-1, -1],
+            offset: [-3, -10],
+            radiuses: [20, 0, 0, 20],
             color: 0x22273F,
             width: 300,
             height: 62,
@@ -68,9 +100,9 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Zero]: {
-            anchor: [0, 0],
-            offset: [3, -10],
-            radiuses: [20, 20, 20, 20],
+            anchor: [-1, 0],
+            offset: [-3, -10],
+            radiuses: [20, 0, 0, 20],
             color: 0x22273F,
             width: 300,
             height: 62,
@@ -142,32 +174,30 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private configAnimations: any = {
-        winning: {
+        winning_bg: {
+            pixi: {
+                alpha: 1.2,
+            },
+            duration: 0.5,
+            ease: 'back.out(4)',
+        },
+        loseing_bg: {
+            pixi: {
+                alpha: 1,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+        },
+        won_bg: {
             pixi: {
                 alpha: 1.1,
-                lineColor: 0xFFFFFF,
-            },
-            duration: 0.5,
-            ease: 'power2.out',
-        },
-        loseing: {
-            pixi: {
-                alpha: 1,
-                lineColor: 0xB7BDD7,
-            },
-            duration: 0.5,
-            ease: 'power2.out',
-        },
-        won: {
-            pixi: {
-                alpha: 1,
                 lineColor: 0xFFA000,
             },
             duration: 0.5,
             ease: 'power2.out',
             new: 'set'
         },
-        lost: {
+        lost_bg: {
             pixi: {
                 alpha: 1,
                 lineColor: 0xB7BDD7,
@@ -176,7 +206,7 @@ export class PariTile extends BaseParisRenderer {
             ease: 'power2.out',
             new: 'set'
         },
-        cntlost: {
+        lost_contnet: {
             pixi: {
                 alpha: 0.6,
             },
@@ -184,7 +214,7 @@ export class PariTile extends BaseParisRenderer {
             ease: 'power2.out',
             new: 'set'
         },
-        fadeinwin: {
+        winning_group: {
             pixi: {
                 alpha: 1.3,
                 zIndex: 3,
@@ -194,7 +224,7 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        fadeinlose: {
+        loseing_group: {
             pixi: {
                 alpha: 1,
                 zIndex: 3,
@@ -204,9 +234,9 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        hoverwin: {
+        hover_group_claimable: {
             pixi: {
-                alpha: 1.3,
+                alpha: 1.1,
                 zIndex: 4,
             },
             duration: 0.5,
@@ -214,7 +244,7 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        unhoverwin: {
+        unhover_group_claimable: {
             pixi: {
                 alpha: 1,
                 zIndex: 1,
@@ -224,7 +254,7 @@ export class PariTile extends BaseParisRenderer {
             delay: 0.5,
             new: 'set'
         },
-        hoverlose: {
+        hover_group_unclaimable: {
             pixi: {
                 alpha: 1,
                 zIndex: 4,
@@ -234,7 +264,7 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        unhoverlose: {
+        unhover_group_unclaimable: {
             pixi: {
                 alpha: 0,
                 zIndex: 0,
@@ -243,7 +273,34 @@ export class PariTile extends BaseParisRenderer {
             ease: 'power2.out',
             delay: 0.5,
             new: 'set'
-        }
+        },
+        hover_claim: {
+            pixi: {
+                alpha: 1.2,
+                scale: 1.1,
+            },
+            duration: 0.5,
+            ease: 'back.out(4)',
+            clear: true,
+        },
+        unhover_claim: {
+            pixi: {
+                alpha: 1,
+                scale: 1,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+        },
+        tab_paybtn: {
+            pixi: {
+                scale: 1.2,
+            },
+            duration: 0.2,
+            ease: 'back.out(2)',
+            repeat: 1,
+            yoyo: true,
+            yoyoEase: 'power2.out',
+        },
     }
 
     protected get animations(): any {
@@ -274,36 +331,38 @@ export class PariTile extends BaseParisRenderer {
             height,
         } = context.screen
 
+        const poolid = pool.poolid
+        const pariid = pari.pariid
+
         const { timerange, paddingY: [top, bottom] } = context.plotdata
         const { openPriceTimestamp } = pool
         const [ox] = datamath.scale([openPriceTimestamp], timerange, width)
 
+        const bgStyle = this.backgroundStyle[position]
+        const [ax, ay] = bgStyle.anchor
+        const [ofx, ofy] = bgStyle.offset
+        const bgwidth = bgStyle.width
+        const bgheight = bgStyle.height
+        const bgx = ox + bgwidth * ax + ofx
+        const bgy = top - bgheight * ay + ofy
+
         const [group, groupstate] = this.get('group', () => new Container())
         if (groupstate.new) {
             group.alpha = 0
+
+            group.width = bgwidth
+            group.height = bgheight
+
             container.sortableChildren = true
             container.addChild(group)
         }
+        group.position.set(bgx, bgy)
 
         const [background, backgroundState] = this.get('background', () => this.createBackground(pari.position))
         if (backgroundState.new) group.addChild(background)
 
-        const bgStyle = this.backgroundStyle[position]
-        const [ax, ay] = bgStyle.anchor
-        const [ofx, ofy] = bgStyle.offset
-        const bgwidth = background.width
-        const bgheight = background.height
-        const bgx = ox + bgwidth * ax + ofx
-        const bgy = top - bgheight * ay + ofy
-        background.position.set(bgx, bgy)
-
         const [content, contentState] = this.get('content', () => new Container())
-        if (contentState.new) {
-            content.width = bgwidth
-            content.height = bgheight
-            group.addChild(content)
-        }
-        content.position.set(bgx, bgy)
+        if (contentState.new) group.addChild(content)
 
         const [icon, iconState] = this.get('icon', () => this.createIcon(context, pari.position))
         if (iconState.new) content.addChild(icon)
@@ -327,10 +386,6 @@ export class PariTile extends BaseParisRenderer {
         )
         if (titlewagerState.new) content.addChild(titlewager)
 
-        const rprice = this.getResolutionPricePoint(pool, context)
-        const resolution = this.getPoolResolutionByPrice(pool, rprice)
-        const [win] = this.get('win', () => pari.position === resolution, [resolution, pari.position])
-
         const [tptox, tptoy] = this.titleprofitStyle.offset
         const [titleprofit, titleprofitState] = this.get('titleprofit', () =>
             GraphicUtils.createText(
@@ -345,6 +400,9 @@ export class PariTile extends BaseParisRenderer {
         )
         if (titleprofitState.new) content.addChild(titleprofit)
 
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const resolution = this.getPoolResolutionByPrice(pool, rprice)
+        const win = pari.position === resolution
         if (win) {
             this.clear('zero')
 
@@ -421,49 +479,129 @@ export class PariTile extends BaseParisRenderer {
 
         if (this.isHistoricalPool(pool, context)) {
 
-            if (win) this.animate('background', 'won')
-            else this.animate('background', 'lost')
-
-            if (!win) this.animate('content', 'cntlost')
-
             if (win) {
-                if (groupstate.animation !== 'hoverwin') this.animate('group', 'unhoverwin')
+                this.animate('background', 'won_bg')
             } else {
-                if (groupstate.animation !== 'hoverlose') this.animate('group', 'unhoverlose')
+                this.animate('background', 'lost_bg')
+                this.animate('content', 'lost_contnet')
             }
 
-            if (!backgroundState.subscribed) {
-                backgroundState.subscribed = true
+            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed])
 
-                const poolid = pool.poolid
-                const pariid = pari.pariid
+            if (claimable) {
+                if (groupstate.animation !== 'hover_group_claimable') this.animate('group', 'unhover_group_claimable')
+            } else {
+                if (groupstate.animation !== 'hover_group_unclaimable') this.animate('group', 'unhover_group_unclaimable')
+            }
+
+            if (claimable) {
+                const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
+                const [settlement] = this.get('settlement', () => context.settlements?.[pool.poolid], [context.settlements?.[pool.poolid]])
+
+                const btnStyle = this.buttonStyle[position]
+                const [btnx, btny] = btnStyle.offset
+                const [horizontal, vertical] = btnStyle.outside
+                const [claim, claimState] = this.get('claim', () => new Container(), [pari.claimed])
+                if (claimState.new) {
+                    group.addChild(claim)
+
+                    claim.width = btnStyle.size
+                    claim.height = btnStyle.size
+                    claim.interactive = true
+                    claim.cursor = 'pointer'
+                    claim.addEventListener('pointerover', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('group', 'hover_group_claimable')
+                        this.animate('claim', 'hover_claim')
+                    })
+                    claim.addEventListener('pointerout', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('group', 'unhover_group_claimable')
+                        this.animate('claim', 'unhover_claim')
+                    })
+                    claim.addEventListener('pointertap', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('claim', 'tab_paybtn')
+                        const [rslvd] = this.read('resolved')
+                        const [sttlmnt] = this.read('settlement')
+
+                        if (rslvd) {
+                            context.eventTarget.dispatchEvent(
+                                new ClaimPariEvent(pari, e)
+                            )
+                        }
+
+                        if (!rslvd && sttlmnt) {
+                            context.eventTarget.dispatchEvent(
+                                new SettlePoolEvent(pool, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e)
+                            )
+                        }
+                    })
+                }
+
+                claim.position.set(
+                    btnx + bgwidth * horizontal,
+                    btny + bgheight * vertical,
+                )
+
+                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved, pari.claimed])
+                if (claimimgState.new) {
+                    claim_img
+                        .beginFill(0xFFA000)
+                        .drawCircle(0, 0, btnStyle.size / 2)
+                        .endFill()
+                        .beginFill(0xFFA000)
+                        .drawCircle(0, 0, btnStyle.size / 3)
+                        .endFill()
+
+                    if (!resolved) {
+                        claim_img
+                            .beginFill(0xFFF000)
+                            .drawCircle(0, 0, btnStyle.size / 3)
+                            .endFill()
+                    }
+
+                    claim.addChild(claim_img)
+                }
+            } else {
+                this.clear('claim')
+                this.clear('claim_img')
+                this.clear('resolved')
+                this.clear('settlement')
+            }
+
+            if (!groupstate.subscribed) {
+                groupstate.subscribed = true
+
                 context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
-                    const [w] = this.read('win')
-                    if (w) this.animate('group', 'hoverwin')
-                    else this.animate('group', 'hoverlose')
+                    const [clble] = this.read('claimable')
+                    if (clble) this.animate('group', 'hover_group_claimable')
+                    else this.animate('group', 'hover_group_unclaimable')
                 })
 
                 context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
-                    const [w] = this.read('win')
-                    if (w) this.animate('group', 'unhoverwin')
-                    else this.animate('group', 'unhoverlose')
+                    const [clble] = this.read('claimable')
+                    if (clble) this.animate('group', 'unhover_group_claimable')
+                    else this.animate('group', 'unhover_group_unclaimable')
                 })
 
             }
 
         } else {
 
-            if (win) this.animate('background', 'winning')
-            else this.animate('background', 'loseing')
-
-            if (win) this.animate('group', 'fadeinwin')
-            else this.animate('group', 'fadeinlose')
+            if (win) {
+                this.animate('background', 'winning_bg')
+                this.animate('group', 'winning_group')
+            } else {
+                this.animate('background', 'loseing_bg')
+                this.animate('group', 'loseing_group')
+            }
 
         }
     }

@@ -8,4 +8,5 @@ export declare const PRIZEFUNDS: {
     DOWN: number;
     UP: number;
     EQUAL: number;
+    WITHDRAWN: number;
 };

@@ -5,6 +5,11 @@ export declare type PricePoint = {
     value: number;
     timestamp: number;
 };
+export declare type PricefeedPoint = {
+    value: number;
+    timestamp: number;
+    roundid: string;
+};
 export declare type DataPadding = {
     min: number;
     max: number;

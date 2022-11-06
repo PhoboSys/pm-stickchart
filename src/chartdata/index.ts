@@ -81,6 +81,7 @@ export class DataBuilder {
 
         const timestamps = datamath.sample(timestampsOrig, config.maxdensity)
         const prices = datamath.sample(pricesOrig, config.maxdensity)
+        const { width, height } = screen
 
         // return latest price if sampled out
         if (
@@ -91,32 +92,35 @@ export class DataBuilder {
             prices.push(Number(pricesOrig.at(-1)))
         }
 
+        const unwidth = width - (config.padding.left + config.padding.right)
+        const paddingLeft = config.padding.left / width
+        const paddingRight = config.padding.right / width
         const timerange = datamath.range(
             timestamps,
-            config.padding.left,
-            config.padding.right,
+            paddingLeft,
+            paddingRight,
         )
 
+        const unheight = height - (config.padding.top + config.padding.bottom)
+        const paddingBottom = config.padding.bottom / unheight
+        const paddingTop = config.padding.top / unheight
         const pricerange = datamath.range(
             prices,
-            config.padding.bottom,
-            config.padding.top,
+            paddingBottom,
+            paddingTop,
         )
 
-        const { width, height } = screen
         const xs = datamath.scale(timestamps, timerange, width)
         const ys = datamath.scaleReverse(prices, pricerange, height)
 
-        const unpheight = height / (1 + config.padding.top + config.padding.bottom)
         const paddingY: [number, number] = [
-            unpheight * config.padding.top,
-            unpheight * (1 + config.padding.bottom)
+            config.padding.top,
+            height - config.padding.bottom
         ]
 
-        const unpwidth = width / (1 + config.padding.left + config.padding.right)
         const paddingX: [number, number] = [
-            unpwidth * config.padding.left,
-            unpwidth * (1 + config.padding.right)
+            config.padding.left,
+            width - config.padding.right
         ]
 
         return {

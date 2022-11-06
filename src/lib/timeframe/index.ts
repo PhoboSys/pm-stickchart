@@ -31,9 +31,9 @@ export class Timeframe {
         private readonly zoomTarget: EventTarget,
         private readonly onZoom: () => any,
     ) {
-        this.zoomevent = throttle(
-            (e: ZoomEvent) => this.zoom(e.zoom),
+        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom),
             config.zoom.throttle,
+            { trailing: false }
         )
         this.zoomTarget.addEventListener('zoom', this.zoomevent)
     }

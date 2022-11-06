@@ -116,7 +116,7 @@ export class TextureStorage implements ITextureStorage {
 
     private [PRICE_LINE_TEXTURE](): RenderTexture {
         const x0 = 0
-        const y0 = 0 + this.application.screen.height * config.padding.top
+        const y0 = 0 + config.padding.top
         const x1 = 0
         const y1 = this.application.screen.height
 
@@ -144,13 +144,10 @@ export class TextureStorage implements ITextureStorage {
     }
 
     private [POOL_ROUND_TEXTURE](): RenderTexture {
-        const { width, height } = this.application.screen
-        const { padding } = config
-
-        const x0 = width - width * padding.right - width / 100
-        const y0 = 0 + height * padding.top
-        const x1 = width - width * padding.right + width / 100
-        const y1 = height
+        const x0 = 0
+        const y0 = 0 + config.padding.top
+        const x1 = 0
+        const y1 = this.application.screen.height
 
         const topcolor = '#00A573' + '00'
         const middlecolor1 = '#00A573'
@@ -161,8 +158,8 @@ export class TextureStorage implements ITextureStorage {
         const gradient = GradientFactory.createLinearGradient(
             <Renderer>renderer,
             RenderTexture.create({
-                width,
-                height,
+                width: renderer.width,
+                height: renderer.height,
             }),
             {
                 x0, y0,

@@ -49,10 +49,11 @@ class BasePoolsRenderer extends __1.BaseRenderer {
         return enums_1.EPosition.Undefined;
     }
     isHistoricalPool(pool, context) {
+        var _a;
         if (this.isActualPool(pool))
             return false;
-        const pricepoint = chartdata_1.DataBuilder.getLatest(context.plotdata);
-        return pricepoint.timestamp >= pool.resolutionDate;
+        return (pool.resolved ||
+            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]));
     }
     isActualPool(pool) {
         return pool.resolutionDate > (0, utils_1.nowUnixTS)();

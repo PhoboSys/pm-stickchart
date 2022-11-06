@@ -74,8 +74,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         if (this.isActualPool(pool)) return false
 
-        const pricepoint = DataBuilder.getLatest(context.plotdata)
-        return pricepoint.timestamp >= pool.resolutionDate
+        return (
+            pool.resolved ||
+            context.settlements?.[pool.poolid]
+        )
     }
 
     protected isActualPool(

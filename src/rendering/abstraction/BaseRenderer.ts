@@ -120,6 +120,7 @@ export abstract class BaseRenderer implements IRenderer {
     protected animate(
         name: string,
         animation: string,
+        vars: object = {},
     ): void {
 
         const config = this.animations[animation]
@@ -138,7 +139,7 @@ export abstract class BaseRenderer implements IRenderer {
 
             let method = 'to'
             if (state.new && config.new) method = config.new
-            if (isFunction(state.timeline[method])) state.timeline[method](target, { ...config })
+            if (isFunction(state.timeline[method])) state.timeline[method](target, { ...config, ...vars })
             else Logger.warn('amination method "%s" unknown', method)
         }
 

@@ -1,13 +1,13 @@
 export default {
 
     performance: {
-        renderMs: 3
+        renderMs: 5
     },
 
     //zoom
     zoom: {
         speed: 100,
-        throttle: 30, // one frame
+        throttle: 30, // once per frame
     },
 
     grid: {
@@ -86,9 +86,9 @@ export default {
     },
 
     padding: {
-        left: -0.1, // %
-        right: 0.3819, // % golden
-        top: 0.2, // %
-        bottom: 0.3819, // % golden
+        left: -20, // px
+        right: 250, // px
+        top: 90, // px
+        bottom: 150, // px
     },
 }

@@ -13,7 +13,7 @@ export declare abstract class BaseRenderer implements IRenderer {
     protected read(name: string): [any, any, any[]];
     protected get<T>(name: string, create: () => T, dependencies?: any[]): [T, any, any[]];
     private isEqual;
-    protected animate(name: string, animation: string): void;
+    protected animate(name: string, animation: string, vars?: object): void;
     abstract get rendererId(): symbol;
     protected abstract update(context: RenderingContext, container: Container): Container;
 }
