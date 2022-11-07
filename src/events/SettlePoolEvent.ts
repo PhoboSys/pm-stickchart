@@ -5,19 +5,19 @@ export class SettlePoolEvent extends Event {
 
     public readonly inner: Event
 
-    public readonly pool: object
+    public readonly poolid: string
     public readonly resolutionPrice: PricefeedPoint
     public readonly controlPrice: PricefeedPoint
 
     constructor(
-        pool: object,
+        poolid: string,
         resolutionPrice: PricefeedPoint,
         controlPrice: PricefeedPoint,
         inner: Event
     ) {
         super(SettlePoolEvent.NAME)
 
-        this.pool = pool
+        this.poolid = poolid
         this.resolutionPrice = resolutionPrice
         this.controlPrice = controlPrice
         this.inner = inner

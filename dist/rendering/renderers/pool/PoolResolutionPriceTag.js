@@ -4,28 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolResolutionPriceTag = void 0;
+const __1 = require("../..");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
-const pixi_1 = require("../../../lib/pixi");
 const index_1 = __importDefault(require("../../../lib/ui/index"));
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
-        this.textStyle = {
-            fill: 0xFFFFFF,
-            fontWeight: 600,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        };
         this.coverStyle = {
-            paddingx: 8,
-            paddingy: 5,
-            paddingRight: 10,
-            radius: 30,
-            color: 0x22273F,
-            lineStyle: {
-                color: 0xFFFFFF,
-                width: 2,
+            offset: [8, -8],
+            anchor: [0, 0],
+            textStyle: {
+                fill: 0xFFFFFF,
+                fontWeight: 700,
+                fontFamily: 'Gilroy',
+                fontSize: 13,
             }
         };
         this.configAnimations = {
@@ -43,7 +36,7 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
                 },
                 duration: 0.3,
                 ease: 'power2.out',
-                delay: 0.2,
+                delay: 0.1,
             }
         };
     }
@@ -67,20 +60,12 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [x] = datamath_1.default.scale([resolution.timestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([resolution.value], pricerange, height);
         const priceValue = index_1.default.currency(resolution.value, context.metapool.quote);
-        const [cover, coverState] = this.get('cover', () => this.createPriceText(priceValue));
+        const [cover, coverState] = this.get('cover', () => __1.GraphicUtils.createText(priceValue, [0, 0], this.coverStyle.textStyle, this.coverStyle.anchor));
         if (coverState.new)
             container.addChild(cover);
-        const textGraphic = cover.getChildAt(1);
-        textGraphic.text = priceValue;
-        const { paddingx, paddingy } = this.coverStyle;
-        const coverGraphic = cover.getChildAt(0);
-        const coverWidth = textGraphic.width + paddingx * 2;
-        const coverHeight = textGraphic.height + paddingy * 2;
-        coverGraphic.width = coverWidth;
-        coverGraphic.height = coverHeight;
-        coverGraphic.position.x = -coverWidth;
-        textGraphic.position.x = -coverWidth + paddingx;
-        cover.position.set(x + coverWidth + this.coverStyle.paddingRight, y);
+        cover.text = priceValue;
+        const [ofx, ofy] = this.coverStyle.offset;
+        cover.position.set(x + ofx, y + ofy);
         if (this.isHistoricalPool(pool, context)) {
             const poolid = pool.poolid;
             if (!coverState.subscribed) {
@@ -105,26 +90,6 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
                 this.animate('cover', 'fadeout');
             }
         }
-    }
-    createPriceText(priceValue) {
-        const { paddingx, paddingy } = this.coverStyle;
-        const text = new pixi_1.Text(priceValue, this.textStyle);
-        text.position.set(paddingx, paddingy);
-        const width = text.width + paddingx * 2;
-        const height = text.height + paddingy * 2;
-        const { radius, color } = this.coverStyle;
-        const cover = new pixi_1.Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill();
-        text.position.x = -width + paddingx;
-        cover.position.x = -width;
-        text.position.y = -height / 2 + paddingy;
-        cover.position.y = -height / 2;
-        const coveredText = new pixi_1.Container();
-        coveredText.addChild(cover, text);
-        return coveredText;
     }
 }
 exports.PoolResolutionPriceTag = PoolResolutionPriceTag;

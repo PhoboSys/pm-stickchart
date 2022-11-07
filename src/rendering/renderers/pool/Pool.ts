@@ -4,7 +4,7 @@ import { RenderingContext, DoneFunction, IRenderer } from '../..'
 import { PoolBackground } from './PoolBackground'
 import { PoolLock } from './PoolLock'
 import { PoolOpen } from './PoolOpen'
-import { PoolLockCountdown } from './PoolLockCountdown'
+import { PoolCountdown } from './PoolCountdown'
 import { PoolResolution } from './PoolResolution'
 import { PoolResolutionLine } from './PoolResolutionLine'
 import { PoolOpenPriceTag } from './PoolOpenPriceTag'
@@ -23,11 +23,11 @@ export class Pool implements IRenderer {
             new PoolBackground(renderer),
             new PoolLock(renderer),
             new PoolOpen(renderer),
-            new PoolLockCountdown(renderer),
             new PoolResolution(renderer),
             new PoolResolutionLine(renderer),
             new PoolResolutionPriceTag(renderer),
             new PoolOpenPriceTag(renderer),
+            new PoolCountdown(renderer),
         ])
     }
 

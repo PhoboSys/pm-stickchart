@@ -30,7 +30,7 @@ class BaseRenderer {
         done();
     }
     rebind(...path) {
-        this.stateprefix = (path || []).join('>');
+        this.stateprefix = !(0, utils_1.isEmpty)(path) ? path.join('>') + '>' : '';
     }
     clear(name) {
         var _a, _b, _c;
@@ -46,8 +46,8 @@ class BaseRenderer {
             if (name in this.local) {
                 infra_1.Logger.info('clear', name);
                 const [item, state] = this.local[name];
-                (_a = item.destroy) === null || _a === void 0 ? void 0 : _a.call(item);
-                (_c = (_b = state.timeline) === null || _b === void 0 ? void 0 : _b.kill) === null || _c === void 0 ? void 0 : _c.call(_b);
+                (_a = item === null || item === void 0 ? void 0 : item.destroy) === null || _a === void 0 ? void 0 : _a.call(item);
+                (_c = (_b = state === null || state === void 0 ? void 0 : state.timeline) === null || _b === void 0 ? void 0 : _b.kill) === null || _c === void 0 ? void 0 : _c.call(_b);
                 delete this.local[name];
             }
         }
@@ -91,7 +91,7 @@ class BaseRenderer {
         if (!config)
             return;
         const got = this.read(name);
-        if (!got)
+        if ((0, utils_1.isEmpty)(got))
             return;
         const [target, state] = got;
         if (state.animation !== animation) {

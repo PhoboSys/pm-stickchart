@@ -2,6 +2,7 @@ import { IGraphicStorage, RenderingCompositor } from '../..'
 import { RenderingContext, DoneFunction, IRenderer } from '../..'
 
 import { PariTile } from './PariTile'
+import { PariClaimBackground } from './PariClaimBackground'
 
 export class Pari implements IRenderer {
 
@@ -11,6 +12,7 @@ export class Pari implements IRenderer {
         private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
+            new PariClaimBackground(renderer),
             new PariTile(renderer),
         ])
     }

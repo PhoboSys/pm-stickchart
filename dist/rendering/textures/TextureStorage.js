@@ -13,6 +13,7 @@ const symbols_3 = require("./symbols");
 const symbols_4 = require("./symbols");
 const symbols_5 = require("./symbols");
 const symbols_6 = require("./symbols");
+const symbols_7 = require("./symbols");
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -109,15 +110,11 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_2.POOL_ROUND_TEXTURE]() {
+    [symbols_7.POOL_CLAIM_TEXTURE]() {
         const x0 = 0;
         const y0 = 0 + config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
-        const topcolor = '#00A573' + '00';
-        const middlecolor1 = '#00A573';
-        const middlecolor2 = '#F07750';
-        const bottomcolor = '#F07750' + '00';
         const { renderer } = this.application;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
             width: renderer.width,
@@ -125,12 +122,23 @@ class TextureStorage {
         }), {
             x0, y0,
             x1, y1,
-            colorStops: [
-                { color: topcolor, offset: 0.0 },
-                { color: middlecolor1, offset: 0.33 },
-                { color: middlecolor2, offset: 0.90 },
-                { color: bottomcolor, offset: 1.0 },
-            ],
+            colorStops: config_1.default.style.poolClaimaColors
+        });
+        return gradient;
+    }
+    [symbols_2.POOL_ROUND_TEXTURE]() {
+        const x0 = 0;
+        const y0 = 0 + config_1.default.padding.top;
+        const x1 = 0;
+        const y1 = this.application.screen.height;
+        const { renderer } = this.application;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
+            width: renderer.width,
+            height: renderer.height,
+        }), {
+            x0, y0,
+            x1, y1,
+            colorStops: config_1.default.style.poolRoundColors
         });
         return gradient;
     }
@@ -250,8 +258,24 @@ class TextureStorage {
         });
         return gradient;
     }
+    [symbols_3.RESOLUTION_COUNTDOWN_TEXTURE]() {
+        const { width, height } = this.application.screen;
+        const x0 = 0;
+        const y0 = 0;
+        const x1 = 0;
+        const y1 = height;
+        const renderer = this.application.renderer;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0,
+            y0,
+            x1,
+            y1,
+            colorStops: config_1.default.style.resolutionCountdownColors,
+        });
+        return gradient;
+    }
     [symbols_3.LOCK_COUNTDOWN_TEXTURE]() {
-        const { width, height, } = this.application.screen;
+        const { width, height } = this.application.screen;
         const x0 = 0;
         const y0 = 0;
         const x1 = 0;

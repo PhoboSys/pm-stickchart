@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PariTile = void 0;
+exports.PariResolutionLine = void 0;
 const infra_1 = require("../../../infra");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
@@ -14,199 +14,91 @@ const __1 = require("../..");
 const enums_1 = require("../../../enums");
 const symbols_1 = require("../../textures/symbols");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
-class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
+class PariResolutionLine extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
-        this.winlineStyle = {
-            [enums_1.EPosition.Up]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+        this.lineStyle = {
+            [enums_1.EPosition.Undefined]: {
+                circlStyle: {
+                    innerr: 3,
+                    outerr: 6,
+                    innerColor: 0x303550,
+                    outerColor: 0xFFFFFF,
+                },
                 lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
+                    color: 0xFFFFFF,
+                    width: 1,
+                }
+            },
+            [enums_1.EPosition.Up]: {
+                circlStyle: {
+                    innerr: 3,
+                    outerr: 6,
+                    innerColor: 0x303550,
+                    outerColor: config.style.resolution.upcolor,
+                },
+                lineStyle: {
+                    color: config.style.resolution.upcolor,
+                    width: 1,
                 }
             },
             [enums_1.EPosition.Down]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+                circlStyle: {
+                    innerr: 3,
+                    outerr: 6,
+                    innerColor: 0x303550,
+                    outerColor: config.style.resolution.downcolor,
+                },
                 lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
+                    color: config.style.resolution.downcolor,
+                    width: 1,
                 }
             },
             [enums_1.EPosition.Zero]: {
-                offsetTOP: [300, -6],
-                offsetBOTTOM: [300, 6],
+                circlStyle: {
+                    innerr: 3,
+                    outerr: 6,
+                    innerColor: 0x303550,
+                    outerColor: config.style.resolution.zerocolor,
+                },
                 lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
-                }
-            }
-        };
-        this.buttonStyle = {
-            [enums_1.EPosition.Up]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
-            },
-            [enums_1.EPosition.Down]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
-            },
-            [enums_1.EPosition.Zero]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
-            }
-        };
-        this.backgroundStyle = {
-            [enums_1.EPosition.Up]: {
-                anchor: [0, 0],
-                offset: [0, 40],
-                radiuses: [1, 20, 20, 1],
-                color: 0x22273F,
-                width: 300,
-                height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
+                    color: config.style.resolution.zerocolor,
+                    width: 1,
                 }
             },
-            [enums_1.EPosition.Down]: {
-                anchor: [0, -1],
-                offset: [0, -134],
-                radiuses: [1, 20, 20, 1],
-                color: 0x22273F,
-                width: 300,
-                height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
-                }
-            },
-            [enums_1.EPosition.Zero]: {
-                anchor: [-1, 0],
-                offset: [0, 8],
-                radiuses: [20, 1, 1, 20],
-                color: 0x22273F,
-                width: 300,
-                height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
-                }
-            }
-        };
-        this.iconStyle = {
-            size: 30,
-            offset: [16, 16]
-        };
-        this.wagerStyle = {
-            text: {
-                fill: 0xFFFFFF,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 16,
-            },
-            offset: [60, 28]
-        };
-        this.titlewagerStyle = {
-            text: {
-                fill: 0xB7BDD7,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 13,
-            },
-            offset: [60, 16]
-        };
-        this.prizeStyle = {
-            text: {
-                fill: 0xFFFFFF,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 16,
-            },
-            offset: [-22, 28],
-            anchor: [1, 0]
-        };
-        this.profitStyle = {
-            text: {
-                fill: 0xB7BDD7,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 13,
-            },
-            offset: [-22, 16],
-            anchor: [1, 0]
-        };
-        this.titleprofitStyle = {
-            text: {
-                fill: 0xB7BDD7,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 13,
-            },
-            offset: [-22, 16],
-            anchor: [1, 0]
-        };
-        this.validPariPositions = {
-            [enums_1.EPosition.Up]: enums_1.EPosition.Up,
-            [enums_1.EPosition.Down]: enums_1.EPosition.Down,
-            [enums_1.EPosition.Zero]: enums_1.EPosition.Zero,
         };
         this.configAnimations = {
-            winning_bg: {
+            winning_line: {
                 pixi: {
-                    alpha: 1.2,
-                    lineColor: 0xFFA000,
+                    alpha: 1.1,
+                },
+                duration: 0.5,
+                ease: 'back.out(4)',
+            },
+            loseing_line: {
+                pixi: {
+                    alpha: 0.7,
                 },
                 duration: 0.5,
                 ease: 'power2.out',
             },
-            loseing_bg: {
+            won_line: {
                 pixi: {
-                    alpha: 1,
-                    lineColor: 0xB7BDD7,
+                    alpha: 1.1,
                 },
                 duration: 0.5,
-                ease: 'power2.out',
+                ease: 'back.out(4)',
             },
-            won_bg: {
+            lost_line: {
                 pixi: {
-                    alpha: 1.2,
-                    lineColor: 0xFFA000,
+                    alpha: 0.4,
                 },
                 duration: 0.5,
                 ease: 'power2.out',
-                new: 'set'
-            },
-            lost_bg: {
-                pixi: {
-                    alpha: 1,
-                    lineColor: 0xB7BDD7,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
-            },
-            lost_contnet: {
-                pixi: {
-                    alpha: 0.6,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
             },
             winning_group: {
                 pixi: {
-                    alpha: 1,
+                    alpha: 1.3,
                     zIndex: 3,
                 },
                 duration: 0.5,
@@ -232,52 +124,37 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 duration: 0.5,
                 ease: 'back.out(4)',
                 clear: true,
+                new: 'set'
             },
             unhover_group_claimable: {
                 pixi: {
-                    alpha: 0,
+                    alpha: 1,
                     zIndex: 1,
                 },
-                duration: 0.6,
+                duration: 0.5,
                 ease: 'power2.out',
-                delay: 0.9,
-            },
-            hide_group_claimable: {
-                pixi: {
-                    alpha: 0,
-                    zIndex: 1,
-                },
-                duration: 0.6,
-                ease: 'power2.out',
-                delay: 5,
+                delay: 0.5,
                 new: 'set'
             },
             hover_group_unclaimable: {
                 pixi: {
-                    alpha: 0.7,
-                    zIndex: 3,
+                    alpha: 1,
+                    zIndex: 4,
                 },
                 duration: 0.3,
-                ease: 'power2.out',
+                ease: 'back.out(2)',
                 clear: true,
+                new: 'set'
             },
             unhover_group_unclaimable: {
                 pixi: {
                     alpha: 0,
                     zIndex: 0,
                 },
-                duration: 0.3,
+                duration: 0.5,
                 ease: 'power2.out',
                 delay: 0.5,
                 new: 'set'
-            },
-            hide_group: {
-                pixi: {
-                    alpha: 0,
-                    zIndex: 0,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
             },
             hover_claim: {
                 pixi: {
@@ -296,7 +173,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 duration: 0.5,
                 ease: 'power2.out',
             },
-            tab_claim: {
+            tab_paybtn: {
                 pixi: {
                     scale: 1.2,
                 },
@@ -309,78 +186,31 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         };
     }
     get rendererId() {
-        return PariTile.PARI_TILE_ID;
+        return PariResolutionLine.PARI_RESOLUTION_LINE_ID;
     }
     get animations() {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
-        if (!(pari.position in this.validPariPositions))
-            return this.clear();
-        const rprice = this.getResolutionPricePoint(pool, context);
-        const resolution = this.getPoolResolutionByPrice(pool, rprice);
-        const win = pari.position === resolution;
-        this.updateTile(pool, pari, context, container, win);
-        this.updateLine(pool, pari, context, container, win);
+        this.updateTile(pool, pari, context, container);
     }
-    updateLine(pool, pari, context, container, win) {
-        const [group] = this.read('group');
-        if (!win || !group || !this.isHistoricalPool(pool, context))
-            return this.clear('line');
-        const { height } = context.screen;
-        const { pricerange } = context.plotdata;
-        const { openPriceValue } = pool;
-        const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
-        const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
-        if (linestate.new)
-            group.addChild(line);
-        const [topx, topy] = this.winlineStyle[pari.position].offsetTOP;
-        const [botx, boty] = this.winlineStyle[pari.position].offsetBOTTOM;
-        line
-            .clear()
-            .lineStyle(this.winlineStyle[pari.position].lineStyle)
-            .moveTo(0 + topx, 0)
-            .lineTo(0 + topx, oy + topy)
-            .moveTo(0 + botx, oy + boty)
-            .lineTo(0 + botx, height);
-        line.position.y = -group.position.y;
-    }
-    updateTile(pool, pari, context, container, win) {
+    updateTile(pool, pari, context, container) {
         var _a;
+        const position = pari.position in enums_1.EPosition ? pari.position : enums_1.EPosition.Undefined;
         const { width, height, } = context.screen;
         const poolid = pool.poolid;
         const pariid = pari.pariid;
-        if (!win && this.isHistoricalPool(pool, context)) {
-            this.animate('group', 'hide_group', {
-                onComplete: () => {
-                    this.rebind(poolid, pariid);
-                    this.clear();
-                }
-            });
-            return;
-        }
         const erc20 = pari.erc20;
-        const position = pari.position;
-        const { timerange, pricerange } = context.plotdata;
-        const { openPriceTimestamp, openPriceValue } = pool;
+        const { timerange, paddingY: [top, bottom] } = context.plotdata;
+        const { openPriceTimestamp } = pool;
         const [ox] = datamath_1.default.scale([openPriceTimestamp], timerange, width);
-        const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
         const bgStyle = this.backgroundStyle[position];
         const [ax, ay] = bgStyle.anchor;
         const [ofx, ofy] = bgStyle.offset;
         const bgwidth = bgStyle.width;
-        const bgx = ox + bgwidth * ax + ofx;
-        let vertical = null;
-        if (position === enums_1.EPosition.Up)
-            vertical = 0;
-        if (position === enums_1.EPosition.Zero)
-            vertical = oy;
-        if (position === enums_1.EPosition.Down)
-            vertical = height;
-        if (vertical === null)
-            return this.clear();
         const bgheight = bgStyle.height;
-        const bgy = vertical + bgheight * ay + ofy;
+        const bgx = ox + bgwidth * ax + ofx;
+        const bgy = top - bgheight * ay + ofy;
         const [group, groupstate] = this.get('group', () => new pixi_1.Container());
         if (groupstate.new) {
             group.alpha = 0;
@@ -390,13 +220,13 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             container.addChild(group);
         }
         group.position.set(bgx, bgy);
-        const [background, backgroundState] = this.get('background', () => this.createBackground(position));
+        const [background, backgroundState] = this.get('background', () => this.createBackground(pari.position));
         if (backgroundState.new)
             group.addChild(background);
         const [content, contentState] = this.get('content', () => new pixi_1.Container());
         if (contentState.new)
             group.addChild(content);
-        const [icon, iconState] = this.get('icon', () => this.createIcon(context, position));
+        const [icon, iconState] = this.get('icon', () => this.createIcon(context, pari.position));
         if (iconState.new)
             content.addChild(icon);
         const [wager, wagerState] = this.get('wager', () => __1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle.offset, this.wagerStyle.text));
@@ -413,9 +243,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         ], this.titleprofitStyle.text, this.titleprofitStyle.anchor));
         if (titleprofitState.new)
             content.addChild(titleprofit);
+        const rprice = this.getResolutionPricePoint(pool, context);
+        const resolution = this.getPoolResolutionByPrice(pool, rprice);
+        const win = pari.position === resolution;
         if (win) {
             this.clear('zero');
-            const [prizeAmount] = this.get('prizeAmount', () => ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, position)), [pari.wager, pool.prizefunds]);
+            const [prizeAmount] = this.get('prizeAmount', () => ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pool.prizefunds]);
             const [pzox, pzoy] = this.prizeStyle.offset;
             const [prize, prizeState] = this.get('prize', () => __1.GraphicUtils.createText(prizeAmount, [
                 bgwidth + pzox,
@@ -424,7 +257,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (prizeState.new)
                 content.addChild(prize);
             prize.text = prizeAmount;
-            const [profitPercent] = this.get('profitPercent', () => ui_1.default.percent((0, calc_utils_1.actualProfitPercent)(pool.prizefunds, pari.wager, position)), [pari.wager, pool.prizefunds]);
+            const [profitPercent] = this.get('profitPercent', () => ui_1.default.percent((0, calc_utils_1.actualProfitPercent)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pool.prizefunds]);
             const [ptox, ptoy] = this.profitStyle.offset;
             const [profit, profitState] = this.get('profit', () => __1.GraphicUtils.createText(profitPercent, [
                 bgwidth + ptox,
@@ -459,7 +292,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed]);
             if (claimable) {
                 if (groupstate.animation !== 'hover_group_claimable')
-                    this.animate('group', 'hide_group_claimable');
+                    this.animate('group', 'unhover_group_claimable');
             }
             else {
                 if (groupstate.animation !== 'hover_group_unclaimable')
@@ -482,17 +315,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         this.rebind(poolid, pariid);
                         this.animate('group', 'hover_group_claimable');
                         this.animate('claim', 'hover_claim');
-                        context.eventTarget.dispatchEvent(new events_1.PoolHoverEvent(poolid, e));
                     });
                     claim.addEventListener('pointerout', (e) => {
                         this.rebind(poolid, pariid);
                         this.animate('group', 'unhover_group_claimable');
                         this.animate('claim', 'unhover_claim');
-                        context.eventTarget.dispatchEvent(new events_1.PoolUnhoverEvent(poolid, e));
                     });
                     claim.addEventListener('pointertap', (e) => {
                         this.rebind(poolid, pariid);
-                        this.animate('claim', 'tab_claim');
+                        this.animate('claim', 'tab_paybtn');
                         const [rslvd] = this.read('resolved');
                         const [sttlmnt] = this.read('settlement');
                         if (rslvd) {
@@ -591,6 +422,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return background;
     }
 }
-exports.PariTile = PariTile;
-PariTile.PARI_TILE_ID = Symbol('PARI_TILE_ID');
-//# sourceMappingURL=PariTile.js.map
+exports.PariResolutionLine = PariResolutionLine;
+PariResolutionLine.PARI_RESOLUTION_LINE_ID = Symbol('PARI_RESOLUTION_LINE_ID');
+//# sourceMappingURL=PariResolutionLine.js.map

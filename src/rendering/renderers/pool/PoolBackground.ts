@@ -18,7 +18,7 @@ export class PoolBackground extends BasePoolsRenderer {
     }
 
     private configAnimations: any = {
-        fadein: {
+        hover_group: {
             pixi: {
                 alpha: 0.1,
             },
@@ -26,14 +26,20 @@ export class PoolBackground extends BasePoolsRenderer {
             ease: 'back.out(4)',
             clear: true,
         },
-        fadeout: {
+        unhover_group: {
             pixi: {
                 alpha: 0,
             },
             duration: 0.5,
             ease: 'power2.out',
             delay: 0.5,
-            new: 'set'
+        },
+        actual_group: {
+            pixi: {
+                alpha: 0.15,
+            },
+            duration: 0.5,
+            ease: 'back.out(4)',
         }
     }
 
@@ -46,6 +52,8 @@ export class PoolBackground extends BasePoolsRenderer {
         context: RenderingContext,
         container: Container,
     ): void {
+
+        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
         this.updateBackground(pool, context, container)
 
@@ -63,8 +71,15 @@ export class PoolBackground extends BasePoolsRenderer {
         } = context.screen
 
         const { timerange } = context.plotdata
-        const { openDate, resolutionDate, poolid } = pool
-        const [ox, rx] = datamath.scale([openDate, resolutionDate], timerange, width)
+        const { openPriceTimestamp, resolutionDate, poolid } = pool
+
+        let rdate = resolutionDate
+        if (this.isHistoricalPool(pool, context)) {
+            const resolution = this.getResolutionPricePoint(pool, context)
+            if (resolution?.timestamp) rdate = resolution?.timestamp
+        }
+
+        const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)
 
         const shape = [
             ox, 0,
@@ -99,22 +114,21 @@ export class PoolBackground extends BasePoolsRenderer {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid)
-                    this.animate('group', 'fadein')
+                    this.animate('group', 'hover_group')
                 })
                 context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid)
-                    this.animate('group', 'fadeout')
+                    this.animate('group', 'unhover_group')
                 })
             }
 
-            if (groupstate.animation !== 'fadein') {
-                this.animate('group', 'fadeout')
-            }
-        } else if (this.isActualPool(pool)) {
-            group.alpha = 0.15
+            if (groupstate.animation !== 'hover_group') this.animate('group', 'unhover_group')
+
         }
+
+        if (this.isActualPool(pool)) this.animate('group', 'actual_group')
 
     }
 

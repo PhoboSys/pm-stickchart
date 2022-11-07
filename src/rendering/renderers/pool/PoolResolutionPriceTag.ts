@@ -15,25 +15,14 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
 
     static readonly POOL_RESOLUTION_PRICE_TAG_ID: symbol = Symbol('POOL_RESOLUTION_PRICE_TAG_ID')
 
-    private textStyle: any = {
-        fill: 0xFFFFFF,
-        fontWeight: 600,
-        fontFamily: 'Gilroy',
-        fontSize: 13,
-    }
-
     private coverStyle: any = {
-        paddingx: 8,
-        paddingy: 5,
-
-        paddingRight: 10,
-
-        radius: 30,
-        color: 0x22273F,
-
-        lineStyle: {
-            color: 0xFFFFFF,
-            width: 2,
+        offset: [8, -8],
+        anchor: [0, 0],
+        textStyle: {
+            fill: 0xFFFFFF,
+            fontWeight: 700,
+            fontFamily: 'Gilroy',
+            fontSize: 13,
         }
     }
 
@@ -52,7 +41,7 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
             },
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.2,
+            delay: 0.1,
         }
     }
 
@@ -97,27 +86,21 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
 
         const [x] = datamath.scale([resolution.timestamp], timerange, width)
         const [y] = datamath.scaleReverse([resolution.value], pricerange, height)
-
         const priceValue = ui.currency(resolution.value, context.metapool.quote)
-        const [cover, coverState] = this.get('cover', () => this.createPriceText(priceValue))
+
+        const [cover, coverState] = this.get('cover', () => GraphicUtils.createText(
+                priceValue,
+                [0, 0],
+                this.coverStyle.textStyle,
+                this.coverStyle.anchor,
+            )
+        )
         if (coverState.new) container.addChild(cover)
 
-        const textGraphic = <Text>cover.getChildAt(1)
-        textGraphic.text = priceValue
+        cover.text = priceValue
 
-        const { paddingx, paddingy } = this.coverStyle
-        const coverGraphic = <Graphics>cover.getChildAt(0)
-
-        const coverWidth = textGraphic.width + paddingx * 2
-        const coverHeight = textGraphic.height + paddingy * 2
-
-        coverGraphic.width = coverWidth
-        coverGraphic.height = coverHeight
-
-        coverGraphic.position.x = -coverWidth
-        textGraphic.position.x = -coverWidth + paddingx
-
-        cover.position.set(x + coverWidth + this.coverStyle.paddingRight, y)
+        const [ofx, ofy] = this.coverStyle.offset
+        cover.position.set(x+ofx, y+ofy)
 
         if (this.isHistoricalPool(pool, context)) {
             const poolid = pool.poolid
@@ -143,35 +126,6 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
                 this.animate('cover', 'fadeout')
             }
         }
-
-    }
-
-    private createPriceText(priceValue): Container {
-        const { paddingx, paddingy } = this.coverStyle
-
-        const text = new Text(priceValue, this.textStyle)
-        text.position.set(paddingx, paddingy)
-
-        const width = text.width + paddingx * 2
-        const height = text.height + paddingy * 2
-
-        const { radius, color } = this.coverStyle
-        const cover = new Graphics()
-            .beginFill(color)
-            .lineStyle(this.coverStyle.lineStyle)
-            .drawRoundedRect(0, 0, width, height, radius)
-            .endFill()
-
-        text.position.x = -width + paddingx
-        cover.position.x = -width
-
-        text.position.y = -height / 2 + paddingy
-        cover.position.y = -height / 2
-
-        const coveredText = new Container()
-        coveredText.addChild(cover, text)
-
-        return coveredText
     }
 
 }

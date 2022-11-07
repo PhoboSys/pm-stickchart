@@ -27,7 +27,7 @@ class PoolLock extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.actualCoverStyle = {
             paddingx: 7,
             paddingy: 5,
-            paddingTop: 30,
+            paddingTop: 10,
             paddingLeft: 10,
             radiuses: [8, 8, 8, 2],
             color: 0xFFA000,

@@ -12,37 +12,36 @@ export class PoolOpen extends BasePoolsRenderer {
 
     static readonly POOL_OPEN_ID: symbol = Symbol('POOL_OPEN_ID')
 
-    private historicalLineStyle: any = {
-        color: 0xFFFFFF,
-        width: 2,
-        alpha: 0,
-    }
+    private openBorder: any = {
 
-    private lineStyle: any  = {
-        width: 2,
-        join: 'round',
-        cap: 'round',
-        gap: 10,
-        dash: 10,
-        color: 0xB7BDD7,
-    }
+        lineStyle: {
+            width: 2,
+            join: 'round',
+            cap: 'round',
+            gap: 10,
+            dash: 10,
+            color: 0xB7BDD7,
+            alpha: 1,
+        },
 
-    private textStyle: any  = {
-        fontWeight: 600,
-        fontFamily: 'Gilroy',
-        fontSize: 12,
-        fill: 0x22273F,
-    }
+        textStyle: {
+            fontWeight: 600,
+            fontFamily: 'Gilroy',
+            fontSize: 12,
+            fill: 0x22273F,
+        },
 
-    private coverStyle: any = {
-        paddingx: 10,
-        paddingy: 4,
+        coverStyle: {
+            paddingx: 10,
+            paddingy: 4,
 
-        paddingTop: 30,
-        paddingRight: 10,
+            paddingTop: 10,
+            paddingRight: 10,
 
-        radiuses: [8, 8, 2, 8],
-        color: 0xB7BDD7,
+            radiuses: [8, 8, 2, 8],
+            color: 0xB7BDD7,
+        },
+
     }
 
     public get rendererId(): symbol {
@@ -55,69 +54,51 @@ export class PoolOpen extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (this.isActualPool(pool)) {
+        if (!this.isActualPool(pool)) return this.clear()
 
-            this.clearHistoricalPool()
-            this.updateActualPool(pool, context, container)
-
-        } else {
-
-            this.clearActualPool()
-            this.updateHistoricalPool(pool, context, container)
-
-        }
+        this.updateOpenLine(pool, context, container)
 
     }
 
-    private clearActualPool() {
-        this.clear('actualtitle')
-        this.clear('actualline')
-    }
-
-    private clearHistoricalPool() {
-        this.clear('historicalline')
-    }
-
-    private updateActualPool(
+    private updateOpenLine(
         pool: any,
         context: RenderingContext,
-        container: Container
+        container: Container,
     ): void {
-
-        const {
-            width,
-            height
-        } = context.screen
-
+        const { width, height} = context.screen
         const { timerange } = context.plotdata
-        const [x] = datamath.scale([pool.openDate], timerange, width)
+        const [x] = datamath.scale([pool.openPriceTimestamp], timerange, width)
+        const style = this.openBorder
 
-        const [title, titlestate] = this.get('actualtitle', () => this.createTitle())
+        const [title, titlestate] = this.get('title', () => this.createTitle('Open', style))
 
         title.position.set(
-            x - this.coverStyle.paddingRight,
-            this.coverStyle.paddingTop
+            x - style.coverStyle.paddingRight,
+            style.coverStyle.paddingTop
         )
         if (titlestate.new) container.addChild(title)
 
-        const [line, linestate] = this.get('actualline', () => this.createLine(context))
+        const [line, linestate] = this.get('line', () => GraphicUtils.createVerticalDashLine(
+                0,
+                [0, height],
+                style.lineStyle
+            )
+        )
+        if (linestate.new) container.addChild(line)
 
         line.position.x = x
         line.height = height
-
-        if (linestate.new) container.addChild(line)
     }
 
-    private createTitle(): Container {
-        const { paddingx, paddingy } = this.coverStyle
+    private createTitle(title: string, style: { coverStyle: any, textStyle: any, lineStyle: any }): Container {
+        const { paddingx, paddingy } = style.coverStyle
 
-        const text = new Text('Open', this.textStyle)
-        text.position.set(paddingx, paddingy)
+        const text = GraphicUtils.createText(title, [paddingx, paddingy], style.textStyle)
 
         const width = text.width + paddingx * 2
         const height = text.height + paddingy * 2
 
-        const { radiuses, color } = this.coverStyle
+        const { radiuses, color } = style.coverStyle
         const cover = GraphicUtils.createRoundedRect(
             [0, 0],
             [width, height],
@@ -128,55 +109,10 @@ export class PoolOpen extends BasePoolsRenderer {
         text.position.x = -width + paddingx
         cover.position.x = -width
 
-        const title = new Container()
-        title.addChild(cover, text)
+        const group = new Container()
+        group.addChild(cover, text)
 
-        return title
-    }
-
-    private createLine(context: RenderingContext): Graphics {
-        const { height } = context.screen
-
-        const dash = GraphicUtils.createVerticalDashLine(
-            0,
-            [0, height],
-            this.lineStyle
-        )
-
-        return dash
-    }
-
-    private updateHistoricalPool(
-        pool: any,
-        context: RenderingContext,
-        container: Container,
-    ): void {
-
-        const {
-            width,
-            height
-        } = context.screen
-
-        const { timerange } = context.plotdata
-        const [x] = datamath.scale([pool.openDate], timerange, width)
-
-        const [line, linestate] = this.get('historicalline', () => this.createHistoricalPoolLine(context))
-        if (linestate.new) container.addChild(line)
-
-        line.position.x = x + this.historicalLineStyle.width
-        line.height = height
-    }
-
-    private createHistoricalPoolLine(context: RenderingContext): Graphics {
-        const { height } = context.screen
-
-        const line = GraphicUtils.createLine(
-            [0, 0],
-            [0, height],
-            this.historicalLineStyle,
-        )
-
-        return line
+        return group
     }
 
 }

@@ -5,7 +5,7 @@ const __1 = require("../..");
 const PoolBackground_1 = require("./PoolBackground");
 const PoolLock_1 = require("./PoolLock");
 const PoolOpen_1 = require("./PoolOpen");
-const PoolLockCountdown_1 = require("./PoolLockCountdown");
+const PoolCountdown_1 = require("./PoolCountdown");
 const PoolResolution_1 = require("./PoolResolution");
 const PoolResolutionLine_1 = require("./PoolResolutionLine");
 const PoolOpenPriceTag_1 = require("./PoolOpenPriceTag");
@@ -19,11 +19,11 @@ class Pool {
             new PoolBackground_1.PoolBackground(renderer),
             new PoolLock_1.PoolLock(renderer),
             new PoolOpen_1.PoolOpen(renderer),
-            new PoolLockCountdown_1.PoolLockCountdown(renderer),
             new PoolResolution_1.PoolResolution(renderer),
             new PoolResolutionLine_1.PoolResolutionLine(renderer),
             new PoolResolutionPriceTag_1.PoolResolutionPriceTag(renderer),
             new PoolOpenPriceTag_1.PoolOpenPriceTag(renderer),
+            new PoolCountdown_1.PoolCountdown(renderer),
         ]);
     }
     render(context, done) {

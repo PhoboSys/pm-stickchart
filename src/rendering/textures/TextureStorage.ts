@@ -7,11 +7,13 @@ import { ITextureStorage } from '../abstraction'
 
 import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'
-import { LOCK_COUNTDOWN_TEXTURE } from './symbols'
+import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from './symbols'
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols'
 
 import { LOCK_ICON_TEXTURE, UP_ICON_TEXTURE, DOWN_ICON_TEXTURE } from './symbols'
 import { ZERO_ICON_TEXTURE, UNDEFINED_ICON_TEXTURE } from './symbols'
+
+import { POOL_CLAIM_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
 
@@ -143,16 +145,11 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [POOL_ROUND_TEXTURE](): RenderTexture {
+    private [POOL_CLAIM_TEXTURE](): RenderTexture {
         const x0 = 0
         const y0 = 0 + config.padding.top
         const x1 = 0
         const y1 = this.application.screen.height
-
-        const topcolor = '#00A573' + '00'
-        const middlecolor1 = '#00A573'
-        const middlecolor2 = '#F07750'
-        const bottomcolor = '#F07750' + '00'
 
         const { renderer } = this.application
         const gradient = GradientFactory.createLinearGradient(
@@ -164,12 +161,30 @@ export class TextureStorage implements ITextureStorage {
             {
                 x0, y0,
                 x1, y1,
-                colorStops : [
-                    { color: topcolor, offset: 0.0 },
-                    { color: middlecolor1, offset: 0.33 },
-                    { color: middlecolor2, offset: 0.90 },
-                    { color: bottomcolor, offset: 1.0 },
-                ],
+                colorStops: config.style.poolClaimaColors
+            },
+        )
+
+        return gradient
+    }
+
+    private [POOL_ROUND_TEXTURE](): RenderTexture {
+        const x0 = 0
+        const y0 = 0 + config.padding.top
+        const x1 = 0
+        const y1 = this.application.screen.height
+
+        const { renderer } = this.application
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer>renderer,
+            RenderTexture.create({
+                width: renderer.width,
+                height: renderer.height,
+            }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops: config.style.poolRoundColors
             },
         )
 
@@ -323,8 +338,32 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
+    private [RESOLUTION_COUNTDOWN_TEXTURE](): RenderTexture {
+        const { width, height } = this.application.screen
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const renderer = <Renderer> this.application.renderer
+        const gradient = GradientFactory.createLinearGradient(
+            renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0,
+                y0,
+                x1,
+                y1,
+                colorStops: config.style.resolutionCountdownColors,
+            },
+        )
+
+        return gradient
+    }
+
     private [LOCK_COUNTDOWN_TEXTURE](): RenderTexture {
-        const { width, height, } = this.application.screen
+        const { width, height } = this.application.screen
 
         const x0 = 0
         const y0 = 0

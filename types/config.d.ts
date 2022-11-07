@@ -1,4 +1,7 @@
 declare const _default: {
+    pari: {
+        historical: boolean;
+    };
     performance: {
         renderMs: number;
     };
@@ -47,7 +50,19 @@ declare const _default: {
             downcolor: number;
             zerocolor: number;
         };
+        poolRoundColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolClaimaColors: {
+            color: string;
+            offset: number;
+        }[];
         lockCountdownColors: {
+            color: string;
+            offset: number;
+        }[];
+        resolutionCountdownColors: {
             color: string;
             offset: number;
         }[];

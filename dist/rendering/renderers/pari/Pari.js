@@ -3,10 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pari = void 0;
 const __1 = require("../..");
 const PariTile_1 = require("./PariTile");
+const PariClaimBackground_1 = require("./PariClaimBackground");
 class Pari {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new __1.RenderingCompositor([
+            new PariClaimBackground_1.PariClaimBackground(renderer),
             new PariTile_1.PariTile(renderer),
         ]);
     }

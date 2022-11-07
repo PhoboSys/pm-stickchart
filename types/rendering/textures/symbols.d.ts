@@ -11,3 +11,5 @@ export declare const UP_ICON_TEXTURE: unique symbol;
 export declare const DOWN_ICON_TEXTURE: unique symbol;
 export declare const ZERO_ICON_TEXTURE: unique symbol;
 export declare const UNDEFINED_ICON_TEXTURE: unique symbol;
+export declare const RESOLUTION_COUNTDOWN_TEXTURE: unique symbol;
+export declare const POOL_CLAIM_TEXTURE: unique symbol;

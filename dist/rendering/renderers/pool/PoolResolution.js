@@ -36,7 +36,7 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.coverStyle = {
             paddingx: 10,
             paddingy: 5,
-            paddingTop: 30,
+            paddingTop: 10,
             paddingLeft: 10,
             radiuses: [8, 8, 8, 2],
         };

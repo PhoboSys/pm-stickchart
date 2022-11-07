@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SettlePoolEvent = void 0;
 class SettlePoolEvent extends Event {
-    constructor(pool, resolutionPrice, controlPrice, inner) {
+    constructor(poolid, resolutionPrice, controlPrice, inner) {
         super(SettlePoolEvent.NAME);
-        this.pool = pool;
+        this.poolid = poolid;
         this.resolutionPrice = resolutionPrice;
         this.controlPrice = controlPrice;
         this.inner = inner;

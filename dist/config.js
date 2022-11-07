@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
+    pari: {
+        historical: true,
+    },
     performance: {
         renderMs: 5
     },
@@ -48,12 +51,31 @@ exports.default = {
             downcolor: 0xF05750,
             zerocolor: 0x007397,
         },
+        poolRoundColors: [
+            { color: '#00A57300', offset: 0.0 },
+            { color: '#00A573FF', offset: 0.33 },
+            { color: '#F07750FF', offset: 0.90 },
+            { color: '#F0775000', offset: 1 },
+        ],
+        poolClaimaColors: [
+            { color: '#F7514D00', offset: 0 },
+            { color: '#FC8E5FFF', offset: 0.2 },
+            { color: '#FBC88BFF', offset: 0.9 },
+            { color: '#FBC88B00', offset: 1 },
+        ],
         lockCountdownColors: [
             { color: '#FFA00000', offset: 0 },
             { color: '#FFA00000', offset: 0.05 },
             { color: '#FFA000FF', offset: 0.5 },
             { color: '#FFA00000', offset: 0.95 },
             { color: '#FFA00000', offset: 1 },
+        ],
+        resolutionCountdownColors: [
+            { color: '#00979700', offset: 0 },
+            { color: '#00979700', offset: 0.05 },
+            { color: '#009797FF', offset: 0.5 },
+            { color: '#00979700', offset: 0.95 },
+            { color: '#00979700', offset: 1 },
         ],
         levels: {
             royalLineColors: [0xDDDFDE, 0xB3B7B8],
@@ -79,9 +101,9 @@ exports.default = {
     },
     padding: {
         left: -20,
-        right: 250,
-        top: 90,
-        bottom: 150, // px
+        right: 450,
+        top: 113,
+        bottom: 210, // px
     },
 };
 //# sourceMappingURL=config.js.map

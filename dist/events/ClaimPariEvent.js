@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClaimPariEvent = void 0;
 class ClaimPariEvent extends Event {
-    constructor(pari, inner) {
+    constructor(pariid, erc20, inner) {
         super(ClaimPariEvent.NAME);
         this.inner = inner;
-        this.pari = pari;
+        this.pariid = pariid;
+        this.erc20 = erc20;
     }
 }
 exports.ClaimPariEvent = ClaimPariEvent;

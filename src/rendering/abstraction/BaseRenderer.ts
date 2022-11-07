@@ -5,7 +5,7 @@ import cfg from '../../config'
 import { Logger } from '../../infra'
 
 import { Container, gsap } from '../../lib/pixi'
-import { isFunction } from '../../lib/utils'
+import { isFunction, isEmpty } from '../../lib/utils'
 
 export abstract class BaseRenderer implements IRenderer {
 
@@ -40,7 +40,7 @@ export abstract class BaseRenderer implements IRenderer {
     }
 
     protected rebind(...path): void {
-        this.stateprefix = (path || []).join('>')
+        this.stateprefix = !isEmpty(path) ? path.join('>') + '>' : ''
     }
 
     protected clear(name?: string): void {
@@ -57,8 +57,8 @@ export abstract class BaseRenderer implements IRenderer {
                 Logger.info('clear', name)
                 const [item, state] = this.local[name]
 
-                item.destroy?.()
-                state.timeline?.kill?.()
+                item?.destroy?.()
+                state?.timeline?.kill?.()
                 delete this.local[name]
             }
         }
@@ -127,7 +127,7 @@ export abstract class BaseRenderer implements IRenderer {
         if (!config) return
 
         const got = this.read(name)
-        if (!got) return
+        if (isEmpty(got)) return
 
         const [target, state] = got
 
