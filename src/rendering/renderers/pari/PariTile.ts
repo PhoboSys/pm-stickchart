@@ -13,7 +13,8 @@ import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } fro
 import { GraphicUtils } from '../..'
 import { EPosition } from '../../../enums'
 
-import { UP_ICON_TEXTURE, DOWN_ICON_TEXTURE, ZERO_ICON_TEXTURE, UNDEFINED_ICON_TEXTURE } from '../../textures/symbols'
+import { UP_ICON_TEXTURE, DOWN_ICON_TEXTURE, ZERO_ICON_TEXTURE } from '../../textures'
+import { UNDEFINED_ICON_TEXTURE, GRADIENT_TEXTURE } from '../../textures'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
 
@@ -80,47 +81,83 @@ export class PariTile extends BaseParisRenderer {
 
     }
 
-    private backgroundStyle: any = {
+    private groupStyle: any = {
 
         [EPosition.Up]: {
             anchor: [0, 0],
             offset: [0, 40],
-            radiuses: [1, 20, 20, 1],
-            color: 0x22273F,
             width: 300,
             height: 62,
-            lineStyle: {
-                color: 0xB7BDD7,
-                width: 2,
-                alpha: 1,
-            }
+            background: {
+                offset: [3, 0],
+                radiuses: [1, 20, 20, 1],
+                color: 0x22273F,
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                    alpha: 1,
+                },
+                shadow: {
+                    points: [0, 0, 300, 0],
+                    colorStops: [
+                        { color: '#22273FFF', offset: 0 },
+                        { color: '#22273FFF', offset: 0.01 },
+                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 1 },
+                    ]
+                },
+            },
         },
 
         [EPosition.Down]: {
             anchor: [0, -1],
             offset: [0, -134],
-            radiuses: [1, 20, 20, 1],
-            color: 0x22273F,
             width: 300,
             height: 62,
-            lineStyle: {
-                color: 0xB7BDD7,
-                width: 2,
-                alpha: 1,
+            background: {
+                offset: [3, 0],
+                radiuses: [1, 20, 20, 1],
+                color: 0x22273F,
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                    alpha: 1,
+                },
+                shadow: {
+                    points: [0, 0, 300, 0],
+                    colorStops: [
+                        { color: '#22273FFF', offset: 0 },
+                        { color: '#22273FFF', offset: 0.01 },
+                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 1 },
+                    ]
+                },
             }
         },
 
         [EPosition.Zero]: {
             anchor: [-1, 0],
             offset: [0, 8],
-            radiuses: [20, 1, 1, 20],
-            color: 0x22273F,
             width: 300,
             height: 62,
-            lineStyle: {
-                color: 0xB7BDD7,
-                width: 2,
-                alpha: 1,
+            background: {
+                offset: [-3, 0],
+                radiuses: [20, 1, 1, 20],
+                color: 0x22273F,
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                    alpha: 1,
+                },
+                shadow: {
+                    points: [300, 0, 0, 0],
+                    colorStops: [
+                        { color: '#22273FFF', offset: 0 },
+                        { color: '#22273FFF', offset: 0.01 },
+                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 1 },
+                    ]
+                },
             }
         }
 
@@ -193,7 +230,7 @@ export class PariTile extends BaseParisRenderer {
     private configAnimations: any = {
         winning_bg: {
             pixi: {
-                alpha: 1.2,
+                alpha: 1,
                 lineColor: 0xFFA000,
             },
             duration: 0.5,
@@ -209,7 +246,7 @@ export class PariTile extends BaseParisRenderer {
         },
         won_bg: {
             pixi: {
-                alpha: 1.2,
+                alpha: 1.1,
                 lineColor: 0xFFA000,
             },
             duration: 0.5,
@@ -220,6 +257,14 @@ export class PariTile extends BaseParisRenderer {
             pixi: {
                 alpha: 1,
                 lineColor: 0xB7BDD7,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            new: 'set'
+        },
+        unclaimable_contnet: {
+            pixi: {
+                alpha: 0.7,
             },
             duration: 0.5,
             ease: 'power2.out',
@@ -255,7 +300,7 @@ export class PariTile extends BaseParisRenderer {
         },
         hover_group_claimable: {
             pixi: {
-                alpha: 1.1,
+                alpha: 1,
                 zIndex: 4,
             },
             duration: 0.5,
@@ -267,7 +312,7 @@ export class PariTile extends BaseParisRenderer {
                 alpha: 0,
                 zIndex: 1,
             },
-            duration: 0.6,
+            duration: 0.3,
             ease: 'power2.out',
             delay: 0.9,
         },
@@ -283,7 +328,7 @@ export class PariTile extends BaseParisRenderer {
         },
         hover_group_unclaimable: {
             pixi: {
-                alpha: 0.7,
+                alpha: 0.9,
                 zIndex: 3,
             },
             duration: 0.3,
@@ -429,7 +474,7 @@ export class PariTile extends BaseParisRenderer {
         const [ox] = datamath.scale([openPriceTimestamp], timerange, width)
         const [oy] = datamath.scaleReverse([openPriceValue], pricerange, height)
 
-        const bgStyle = this.backgroundStyle[position]
+        const bgStyle = this.groupStyle[position]
         const [ax, ay] = bgStyle.anchor
         const [ofx, ofy] = bgStyle.offset
 
@@ -457,7 +502,7 @@ export class PariTile extends BaseParisRenderer {
         }
         group.position.set(bgx, bgy)
 
-        const [background, backgroundState] = this.get('background', () => this.createBackground(position))
+        const [background, backgroundState] = this.get('background', () => this.createBackground(position, context))
         if (backgroundState.new) group.addChild(background)
 
         const [content, contentState] = this.get('content', () => new Container())
@@ -575,14 +620,15 @@ export class PariTile extends BaseParisRenderer {
 
         if (this.isHistoricalPool(pool, context)) {
 
+            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed])
             if (win) {
                 this.animate('background', 'won_bg')
+                if (!claimable) this.animate('content', 'unclaimable_contnet')
             } else {
                 this.animate('background', 'lost_bg')
                 this.animate('content', 'lost_contnet')
             }
 
-            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed])
 
             if (claimable) {
                 if (groupstate.animation !== 'hover_group_claimable') this.animate('group', 'hide_group_claimable')
@@ -742,15 +788,45 @@ export class PariTile extends BaseParisRenderer {
         return icon
     }
 
-    private createBackground(position: EPosition): Container {
-        const { radiuses, color, width, height, lineStyle, anchor } = this.backgroundStyle[position]
-        const background = GraphicUtils.createRoundedRect(
-            [0, 0],
+    private createBackground(position: EPosition, context: RenderingContext): Container {
+        const {
+            width,
+            height,
+            background: {
+                offset: [ofx, ofy],
+                lineStyle,
+                radiuses,
+                color,
+                shadow: {
+                    points,
+                    colorStops
+                }
+            }
+        } = this.groupStyle[position]
+
+        let background = GraphicUtils.createRoundedRect(
+            [ofx, ofy],
             [width, height],
             radiuses,
             { color, lineStyle }
         )
+
+        const texture = context.textures.get(GRADIENT_TEXTURE, {
+            width: width + lineStyle.width*2,
+            height: height + lineStyle.width*2,
+            points,
+            colorStops
+        })
+        background = GraphicUtils.createRoundedRect(
+            [ofx - lineStyle.width, ofy - lineStyle.width/2],
+            [width + lineStyle.width + lineStyle.width/2, height + lineStyle.width],
+            radiuses,
+            { texture },
+            background
+        )
+
         background.alpha = 0
+
         return background
     }
 

@@ -11,7 +11,7 @@ export declare class GraphicUtils {
         color?: any;
         lineStyle?: any;
         alpha?: any;
-    }): Graphics;
+    }, rect?: Graphics): Graphics;
     static createCoveredIcon([x, y]: [number, number], style: {
         iconstyle: any;
         paddingx: any;

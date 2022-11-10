@@ -14,10 +14,6 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.openBorder = {
             lineStyle: {
                 width: 2,
-                join: 'round',
-                cap: 'round',
-                gap: 10,
-                dash: 10,
                 color: 0xB7BDD7,
                 alpha: 1,
             },
@@ -41,7 +37,7 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolOpen.POOL_OPEN_ID;
     }
     updatePool(pool, context, container) {
-        if (!this.isActualPool(pool))
+        if (this.isHistoricalPool(pool, context))
             return this.clear();
         this.updateOpenLine(pool, context, container);
     }
@@ -54,7 +50,10 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
         title.position.set(x - style.coverStyle.paddingRight, style.coverStyle.paddingTop);
         if (titlestate.new)
             container.addChild(title);
-        const [line, linestate] = this.get('line', () => __1.GraphicUtils.createVerticalDashLine(0, [0, height], style.lineStyle));
+        const [line, linestate] = this.get('line', () => (new pixi_1.Graphics())
+            .lineStyle(style.lineStyle)
+            .moveTo(0, 0)
+            .lineTo(0, height));
         if (linestate.new)
             container.addChild(line);
         line.position.x = x;

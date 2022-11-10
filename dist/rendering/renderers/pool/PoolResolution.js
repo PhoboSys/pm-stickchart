@@ -7,7 +7,6 @@ exports.PoolResolution = void 0;
 const config_1 = __importDefault(require("../../../config"));
 const infra_1 = require("../../../infra");
 const __1 = require("../..");
-const utils_1 = require("../../../lib/utils");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const poollevels_1 = require("../../../constants/poollevels");
@@ -16,10 +15,6 @@ const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
-        this.historicalLineStyle = {
-            width: 2,
-            alpha: 0,
-        };
         this.lineStyle = {
             width: 1,
             join: 'round',
@@ -45,36 +40,19 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolResolution.POOL_RESOLUTION_ID;
     }
     updatePool(pool, context, container) {
-        if (this.isActualPool(pool)) {
-            this.clearHistoricalPool();
-            this.updateActualPool(pool, context, container);
-        }
-        else {
-            this.clearActualPool();
-            this.updateHistoricalPool(pool, context, container);
-        }
-    }
-    clearActualPool() {
-        this.clear('actualtitle');
-        this.clear('actualline');
-    }
-    clearHistoricalPool() {
-        this.clear('historicalline');
+        if (this.isHistoricalPool(pool, context))
+            return this.clear();
+        this.updateActualPool(pool, context, container);
     }
     updateActualPool(pool, context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([pool.resolutionDate], timerange, width);
-        if (pool.resolutionDate > (0, utils_1.nowUnixTS)()) {
-            const [title, titlestate] = this.get('actualtitle', () => this.createTitle(context));
-            title.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
-            if (titlestate.new)
-                container.addChild(title);
-        }
-        else {
-            this.clear('title');
-        }
-        const [line, linestate] = this.get('actualline', () => this.createLine(context));
+        const [title, titlestate] = this.get('title', () => this.createTitle(context));
+        title.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
+        if (titlestate.new)
+            container.addChild(title);
+        const [line, linestate] = this.get('line', () => this.createLine(context));
         line.position.x = x;
         line.height = height;
         if (linestate.new)
@@ -103,22 +81,6 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
         const dash = new pixi_1.Container();
         dash.addChild(dash1, dash2);
         return dash;
-    }
-    updateHistoricalPool(pool, context, container) {
-        const { width, height } = context.screen;
-        const { timerange } = context.plotdata;
-        const [x] = datamath_1.default.scale([pool.resolutionDate], timerange, width);
-        const [line, linestate] = this.get('historicalline', () => this.createHistoricalPoolLine(context));
-        line.position.x = x - this.historicalLineStyle.width;
-        line.height = height;
-        if (linestate.new)
-            container.addChild(line);
-    }
-    createHistoricalPoolLine(context) {
-        const { height } = context.screen;
-        const [color1, color2] = this.getLevelLineColors(context);
-        const line = __1.GraphicUtils.createLine([0, 0], [0, height], Object.assign(Object.assign({}, this.historicalLineStyle), { color: color2 }));
-        return line;
     }
     getLevelLineColors(context) {
         var _a, _b;

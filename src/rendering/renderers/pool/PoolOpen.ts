@@ -16,10 +16,6 @@ export class PoolOpen extends BasePoolsRenderer {
 
         lineStyle: {
             width: 2,
-            join: 'round',
-            cap: 'round',
-            gap: 10,
-            dash: 10,
             color: 0xB7BDD7,
             alpha: 1,
         },
@@ -54,7 +50,7 @@ export class PoolOpen extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!this.isActualPool(pool)) return this.clear()
+        if (this.isHistoricalPool(pool, context)) return this.clear()
 
         this.updateOpenLine(pool, context, container)
 
@@ -78,19 +74,20 @@ export class PoolOpen extends BasePoolsRenderer {
         )
         if (titlestate.new) container.addChild(title)
 
-        const [line, linestate] = this.get('line', () => GraphicUtils.createVerticalDashLine(
-                0,
-                [0, height],
-                style.lineStyle
-            )
+        const [line, linestate] = this.get('line',
+            () => (new Graphics())
+                .lineStyle(style.lineStyle)
+                .moveTo(0, 0)
+                .lineTo(0, height)
         )
+
         if (linestate.new) container.addChild(line)
 
         line.position.x = x
         line.height = height
     }
 
-    private createTitle(title: string, style: { coverStyle: any, textStyle: any, lineStyle: any }): Container {
+    private createTitle(title: string, style: { coverStyle: any, textStyle: any }): Container {
         const { paddingx, paddingy } = style.coverStyle
 
         const text = GraphicUtils.createText(title, [paddingx, paddingy], style.textStyle)

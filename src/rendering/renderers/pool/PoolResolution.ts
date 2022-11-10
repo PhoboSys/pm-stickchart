@@ -16,11 +16,6 @@ export class PoolResolution extends BasePoolsRenderer {
 
     static readonly POOL_RESOLUTION_ID: symbol = Symbol('POOL_RESOLUTION_ID')
 
-    private historicalLineStyle: any = {
-        width: 2,
-        alpha: 0,
-    }
-
     private lineStyle: any = {
         width: 1,
         join: 'round',
@@ -56,27 +51,10 @@ export class PoolResolution extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (this.isActualPool(pool)) {
+        if (this.isHistoricalPool(pool, context)) return this.clear()
 
-            this.clearHistoricalPool()
-            this.updateActualPool(pool, context, container)
+        this.updateActualPool(pool, context, container)
 
-        } else {
-
-            this.clearActualPool()
-            this.updateHistoricalPool(pool, context, container)
-
-        }
-
-    }
-
-    private clearActualPool() {
-        this.clear('actualtitle')
-        this.clear('actualline')
-    }
-
-    private clearHistoricalPool() {
-        this.clear('historicalline')
     }
 
     private updateActualPool(
@@ -93,19 +71,15 @@ export class PoolResolution extends BasePoolsRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([pool.resolutionDate], timerange, width)
 
-        if (pool.resolutionDate > nowUnixTS()) {
-            const [title, titlestate] = this.get('actualtitle', () => this.createTitle(context))
+        const [title, titlestate] = this.get('title', () => this.createTitle(context))
 
-            title.position.set(
-                x + this.coverStyle.paddingLeft,
-                this.coverStyle.paddingTop
-            )
-            if (titlestate.new) container.addChild(title)
-        } else {
-            this.clear('title')
-        }
+        title.position.set(
+            x + this.coverStyle.paddingLeft,
+            this.coverStyle.paddingTop
+        )
+        if (titlestate.new) container.addChild(title)
 
-        const [line, linestate] = this.get('actualline', () => this.createLine(context))
+        const [line, linestate] = this.get('line', () => this.createLine(context))
 
         line.position.x = x
         line.height = height
@@ -162,42 +136,6 @@ export class PoolResolution extends BasePoolsRenderer {
         dash.addChild(dash1, dash2)
 
         return dash
-    }
-
-    private updateHistoricalPool(
-        pool: any,
-        context: RenderingContext,
-        container: Container,
-    ): void {
-
-        const {
-            width,
-            height
-        } = context.screen
-
-        const { timerange } = context.plotdata
-        const [x] = datamath.scale([pool.resolutionDate], timerange, width)
-
-        const [line, linestate] = this.get('historicalline', () => this.createHistoricalPoolLine(context))
-
-        line.position.x = x - this.historicalLineStyle.width
-        line.height = height
-
-        if (linestate.new) container.addChild(line)
-
-    }
-
-    private createHistoricalPoolLine(context: RenderingContext): Graphics {
-        const { height } = context.screen
-
-        const [color1, color2] = this.getLevelLineColors(context)
-        const line = GraphicUtils.createLine(
-            [0, 0],
-            [0, height],
-            { ...this.historicalLineStyle, color: color2 },
-        )
-
-        return line
     }
 
     private getLevelLineColors(context: RenderingContext): number[] {

@@ -13,6 +13,8 @@ import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '.
 import { LOCK_ICON_TEXTURE, UP_ICON_TEXTURE, DOWN_ICON_TEXTURE } from './symbols'
 import { ZERO_ICON_TEXTURE, UNDEFINED_ICON_TEXTURE } from './symbols'
 
+import { GRADIENT_TEXTURE } from './symbols'
+
 import { POOL_CLAIM_TEXTURE } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
@@ -261,7 +263,6 @@ export class TextureStorage implements ITextureStorage {
 
         return RenderTexture.from(url)
     }
-    //
 
     private [UNDEFINED_ICON_TEXTURE](): Texture {
         const svg = `
@@ -275,20 +276,36 @@ export class TextureStorage implements ITextureStorage {
         return RenderTexture.from(url)
     }
 
-    private [SILVER_LEVEL_TEXTURE]({ width, height }): RenderTexture {
-        const x0 = 0
-        const y0 = height + height
-        const x1 = width
-        const y1 = 0
+    // Gradients
+
+    private [GRADIENT_TEXTURE]({ width, height, points, colorStops }): RenderTexture {
+        const [x0, y0, x1, y1] = points
 
         const gradient = GradientFactory.createLinearGradient(
             <Renderer> this.application.renderer,
             RenderTexture.create({ width, height }),
             {
-                x0,
-                y0,
-                x1,
-                y1,
+                x0, y0,
+                x1, y1,
+                colorStops
+            },
+        )
+
+        return gradient
+    }
+
+    private [SILVER_LEVEL_TEXTURE]({ width, height }): RenderTexture {
+        const x0 = 0
+        const y0 = height + height
+        const x1 = width
+        const y1 = 0 - height
+
+        const gradient = GradientFactory.createLinearGradient(
+            <Renderer> this.application.renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0, y0,
+                x1, y1,
                 colorStops: config.style.levels.silverColors
             },
         )
@@ -306,10 +323,8 @@ export class TextureStorage implements ITextureStorage {
             <Renderer> this.application.renderer,
             RenderTexture.create({ width, height }),
             {
-                x0,
-                y0,
-                x1,
-                y1,
+                x0, y0,
+                x1, y1,
                 colorStops: config.style.levels.goldColors
             },
         )
@@ -327,10 +342,8 @@ export class TextureStorage implements ITextureStorage {
             <Renderer> this.application.renderer,
             RenderTexture.create({ width, height }),
             {
-                x0,
-                y0,
-                x1,
-                y1,
+                x0, y0,
+                x1, y1,
                 colorStops: config.style.levels.royalColors,
             },
         )
@@ -351,10 +364,8 @@ export class TextureStorage implements ITextureStorage {
             renderer,
             RenderTexture.create({ width, height }),
             {
-                x0,
-                y0,
-                x1,
-                y1,
+                x0, y0,
+                x1, y1,
                 colorStops: config.style.resolutionCountdownColors,
             },
         )
@@ -375,10 +386,8 @@ export class TextureStorage implements ITextureStorage {
             renderer,
             RenderTexture.create({ width, height }),
             {
-                x0,
-                y0,
-                x1,
-                y1,
+                x0, y0,
+                x1, y1,
                 colorStops: config.style.lockCountdownColors,
             },
         )

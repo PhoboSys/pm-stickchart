@@ -6,6 +6,7 @@ import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from './symbols'
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols';
 import { LOCK_ICON_TEXTURE, UP_ICON_TEXTURE, DOWN_ICON_TEXTURE } from './symbols';
 import { ZERO_ICON_TEXTURE, UNDEFINED_ICON_TEXTURE } from './symbols';
+import { GRADIENT_TEXTURE } from './symbols';
 import { POOL_CLAIM_TEXTURE } from './symbols';
 export declare class TextureStorage implements ITextureStorage {
     private readonly application;
@@ -24,6 +25,7 @@ export declare class TextureStorage implements ITextureStorage {
     private [DOWN_ICON_TEXTURE];
     private [ZERO_ICON_TEXTURE];
     private [UNDEFINED_ICON_TEXTURE];
+    private [GRADIENT_TEXTURE];
     private [SILVER_LEVEL_TEXTURE];
     private [GOLD_LEVEL_TEXTURE];
     private [ROYAL_LEVEL_TEXTURE];

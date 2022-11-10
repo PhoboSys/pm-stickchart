@@ -14,6 +14,7 @@ const symbols_4 = require("./symbols");
 const symbols_5 = require("./symbols");
 const symbols_6 = require("./symbols");
 const symbols_7 = require("./symbols");
+const symbols_8 = require("./symbols");
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -110,7 +111,7 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_7.POOL_CLAIM_TEXTURE]() {
+    [symbols_8.POOL_CLAIM_TEXTURE]() {
         const x0 = 0;
         const y0 = 0 + config_1.default.padding.top;
         const x1 = 0;
@@ -205,7 +206,6 @@ class TextureStorage {
         const url = URL.createObjectURL(blob);
         return pixi_1.RenderTexture.from(url);
     }
-    //
     [symbols_6.UNDEFINED_ICON_TEXTURE]() {
         const svg = `
         <svg width="113" height="148" viewBox="0 0 113 148" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,16 +216,24 @@ class TextureStorage {
         const url = URL.createObjectURL(blob);
         return pixi_1.RenderTexture.from(url);
     }
+    // Gradients
+    [symbols_7.GRADIENT_TEXTURE]({ width, height, points, colorStops }) {
+        const [x0, y0, x1, y1] = points;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0, y0,
+            x1, y1,
+            colorStops
+        });
+        return gradient;
+    }
     [symbols_4.SILVER_LEVEL_TEXTURE]({ width, height }) {
         const x0 = 0;
         const y0 = height + height;
         const x1 = width;
-        const y1 = 0;
+        const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
+            x0, y0,
+            x1, y1,
             colorStops: config_1.default.style.levels.silverColors
         });
         return gradient;
@@ -236,10 +244,8 @@ class TextureStorage {
         const x1 = width;
         const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
+            x0, y0,
+            x1, y1,
             colorStops: config_1.default.style.levels.goldColors
         });
         return gradient;
@@ -250,10 +256,8 @@ class TextureStorage {
         const x1 = width;
         const y1 = 0 - height;
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
+            x0, y0,
+            x1, y1,
             colorStops: config_1.default.style.levels.royalColors,
         });
         return gradient;
@@ -266,10 +270,8 @@ class TextureStorage {
         const y1 = height;
         const renderer = this.application.renderer;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
+            x0, y0,
+            x1, y1,
             colorStops: config_1.default.style.resolutionCountdownColors,
         });
         return gradient;
@@ -282,10 +284,8 @@ class TextureStorage {
         const y1 = height;
         const renderer = this.application.renderer;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
-            x0,
-            y0,
-            x1,
-            y1,
+            x0, y0,
+            x1, y1,
             colorStops: config_1.default.style.lockCountdownColors,
         });
         return gradient;

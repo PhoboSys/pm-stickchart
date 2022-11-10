@@ -12,7 +12,8 @@ const calc_utils_1 = require("../../../lib/calc-utils");
 const events_1 = require("../../../events");
 const __1 = require("../..");
 const enums_1 = require("../../../enums");
-const symbols_1 = require("../../textures/symbols");
+const textures_1 = require("../../textures");
+const textures_2 = require("../../textures");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
@@ -63,44 +64,80 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 outside: [0, 0.5]
             }
         };
-        this.backgroundStyle = {
+        this.groupStyle = {
             [enums_1.EPosition.Up]: {
                 anchor: [0, 0],
                 offset: [0, 40],
-                radiuses: [1, 20, 20, 1],
-                color: 0x22273F,
                 width: 300,
                 height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
-                }
+                background: {
+                    offset: [3, 0],
+                    radiuses: [1, 20, 20, 1],
+                    color: 0x22273F,
+                    lineStyle: {
+                        color: 0xB7BDD7,
+                        width: 2,
+                        alpha: 1,
+                    },
+                    shadow: {
+                        points: [0, 0, 300, 0],
+                        colorStops: [
+                            { color: '#22273FFF', offset: 0 },
+                            { color: '#22273FFF', offset: 0.01 },
+                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 1 },
+                        ]
+                    },
+                },
             },
             [enums_1.EPosition.Down]: {
                 anchor: [0, -1],
                 offset: [0, -134],
-                radiuses: [1, 20, 20, 1],
-                color: 0x22273F,
                 width: 300,
                 height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
+                background: {
+                    offset: [3, 0],
+                    radiuses: [1, 20, 20, 1],
+                    color: 0x22273F,
+                    lineStyle: {
+                        color: 0xB7BDD7,
+                        width: 2,
+                        alpha: 1,
+                    },
+                    shadow: {
+                        points: [0, 0, 300, 0],
+                        colorStops: [
+                            { color: '#22273FFF', offset: 0 },
+                            { color: '#22273FFF', offset: 0.01 },
+                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 1 },
+                        ]
+                    },
                 }
             },
             [enums_1.EPosition.Zero]: {
                 anchor: [-1, 0],
                 offset: [0, 8],
-                radiuses: [20, 1, 1, 20],
-                color: 0x22273F,
                 width: 300,
                 height: 62,
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                    alpha: 1,
+                background: {
+                    offset: [-3, 0],
+                    radiuses: [20, 1, 1, 20],
+                    color: 0x22273F,
+                    lineStyle: {
+                        color: 0xB7BDD7,
+                        width: 2,
+                        alpha: 1,
+                    },
+                    shadow: {
+                        points: [300, 0, 0, 0],
+                        colorStops: [
+                            { color: '#22273FFF', offset: 0 },
+                            { color: '#22273FFF', offset: 0.01 },
+                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 1 },
+                        ]
+                    },
                 }
             }
         };
@@ -164,7 +201,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         this.configAnimations = {
             winning_bg: {
                 pixi: {
-                    alpha: 1.2,
+                    alpha: 1,
                     lineColor: 0xFFA000,
                 },
                 duration: 0.5,
@@ -180,7 +217,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             },
             won_bg: {
                 pixi: {
-                    alpha: 1.2,
+                    alpha: 1.1,
                     lineColor: 0xFFA000,
                 },
                 duration: 0.5,
@@ -191,6 +228,14 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 pixi: {
                     alpha: 1,
                     lineColor: 0xB7BDD7,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
+                new: 'set'
+            },
+            unclaimable_contnet: {
+                pixi: {
+                    alpha: 0.7,
                 },
                 duration: 0.5,
                 ease: 'power2.out',
@@ -226,7 +271,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             },
             hover_group_claimable: {
                 pixi: {
-                    alpha: 1.1,
+                    alpha: 1,
                     zIndex: 4,
                 },
                 duration: 0.5,
@@ -238,7 +283,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     alpha: 0,
                     zIndex: 1,
                 },
-                duration: 0.6,
+                duration: 0.3,
                 ease: 'power2.out',
                 delay: 0.9,
             },
@@ -254,7 +299,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             },
             hover_group_unclaimable: {
                 pixi: {
-                    alpha: 0.7,
+                    alpha: 0.9,
                     zIndex: 3,
                 },
                 duration: 0.3,
@@ -365,7 +410,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const { openPriceTimestamp, openPriceValue } = pool;
         const [ox] = datamath_1.default.scale([openPriceTimestamp], timerange, width);
         const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
-        const bgStyle = this.backgroundStyle[position];
+        const bgStyle = this.groupStyle[position];
         const [ax, ay] = bgStyle.anchor;
         const [ofx, ofy] = bgStyle.offset;
         const bgwidth = bgStyle.width;
@@ -390,7 +435,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             container.addChild(group);
         }
         group.position.set(bgx, bgy);
-        const [background, backgroundState] = this.get('background', () => this.createBackground(position));
+        const [background, backgroundState] = this.get('background', () => this.createBackground(position, context));
         if (backgroundState.new)
             group.addChild(background);
         const [content, contentState] = this.get('content', () => new pixi_1.Container());
@@ -449,14 +494,16 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             titleprofit.position.set(bgwidth + tptox, tptoy);
         }
         if (this.isHistoricalPool(pool, context)) {
+            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed]);
             if (win) {
                 this.animate('background', 'won_bg');
+                if (!claimable)
+                    this.animate('content', 'unclaimable_contnet');
             }
             else {
                 this.animate('background', 'lost_bg');
                 this.animate('content', 'lost_contnet');
             }
-            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed]);
             if (claimable) {
                 if (groupstate.animation !== 'hover_group_claimable')
                     this.animate('group', 'hide_group_claimable');
@@ -566,14 +613,14 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     getPositionIconTextureName(position) {
         switch (position) {
             case enums_1.EPosition.Up:
-                return symbols_1.UP_ICON_TEXTURE;
+                return textures_1.UP_ICON_TEXTURE;
             case enums_1.EPosition.Down:
-                return symbols_1.DOWN_ICON_TEXTURE;
+                return textures_1.DOWN_ICON_TEXTURE;
             case enums_1.EPosition.Zero:
-                return symbols_1.ZERO_ICON_TEXTURE;
+                return textures_1.ZERO_ICON_TEXTURE;
             default:
                 infra_1.Logger.error(`pari position "${position}" is not supported, fallback to Undeliden`);
-                return symbols_1.UNDEFINED_ICON_TEXTURE;
+                return textures_2.UNDEFINED_ICON_TEXTURE;
         }
     }
     createIcon(context, position) {
@@ -584,9 +631,16 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         icon.position.set(...this.iconStyle.offset);
         return icon;
     }
-    createBackground(position) {
-        const { radiuses, color, width, height, lineStyle, anchor } = this.backgroundStyle[position];
-        const background = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle });
+    createBackground(position, context) {
+        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, shadow: { points, colorStops } } } = this.groupStyle[position];
+        let background = __1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { color, lineStyle });
+        const texture = context.textures.get(textures_2.GRADIENT_TEXTURE, {
+            width: width + lineStyle.width * 2,
+            height: height + lineStyle.width * 2,
+            points,
+            colorStops
+        });
+        background = __1.GraphicUtils.createRoundedRect([ofx - lineStyle.width, ofy - lineStyle.width / 2], [width + lineStyle.width + lineStyle.width / 2, height + lineStyle.width], radiuses, { texture }, background);
         background.alpha = 0;
         return background;
     }

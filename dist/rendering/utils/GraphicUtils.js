@@ -28,25 +28,30 @@ class GraphicUtils {
         torus.position.set(x, y);
         return torus;
     }
-    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }) {
-        const rect = new pixi_1.Graphics()
-            .lineStyle(Object.assign({ width: 1, alpha: 0 }, (lineStyle !== null && lineStyle !== void 0 ? lineStyle : {})));
-        if (texture)
-            rect.beginTextureFill({ texture, alpha });
-        else
+    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }, rect) {
+        rect = rect !== null && rect !== void 0 ? rect : new pixi_1.Graphics();
+        rect.lineStyle(Object.assign({ width: 1, alpha: 0 }, lineStyle));
+        if (texture) {
+            const matrix = new pixi_1.Matrix();
+            matrix.tx = x;
+            matrix.ty = y;
+            rect.beginTextureFill({ texture, alpha, matrix });
+        }
+        else {
             rect.beginFill(color, alpha);
+        }
         rect
-            .moveTo(0, r1)
-            .arcTo(0, 0, r1, 0, r1)
-            .lineTo(width - r2, 0)
-            .arcTo(width, 0, width, r2, r2)
-            .lineTo(width, height - r3)
-            .arcTo(width, height, width - r3, height, r3)
-            .lineTo(r4, height)
-            .arcTo(0, height, 0, height - r4, r4)
+            .moveTo(0 + x, r1 + y)
+            .arcTo(0 + x, 0 + y, r1 + x, 0 + y, r1)
+            .lineTo(width + x - r2, 0 + y)
+            .arcTo(width + x, 0 + y, width + x, r2 + y, r2)
+            .lineTo(width + x, height + y - r3)
+            .arcTo(width + x, height + y, width + x - r3, height + y, r3)
+            .lineTo(r4 + x, height + y)
+            .arcTo(0 + x, height + y, 0 + x, height + y - r4, r4)
             .closePath()
             .endFill();
-        rect.position.set(x, y);
+        // rect.position.set(x, y)
         return rect;
     }
     static createCoveredIcon([x, y], style) {

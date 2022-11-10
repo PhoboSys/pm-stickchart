@@ -6,7 +6,7 @@ export declare class PariTile extends BaseParisRenderer {
     get rendererId(): symbol;
     private winlineStyle;
     private buttonStyle;
-    private backgroundStyle;
+    private groupStyle;
     private iconStyle;
     private wagerStyle;
     private titlewagerStyle;

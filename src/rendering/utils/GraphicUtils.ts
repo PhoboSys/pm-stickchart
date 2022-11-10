@@ -3,7 +3,7 @@ import { castArray } from 'lodash'
 import { Logger } from '../../infra'
 
 import datamath from '../../lib/datamath'
-import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture } from '../../lib/pixi'
+import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture, Matrix } from '../../lib/pixi'
 
 export class GraphicUtils {
 
@@ -44,31 +44,39 @@ export class GraphicUtils {
         [x, y]: [number, number],
         [width, height]: [number, number],
         [r1, r2, r3, r4]: [number, number, number, number],
-        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? }
+        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? },
+        rect?: Graphics,
     ): Graphics {
-        const rect = new Graphics()
-            .lineStyle({ width: 1, alpha: 0, ...(lineStyle ?? {}) })
+        rect = rect ?? new Graphics()
 
-        if (texture) rect.beginTextureFill({ texture, alpha })
-        else rect.beginFill(color, alpha)
+        rect.lineStyle({ width: 1, alpha: 0, ...lineStyle })
+
+        if (texture) {
+            const matrix = new Matrix()
+            matrix.tx = x
+            matrix.ty = y
+            rect.beginTextureFill({ texture, alpha, matrix })
+        } else {
+            rect.beginFill(color, alpha)
+        }
 
         rect
-            .moveTo(0, r1)
-            .arcTo(0, 0, r1, 0, r1)
+            .moveTo(0+x, r1+y)
+            .arcTo(0+x, 0+y, r1+x, 0+y, r1)
 
-            .lineTo(width - r2, 0)
-            .arcTo(width, 0, width, r2, r2)
+            .lineTo(width+x - r2, 0+y)
+            .arcTo(width+x, 0+y, width+x, r2+y, r2)
 
-            .lineTo(width, height - r3)
-            .arcTo(width, height, width - r3, height, r3)
+            .lineTo(width+x, height+y - r3)
+            .arcTo(width+x, height+y, width+x - r3, height+y, r3)
 
-            .lineTo(r4, height)
-            .arcTo(0, height, 0, height - r4, r4)
+            .lineTo(r4+x, height+y)
+            .arcTo(0+x, height+y, 0+x, height+y - r4, r4)
 
             .closePath()
             .endFill()
 
-        rect.position.set(x, y)
+        // rect.position.set(x, y)
 
         return rect
     }
