@@ -102,7 +102,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -128,7 +128,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -154,7 +154,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -697,7 +697,7 @@ export class PariTile extends BaseParisRenderer {
                     btny + bgheight * vertical,
                 )
 
-                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved, pari.claimed])
+                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
                 if (claimimgState.new) {
                     claim_img
                         .beginFill(0xFFA000)

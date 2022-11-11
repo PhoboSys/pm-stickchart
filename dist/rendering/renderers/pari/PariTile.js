@@ -84,7 +84,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
                             { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 0.05 },
                             { color: '#22273F00', offset: 1 },
                         ]
                     },
@@ -109,7 +109,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
                             { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 0.05 },
                             { color: '#22273F00', offset: 1 },
                         ]
                     },
@@ -134,7 +134,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
                             { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.1 },
+                            { color: '#22273F00', offset: 0.05 },
                             { color: '#22273F00', offset: 1 },
                         ]
                     },
@@ -551,7 +551,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     });
                 }
                 claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-                const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved, pari.claimed]);
+                const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
                 if (claimimgState.new) {
                     claim_img
                         .beginFill(0xFFA000)
