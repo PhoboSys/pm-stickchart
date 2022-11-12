@@ -1,5 +1,5 @@
 import config from '../../config'
-import { USD } from '../../constants/currencies'
+import { USD } from '../../constants'
 import datamath from '../datamath'
 import { unixTStoDate } from '../utils'
 

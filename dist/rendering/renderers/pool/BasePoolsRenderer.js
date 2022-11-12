@@ -37,6 +37,13 @@ class BasePoolsRenderer extends __1.BaseRenderer {
         this.prevpools = this.newpools;
         this.newpools = {};
     }
+    getPoolResolution(pool, context) {
+        if (pool.resolved)
+            return pool.resolution;
+        const rprice = this.getResolutionPricePoint(pool, context);
+        const resolution = this.getPoolResolutionByPrice(pool, rprice);
+        return resolution;
+    }
     getPoolResolutionByPrice(pool, resolutionPrice) {
         if (!resolutionPrice)
             return enums_1.EPosition.Undefined;
@@ -54,9 +61,6 @@ class BasePoolsRenderer extends __1.BaseRenderer {
             return false;
         return (pool.resolved ||
             ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]));
-    }
-    isActualPool(pool) {
-        return pool.resolutionDate > (0, utils_1.nowUnixTS)();
     }
     getResolutionPricePoint(pool, context) {
         var _a;
@@ -82,6 +86,9 @@ class BasePoolsRenderer extends __1.BaseRenderer {
             return latest;
         }
         return null;
+    }
+    isActualPool(pool) {
+        return pool.resolutionDate > (0, utils_1.nowUnixTS)();
     }
 }
 exports.BasePoolsRenderer = BasePoolsRenderer;

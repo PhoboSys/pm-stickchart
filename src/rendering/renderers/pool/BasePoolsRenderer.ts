@@ -54,6 +54,19 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         this.newpools = {}
     }
 
+    protected getPoolResolution(
+        pool: any,
+        context: RenderingContext,
+    ): EPosition {
+
+        if (pool.resolved) return pool.resolution
+
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const resolution = this.getPoolResolutionByPrice(pool, rprice)
+
+        return resolution
+    }
+
     protected getPoolResolutionByPrice(
         pool: any,
         resolutionPrice: PricePoint | null,
@@ -78,12 +91,6 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             pool.resolved ||
             context.settlements?.[pool.poolid]
         )
-    }
-
-    protected isActualPool(
-        pool: any,
-    ): boolean {
-        return pool.resolutionDate > nowUnixTS()
     }
 
     protected getResolutionPricePoint(
@@ -118,6 +125,12 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         return null
 
+    }
+
+    protected isActualPool(
+        pool: any,
+    ): boolean {
+        return pool.resolutionDate > nowUnixTS()
     }
 
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void
