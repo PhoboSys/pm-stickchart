@@ -29,6 +29,14 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
                 yoyo: true,
                 yoyoEase: 'power3.in',
             },
+            hide: {
+                pixi: {
+                    alpha: 0,
+                },
+                duration: 1,
+                ease: 'power3.out',
+                clear: true,
+            }
         };
     }
     get rendererId() {
@@ -43,12 +51,12 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
         if (!this.isHistoricalPool(pool, context))
             return this.clear();
         const rprice = this.getResolutionPricePoint(pool, context);
-        const resolution = this.getPoolResolutionByPrice(pool, rprice);
+        const resolution = this.getPoolResolution(pool, context);
         const win = pari.position === resolution;
-        if (!win)
-            return this.clear();
-        if (pari.claimed)
-            return this.clear();
+        const nocontest = resolution === enums_1.EPosition.NoContest;
+        const claimable = !pari.claimed && (win || nocontest);
+        if (!claimable)
+            return this.animate('group', 'hide', { onComplete: () => this.clear() });
         this.updateBackground(pool, pari, context, container, rprice);
     }
     updateBackground(pool, pari, context, container, resolutionPrice) {

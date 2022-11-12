@@ -1,7 +1,7 @@
 export enum EPosition {
-  Undefined,
-  Down,
-  Up,
-  Zero,
-  NoContest
+  Undefined = 0,
+  Down = 1,
+  Up = 2,
+  Zero = 3,
+  NoContest = 4
 }

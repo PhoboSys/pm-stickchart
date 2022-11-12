@@ -5,7 +5,7 @@ import config from '../../../../config'
 import datamath from '../../../../lib/datamath'
 import { Graphics, Container, Text } from '../../../../lib/pixi'
 import ui from '../../../../lib/ui/index'
-import { USD } from '../../../../constants/currencies'
+import { USD } from '../../../../constants'
 
 export class LatestPriceLineRenderer extends BaseRenderer {
 

@@ -31,7 +31,7 @@ exports.default = {
     maxdensity: 500,
     ui: {
         precision: {
-            erc20: 7,
+            erc20: 8,
             percent: 2,
         }
     },

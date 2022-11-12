@@ -12,12 +12,39 @@ const calc_utils_1 = require("../../../lib/calc-utils");
 const events_1 = require("../../../events");
 const __1 = require("../..");
 const enums_1 = require("../../../enums");
+const constants_1 = require("../../../constants");
 const textures_1 = require("../../textures");
 const textures_2 = require("../../textures");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
+        this.nocontestLineStyle = {
+            [enums_1.EPosition.Up]: {
+                offsetTOP: [0, -6],
+                offsetBOTTOM: [0, 6],
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                }
+            },
+            [enums_1.EPosition.Down]: {
+                offsetTOP: [0, -6],
+                offsetBOTTOM: [0, 6],
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                }
+            },
+            [enums_1.EPosition.Zero]: {
+                offsetTOP: [300, -6],
+                offsetBOTTOM: [300, 6],
+                lineStyle: {
+                    color: 0xB7BDD7,
+                    width: 2,
+                }
+            }
+        };
         this.winlineStyle = {
             [enums_1.EPosition.Up]: {
                 offsetTOP: [0, -6],
@@ -121,7 +148,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 width: 300,
                 height: 62,
                 background: {
-                    offset: [-3, 0],
+                    offset: [-2, 0],
                     radiuses: [20, 1, 1, 20],
                     color: 0x22273F,
                     lineStyle: {
@@ -362,15 +389,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     updatePari(pool, pari, context, container) {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
-        const rprice = this.getResolutionPricePoint(pool, context);
-        const resolution = this.getPoolResolutionByPrice(pool, rprice);
-        const win = pari.position === resolution;
-        this.updateTile(pool, pari, context, container, win);
-        this.updateLine(pool, pari, context, container, win);
+        const resolution = this.getPoolResolution(pool, context);
+        this.updateTile(pool, pari, context, container, resolution);
+        this.updateLine(pool, pari, context, container, resolution);
     }
-    updateLine(pool, pari, context, container, win) {
+    updateLine(pool, pari, context, container, resolution) {
+        const win = pari.position === resolution;
+        const nocontest = resolution === enums_1.EPosition.NoContest;
         const [group] = this.read('group');
-        if (!win || !group || !this.isHistoricalPool(pool, context))
+        if (!(win || nocontest) || !group || !this.isHistoricalPool(pool, context))
             return this.clear('line');
         const { height } = context.screen;
         const { pricerange } = context.plotdata;
@@ -379,23 +406,26 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
         if (linestate.new)
             group.addChild(line);
-        const [topx, topy] = this.winlineStyle[pari.position].offsetTOP;
-        const [botx, boty] = this.winlineStyle[pari.position].offsetBOTTOM;
+        const style = nocontest ? this.nocontestLineStyle : this.winlineStyle;
+        const [topx, topy] = style[pari.position].offsetTOP;
+        const [botx, boty] = style[pari.position].offsetBOTTOM;
         line
             .clear()
-            .lineStyle(this.winlineStyle[pari.position].lineStyle)
+            .lineStyle(style[pari.position].lineStyle)
             .moveTo(0 + topx, 0)
             .lineTo(0 + topx, oy + topy)
             .moveTo(0 + botx, oy + boty)
             .lineTo(0 + botx, height);
         line.position.y = -group.position.y;
     }
-    updateTile(pool, pari, context, container, win) {
+    updateTile(pool, pari, context, container, resolution) {
         var _a;
-        const { width, height, } = context.screen;
+        const win = pari.position === resolution;
+        const nocontest = resolution === enums_1.EPosition.NoContest;
+        const { width, height } = context.screen;
         const poolid = pool.poolid;
         const pariid = pari.pariid;
-        if (!win && this.isHistoricalPool(pool, context)) {
+        if (!win && !nocontest && this.isHistoricalPool(pool, context)) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
                     this.rebind(poolid, pariid);
@@ -458,9 +488,16 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         ], this.titleprofitStyle.text, this.titleprofitStyle.anchor));
         if (titleprofitState.new)
             content.addChild(titleprofit);
-        if (win) {
+        if (win || nocontest) {
             this.clear('zero');
-            const [prizeAmount] = this.get('prizeAmount', () => ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, position)), [pari.wager, pool.prizefunds]);
+            const [prizeAmount] = this.get('prizeAmount', () => {
+                if (nocontest)
+                    return ui_1.default.erc20(pari.wager);
+                else if (pari.claimed)
+                    return ui_1.default.erc20(pari.payout);
+                else
+                    return ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position));
+            }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL], nocontest]);
             const [pzox, pzoy] = this.prizeStyle.offset;
             const [prize, prizeState] = this.get('prize', () => __1.GraphicUtils.createText(prizeAmount, [
                 bgwidth + pzox,
@@ -469,15 +506,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (prizeState.new)
                 content.addChild(prize);
             prize.text = prizeAmount;
-            const [profitPercent] = this.get('profitPercent', () => ui_1.default.percent((0, calc_utils_1.actualProfitPercent)(pool.prizefunds, pari.wager, position)), [pari.wager, pool.prizefunds]);
+            const [percent] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
             const [ptox, ptoy] = this.profitStyle.offset;
-            const [profit, profitState] = this.get('profit', () => __1.GraphicUtils.createText(profitPercent, [
+            const [profit, profitState] = this.get('profit', () => __1.GraphicUtils.createText(percent, [
                 bgwidth + ptox,
                 ptoy,
             ], this.profitStyle.text, this.profitStyle.anchor));
             if (profitState.new)
                 content.addChild(profit);
-            profit.text = profitPercent;
+            profit.text = percent;
             titleprofit.position.set(bgwidth + tptox - profit.width - 4, // 4px padding
             tptoy);
         }
@@ -494,7 +531,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             titleprofit.position.set(bgwidth + tptox, tptoy);
         }
         if (this.isHistoricalPool(pool, context)) {
-            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed]);
+            const [claimable] = this.get('claimable', () => !pari.claimed && (win || nocontest), [nocontest, win, pari.claimed]);
             if (win) {
                 this.animate('background', 'won_bg');
                 if (!claimable)

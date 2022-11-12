@@ -37,6 +37,14 @@ export class PariClaimBackground extends BaseParisRenderer {
             yoyo: true,
             yoyoEase: 'power3.in',
         },
+        hide: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 1,
+            ease: 'power3.out',
+            clear: true,
+        }
     }
 
     protected get animations(): any {
@@ -54,11 +62,14 @@ export class PariClaimBackground extends BaseParisRenderer {
         if (!this.isHistoricalPool(pool, context)) return this.clear()
 
         const rprice = this.getResolutionPricePoint(pool, context)
-        const resolution = this.getPoolResolutionByPrice(pool, rprice)
-        const win = pari.position === resolution
+        const resolution = this.getPoolResolution(pool, context)
 
-        if (!win) return this.clear()
-        if (pari.claimed) return this.clear()
+        const win = pari.position === resolution
+        const nocontest = resolution === EPosition.NoContest
+
+        const claimable = !pari.claimed && (win || nocontest)
+
+        if (!claimable) return this.animate('group', 'hide', { onComplete: () => this.clear() })
 
         this.updateBackground(pool, pari, context, container, rprice)
 

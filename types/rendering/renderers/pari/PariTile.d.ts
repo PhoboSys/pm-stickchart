@@ -4,6 +4,7 @@ import { BaseParisRenderer } from './BaseParisRenderer';
 export declare class PariTile extends BaseParisRenderer {
     static readonly PARI_TILE_ID: symbol;
     get rendererId(): symbol;
+    private nocontestLineStyle;
     private winlineStyle;
     private buttonStyle;
     private groupStyle;

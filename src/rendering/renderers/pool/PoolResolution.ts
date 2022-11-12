@@ -7,7 +7,7 @@ import { nowUnixTS } from '../../../lib/utils'
 import datamath from '../../../lib/datamath'
 import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
 
-import { SILVER, GOLD, ROYAL } from '../../../constants/poollevels'
+import { SILVER, GOLD, ROYAL } from '../../../constants'
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '../../textures/symbols'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'

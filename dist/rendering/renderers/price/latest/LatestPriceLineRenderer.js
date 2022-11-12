@@ -8,7 +8,7 @@ const __1 = require("../../..");
 const config_1 = __importDefault(require("../../../../config"));
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
 const index_1 = __importDefault(require("../../../../lib/ui/index"));
-const currencies_1 = require("../../../../constants/currencies");
+const constants_1 = require("../../../../constants");
 class LatestPriceLineRenderer extends __1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
@@ -52,7 +52,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         if (coveredTextState.new)
             container.addChild(coveredText);
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = index_1.default.currency(price, currencies_1.USD);
+        textGraphic.text = index_1.default.currency(price, constants_1.USD);
         const { paddingx, paddingy } = this.textCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;
