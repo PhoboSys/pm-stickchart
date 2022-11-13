@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextureStorage = void 0;
-const config_1 = __importDefault(require("../../config"));
-const infra_1 = require("../../infra");
+const _config_1 = __importDefault(require("../../config.js"));
+const _infra_1 = require("../../infra/index.js");
 const pixi_1 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
 const symbols_2 = require("./symbols");
@@ -31,12 +31,12 @@ class TextureStorage {
     get(name, params) {
         const key = `${name.description}_${JSON.stringify(params)}`;
         if (!this.textures[key]) {
-            infra_1.Logger.warn('Create Texture', name);
+            _infra_1.Logger.warn('Create Texture', name);
             if (this[name] instanceof Function) {
                 this.textures[key] = this[name](params);
             }
             else {
-                infra_1.Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty');
+                _infra_1.Logger.warn(Symbol.keyFor(name), 'Texture is not supported create empty');
                 this.textures[key] = this.EMPTY();
             }
         }
@@ -54,7 +54,7 @@ class TextureStorage {
         const y0 = 0;
         const x1 = 0;
         const y1 = height;
-        const top = '#' + config_1.default.style.resolution.upcolor.toString(16).padStart(6, '0');
+        const top = '#' + _config_1.default.style.resolution.upcolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
@@ -75,7 +75,7 @@ class TextureStorage {
         const y0 = 0;
         const x1 = 0;
         const y1 = height;
-        const top = '#' + config_1.default.style.resolution.downcolor.toString(16).padStart(6, '0');
+        const top = '#' + _config_1.default.style.resolution.downcolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
@@ -92,10 +92,10 @@ class TextureStorage {
     }
     [symbols_2.PRICE_LINE_TEXTURE]() {
         const x0 = 0;
-        const y0 = 0 + config_1.default.padding.top;
+        const y0 = 0 + _config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
-        const top = '#' + config_1.default.style.linecolor.toString(16).padStart(6, '0');
+        const top = '#' + _config_1.default.style.linecolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
         const { renderer } = this.application;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
@@ -113,7 +113,7 @@ class TextureStorage {
     }
     [symbols_8.POOL_CLAIM_TEXTURE]() {
         const x0 = 0;
-        const y0 = 0 + config_1.default.padding.top;
+        const y0 = 0 + _config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
         const { renderer } = this.application;
@@ -123,13 +123,13 @@ class TextureStorage {
         }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.poolClaimaColors
+            colorStops: _config_1.default.style.poolClaimaColors
         });
         return gradient;
     }
     [symbols_2.POOL_ROUND_TEXTURE]() {
         const x0 = 0;
-        const y0 = 0 + config_1.default.padding.top;
+        const y0 = 0 + _config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
         const { renderer } = this.application;
@@ -139,7 +139,7 @@ class TextureStorage {
         }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.poolRoundColors
+            colorStops: _config_1.default.style.poolRoundColors
         });
         return gradient;
     }
@@ -234,7 +234,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.levels.silverColors
+            colorStops: _config_1.default.style.levels.silverColors
         });
         return gradient;
     }
@@ -246,7 +246,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.levels.goldColors
+            colorStops: _config_1.default.style.levels.goldColors
         });
         return gradient;
     }
@@ -258,7 +258,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.levels.royalColors,
+            colorStops: _config_1.default.style.levels.royalColors,
         });
         return gradient;
     }
@@ -272,7 +272,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.resolutionCountdownColors,
+            colorStops: _config_1.default.style.resolutionCountdownColors,
         });
         return gradient;
     }
@@ -286,7 +286,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: config_1.default.style.lockCountdownColors,
+            colorStops: _config_1.default.style.lockCountdownColors,
         });
         return gradient;
     }

@@ -1,16 +1,18 @@
-import { IRenderer, IGraphicStorage } from '..'
-import { RenderingContext, DoneFunction } from '..'
+import { IRenderer, IGraphicStorage } from '@rendering'
+import { RenderingContext, DoneFunction } from '@rendering'
 
-import cfg from '../../config'
-import { Logger } from '../../infra'
+import cfg from '@config'
 
-import { Container, gsap } from '../../lib/pixi'
-import { isFunction, isEmpty } from '../../lib/utils'
+import { Logger } from '@infra'
+
+import { Container, gsap } from '@lib/pixi'
+import { isFunction, isEmpty } from '@lib/utils'
 
 export abstract class BaseRenderer implements IRenderer {
 
     private local: { [key: string]: any } = {}
-    private stateprefix: string = ''
+
+    private stateprefix = ''
 
     constructor(
         protected readonly storage: IGraphicStorage,
@@ -70,6 +72,7 @@ export abstract class BaseRenderer implements IRenderer {
     ): [any, any, any[]] {
         const bindname = this.stateprefix + name
         const got = this.local[bindname]
+
         return got || []
     }
 
@@ -87,6 +90,7 @@ export abstract class BaseRenderer implements IRenderer {
             if (this.isEqual(deps, dependencies)) {
 
                 state.new = false
+
                 return [<T>g, state, dependencies]
 
             } else {

@@ -1,8 +1,8 @@
-import config from '../../config'
+import config from '@config'
 
-import { gsap } from '../pixi'
-import { PricePoint, PlotData } from '../../chartdata/types'
-import { DataBuilder } from '../../chartdata'
+import { gsap } from '@lib/pixi'
+import { PricePoint, PlotData } from '@chartdata'
+import { DataBuilder } from '@chartdata'
 
 export default class MorphController {
     private anim: gsap.core.Tween | null

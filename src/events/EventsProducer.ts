@@ -1,4 +1,4 @@
-import { ZoomEvent, PointermoveEvent, CanvasErrorEvent, PointerleaveEvent } from '.'
+import { ZoomEvent, PointermoveEvent, CanvasErrorEvent, PointerleaveEvent } from '@events'
 
 export class EventsProducer {
 

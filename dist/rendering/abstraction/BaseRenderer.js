@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRenderer = void 0;
-const config_1 = __importDefault(require("../../config"));
-const infra_1 = require("../../infra");
+const _config_1 = __importDefault(require("../../config.js"));
+const _infra_1 = require("../../infra/index.js");
 const pixi_1 = require("../../lib/pixi");
 const utils_1 = require("../../lib/utils");
 class BaseRenderer {
@@ -25,8 +25,8 @@ class BaseRenderer {
             this.clear();
         }
         const took = Date.now() - start;
-        if (took > config_1.default.performance.renderMs)
-            infra_1.Logger.warn('[Violation] Render took ' + took + 'ms', this.rendererId);
+        if (took > _config_1.default.performance.renderMs)
+            _infra_1.Logger.warn('[Violation] Render took ' + took + 'ms', this.rendererId);
         done();
     }
     rebind(...path) {
@@ -44,7 +44,7 @@ class BaseRenderer {
         else {
             name = this.stateprefix + name;
             if (name in this.local) {
-                infra_1.Logger.info('clear', name);
+                _infra_1.Logger.info('clear', name);
                 const [item, state] = this.local[name];
                 (_a = item === null || item === void 0 ? void 0 : item.destroy) === null || _a === void 0 ? void 0 : _a.call(item);
                 (_c = (_b = state === null || state === void 0 ? void 0 : state.timeline) === null || _b === void 0 ? void 0 : _b.kill) === null || _c === void 0 ? void 0 : _c.call(_b);
@@ -70,7 +70,7 @@ class BaseRenderer {
                 this.clear(name);
             }
         }
-        infra_1.Logger.info('get new', bindname);
+        _infra_1.Logger.info('get new', bindname);
         this.local[bindname] = [create(), { new: true }, dependencies];
         return this.local[bindname];
     }
@@ -105,7 +105,7 @@ class BaseRenderer {
             if ((0, utils_1.isFunction)(state.timeline[method]))
                 state.timeline[method](target, Object.assign(Object.assign({}, config), vars));
             else
-                infra_1.Logger.warn('amination method "%s" unknown', method);
+                _infra_1.Logger.warn('amination method "%s" unknown', method);
         }
     }
 }

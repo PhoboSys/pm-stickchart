@@ -1,5 +1,4 @@
-import { IGraphicStorage, IRenderer } from '..';
-import { DoneFunction, RenderingContext } from '..';
+import { IGraphicStorage, IRenderer, DoneFunction, RenderingContext } from '@rendering';
 export declare class LineChartRenderer implements IRenderer {
     private readonly renderer;
     private readonly compositor;

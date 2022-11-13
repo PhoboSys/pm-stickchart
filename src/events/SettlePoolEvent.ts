@@ -1,4 +1,4 @@
-import { PricefeedPoint } from '../chartdata'
+import { PricefeedPoint } from '@chartdata'
 
 export class SettlePoolEvent extends Event {
     public static readonly NAME: string = 'settlepool'
@@ -6,7 +6,9 @@ export class SettlePoolEvent extends Event {
     public readonly inner: Event
 
     public readonly poolid: string
+
     public readonly resolutionPrice: PricefeedPoint
+
     public readonly controlPrice: PricefeedPoint
 
     constructor(
@@ -23,5 +25,4 @@ export class SettlePoolEvent extends Event {
         this.inner = inner
     }
 }
-
 

@@ -1,10 +1,7 @@
-import config from '../../../config'
-import { RenderingContext } from '../..'
-import { GraphicUtils } from '../..'
+import { RenderingContext, GraphicUtils } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { nowUnixTS } from '../../../lib/utils'
-import { Graphics, Container, Text } from '../../../lib/pixi'
+import datamath from '@lib/datamath'
+import { Graphics, Container } from '@lib/pixi'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -61,7 +58,7 @@ export class PoolOpen extends BasePoolsRenderer {
         context: RenderingContext,
         container: Container,
     ): void {
-        const { width, height} = context.screen
+        const { width, height } = context.screen
         const { timerange } = context.plotdata
         const [x] = datamath.scale([pool.openPriceTimestamp], timerange, width)
         const style = this.openBorder

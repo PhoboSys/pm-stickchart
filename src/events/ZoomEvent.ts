@@ -1,4 +1,4 @@
-import config from '../config'
+import config from '@config'
 
 export class ZoomEvent extends Event {
     public static readonly NAME: string = 'zoom'

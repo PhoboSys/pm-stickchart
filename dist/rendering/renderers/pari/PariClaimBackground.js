@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariClaimBackground = void 0;
+const textures_1 = require("../../textures");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const enums_1 = require("../../../enums");
-const textures_1 = require("../../textures");
+const _enums_1 = require("../../../enums/index.js");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
         this.validPariPositions = {
-            [enums_1.EPosition.Up]: enums_1.EPosition.Up,
-            [enums_1.EPosition.Down]: enums_1.EPosition.Down,
-            [enums_1.EPosition.Zero]: enums_1.EPosition.Zero,
+            [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
+            [_enums_1.EPosition.Down]: _enums_1.EPosition.Down,
+            [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
         this.configAnimations = {
             pulsar: {

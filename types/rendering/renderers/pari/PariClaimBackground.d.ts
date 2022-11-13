@@ -1,4 +1,4 @@
-import { RenderingContext } from '../..';
+import { RenderingContext } from '@rendering';
 import { Container } from '../../../lib/pixi';
 import { BaseParisRenderer } from './BaseParisRenderer';
 export declare class PariClaimBackground extends BaseParisRenderer {

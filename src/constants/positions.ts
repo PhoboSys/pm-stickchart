@@ -5,10 +5,10 @@ export const EQUAL = 3
 export const NOCONTEST = 4
 
 export const PRIZEFUNDS = {
-  TOTAL: -1,
-  DOWN: 1,
-  UP: 2,
-  EQUAL: 3,
-  WITHDRAWN: -2,
+    TOTAL: -1,
+    DOWN: 1,
+    UP: 2,
+    EQUAL: 3,
+    WITHDRAWN: -2,
 }
 

@@ -1,5 +1,5 @@
-import { RenderingContext, RenderingCompositor } from '../..'
-import { IGraphicStorage, IRenderer, DoneFunction } from '../..'
+import { RenderingContext, RenderingCompositor } from '@rendering'
+import { IGraphicStorage, IRenderer, DoneFunction } from '@rendering'
 
 import { VerticalGridRenderer } from './VerticalGridRenderer'
 import { HorizontalGridRenderer } from './HorizontalGridRenderer'

@@ -1,4 +1,4 @@
-import { IRenderer, RenderingContext, DoneFunction } from '..';
+import { IRenderer, RenderingContext, DoneFunction } from '@rendering';
 export declare class RenderingCompositor {
     private readonly renderers;
     constructor(renderers: Array<IRenderer>);

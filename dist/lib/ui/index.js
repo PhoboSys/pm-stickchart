@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
-const config_1 = __importDefault(require("../../config"));
-const currencies_1 = require("../../constants/currencies");
+const _config_1 = __importDefault(require("../../config.js"));
+const _constants_1 = require("../../constants/index.js");
 const datamath_1 = __importDefault(require("../datamath"));
 const utils_1 = require("../utils");
 exports.UNIX_MINUTE = 60;
@@ -20,29 +20,29 @@ class ui {
         let s = '+';
         if (amount < 0)
             s = '';
-        return s + datamath_1.default.percent(amount, config_1.default.ui.precision.percent) + '%';
+        return s + datamath_1.default.percent(amount, _config_1.default.ui.precision.percent) + '%';
     }
     static erc20(amount) {
         if (!amount)
             return '0';
-        return datamath_1.default.round(amount, config_1.default.ui.precision.erc20).toString();
+        return datamath_1.default.round(amount, _config_1.default.ui.precision.erc20).toString();
     }
     static currency(price, currently = '') {
         let symb = '';
-        if (currently && config_1.default.price.showSymbols) {
+        if (currently && _config_1.default.price.showSymbols) {
             const symbols = {
-                [currencies_1.USD]: '$'
+                [_constants_1.USD]: '$'
             };
             symb = symbols[currently];
         }
-        return symb + datamath_1.default.toFixedPrecision(price, config_1.default.price.precision);
+        return symb + datamath_1.default.toFixedPrecision(price, _config_1.default.price.precision);
     }
     static currencyScaled(price, currently, scale) {
         const symbols = {
-            [currencies_1.USD]: '$'
+            [_constants_1.USD]: '$'
         };
         let symb = symbols[currently] || '';
-        if (!config_1.default.price.showSymbols)
+        if (!_config_1.default.price.showSymbols)
             symb = '';
         return symb + datamath_1.default.toFixedScaled(price, scale);
     }
@@ -57,9 +57,9 @@ class ui {
         const mm = Math.floor(duration / exports.UNIX_MINUTE) % 60;
         const hh = Math.floor(duration / exports.UNIX_HOUR) % 60;
         const dd = Math.floor(duration / exports.UNIX_DAY) % 24;
-        let pritty = [];
+        const pritty = [];
         // remove prepending zeros
-        for (let part of [dd, hh, mm, ss]) {
+        for (const part of [dd, hh, mm, ss]) {
             if (pritty.length)
                 pritty.push(part.toFixed().padStart(2, '0'));
             else if (part)

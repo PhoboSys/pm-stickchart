@@ -1,5 +1,5 @@
 import { Container } from '../../lib/pixi';
-import { IGraphicStorage } from '..';
+import { IGraphicStorage } from '@rendering';
 export declare class GraphicStorage implements IGraphicStorage {
     private readonly root;
     private containers;

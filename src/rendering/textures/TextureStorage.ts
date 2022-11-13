@@ -1,9 +1,9 @@
-import config from '../../config'
-import { Logger } from '../../infra'
+import config from '@config'
+import { Logger } from '@infra'
 
-import { Application, RenderTexture, GradientFactory, Sprite } from '../../lib/pixi'
-import { Texture, Renderer } from '../../lib/pixi'
-import { ITextureStorage } from '../abstraction'
+import { Application, RenderTexture, GradientFactory } from '@lib/pixi'
+import { Texture, Renderer } from '@lib/pixi'
+import { ITextureStorage } from '@rendering/abstraction'
 
 import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE } from './symbols'
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols'

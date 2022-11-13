@@ -1,17 +1,17 @@
 import { IGraphicStorage, RenderingContext } from '../..';
+import { BaseRenderer } from '../..';
 import { Container } from '../../../lib/pixi';
-import { BasePoolsRenderer } from './BasePoolsRenderer';
-export declare class PoolResolution extends BasePoolsRenderer {
+export declare class PoolResolutionRenderer extends BaseRenderer {
     static readonly POOL_RESOLUTION_ID: symbol;
+    private _lastLevel;
     private lineStyle;
     private textStyle;
     private coverStyle;
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    protected updatePool(pool: any, context: RenderingContext, container: Container): void;
-    private updatePoolBorder;
-    private createName;
-    private getLevelTextureName;
-    private createDash;
+    protected update(context: RenderingContext, container: Container): Container;
     private getLevelLineColors;
+    private updatePoolBorder;
+    private createPoolName;
+    private createDash;
 }

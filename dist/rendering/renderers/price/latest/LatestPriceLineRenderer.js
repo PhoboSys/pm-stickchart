@@ -4,24 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceLineRenderer = void 0;
-const __1 = require("../../..");
-const config_1 = __importDefault(require("../../../../config"));
+const _rendering_1 = require("../../../index.js");
+const _config_1 = __importDefault(require("../../../../config.js"));
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
-const index_1 = __importDefault(require("../../../../lib/ui/index"));
-const currencies_1 = require("../../../../constants/currencies");
-class LatestPriceLineRenderer extends __1.BaseRenderer {
+const ui_1 = __importDefault(require("../../../../lib/ui"));
+const _constants_1 = require("../../../../constants/index.js");
+class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.lineStyle = {
             width: 2,
-            color: config_1.default.style.linecolor,
+            color: _config_1.default.style.linecolor,
             alpha: 1,
             join: 'round',
             cap: 'round',
             paddingx: 12,
         };
         this.textCoverStyle = {
-            color: config_1.default.style.linecolor,
+            color: _config_1.default.style.linecolor,
             paddingx: 8,
             paddingy: 6,
             anchorx: 1.1,
@@ -34,7 +34,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
                 fontSize: 13,
             },
             linestyle: {
-                color: config_1.default.style.linecolor,
+                color: _config_1.default.style.linecolor,
                 width: 1,
             },
         };
@@ -48,11 +48,11 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         const x = width;
         const y = Number(ys.at(-1));
         const price = Number(prices.at(-1));
-        const [coveredText, coveredTextState] = this.get('coveredText', () => __1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [x, y], this.textCoverStyle));
+        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [x, y], this.textCoverStyle));
         if (coveredTextState.new)
             container.addChild(coveredText);
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = index_1.default.currency(price, currencies_1.USD);
+        textGraphic.text = ui_1.default.currency(price, _constants_1.USD);
         const { paddingx, paddingy } = this.textCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;
@@ -60,7 +60,7 @@ class LatestPriceLineRenderer extends __1.BaseRenderer {
         const { anchorx, anchory } = this.textCoverStyle;
         coveredText.position.set(x - coveredText.width * anchorx, y - coveredText.height * anchory);
         const padding = coveredText.width + this.lineStyle.paddingx;
-        const [line, lineState] = this.get('line', () => __1.GraphicUtils.createLine([0, 0], [width, 0], this.lineStyle));
+        const [line, lineState] = this.get('line', () => _rendering_1.GraphicUtils.createLine([0, 0], [width, 0], this.lineStyle));
         if (lineState.new)
             container.addChild(line);
         line.position.set(0, y);

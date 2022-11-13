@@ -1,7 +1,10 @@
-import { LineChartRenderer } from '..'
-import { NotSupportedChartTypeRenderer } from '..'
-import { IRenderer, IGraphicStorage } from '..'
-import { EChartType } from '../../enums/EChartType'
+import {
+    LineChartRenderer,
+    NotSupportedChartTypeRenderer,
+    IRenderer,
+    IGraphicStorage
+} from '@rendering'
+import { EChartType } from '@enums'
 
 export class RenderingPipelineFactory {
 

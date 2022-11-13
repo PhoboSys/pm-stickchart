@@ -4,59 +4,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolResolutionLine = void 0;
-const config_1 = __importDefault(require("../../../config"));
-const __1 = require("../..");
+const _config_1 = __importDefault(require("../../../config.js"));
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
-const enums_1 = require("../../../enums");
+const _enums_1 = require("../../../enums/index.js");
 const pixi_1 = require("../../../lib/pixi");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
         this.torusStyle = {
-            [enums_1.EPosition.Undefined]: {
+            [_enums_1.EPosition.Undefined]: {
                 innerr: 3,
                 outerr: 6,
                 innerColor: 0x303550,
                 outerColor: 0xFFFFFF,
             },
-            [enums_1.EPosition.Up]: {
+            [_enums_1.EPosition.Up]: {
                 innerr: 3,
                 outerr: 6,
                 innerColor: 0x303550,
-                outerColor: config_1.default.style.resolution.upcolor,
+                outerColor: _config_1.default.style.resolution.upcolor,
             },
-            [enums_1.EPosition.Down]: {
+            [_enums_1.EPosition.Down]: {
                 innerr: 3,
                 outerr: 6,
                 innerColor: 0x303550,
-                outerColor: config_1.default.style.resolution.downcolor,
+                outerColor: _config_1.default.style.resolution.downcolor,
             },
-            [enums_1.EPosition.Zero]: {
+            [_enums_1.EPosition.Zero]: {
                 innerr: 3,
                 outerr: 6,
                 innerColor: 0x303550,
-                outerColor: config_1.default.style.resolution.zerocolor,
+                outerColor: _config_1.default.style.resolution.zerocolor,
             }
         };
         this.lineStyle = {
-            [enums_1.EPosition.Undefined]: {
+            [_enums_1.EPosition.Undefined]: {
                 color: 0xFFFFFF,
                 width: 3,
                 alpha: 0.9,
             },
-            [enums_1.EPosition.Up]: {
-                color: config_1.default.style.resolution.upcolor,
+            [_enums_1.EPosition.Up]: {
+                color: _config_1.default.style.resolution.upcolor,
                 width: 3,
                 alpha: 1,
             },
-            [enums_1.EPosition.Down]: {
-                color: config_1.default.style.resolution.downcolor,
+            [_enums_1.EPosition.Down]: {
+                color: _config_1.default.style.resolution.downcolor,
                 width: 3,
                 alpha: 1,
             },
-            [enums_1.EPosition.Zero]: {
-                color: config_1.default.style.resolution.zerocolor,
+            [_enums_1.EPosition.Zero]: {
+                color: _config_1.default.style.resolution.zerocolor,
                 width: 3,
                 alpha: 1,
             },
@@ -145,8 +145,8 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
     }
     createPricePoint(pool, context, style) {
-        const inner = __1.GraphicUtils.createCircle([0, 0], style.innerr, { color: style.innerColor });
-        const outer = __1.GraphicUtils.createCircle([0, 0], style.outerr, { color: style.outerColor });
+        const inner = _rendering_1.GraphicUtils.createCircle([0, 0], style.innerr, { color: style.innerColor });
+        const outer = _rendering_1.GraphicUtils.createCircle([0, 0], style.outerr, { color: style.outerColor });
         const pointer = new pixi_1.Container();
         pointer.addChild(outer, inner);
         return pointer;

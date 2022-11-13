@@ -1,13 +1,10 @@
-import config from '../../../config'
-import { RenderingContext } from '../..'
-import { GraphicUtils } from '../..'
+import { RenderingContext, GraphicUtils } from '@rendering'
 
-import { PricePoint } from '../../../chartdata'
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text } from '../../../lib/pixi'
-import { EPosition } from '../../../enums'
-import ui from '../../../lib/ui/index'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
+import { PricePoint } from '@chartdata'
+import datamath from '@lib/datamath'
+import { Container } from '@lib/pixi'
+import ui from '@lib/ui/index'
+import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -89,11 +86,11 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
         const priceValue = ui.currency(resolution.value, context.metapool.quote)
 
         const [cover, coverState] = this.get('cover', () => GraphicUtils.createText(
-                priceValue,
-                [0, 0],
-                this.coverStyle.textStyle,
-                this.coverStyle.anchor,
-            )
+            priceValue,
+            [0, 0],
+            this.coverStyle.textStyle,
+            this.coverStyle.anchor,
+        )
         )
         if (coverState.new) container.addChild(cover)
 

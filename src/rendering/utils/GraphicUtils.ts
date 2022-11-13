@@ -1,9 +1,9 @@
 import { castArray } from 'lodash'
 
-import { Logger } from '../../infra'
+import { Logger } from '@infra'
 
-import datamath from '../../lib/datamath'
-import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture, Matrix } from '../../lib/pixi'
+import datamath from '@lib/datamath'
+import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture, Matrix } from '@lib/pixi'
 
 export class GraphicUtils {
 

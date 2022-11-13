@@ -1,14 +1,12 @@
-import config from '../../../config'
-import { Logger } from '../../../infra'
-import { RenderingContext } from '../..'
-import { GraphicUtils } from '../..'
+import config from '@config'
+import { Logger } from '@infra'
+import { RenderingContext, GraphicUtils } from '@rendering'
 
-import { nowUnixTS } from '../../../lib/utils'
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
+import datamath from '@lib/datamath'
+import { Container, Text } from '@lib/pixi'
 
-import { SILVER, GOLD, ROYAL } from '../../../constants/poollevels'
-import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '../../textures/symbols'
+import { SILVER, GOLD, ROYAL } from '@constants'
+import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@rendering/textures/symbols'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -150,6 +148,7 @@ export class PoolResolution extends BasePoolsRenderer {
 
             default:
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
+
                 return config.style.levels.silverLineColors
         }
 
@@ -167,6 +166,7 @@ export class PoolResolution extends BasePoolsRenderer {
 
             default:
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
+
                 return SILVER_LEVEL_TEXTURE
         }
 

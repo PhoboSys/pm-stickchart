@@ -1,5 +1,5 @@
-import { RenderingContext } from '../..';
-import { BasePoolsRenderer } from '../pool/BasePoolsRenderer';
+import { RenderingContext } from '@rendering';
+import { BasePoolsRenderer } from '../../renderers/pool/BasePoolsRenderer';
 import { Container } from '../../../lib/pixi';
 export declare abstract class BaseParisRenderer extends BasePoolsRenderer {
     protected prevparis: {

@@ -1,7 +1,7 @@
-import { PlotData } from '../../chartdata';
+import { PlotData } from '@chartdata';
 import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
-import { EChartType } from '../../enums';
+import { EChartType } from '@enums';
 export declare type DoneFunction = () => void;
 export declare type RenderingContext = {
     metapool: any;

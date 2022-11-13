@@ -1,5 +1,10 @@
-import { IGraphicStorage, RenderingCompositor } from '../..'
-import { RenderingContext, DoneFunction, IRenderer } from '../..'
+import {
+    IGraphicStorage,
+    RenderingCompositor,
+    RenderingContext,
+    DoneFunction,
+    IRenderer
+} from '@rendering'
 
 import { PariTile } from './PariTile'
 import { PariClaimBackground } from './PariClaimBackground'
