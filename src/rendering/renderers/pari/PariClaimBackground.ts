@@ -69,7 +69,15 @@ export class PariClaimBackground extends BaseParisRenderer {
 
         const claimable = !pari.claimed && (win || nocontest)
 
-        if (!claimable) return this.animate('group', 'hide', { onComplete: () => this.clear() })
+        const poolid = pool.poolid
+        const pariid = pari.pariid
+
+        if (!claimable) return this.animate('group', 'hide', {
+            onComplete: () => {
+                this.rebind(poolid, pariid)
+                this.clear()
+            }
+        })
 
         this.updateBackground(pool, pari, context, container, rprice)
 

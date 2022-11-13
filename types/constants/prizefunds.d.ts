@@ -3,5 +3,5 @@ export declare const PRIZEFUNDS: {
     TOTAL: number;
     DOWN: number;
     UP: number;
-    EQUAL: number;
+    ZERO: number;
 };
