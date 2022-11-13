@@ -6,6 +6,6 @@ exports.PRIZEFUNDS = {
     TOTAL: -1,
     DOWN: 1,
     UP: 2,
-    EQUAL: 3,
+    ZERO: 3,
 };
 //# sourceMappingURL=prizefunds.js.map

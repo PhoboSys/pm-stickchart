@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasePoolsRenderer = void 0;
 const __1 = require("../..");
+const constants_1 = require("../../../constants");
 const utils_1 = require("../../../lib/utils");
 const chartdata_1 = require("../../../chartdata");
 const enums_1 = require("../../../enums");
@@ -40,6 +41,8 @@ class BasePoolsRenderer extends __1.BaseRenderer {
     getPoolResolution(pool, context) {
         if (pool.resolved)
             return pool.resolution;
+        if (this.isNoContestPool(pool, context))
+            return enums_1.EPosition.NoContest;
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolutionByPrice(pool, rprice);
         return resolution;
@@ -54,6 +57,39 @@ class BasePoolsRenderer extends __1.BaseRenderer {
         if (resolutionPrice.value < pool.openPriceValue)
             return enums_1.EPosition.Down;
         return enums_1.EPosition.Undefined;
+    }
+    isNoContestPool(pool, context) {
+        if ((0, utils_1.nowUnixTS)() < pool.lockDate)
+            return false;
+        const price = chartdata_1.DataBuilder.getLatest(context.plotdata);
+        if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
+            return false;
+        // TODO: Implement Early Pool Resolution with NoContest
+        // if (this._isNoContestEmptyPool(pool)) return true
+        if (!this.isHistoricalPool(pool, context))
+            return false;
+        if (pool.resolved && pool.resolution === enums_1.EPosition.NoContest)
+            return true;
+        if (this._isNoContestEmptyPool(pool))
+            return true;
+        const rprice = this.getResolutionPricePoint(pool, context);
+        const resolution = this.getPoolResolutionByPrice(pool, rprice);
+        if (this._isNoContestPool(pool, resolution))
+            return true;
+        return false;
+    }
+    _isNoContestEmptyPool(pool) {
+        const prizefundTotal = pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL];
+        return (pool.prizefunds[constants_1.PRIZEFUNDS.UP] == prizefundTotal ||
+            pool.prizefunds[constants_1.PRIZEFUNDS.ZERO] == prizefundTotal ||
+            pool.prizefunds[constants_1.PRIZEFUNDS.DOWN] == prizefundTotal);
+    }
+    _isNoContestPool(pool, position) {
+        if (position === enums_1.EPosition.Undefined)
+            return false;
+        const prizefundTotal = pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL];
+        const prizefundWin = pool.prizefunds[position];
+        return Number(prizefundWin) === 0 || prizefundWin === prizefundTotal;
     }
     isHistoricalPool(pool, context) {
         var _a;

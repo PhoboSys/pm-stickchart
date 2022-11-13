@@ -107,8 +107,8 @@ export class PariTile extends BaseParisRenderer {
         [EPosition.Zero]: {
             size: 50,
             color: 0xFFA000,
-            offset: [-30, 0],
-            outside: [0, 0.5]
+            offset: [30, 0],
+            outside: [1, 0.5]
         }
 
     }
@@ -577,16 +577,14 @@ export class PariTile extends BaseParisRenderer {
         )
         if (titleprofitState.new) content.addChild(titleprofit)
 
-        if (win || nocontest) {
+        if (win) {
             this.clear('zero')
 
             const [prizeAmount] = this.get(
                 'prizeAmount',
-                () => {
-                    if (nocontest)         return ui.erc20(pari.wager)
-                    else if (pari.claimed) return ui.erc20(pari.payout)
-                    else                   return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
-                },
+                () => pari.claimed ? ui.erc20(pari.payout)
+                    : ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                ,
                 [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest]
             )
 
@@ -626,6 +624,7 @@ export class PariTile extends BaseParisRenderer {
             if (profitState.new) content.addChild(profit)
             profit.text = percent
 
+            titleprofit.text = 'Profit'
             titleprofit.position.set(
                 bgwidth + tptox - profit.width - 4, // 4px padding
                 tptoy,
@@ -645,10 +644,13 @@ export class PariTile extends BaseParisRenderer {
                     ],
                     this.prizeStyle.text,
                     this.prizeStyle.anchor
-                )
+                ),
+                [pari.wager]
             )
             if (zeroState.new) content.addChild(zero)
+            zero.text = nocontest ? ui.erc20(pari.wager) : 0
 
+            titleprofit.text = 'Return'
             titleprofit.position.set(
                 bgwidth + tptox,
                 tptoy,

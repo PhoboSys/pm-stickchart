@@ -87,8 +87,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [enums_1.EPosition.Zero]: {
                 size: 50,
                 color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
+                offset: [30, 0],
+                outside: [1, 0.5]
             }
         };
         this.groupStyle = {
@@ -488,16 +488,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         ], this.titleprofitStyle.text, this.titleprofitStyle.anchor));
         if (titleprofitState.new)
             content.addChild(titleprofit);
-        if (win || nocontest) {
+        if (win) {
             this.clear('zero');
-            const [prizeAmount] = this.get('prizeAmount', () => {
-                if (nocontest)
-                    return ui_1.default.erc20(pari.wager);
-                else if (pari.claimed)
-                    return ui_1.default.erc20(pari.payout);
-                else
-                    return ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position));
-            }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL], nocontest]);
+            const [prizeAmount] = this.get('prizeAmount', () => pari.claimed ? ui_1.default.erc20(pari.payout)
+                : ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pari.position, pari.claimed, pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL], nocontest]);
             const [pzox, pzoy] = this.prizeStyle.offset;
             const [prize, prizeState] = this.get('prize', () => __1.GraphicUtils.createText(prizeAmount, [
                 bgwidth + pzox,
@@ -515,6 +509,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (profitState.new)
                 content.addChild(profit);
             profit.text = percent;
+            titleprofit.text = 'Profit';
             titleprofit.position.set(bgwidth + tptox - profit.width - 4, // 4px padding
             tptoy);
         }
@@ -525,9 +520,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             const [zero, zeroState] = this.get('zero', () => __1.GraphicUtils.createText(0, [
                 bgwidth + pzox,
                 pzoy,
-            ], this.prizeStyle.text, this.prizeStyle.anchor));
+            ], this.prizeStyle.text, this.prizeStyle.anchor), [pari.wager]);
             if (zeroState.new)
                 content.addChild(zero);
+            zero.text = nocontest ? ui_1.default.erc20(pari.wager) : 0;
+            titleprofit.text = 'Return';
             titleprofit.position.set(bgwidth + tptox, tptoy);
         }
         if (this.isHistoricalPool(pool, context)) {
