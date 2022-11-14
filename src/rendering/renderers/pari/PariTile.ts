@@ -648,7 +648,9 @@ export class PariTile extends BaseParisRenderer {
                 [pari.wager]
             )
             if (zeroState.new) content.addChild(zero)
-            zero.text = nocontest ? ui.erc20(pari.wager) : 0
+
+            if (pari.claim) zero.text = ui.erc20(pari.payout)
+            else            zero.text = nocontest ? ui.erc20(pari.wager) : 0
 
             titleprofit.text = 'Return'
             titleprofit.position.set(
@@ -669,7 +671,7 @@ export class PariTile extends BaseParisRenderer {
                 if (!claimable) this.animate('content', 'unclaimable_contnet')
             } else {
                 this.animate('background', 'lost_bg')
-                this.animate('content', 'lost_contnet')
+                if (!claimable) this.animate('content', 'lost_contnet')
             }
 
 

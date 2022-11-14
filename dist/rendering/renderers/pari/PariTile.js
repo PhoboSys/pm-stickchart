@@ -523,7 +523,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             ], this.prizeStyle.text, this.prizeStyle.anchor), [pari.wager]);
             if (zeroState.new)
                 content.addChild(zero);
-            zero.text = nocontest ? ui_1.default.erc20(pari.wager) : 0;
+            if (pari.claim)
+                zero.text = ui_1.default.erc20(pari.payout);
+            else
+                zero.text = nocontest ? ui_1.default.erc20(pari.wager) : 0;
             titleprofit.text = 'Return';
             titleprofit.position.set(bgwidth + tptox, tptoy);
         }
@@ -536,7 +539,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             else {
                 this.animate('background', 'lost_bg');
-                this.animate('content', 'lost_contnet');
+                if (!claimable)
+                    this.animate('content', 'lost_contnet');
             }
             if (claimable) {
                 if (groupstate.animation !== 'hover_group_claimable')
