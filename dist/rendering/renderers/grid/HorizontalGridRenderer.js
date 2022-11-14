@@ -8,8 +8,13 @@ const _constants_1 = require("../../../constants/index.js");
 const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const index_1 = __importDefault(require("../../../lib/ui/index"));
+<<<<<<< HEAD
 const _rendering_1 = require("../../index.js");
 class HorizontalGridRenderer extends _rendering_1.BaseRenderer {
+=======
+const constants_1 = require("../../../constants");
+class HorizontalGridRenderer extends __1.BaseRenderer {
+>>>>>>> master
     constructor(renderer) {
         super(renderer);
         this.lineStyle = {
@@ -50,8 +55,13 @@ class HorizontalGridRenderer extends _rendering_1.BaseRenderer {
                 container.addChild(line);
             line.position.set(0, y);
             line.width = width;
+<<<<<<< HEAD
             const priceValue = index_1.default.currencyScaled(price, _constants_1.USD, stepsize);
             const [text, textState] = this.get('y_gridtext' + idx, () => _rendering_1.GraphicUtils.createText(priceValue, [width, y], this.textStyle, 1.1));
+=======
+            const priceValue = index_1.default.currencyScaled(price, constants_1.USD, stepsize);
+            const [text, textState] = this.get('y_gridtext' + idx, () => __1.GraphicUtils.createText(priceValue, [width, y], this.textStyle, 1.1));
+>>>>>>> master
             if (textState.new)
                 container.addChild(text);
             text.position.set(width, y);

@@ -1,3 +1,5 @@
+import { PRIZEFUNDS } from '@constants'
+
 import { RenderingContext, GraphicUtils } from '@rendering'
 import {
     UP_ICON_TEXTURE,
@@ -12,7 +14,7 @@ import { Logger } from '@infra'
 import datamath from '@lib/datamath'
 import { Graphics, Container, Sprite } from '@lib/pixi'
 import ui from '@lib/ui'
-import { actualReturn, actualProfitPercent } from '@lib/calc-utils'
+import { actualReturn, profitPercent } from '@lib/calc-utils'
 
 import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } from '@events'
 
@@ -26,6 +28,36 @@ export class PariTile extends BaseParisRenderer {
 
     public get rendererId(): symbol {
         return PariTile.PARI_TILE_ID
+    }
+
+    private nocontestLineStyle: any = {
+
+        [EPosition.Up]: {
+            offsetTOP: [0, -6],
+            offsetBOTTOM: [0, 6],
+            lineStyle: {
+                color: 0xB7BDD7,
+                width: 2,
+            }
+        },
+
+        [EPosition.Down]: {
+            offsetTOP: [0, -6],
+            offsetBOTTOM: [0, 6],
+            lineStyle: {
+                color: 0xB7BDD7,
+                width: 2,
+            }
+        },
+
+        [EPosition.Zero]: {
+            offsetTOP: [300, -6],
+            offsetBOTTOM: [300, 6],
+            lineStyle: {
+                color: 0xB7BDD7,
+                width: 2,
+            }
+        }
     }
 
     private winlineStyle: any = {
@@ -77,8 +109,8 @@ export class PariTile extends BaseParisRenderer {
         [EPosition.Zero]: {
             size: 50,
             color: 0xFFA000,
-            offset: [-30, 0],
-            outside: [0, 0.5]
+            offset: [30, 0],
+            outside: [1, 0.5]
         }
 
     }
@@ -104,7 +136,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -130,7 +162,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -143,7 +175,7 @@ export class PariTile extends BaseParisRenderer {
             width: 300,
             height: 62,
             background: {
-                offset: [-3, 0],
+                offset: [-2, 0],
                 radiuses: [20, 1, 1, 20],
                 color: 0x22273F,
                 lineStyle: {
@@ -156,7 +188,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
                         { color: '#22273FFF', offset: 0.01 },
-                        { color: '#22273F00', offset: 0.1 },
+                        { color: '#22273F00', offset: 0.05 },
                         { color: '#22273F00', offset: 1 },
                     ]
                 },
@@ -397,12 +429,10 @@ export class PariTile extends BaseParisRenderer {
 
         if (!(pari.position in this.validPariPositions)) return this.clear()
 
-        const rprice = this.getResolutionPricePoint(pool, context)
-        const resolution = this.getPoolResolutionByPrice(pool, rprice)
-        const win = pari.position === resolution
+        const resolution = this.getPoolResolution(pool, context)
 
-        this.updateTile(pool, pari, context, container, win)
-        this.updateLine(pool, pari, context, container, win)
+        this.updateTile(pool, pari, context, container, resolution)
+        this.updateLine(pool, pari, context, container, resolution)
 
     }
 
@@ -411,11 +441,13 @@ export class PariTile extends BaseParisRenderer {
         pari: any,
         context: RenderingContext,
         container: Container,
-        win: boolean,
+        resolution: EPosition,
     ): void {
+        const win = pari.position === resolution
+        const nocontest = resolution === EPosition.NoContest
 
         const [group] = this.read('group')
-        if (!win || !group || !this.isHistoricalPool(pool, context)) return this.clear('line')
+        if (!(win || nocontest) || !group || !this.isHistoricalPool(pool, context)) return this.clear('line')
 
         const { height } = context.screen
         const { pricerange } = context.plotdata
@@ -426,12 +458,14 @@ export class PariTile extends BaseParisRenderer {
         const [line, linestate] = this.get('line', () => new Graphics())
         if (linestate.new) group.addChild(line)
 
-        const [topx, topy] = this.winlineStyle[pari.position].offsetTOP
-        const [botx, boty] = this.winlineStyle[pari.position].offsetBOTTOM
+        const style = nocontest ? this.nocontestLineStyle : this.winlineStyle
+
+        const [topx, topy] = style[pari.position].offsetTOP
+        const [botx, boty] = style[pari.position].offsetBOTTOM
 
         line
             .clear()
-            .lineStyle(this.winlineStyle[pari.position].lineStyle)
+            .lineStyle(style[pari.position].lineStyle)
             .moveTo(0+topx, 0)
             .lineTo(0+topx, oy+topy)
             .moveTo(0+botx, oy+boty)
@@ -446,18 +480,17 @@ export class PariTile extends BaseParisRenderer {
         pari: any,
         context: RenderingContext,
         container: Container,
-        win: boolean,
+        resolution: EPosition,
     ): void {
+        const win = pari.position === resolution
+        const nocontest = resolution === EPosition.NoContest
 
-        const {
-            width,
-            height,
-        } = context.screen
+        const { width, height } = context.screen
 
         const poolid = pool.poolid
         const pariid = pari.pariid
 
-        if (!win && this.isHistoricalPool(pool, context)) {
+        if (!win && !nocontest && this.isHistoricalPool(pool, context)) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
                     this.rebind(poolid, pariid)
@@ -552,8 +585,10 @@ export class PariTile extends BaseParisRenderer {
 
             const [prizeAmount] = this.get(
                 'prizeAmount',
-                () => ui.erc20(actualReturn(pool.prizefunds, pari.wager, position)),
-                [pari.wager, pool.prizefunds]
+                () => pari.claimed ? ui.erc20(pari.payout)
+                    : ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                ,
+                [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest]
             )
 
             const [pzox, pzoy] = this.prizeStyle.offset
@@ -571,16 +606,16 @@ export class PariTile extends BaseParisRenderer {
             if (prizeState.new) content.addChild(prize)
             prize.text = prizeAmount
 
-            const [profitPercent] = this.get(
-                'profitPercent',
-                () => ui.percent(actualProfitPercent(pool.prizefunds, pari.wager, position)),
-                [pari.wager, pool.prizefunds]
+            const [percent] = this.get(
+                'percent',
+                () => ui.percent(profitPercent(prizeAmount, pari.wager)),
+                [prizeAmount, pari.wager]
             )
 
             const [ptox, ptoy] = this.profitStyle.offset
             const [profit, profitState] = this.get('profit', () =>
                 GraphicUtils.createText(
-                    profitPercent,
+                    percent,
                     [
                         bgwidth + ptox,
                         ptoy,
@@ -590,8 +625,9 @@ export class PariTile extends BaseParisRenderer {
                 )
             )
             if (profitState.new) content.addChild(profit)
-            profit.text = profitPercent
+            profit.text = percent
 
+            titleprofit.text = 'Profit'
             titleprofit.position.set(
                 bgwidth + tptox - profit.width - 4, // 4px padding
                 tptoy,
@@ -611,10 +647,13 @@ export class PariTile extends BaseParisRenderer {
                     ],
                     this.prizeStyle.text,
                     this.prizeStyle.anchor
-                )
+                ),
+            [pari.wager]
             )
             if (zeroState.new) content.addChild(zero)
+            zero.text = nocontest ? ui.erc20(pari.wager) : 0
 
+            titleprofit.text = 'Return'
             titleprofit.position.set(
                 bgwidth + tptox,
                 tptoy,
@@ -623,7 +662,11 @@ export class PariTile extends BaseParisRenderer {
 
         if (this.isHistoricalPool(pool, context)) {
 
-            const [claimable] = this.get('claimable', () => win && !pari.claimed, [win, pari.claimed])
+            const [claimable] = this.get('claimable', () =>
+                !pari.claimed && (win || nocontest),
+            [nocontest, win, pari.claimed]
+            )
+
             if (win) {
                 this.animate('background', 'won_bg')
                 if (!claimable) this.animate('content', 'unclaimable_contnet')
@@ -699,7 +742,7 @@ export class PariTile extends BaseParisRenderer {
                     btny + bgheight * vertical,
                 )
 
-                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved, pari.claimed])
+                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
                 if (claimimgState.new) {
                     claim_img
                         .beginFill(0xFFA000)

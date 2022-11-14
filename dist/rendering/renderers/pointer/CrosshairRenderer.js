@@ -7,8 +7,13 @@ exports.CrosshairRenderer = void 0;
 const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const ui_1 = __importDefault(require("../../../lib/ui"));
+<<<<<<< HEAD
 const _constants_1 = require("../../../constants/index.js");
 class CrosshairRenderer extends _rendering_1.BaseRenderer {
+=======
+const constants_1 = require("../../../constants");
+class CrosshairRenderer extends __1.BaseRenderer {
+>>>>>>> master
     constructor(storage) {
         super(storage);
         this.lineStyle = {
@@ -107,9 +112,15 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
         const { y } = this._position;
         const pricedif = maxprice - minprice;
         const price = minprice + datamath_1.default.scaleReverse([y], [0, height], pricedif)[0];
+<<<<<<< HEAD
         const [coveredText, coveredTextState] = this.get('priceCoveredText', () => _rendering_1.GraphicUtils.createCoveredText(ui_1.default.currency(price, _constants_1.USD), [width, y], this.priceCoverStyle));
         const textGraphic = coveredText.getChildAt(1);
         textGraphic.text = ui_1.default.currency(price, _constants_1.USD);
+=======
+        const [coveredText, coveredTextState] = this.get('priceCoveredText', () => __1.GraphicUtils.createCoveredText(ui_1.default.currency(price, constants_1.USD), [width, y], this.priceCoverStyle));
+        const textGraphic = coveredText.getChildAt(1);
+        textGraphic.text = ui_1.default.currency(price, constants_1.USD);
+>>>>>>> master
         const { paddingx, paddingy } = this.priceCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;

@@ -5,6 +5,8 @@ import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
 import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
 
+import { PRIZEFUNDS } from '@constants'
+
 export abstract class BasePoolsRenderer extends BaseRenderer {
 
     protected prevpools: { [key:string]: string } = {}
@@ -53,6 +55,20 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         this.newpools = {}
     }
 
+    protected getPoolResolution(
+        pool: any,
+        context: RenderingContext,
+    ): EPosition {
+
+        if (pool.resolved) return pool.resolution
+        if (this.isNoContestPool(pool, context)) return EPosition.NoContest
+
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const resolution = this.getPoolResolutionByPrice(pool, rprice)
+
+        return resolution
+    }
+
     protected getPoolResolutionByPrice(
         pool: any,
         resolutionPrice: PricePoint | null,
@@ -66,6 +82,49 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return EPosition.Undefined
     }
 
+    protected isNoContestPool(
+        pool: any,
+        context: RenderingContext,
+    ): boolean {
+        if (nowUnixTS() < pool.lockDate) return false
+
+        const price = DataBuilder.getLatest(context.plotdata)
+        if (!price?.timestamp || price.timestamp < pool.lockDate) return false
+
+        // TODO: Implement Early Pool Resolution with NoContest
+        // if (this._isNoContestEmptyPool(pool)) return true
+
+        if (!this.isHistoricalPool(pool, context)) return false
+        if (pool.resolved && pool.resolution === EPosition.NoContest) return true
+
+        if (this._isNoContestEmptyPool(pool)) return true
+
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const resolution = this.getPoolResolutionByPrice(pool, rprice)
+        if (this._isNoContestPool(pool, resolution)) return true
+
+        return false
+    }
+
+    private _isNoContestEmptyPool(pool: any): boolean {
+        const prizefundTotal = pool.prizefunds[PRIZEFUNDS.TOTAL]
+
+        return (
+            pool.prizefunds[PRIZEFUNDS.UP] == prizefundTotal ||
+            pool.prizefunds[PRIZEFUNDS.ZERO] == prizefundTotal ||
+            pool.prizefunds[PRIZEFUNDS.DOWN] == prizefundTotal
+        )
+    }
+
+    private _isNoContestPool(pool: any, position: EPosition): boolean {
+        if (position === EPosition.Undefined) return false
+
+        const prizefundTotal = pool.prizefunds[PRIZEFUNDS.TOTAL]
+        const prizefundWin = pool.prizefunds[position]
+
+        return Number(prizefundWin) === 0 || prizefundWin === prizefundTotal
+    }
+
     protected isHistoricalPool(
         pool: any,
         context: RenderingContext,
@@ -77,12 +136,6 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             pool.resolved ||
             context.settlements?.[pool.poolid]
         )
-    }
-
-    protected isActualPool(
-        pool: any,
-    ): boolean {
-        return pool.resolutionDate > nowUnixTS()
     }
 
     protected getResolutionPricePoint(
@@ -117,6 +170,12 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         return null
 
+    }
+
+    protected isActualPool(
+        pool: any,
+    ): boolean {
+        return pool.resolutionDate > nowUnixTS()
     }
 
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void

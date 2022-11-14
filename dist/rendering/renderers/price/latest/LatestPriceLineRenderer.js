@@ -7,9 +7,15 @@ exports.LatestPriceLineRenderer = void 0;
 const _rendering_1 = require("../../../index.js");
 const _config_1 = __importDefault(require("../../../../config.js"));
 const datamath_1 = __importDefault(require("../../../../lib/datamath"));
+<<<<<<< HEAD
 const ui_1 = __importDefault(require("../../../../lib/ui"));
 const _constants_1 = require("../../../../constants/index.js");
 class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
+=======
+const index_1 = __importDefault(require("../../../../lib/ui/index"));
+const constants_1 = require("../../../../constants");
+class LatestPriceLineRenderer extends __1.BaseRenderer {
+>>>>>>> master
     constructor(renderer) {
         super(renderer);
         this.lineStyle = {
@@ -52,7 +58,11 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
         if (coveredTextState.new)
             container.addChild(coveredText);
         const textGraphic = coveredText.getChildAt(1);
+<<<<<<< HEAD
         textGraphic.text = ui_1.default.currency(price, _constants_1.USD);
+=======
+        textGraphic.text = index_1.default.currency(price, constants_1.USD);
+>>>>>>> master
         const { paddingx, paddingy } = this.textCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;

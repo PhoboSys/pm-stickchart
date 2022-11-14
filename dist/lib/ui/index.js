@@ -4,8 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
+<<<<<<< HEAD
 const _config_1 = __importDefault(require("../../config.js"));
 const _constants_1 = require("../../constants/index.js");
+=======
+const config_1 = __importDefault(require("../../config"));
+const constants_1 = require("../../constants");
+>>>>>>> master
 const datamath_1 = __importDefault(require("../datamath"));
 const utils_1 = require("../utils");
 exports.UNIX_MINUTE = 60;
@@ -31,7 +36,11 @@ class ui {
         let symb = '';
         if (currently && _config_1.default.price.showSymbols) {
             const symbols = {
+<<<<<<< HEAD
                 [_constants_1.USD]: '$'
+=======
+                [constants_1.USD]: '$'
+>>>>>>> master
             };
             symb = symbols[currently];
         }
@@ -39,7 +48,11 @@ class ui {
     }
     static currencyScaled(price, currently, scale) {
         const symbols = {
+<<<<<<< HEAD
             [_constants_1.USD]: '$'
+=======
+            [constants_1.USD]: '$'
+>>>>>>> master
         };
         let symb = symbols[currently] || '';
         if (!_config_1.default.price.showSymbols)
