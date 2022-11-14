@@ -53,7 +53,7 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolution(pool, context);
         const win = pari.position === resolution;
-        const nocontest = resolution === enums_1.EPosition.NoContest;
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
         const claimable = !pari.claimed && (win || nocontest);
         const poolid = pool.poolid;
         const pariid = pari.pariid;

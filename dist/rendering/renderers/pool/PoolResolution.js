@@ -9,11 +9,7 @@ const _infra_1 = require("../../../infra/index.js");
 const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-<<<<<<< HEAD
 const _constants_1 = require("../../../constants/index.js");
-=======
-const constants_1 = require("../../../constants");
->>>>>>> master
 const symbols_1 = require("../../textures/symbols");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
@@ -89,21 +85,12 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     getLevelLineColors(context) {
         var _a, _b;
         switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
-<<<<<<< HEAD
             case _constants_1.SILVER:
                 return _config_1.default.style.levels.silverLineColors;
             case _constants_1.GOLD:
                 return _config_1.default.style.levels.goldLineColors;
             case _constants_1.ROYAL:
                 return _config_1.default.style.levels.royalLineColors;
-=======
-            case constants_1.SILVER:
-                return config_1.default.style.levels.silverLineColors;
-            case constants_1.GOLD:
-                return config_1.default.style.levels.goldLineColors;
-            case constants_1.ROYAL:
-                return config_1.default.style.levels.royalLineColors;
->>>>>>> master
             default:
                 _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
                 return _config_1.default.style.levels.silverLineColors;
@@ -112,19 +99,11 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     getLevelTextureName(context) {
         var _a, _b;
         switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
-<<<<<<< HEAD
             case _constants_1.SILVER:
                 return symbols_1.SILVER_LEVEL_TEXTURE;
             case _constants_1.GOLD:
                 return symbols_1.GOLD_LEVEL_TEXTURE;
             case _constants_1.ROYAL:
-=======
-            case constants_1.SILVER:
-                return symbols_1.SILVER_LEVEL_TEXTURE;
-            case constants_1.GOLD:
-                return symbols_1.GOLD_LEVEL_TEXTURE;
-            case constants_1.ROYAL:
->>>>>>> master
                 return symbols_1.ROYAL_LEVEL_TEXTURE;
             default:
                 _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);

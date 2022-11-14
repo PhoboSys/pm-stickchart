@@ -1,15 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasePoolsRenderer = void 0;
-<<<<<<< HEAD
 const _rendering_1 = require("../../index.js");
-=======
-const __1 = require("../..");
-const constants_1 = require("../../../constants");
->>>>>>> master
 const utils_1 = require("../../../lib/utils");
 const _chartdata_1 = require("../../../chartdata/index.js");
 const _enums_1 = require("../../../enums/index.js");
+const _constants_1 = require("../../../constants/index.js");
 class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     constructor() {
         super(...arguments);
@@ -46,7 +42,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (pool.resolved)
             return pool.resolution;
         if (this.isNoContestPool(pool, context))
-            return enums_1.EPosition.NoContest;
+            return _enums_1.EPosition.NoContest;
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolutionByPrice(pool, rprice);
         return resolution;
@@ -65,14 +61,14 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     isNoContestPool(pool, context) {
         if ((0, utils_1.nowUnixTS)() < pool.lockDate)
             return false;
-        const price = chartdata_1.DataBuilder.getLatest(context.plotdata);
+        const price = _chartdata_1.DataBuilder.getLatest(context.plotdata);
         if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
             return false;
         // TODO: Implement Early Pool Resolution with NoContest
         // if (this._isNoContestEmptyPool(pool)) return true
         if (!this.isHistoricalPool(pool, context))
             return false;
-        if (pool.resolved && pool.resolution === enums_1.EPosition.NoContest)
+        if (pool.resolved && pool.resolution === _enums_1.EPosition.NoContest)
             return true;
         if (this._isNoContestEmptyPool(pool))
             return true;
@@ -83,15 +79,15 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         return false;
     }
     _isNoContestEmptyPool(pool) {
-        const prizefundTotal = pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL];
-        return (pool.prizefunds[constants_1.PRIZEFUNDS.UP] == prizefundTotal ||
-            pool.prizefunds[constants_1.PRIZEFUNDS.ZERO] == prizefundTotal ||
-            pool.prizefunds[constants_1.PRIZEFUNDS.DOWN] == prizefundTotal);
+        const prizefundTotal = pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL];
+        return (pool.prizefunds[_constants_1.PRIZEFUNDS.UP] == prizefundTotal ||
+            pool.prizefunds[_constants_1.PRIZEFUNDS.ZERO] == prizefundTotal ||
+            pool.prizefunds[_constants_1.PRIZEFUNDS.DOWN] == prizefundTotal);
     }
     _isNoContestPool(pool, position) {
-        if (position === enums_1.EPosition.Undefined)
+        if (position === _enums_1.EPosition.Undefined)
             return false;
-        const prizefundTotal = pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL];
+        const prizefundTotal = pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL];
         const prizefundWin = pool.prizefunds[position];
         return Number(prizefundWin) === 0 || prizefundWin === prizefundTotal;
     }

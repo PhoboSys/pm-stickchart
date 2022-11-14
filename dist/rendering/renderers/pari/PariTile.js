@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariTile = void 0;
+const _constants_1 = require("../../../constants/index.js");
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
 const _infra_1 = require("../../../infra/index.js");
@@ -11,23 +12,14 @@ const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const calc_utils_1 = require("../../../lib/calc-utils");
-<<<<<<< HEAD
 const _events_1 = require("../../../events/index.js");
 const _enums_1 = require("../../../enums/index.js");
-=======
-const events_1 = require("../../../events");
-const __1 = require("../..");
-const enums_1 = require("../../../enums");
-const constants_1 = require("../../../constants");
-const textures_1 = require("../../textures");
-const textures_2 = require("../../textures");
->>>>>>> master
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
         this.nocontestLineStyle = {
-            [enums_1.EPosition.Up]: {
+            [_enums_1.EPosition.Up]: {
                 offsetTOP: [0, -6],
                 offsetBOTTOM: [0, 6],
                 lineStyle: {
@@ -35,7 +27,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     width: 2,
                 }
             },
-            [enums_1.EPosition.Down]: {
+            [_enums_1.EPosition.Down]: {
                 offsetTOP: [0, -6],
                 offsetBOTTOM: [0, 6],
                 lineStyle: {
@@ -43,7 +35,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     width: 2,
                 }
             },
-            [enums_1.EPosition.Zero]: {
+            [_enums_1.EPosition.Zero]: {
                 offsetTOP: [300, -6],
                 offsetBOTTOM: [300, 6],
                 lineStyle: {
@@ -402,7 +394,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     }
     updateLine(pool, pari, context, container, resolution) {
         const win = pari.position === resolution;
-        const nocontest = resolution === enums_1.EPosition.NoContest;
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
         const [group] = this.read('group');
         if (!(win || nocontest) || !group || !this.isHistoricalPool(pool, context))
             return this.clear('line');
@@ -428,7 +420,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     updateTile(pool, pari, context, container, resolution) {
         var _a;
         const win = pari.position === resolution;
-        const nocontest = resolution === enums_1.EPosition.NoContest;
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
         const { width, height } = context.screen;
         const poolid = pool.poolid;
         const pariid = pari.pariid;
@@ -498,7 +490,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (win) {
             this.clear('zero');
             const [prizeAmount] = this.get('prizeAmount', () => pari.claimed ? ui_1.default.erc20(pari.payout)
-                : ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pari.position, pari.claimed, pool.prizefunds[constants_1.PRIZEFUNDS.TOTAL], nocontest]);
+                : ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest]);
             const [pzox, pzoy] = this.prizeStyle.offset;
             const [prize, prizeState] = this.get('prize', () => _rendering_1.GraphicUtils.createText(prizeAmount, [
                 bgwidth + pzox,
@@ -509,11 +501,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             prize.text = prizeAmount;
             const [percent] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
             const [ptox, ptoy] = this.profitStyle.offset;
-<<<<<<< HEAD
-            const [profit, profitState] = this.get('profit', () => _rendering_1.GraphicUtils.createText(profitPercent, [
-=======
-            const [profit, profitState] = this.get('profit', () => __1.GraphicUtils.createText(percent, [
->>>>>>> master
+            const [profit, profitState] = this.get('profit', () => _rendering_1.GraphicUtils.createText(percent, [
                 bgwidth + ptox,
                 ptoy,
             ], this.profitStyle.text, this.profitStyle.anchor));
