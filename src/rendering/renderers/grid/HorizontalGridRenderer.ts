@@ -11,24 +11,17 @@ export class HorizontalGridRenderer extends BaseRenderer {
 
     static readonly HORIZONTAL_GRID_ID: symbol = Symbol('HORIZONTAL_GRID_ID')
 
-    private readonly lineStyle: any
+    private readonly lineStyle: any = {
+        width: 1,
+        color: 0x303550,
+        alpha: 1,
+    }
 
-    private readonly textStyle: any
-
-    constructor(renderer: IGraphicStorage) {
-        super(renderer)
-
-        this.lineStyle = {
-            width: 1,
-            color: 0x303550,
-            alpha: 1,
-        }
-        this.textStyle = {
-            fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
-            fontSize: config.grid.price.fontsize,
-        }
+    private readonly textStyle: any = {
+        fill: 0xB7BDD7,
+        fontWeight: 500,
+        fontFamily: 'Gilroy',
+        fontSize: config.grid.price.fontsize,
     }
 
     public get rendererId(): symbol {
@@ -74,7 +67,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                 priceValue,
                 [width, y],
                 this.textStyle,
-                1.1,
+                [1.2, 1.1],
             ))
             if (textState.new) container.addChild(text)
             text.position.set(width, y)
