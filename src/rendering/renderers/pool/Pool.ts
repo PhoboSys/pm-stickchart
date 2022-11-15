@@ -1,10 +1,5 @@
-import {
-    IGraphicStorage,
-    RenderingCompositor,
-    RenderingContext,
-    DoneFunction,
-    IRenderer
-} from '@rendering'
+import { IGraphicStorage, RenderingCompositor } from '@rendering'
+import { RenderingContext, DoneFunction, IRenderer } from '@rendering'
 
 import { PoolBackground } from './PoolBackground'
 import { PoolLock } from './PoolLock'
