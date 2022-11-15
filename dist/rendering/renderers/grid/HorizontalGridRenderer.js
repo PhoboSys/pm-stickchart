@@ -10,8 +10,8 @@ const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const index_1 = __importDefault(require("../../../lib/ui/index"));
 const _rendering_1 = require("../../index.js");
 class HorizontalGridRenderer extends _rendering_1.BaseRenderer {
-    constructor(renderer) {
-        super(renderer);
+    constructor() {
+        super(...arguments);
         this.lineStyle = {
             width: 1,
             color: 0x303550,
@@ -51,7 +51,7 @@ class HorizontalGridRenderer extends _rendering_1.BaseRenderer {
             line.position.set(0, y);
             line.width = width;
             const priceValue = index_1.default.currencyScaled(price, _constants_1.USD, stepsize);
-            const [text, textState] = this.get('y_gridtext' + idx, () => _rendering_1.GraphicUtils.createText(priceValue, [width, y], this.textStyle, 1.1));
+            const [text, textState] = this.get('y_gridtext' + idx, () => _rendering_1.GraphicUtils.createText(priceValue, [width, y], this.textStyle, [1.2, 1.1]));
             if (textState.new)
                 container.addChild(text);
             text.position.set(width, y);
