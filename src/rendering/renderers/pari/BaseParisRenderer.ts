@@ -1,12 +1,13 @@
-import { RenderingContext } from '../..'
-import { BasePoolsRenderer } from '../pool/BasePoolsRenderer'
+import { RenderingContext } from '@rendering'
+import { BasePoolsRenderer } from '@rendering/renderers/pool/BasePoolsRenderer'
 
-import { Container } from '../../../lib/pixi'
-import { isEmpty, forEach } from '../../../lib/utils'
+import { Container } from '@lib/pixi'
+import { isEmpty, forEach } from '@lib/utils'
 
 export abstract class BaseParisRenderer extends BasePoolsRenderer {
 
     protected prevparis: { [key:string]: string } = {}
+
     protected newparis: { [key:string]: string } = {}
 
     protected updatePool(
@@ -17,6 +18,7 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
         const paris = context.paris?.[pool.poolid]
         if (isEmpty(paris)) {
             this.cleanupPari(pool, context)
+
             return layer
         }
 

@@ -1,6 +1,6 @@
-import { Container } from '../../lib/pixi'
+import { Container } from '@lib/pixi'
 
-import { IGraphicStorage } from '..'
+import { IGraphicStorage } from '@rendering'
 
 export class GraphicStorage implements IGraphicStorage {
 
@@ -42,7 +42,7 @@ export class GraphicStorage implements IGraphicStorage {
             this.add(renderKey, new Container())
         }
 
-        return <Container>this.root.getChildAt(this.indexOf(renderKey))
+        return <Container> this.root.getChildAt(this.indexOf(renderKey))
 
     }
 

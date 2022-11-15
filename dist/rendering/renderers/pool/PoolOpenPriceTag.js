@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolOpenPriceTag = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const index_1 = __importDefault(require("../../../lib/ui/index"));
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
@@ -60,7 +60,7 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [x] = datamath_1.default.scale([pool.openPriceTimestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([pool.openPriceValue], pricerange, height);
         const priceValue = index_1.default.currency(pool.openPriceValue, context.metapool.quote);
-        const [cover, coverState] = this.get('cover', () => __1.GraphicUtils.createText(priceValue, [0, 0], this.coverStyle.textStyle, this.coverStyle.anchor));
+        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createText(priceValue, [0, 0], this.coverStyle.textStyle, this.coverStyle.anchor));
         if (coverState.new)
             container.addChild(cover);
         cover.text = priceValue;

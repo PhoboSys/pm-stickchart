@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseParisRenderer = void 0;
-const BasePoolsRenderer_1 = require("../pool/BasePoolsRenderer");
+const BasePoolsRenderer_1 = require("../../renderers/pool/BasePoolsRenderer");
 const utils_1 = require("../../../lib/utils");
 class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {

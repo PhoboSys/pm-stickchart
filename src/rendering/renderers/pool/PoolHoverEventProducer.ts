@@ -1,11 +1,8 @@
-import { RenderingContext } from '../..'
+import { RenderingContext } from '@rendering'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container } from '../../../lib/pixi'
-import { isEmpty, forEach } from '../../../lib/utils'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
-
-import { POOL_ROUND_TEXTURE } from '../../textures/symbols'
+import datamath from '@lib/datamath'
+import { Graphics, Container } from '@lib/pixi'
+import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 

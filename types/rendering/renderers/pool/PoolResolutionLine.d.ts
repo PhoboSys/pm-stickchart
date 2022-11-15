@@ -1,4 +1,4 @@
-import { RenderingContext } from '../..';
+import { RenderingContext } from '@rendering';
 import { Container } from '../../../lib/pixi';
 import { BasePoolsRenderer } from './BasePoolsRenderer';
 export declare class PoolResolutionLine extends BasePoolsRenderer {

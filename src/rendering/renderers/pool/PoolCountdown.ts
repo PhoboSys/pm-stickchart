@@ -1,13 +1,11 @@
-import config from '../../../config'
-import { IGraphicStorage, RenderingContext, GraphicUtils } from '../..'
+import { IGraphicStorage, RenderingContext, GraphicUtils } from '@rendering'
+import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from '@rendering/textures'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Rectangle, Ticker } from '../../../lib/pixi'
-import { isEmpty, forEach, nowUnixTS } from '../../../lib/utils'
-import ui from '../../../lib/ui'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
-
-import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from '../../textures'
+import datamath from '@lib/datamath'
+import { Graphics, Container } from '@lib/pixi'
+import { nowUnixTS } from '@lib/utils'
+import ui from '@lib/ui'
+import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -107,6 +105,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         layer: Container
     ): Container {
         this._countdownTick = () => super.update(context, layer)
+
         return this._countdownTick()
     }
 

@@ -1,12 +1,8 @@
-import config from '../../../config'
-import { RenderingContext } from '../..'
-import { GraphicUtils } from '../..'
+import { RenderingContext, GraphicUtils } from '@rendering'
+import { LOCK_ICON_TEXTURE } from '@rendering/textures/symbols'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
-import { nowUnixTS } from '../../../lib/utils'
-
-import { LOCK_ICON_TEXTURE } from '../../textures/symbols'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Sprite } from '@lib/pixi'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 

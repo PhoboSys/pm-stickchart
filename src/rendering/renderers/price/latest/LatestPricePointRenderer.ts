@@ -1,9 +1,8 @@
-import { IGraphicStorage, RenderingContext } from '../../..'
-import { BaseRenderer, GraphicUtils } from '../../..'
-import config from '../../../../config'
+import { IGraphicStorage, RenderingContext } from '@rendering'
+import { BaseRenderer, GraphicUtils } from '@rendering'
+import config from '@config'
 
-import datamath from '../../../../lib/datamath'
-import { Graphics, Container, gsap } from '../../../../lib/pixi'
+import { Container, gsap } from '@lib/pixi'
 
 export class LatestPricePointRenderer extends BaseRenderer {
 

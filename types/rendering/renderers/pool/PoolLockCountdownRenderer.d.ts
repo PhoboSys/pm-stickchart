@@ -1,7 +1,7 @@
-import { IGraphicStorage, RenderingContext } from '../..';
+import { IGraphicStorage, RenderingContext } from '../../../rendering';
+import { BaseRenderer } from '../../../rendering';
 import { Container } from '../../../lib/pixi';
-import { BasePoolsRenderer } from './BasePoolsRenderer';
-export declare class PoolLockCountdown extends BasePoolsRenderer {
+export declare class PoolLockCountdownRenderer extends BaseRenderer {
     static readonly POOL_LOCK_COUNTDOWN_ID: symbol;
     private readonly style;
     private readonly postextStyle;
@@ -10,8 +10,8 @@ export declare class PoolLockCountdown extends BasePoolsRenderer {
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
     private countdown;
-    protected update(context: RenderingContext, layer: Container): Container;
-    protected updatePool(pool: any, context: RenderingContext, container: Container): void;
-    protected updateBackground(pool: any, context: RenderingContext, container: Container): void;
-    protected updateText(pool: any, context: RenderingContext, container: Container): void;
+    private hideContainerAndDestroyVisitor;
+    protected update(context: RenderingContext, container: Container): Container;
+    protected updateBackground(context: RenderingContext, container: Container): Container;
+    protected updateText(context: RenderingContext, container: Container): Container;
 }

@@ -4,12 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolCountdown = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
+const textures_1 = require("../../textures");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const utils_1 = require("../../../lib/utils");
 const ui_1 = __importDefault(require("../../../lib/ui"));
-const textures_1 = require("../../textures");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor(renderer) {
@@ -169,7 +169,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             textgroup.alpha = 0;
             container.addChild(textgroup);
         }
-        const [countdowntext, countdownstate] = this.get('countdowntext', () => __1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));
+        const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));
         if (countdownstate.new)
             textgroup.addChild(countdowntext);
         const [xof, yof] = this.countdownStyle.offset;
@@ -178,7 +178,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const phaseName = positioning
             ? 'Positioning'
             : 'Resolution';
-        const [phasetext, phasetextstate] = this.get('phasetext', () => __1.GraphicUtils.createText(phaseName, [0, 0], this.phaseStyle.textstyle, this.phaseStyle.anchor));
+        const [phasetext, phasetextstate] = this.get('phasetext', () => _rendering_1.GraphicUtils.createText(phaseName, [0, 0], this.phaseStyle.textstyle, this.phaseStyle.anchor));
         if (phasetextstate.new)
             textgroup.addChild(phasetext);
         const [phxof, phyof] = this.phaseStyle.offset;

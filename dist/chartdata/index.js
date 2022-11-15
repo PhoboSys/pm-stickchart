@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
-const config_1 = __importDefault(require("../config"));
+const _config_1 = __importDefault(require("../config.js"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
 class DataBuilder {
     static isEqual(start, end) {
@@ -58,8 +58,8 @@ class DataBuilder {
         return polyline;
     }
     static normalize(timestampsOrig, pricesOrig, screen) {
-        const timestamps = datamath_1.default.sample(timestampsOrig, config_1.default.maxdensity);
-        const prices = datamath_1.default.sample(pricesOrig, config_1.default.maxdensity);
+        const timestamps = datamath_1.default.sample(timestampsOrig, _config_1.default.maxdensity);
+        const prices = datamath_1.default.sample(pricesOrig, _config_1.default.maxdensity);
         const { width, height } = screen;
         // return latest price if sampled out
         if (timestamps.at(-1) !== timestampsOrig.at(-1) ||
@@ -67,23 +67,23 @@ class DataBuilder {
             timestamps.push(Number(timestampsOrig.at(-1)));
             prices.push(Number(pricesOrig.at(-1)));
         }
-        const unwidth = width - (config_1.default.padding.left + config_1.default.padding.right);
-        const paddingLeft = config_1.default.padding.left / width;
-        const paddingRight = config_1.default.padding.right / width;
+        const unwidth = width - (_config_1.default.padding.left + _config_1.default.padding.right);
+        const paddingLeft = _config_1.default.padding.left / width;
+        const paddingRight = _config_1.default.padding.right / width;
         const timerange = datamath_1.default.range(timestamps, paddingLeft, paddingRight);
-        const unheight = height - (config_1.default.padding.top + config_1.default.padding.bottom);
-        const paddingBottom = config_1.default.padding.bottom / unheight;
-        const paddingTop = config_1.default.padding.top / unheight;
+        const unheight = height - (_config_1.default.padding.top + _config_1.default.padding.bottom);
+        const paddingBottom = _config_1.default.padding.bottom / unheight;
+        const paddingTop = _config_1.default.padding.top / unheight;
         const pricerange = datamath_1.default.range(prices, paddingBottom, paddingTop);
         const xs = datamath_1.default.scale(timestamps, timerange, width);
         const ys = datamath_1.default.scaleReverse(prices, pricerange, height);
         const paddingY = [
-            config_1.default.padding.top,
-            height - config_1.default.padding.bottom
+            _config_1.default.padding.top,
+            height - _config_1.default.padding.bottom
         ];
         const paddingX = [
-            config_1.default.padding.left,
-            width - config_1.default.padding.right
+            _config_1.default.padding.left,
+            width - _config_1.default.padding.right
         ];
         return {
             timestamps,

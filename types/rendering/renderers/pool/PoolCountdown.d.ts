@@ -1,4 +1,4 @@
-import { IGraphicStorage, RenderingContext } from '../..';
+import { IGraphicStorage, RenderingContext } from '@rendering';
 import { Container } from '../../../lib/pixi';
 import { BasePoolsRenderer } from './BasePoolsRenderer';
 export declare class PoolCountdown extends BasePoolsRenderer {

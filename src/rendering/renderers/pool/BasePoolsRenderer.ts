@@ -1,17 +1,16 @@
-import config from '../../../config'
+import { RenderingContext, BaseRenderer } from '@rendering'
 
-import { RenderingContext } from '../..'
-import { BaseRenderer } from '../..'
+import { Container } from '@lib/pixi'
+import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
+import { PricePoint, DataBuilder } from '@chartdata'
+import { EPosition } from '@enums'
 
-import { PRIZEFUNDS } from '../../../constants'
-import { Container } from '../../../lib/pixi'
-import { isEmpty, forEach, nowUnixTS } from '../../../lib/utils'
-import { PricePoint, DataBuilder } from '../../../chartdata'
-import { EPosition } from '../../../enums'
+import { PRIZEFUNDS } from '@constants'
 
 export abstract class BasePoolsRenderer extends BaseRenderer {
 
     protected prevpools: { [key:string]: string } = {}
+
     protected newpools: { [key:string]: string } = {}
 
     protected update(
@@ -20,6 +19,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): Container {
         if (isEmpty(context.pools)) {
             this.cleanup(context)
+
             return layer
         }
 
@@ -108,6 +108,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     private _isNoContestEmptyPool(pool: any): boolean {
         const prizefundTotal = pool.prizefunds[PRIZEFUNDS.TOTAL]
+
         return (
             pool.prizefunds[PRIZEFUNDS.UP] == prizefundTotal ||
             pool.prizefunds[PRIZEFUNDS.ZERO] == prizefundTotal ||

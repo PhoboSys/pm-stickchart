@@ -1,16 +1,13 @@
-import config from '../../../config'
-import { RenderingContext } from '../..'
-import { GraphicUtils } from '../..'
+import config from '@config'
+import { RenderingContext, GraphicUtils } from '@rendering'
 
-import { PricePoint } from '../../../chartdata'
-import datamath from '../../../lib/datamath'
-import { EPosition } from '../../../enums'
-import { Graphics, Container } from '../../../lib/pixi'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
+import { PricePoint } from '@chartdata'
+import datamath from '@lib/datamath'
+import { EPosition } from '@enums'
+import { Graphics, Container } from '@lib/pixi'
+import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
-
-
 export class PoolResolutionLine extends BasePoolsRenderer {
 
     static readonly POOL_RESOLUTION_LINE_ID: symbol = Symbol('POOL_RESOLUTION_LINE_ID')

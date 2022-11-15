@@ -1,7 +1,7 @@
-import config from '../../config'
-import { USD } from '../../constants'
-import datamath from '../datamath'
-import { unixTStoDate } from '../utils'
+import config from '@config'
+import { USD } from '@constants'
+import datamath from '@lib/datamath'
+import { unixTStoDate } from '@lib/utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
@@ -65,9 +65,9 @@ export default class ui {
         const hh = Math.floor(duration / UNIX_HOUR) % 60
         const dd = Math.floor(duration / UNIX_DAY) % 24
 
-        let pritty: any[] = []
+        const pritty: any[] = []
         // remove prepending zeros
-        for (let part of [dd, hh, mm, ss]) {
+        for (const part of [dd, hh, mm, ss]) {
             if (pritty.length) pritty.push(part.toFixed().padStart(2, '0'))
             else if (part) pritty.push(part)
         }

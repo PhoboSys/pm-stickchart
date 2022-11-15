@@ -1,4 +1,4 @@
-import { IRenderer, RenderingContext, DoneFunction } from '..'
+import { IRenderer, RenderingContext, DoneFunction } from '@rendering'
 
 export class RenderingCompositor {
 

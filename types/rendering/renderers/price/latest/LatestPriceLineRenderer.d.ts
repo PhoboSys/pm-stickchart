@@ -1,5 +1,4 @@
-import { IGraphicStorage, RenderingContext } from '../../..';
-import { BaseRenderer } from '../../..';
+import { IGraphicStorage, RenderingContext, BaseRenderer } from '@rendering';
 import { Container } from '../../../../lib/pixi';
 export declare class LatestPriceLineRenderer extends BaseRenderer {
     static readonly LATEST_PRICE_LINE_ID: symbol;

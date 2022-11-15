@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolOpen = void 0;
-const __1 = require("../..");
+const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
@@ -61,11 +61,11 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     createTitle(title, style) {
         const { paddingx, paddingy } = style.coverStyle;
-        const text = __1.GraphicUtils.createText(title, [paddingx, paddingy], style.textStyle);
+        const text = _rendering_1.GraphicUtils.createText(title, [paddingx, paddingy], style.textStyle);
         const width = text.width + paddingx * 2;
         const height = text.height + paddingy * 2;
         const { radiuses, color } = style.coverStyle;
-        const cover = __1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
+        const cover = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color });
         text.position.x = -width + paddingx;
         cover.position.x = -width;
         const group = new pixi_1.Container();

@@ -1,20 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChartRenderer = void 0;
-const __1 = require("..");
-const __2 = require("..");
-const __3 = require("..");
-const __4 = require("..");
+const _rendering_1 = require("../index.js");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
-        this.compositor = new __1.RenderingCompositor([
-            new __2.GridRenderer(renderer),
-            new __2.PriceLineRenderer(renderer),
-            new __3.Pool(renderer),
-            new __3.LatestPriceRenderer(renderer),
-            new __4.CrosshairRenderer(renderer),
-            new __3.Pari(renderer),
+        this.compositor = new _rendering_1.RenderingCompositor([
+            new _rendering_1.GridRenderer(renderer),
+            new _rendering_1.PriceLineRenderer(renderer),
+            new _rendering_1.Pool(renderer),
+            new _rendering_1.LatestPriceRenderer(renderer),
+            new _rendering_1.CrosshairRenderer(renderer),
+            new _rendering_1.Pari(renderer),
         ]);
     }
     render(context, done) {

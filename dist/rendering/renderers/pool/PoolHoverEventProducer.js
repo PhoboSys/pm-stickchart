@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolHoverEventProducer = void 0;
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
-const events_1 = require("../../../events");
+const _events_1 = require("../../../events/index.js");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolHoverEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
@@ -42,10 +42,10 @@ class PoolHoverEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
             container.addChild(hover);
             hover.interactive = true;
             hover.addEventListener('pointerover', (e) => {
-                context.eventTarget.dispatchEvent(new events_1.PoolHoverEvent(poolid, e));
+                context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
             });
             hover.addEventListener('pointerout', (e) => {
-                context.eventTarget.dispatchEvent(new events_1.PoolUnhoverEvent(poolid, e));
+                context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
             });
         }
     }

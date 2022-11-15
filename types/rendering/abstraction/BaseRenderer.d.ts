@@ -1,5 +1,5 @@
-import { IRenderer, IGraphicStorage } from '..';
-import { RenderingContext, DoneFunction } from '..';
+import { IRenderer, IGraphicStorage } from '@rendering';
+import { RenderingContext, DoneFunction } from '@rendering';
 import { Container } from '../../lib/pixi';
 export declare abstract class BaseRenderer implements IRenderer {
     protected readonly storage: IGraphicStorage;

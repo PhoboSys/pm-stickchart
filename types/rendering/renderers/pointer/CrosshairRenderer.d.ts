@@ -1,6 +1,5 @@
-import { RenderingContext, IGraphicStorage } from '../..';
-import { BaseRenderer } from '../..';
-import { PointermoveEvent } from '../../../events';
+import { RenderingContext, IGraphicStorage, BaseRenderer } from '@rendering';
+import { PointermoveEvent } from '@events';
 import { Container } from '../../../lib/pixi';
 export declare class CrosshairRenderer extends BaseRenderer {
     static readonly CROSSHAIR_ID: symbol;

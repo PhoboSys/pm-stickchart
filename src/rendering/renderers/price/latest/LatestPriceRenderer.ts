@@ -1,6 +1,6 @@
-import { IGraphicStorage } from '../../..'
-import { DoneFunction, RenderingContext, IRenderer } from '../../..'
-import { RenderingCompositor } from '../../..'
+import { IGraphicStorage } from '@rendering'
+import { DoneFunction, RenderingContext, IRenderer } from '@rendering'
+import { RenderingCompositor } from '@rendering'
 
 import { LatestPriceLineRenderer } from './LatestPriceLineRenderer'
 import { LatestPricePointRenderer } from './LatestPricePointRenderer'

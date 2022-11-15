@@ -1,13 +1,10 @@
-import { RenderingContext } from '../..'
+import { RenderingContext } from '@rendering'
+import { POOL_CLAIM_TEXTURE } from '@rendering/textures'
 
-import { PricePoint } from '../../../chartdata'
-import datamath from '../../../lib/datamath'
-import { Graphics, Container } from '../../../lib/pixi'
-import { isEmpty, forEach } from '../../../lib/utils'
-import { PoolHoverEvent, PoolUnhoverEvent } from '../../../events'
-import { EPosition } from '../../../enums'
-
-import { POOL_CLAIM_TEXTURE } from '../../textures'
+import { PricePoint } from '@chartdata'
+import datamath from '@lib/datamath'
+import { Graphics, Container } from '@lib/pixi'
+import { EPosition } from '@enums'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
 

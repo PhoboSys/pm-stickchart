@@ -1,14 +1,15 @@
-import { RenderingContext } from '../..';
+import { IGraphicStorage, RenderingContext } from '../../../rendering';
+import { BaseRenderer } from '../../../rendering';
 import { Container } from '../../../lib/pixi';
-import { BasePoolsRenderer } from './BasePoolsRenderer';
-export declare class PoolOpen extends BasePoolsRenderer {
+export declare class PoolOpenRenderer extends BaseRenderer {
     static readonly POOL_OPEN_ID: symbol;
     private lineStyle;
     private textStyle;
     private coverStyle;
+    constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    protected updatePool(pool: any, context: RenderingContext, container: Container): void;
+    protected update(context: RenderingContext, container: Container): Container;
     private updatePoolBorder;
-    private createName;
+    private createPoolName;
     private createDash;
 }

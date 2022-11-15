@@ -1,7 +1,7 @@
 import throttle from 'lodash.throttle'
 
-import { ZoomEvent } from '../../events'
-import config from '../../config'
+import { ZoomEvent } from '@events'
+import config from '@config'
 
 export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
 export const INVALID_DATE = new Date(NaN)

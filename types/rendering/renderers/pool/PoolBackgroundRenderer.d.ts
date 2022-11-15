@@ -1,9 +1,10 @@
-import { RenderingContext } from '../..';
+import { IGraphicStorage, RenderingContext } from '../../../rendering';
+import { BaseRenderer } from '../../../rendering';
 import { Container } from '../../../lib/pixi';
-import { BasePoolsRenderer } from './BasePoolsRenderer';
-export declare class PoolBackground extends BasePoolsRenderer {
+export declare class PoolBackgroundRenderer extends BaseRenderer {
     static readonly POOL_BACKGROUND_ID: symbol;
+    constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
-    protected updatePool(pool: any, context: RenderingContext, container: Container): void;
+    protected update(context: RenderingContext, container: Container): Container;
     private updateBackground;
 }

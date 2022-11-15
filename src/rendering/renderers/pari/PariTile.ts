@@ -1,21 +1,24 @@
-import config from '../../../config'
+import { PRIZEFUNDS } from '@constants'
 
-import { RenderingContext } from '../..'
-import { Logger } from '../../../infra'
+import { RenderingContext, GraphicUtils } from '@rendering'
+import {
+    UP_ICON_TEXTURE,
+    DOWN_ICON_TEXTURE,
+    ZERO_ICON_TEXTURE,
+    UNDEFINED_ICON_TEXTURE,
+    GRADIENT_TEXTURE
+} from '@rendering/textures'
 
-import datamath from '../../../lib/datamath'
-import { Graphics, Container, Text, Sprite } from '../../../lib/pixi'
-import { isEmpty, forEach } from '../../../lib/utils'
-import ui from '../../../lib/ui'
-import { actualReturn, profitPercent } from '../../../lib/calc-utils'
-import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } from '../../../events'
+import { Logger } from '@infra'
 
-import { GraphicUtils } from '../..'
-import { EPosition } from '../../../enums'
-import { PRIZEFUNDS } from '../../../constants'
+import datamath from '@lib/datamath'
+import { Graphics, Container, Sprite } from '@lib/pixi'
+import ui from '@lib/ui'
+import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { UP_ICON_TEXTURE, DOWN_ICON_TEXTURE, ZERO_ICON_TEXTURE } from '../../textures'
-import { UNDEFINED_ICON_TEXTURE, GRADIENT_TEXTURE } from '../../textures'
+import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } from '@events'
+
+import { EPosition } from '@enums'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
 
@@ -56,7 +59,6 @@ export class PariTile extends BaseParisRenderer {
             }
         }
     }
-
 
     private winlineStyle: any = {
 
@@ -200,7 +202,7 @@ export class PariTile extends BaseParisRenderer {
         offset: [16, 16]
     }
 
-	private wagerStyle: any = {
+    private wagerStyle: any = {
         text: {
             fill: 0xFFFFFF,
             fontWeight: 400,
@@ -210,7 +212,7 @@ export class PariTile extends BaseParisRenderer {
         offset: [60, 28]
     }
 
-	private titlewagerStyle: any = {
+    private titlewagerStyle: any = {
         text: {
             fill: 0xB7BDD7,
             fontWeight: 400,
@@ -220,7 +222,7 @@ export class PariTile extends BaseParisRenderer {
         offset: [60, 16]
     }
 
-	private prizeStyle: any = {
+    private prizeStyle: any = {
         text: {
             fill: 0xFFFFFF,
             fontWeight: 400,
@@ -495,6 +497,7 @@ export class PariTile extends BaseParisRenderer {
                     this.clear()
                 }
             })
+
             return
         }
 
@@ -645,7 +648,7 @@ export class PariTile extends BaseParisRenderer {
                     this.prizeStyle.text,
                     this.prizeStyle.anchor
                 ),
-                [pari.wager]
+            [pari.wager]
             )
             if (zeroState.new) content.addChild(zero)
 
@@ -663,7 +666,7 @@ export class PariTile extends BaseParisRenderer {
 
             const [claimable] = this.get('claimable', () =>
                 !pari.claimed && (win || nocontest),
-                [nocontest, win, pari.claimed]
+            [nocontest, win, pari.claimed]
             )
 
             if (win) {
@@ -673,7 +676,6 @@ export class PariTile extends BaseParisRenderer {
                 this.animate('background', 'lost_bg')
                 if (!claimable) this.animate('content', 'lost_contnet')
             }
-
 
             if (claimable) {
                 if (groupstate.animation !== 'hover_group_claimable') this.animate('group', 'hide_group_claimable')
@@ -816,6 +818,7 @@ export class PariTile extends BaseParisRenderer {
 
             default:
                 Logger.error(`pari position "${position}" is not supported, fallback to Undeliden`)
+
                 return UNDEFINED_ICON_TEXTURE
         }
 
@@ -830,6 +833,7 @@ export class PariTile extends BaseParisRenderer {
         const icon = new Sprite(texture)
         icon.scale.set(this.iconStyle.size / icon.height)
         icon.position.set(...this.iconStyle.offset)
+
         return icon
     }
 

@@ -1,6 +1,6 @@
 import { Container } from '../../../lib/pixi';
-import { RenderingContext } from '../..';
-import { BaseRenderer } from '../..';
+import { RenderingContext } from '@rendering';
+import { BaseRenderer } from '@rendering';
 export declare class HorizontalGridRenderer extends BaseRenderer {
     static readonly HORIZONTAL_GRID_ID: symbol;
     private readonly lineStyle;

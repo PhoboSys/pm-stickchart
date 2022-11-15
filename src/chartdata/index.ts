@@ -1,8 +1,8 @@
 export * from './types'
 
-import config from '../config'
+import config from '@config'
 
-import datamath from '../lib/datamath'
+import datamath from '@lib/datamath'
 
 import { ChartData, PlotData, PricePoint } from './types'
 
@@ -20,7 +20,7 @@ export class DataBuilder {
 
     static getLatest(
         plotdata: PlotData,
-        back: number = 1
+        back = 1
     ): PricePoint {
 
         const { prices, timestamps } = plotdata

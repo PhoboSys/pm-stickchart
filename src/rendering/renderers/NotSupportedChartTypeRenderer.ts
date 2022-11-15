@@ -1,4 +1,4 @@
-import { IGraphicStorage, IRenderer } from '..'
+import { IGraphicStorage, IRenderer } from '@rendering'
 
 export class NotSupportedChartTypeRenderer implements IRenderer {
 

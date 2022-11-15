@@ -1,9 +1,8 @@
-import { IGraphicStorage, RenderingContext } from '../../..'
-import { BaseRenderer, GraphicUtils } from '../../..'
-import { PRICE_LINE_TEXTURE } from '../../..'
-import config from '../../../../config'
-import datamath from '../../../../lib/datamath'
-import { Graphics, Container } from '../../../../lib/pixi'
+import { RenderingContext } from '@rendering'
+import { BaseRenderer } from '@rendering'
+import { PRICE_LINE_TEXTURE } from '@rendering'
+import config from '@config'
+import { Graphics, Container } from '@lib/pixi'
 
 export class PriceLineRenderer extends BaseRenderer {
 
