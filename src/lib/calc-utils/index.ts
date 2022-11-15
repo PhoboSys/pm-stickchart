@@ -1,6 +1,6 @@
 import Big from 'big.js'
-import { PRIZEFUNDS } from '../../constants'
-import { mapValues } from '../../lib/utils'
+import { PRIZEFUNDS } from '@constants'
+import { mapValues } from '@lib/utils'
 
 const ONE = Big(1)
 const ZERO = Big(0)
@@ -8,9 +8,10 @@ const ZERO = Big(0)
 const VIGORISH = Big(0.01)
 
 function __inNotZeroNumbers(...args) {
-    for (let num of args) {
+    for (const num of args) {
         if (!Number(num)) return false
     }
+
     return true
 }
 
@@ -35,6 +36,7 @@ function __futureReturn(prizefunds, wager, position) {
 
 export function futureReturn(prizefunds, wager, position) {
     const result = __futureReturn(prizefunds, wager, position)
+
     return result.toString()
 }
 
@@ -57,6 +59,7 @@ function __actualReturn(prizefunds, wager, position) {
 
 export function actualReturn(prizefunds, wager, position) {
     const result = __actualReturn(prizefunds, wager, position)
+
     return result.toString()
 }
 
