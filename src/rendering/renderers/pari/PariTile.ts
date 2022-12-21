@@ -685,7 +685,7 @@ export class PariTile extends BaseParisRenderer {
 
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
-                const [settlement] = this.get('settlement', () => context.settlements?.[pool.poolid], [context.settlements?.[pool.poolid]])
+                const [settlement] = this.get('settlement', () => context.settlements?.[pool.resolutionDate], [context.settlements?.[pool.resolutionDate]])
 
                 const btnStyle = this.buttonStyle[position]
                 const [btnx, btny] = btnStyle.offset

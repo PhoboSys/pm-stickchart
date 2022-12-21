@@ -96,18 +96,18 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (this.isActualPool(pool))
             return false;
         return (pool.resolved ||
-            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]));
+            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]));
     }
     getResolutionPricePoint(pool, context) {
         var _a;
         if (this.isActualPool(pool)) {
             return _chartdata_1.DataBuilder.getLatest(context.plotdata);
         }
-        const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]);
+        const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]);
         if (isResolveReady) {
             return {
-                value: context.settlements[pool.poolid].resolutionPrice.value,
-                timestamp: context.settlements[pool.poolid].resolutionPrice.timestamp,
+                value: context.settlements[pool.resolutionDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.resolutionDate].resolutionPrice.timestamp,
             };
         }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;

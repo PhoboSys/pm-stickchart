@@ -551,7 +551,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
-                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.poolid]]);
+                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]]);
                 const btnStyle = this.buttonStyle[position];
                 const [btnx, btny] = btnStyle.offset;
                 const [horizontal, vertical] = btnStyle.outside;

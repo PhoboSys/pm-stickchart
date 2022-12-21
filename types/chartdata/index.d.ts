@@ -8,6 +8,7 @@ export declare class DataBuilder {
         ys: any;
     };
     static toPolyline(plotdata: PlotData): SVGPolylineElement;
+    static EMPTY_PLOTDATA: PlotData;
     static normalize(timestampsOrig: any, pricesOrig: any, screen: {
         width: any;
         height: any;
