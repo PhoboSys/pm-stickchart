@@ -21,6 +21,7 @@ exports.DataBuilder = void 0;
 __exportStar(require("./types"), exports);
 const _config_1 = __importDefault(require("../config.js"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
+const utils_1 = require("../lib/utils");
 class DataBuilder {
     static isEqual(start, end) {
         return (start.timestamp === end.timestamp &&
@@ -58,6 +59,8 @@ class DataBuilder {
         return polyline;
     }
     static normalize(timestampsOrig, pricesOrig, screen) {
+        if ((0, utils_1.isEmpty)(timestampsOrig) || (0, utils_1.isEmpty)(pricesOrig))
+            return DataBuilder.EMPTY_PLOTDATA;
         const timestamps = datamath_1.default.sample(timestampsOrig, _config_1.default.maxdensity);
         const prices = datamath_1.default.sample(pricesOrig, _config_1.default.maxdensity);
         const { width, height } = screen;
@@ -118,4 +121,14 @@ class DataBuilder {
     }
 }
 exports.DataBuilder = DataBuilder;
+DataBuilder.EMPTY_PLOTDATA = {
+    timestamps: [],
+    prices: [],
+    timerange: [0, 0],
+    pricerange: [0, 0],
+    paddingX: [0, 0],
+    paddingY: [0, 0],
+    xs: [],
+    ys: [],
+};
 //# sourceMappingURL=index.js.map

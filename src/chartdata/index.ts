@@ -3,6 +3,7 @@ export * from './types'
 import config from '@config'
 
 import datamath from '@lib/datamath'
+import { isEmpty } from '@lib/utils'
 
 import { ChartData, PlotData, PricePoint } from './types'
 
@@ -73,11 +74,28 @@ export class DataBuilder {
 
     }
 
+    static EMPTY_PLOTDATA: PlotData = {
+        timestamps: [],
+        prices: [],
+
+        timerange: [0, 0],
+        pricerange: [0, 0],
+
+        paddingX: [0, 0],
+        paddingY: [0, 0],
+
+        xs: [],
+        ys: [],
+    }
+
+
     static normalize(
         timestampsOrig,
         pricesOrig,
         screen: { width, height },
     ): PlotData {
+
+        if (isEmpty(timestampsOrig) || isEmpty(pricesOrig)) return DataBuilder.EMPTY_PLOTDATA
 
         const timestamps = datamath.sample(timestampsOrig, config.maxdensity)
         const prices = datamath.sample(pricesOrig, config.maxdensity)

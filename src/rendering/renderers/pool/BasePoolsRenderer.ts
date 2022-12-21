@@ -134,7 +134,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         return (
             pool.resolved ||
-            context.settlements?.[pool.poolid]
+            context.settlements?.[pool.resolutionDate]
         )
     }
 
@@ -147,11 +147,11 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             return DataBuilder.getLatest(context.plotdata)
         }
 
-        const isResolveReady = !pool.resolved && context.settlements?.[pool.poolid]
+        const isResolveReady = !pool.resolved && context.settlements?.[pool.resolutionDate]
         if (isResolveReady) {
             return {
-                value: context.settlements[pool.poolid].resolutionPrice.value,
-                timestamp: context.settlements[pool.poolid].resolutionPrice.timestamp,
+                value: context.settlements[pool.resolutionDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.resolutionDate].resolutionPrice.timestamp,
             }
         }
 
