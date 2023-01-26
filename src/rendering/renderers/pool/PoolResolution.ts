@@ -67,7 +67,7 @@ export class PoolResolution extends BasePoolsRenderer {
         } = context.screen
 
         const { timerange } = context.plotdata
-        const [x] = datamath.scale([pool.resolutionDate], timerange, width)
+        const [x] = datamath.scale([pool.endDate], timerange, width)
 
         const [title, titlestate] = this.get('title', () => this.createTitle(context))
 

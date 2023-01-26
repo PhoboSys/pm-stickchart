@@ -4,6 +4,7 @@ import { PricePoint } from '@chartdata'
 import datamath from '@lib/datamath'
 import { Container } from '@lib/pixi'
 import ui from '@lib/ui/index'
+import { EPosition } from '@enums'
 
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 

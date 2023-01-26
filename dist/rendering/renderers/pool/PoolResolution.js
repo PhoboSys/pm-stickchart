@@ -47,7 +47,7 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     updateActualPool(pool, context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
-        const [x] = datamath_1.default.scale([pool.resolutionDate], timerange, width);
+        const [x] = datamath_1.default.scale([pool.endDate], timerange, width);
         const [title, titlestate] = this.get('title', () => this.createTitle(context));
         title.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
         if (titlestate.new)

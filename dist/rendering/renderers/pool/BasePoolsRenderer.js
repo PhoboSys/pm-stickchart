@@ -59,13 +59,15 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         return _enums_1.EPosition.Undefined;
     }
     isNoContestPool(pool, context) {
-        if ((0, utils_1.nowUnixTS)() < pool.lockDate)
-            return false;
-        const price = _chartdata_1.DataBuilder.getLatest(context.plotdata);
-        if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
-            return false;
-        // TODO: Implement Early Pool Resolution with NoContest
-        // if (this._isNoContestEmptyPool(pool)) return true
+        if (this.isActualPool(pool)) {
+            if ((0, utils_1.nowUnixTS)() < pool.lockDate)
+                return false;
+            const price = _chartdata_1.DataBuilder.getLatest(context.plotdata);
+            if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
+                return false;
+            // TODO: Implement Early Pool Resolution with NoContest
+            // if (this._isNoContestEmptyPool(pool)) return true
+        }
         if (!this.isHistoricalPool(pool, context))
             return false;
         if (pool.resolved && pool.resolution === _enums_1.EPosition.NoContest)
@@ -96,18 +98,18 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (this.isActualPool(pool))
             return false;
         return (pool.resolved ||
-            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]));
+            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
     }
     getResolutionPricePoint(pool, context) {
         var _a;
         if (this.isActualPool(pool)) {
             return _chartdata_1.DataBuilder.getLatest(context.plotdata);
         }
-        const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]);
+        const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]);
         if (isResolveReady) {
             return {
-                value: context.settlements[pool.resolutionDate].resolutionPrice.value,
-                timestamp: context.settlements[pool.resolutionDate].resolutionPrice.timestamp,
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             };
         }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;
@@ -118,13 +120,13 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             };
         }
         const latest = _chartdata_1.DataBuilder.getLatest(context.plotdata);
-        if (pool.resolutionDate > latest.timestamp) {
+        if (pool.endDate > latest.timestamp) {
             return latest;
         }
         return null;
     }
     isActualPool(pool) {
-        return pool.resolutionDate > (0, utils_1.nowUnixTS)();
+        return pool.endDate > (0, utils_1.nowUnixTS)();
     }
 }
 exports.BasePoolsRenderer = BasePoolsRenderer;

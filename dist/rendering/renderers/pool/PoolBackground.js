@@ -51,8 +51,8 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
     updateBackground(pool, context, container) {
         const { width, height, } = context.screen;
         const { timerange } = context.plotdata;
-        const { openPriceTimestamp, resolutionDate, poolid } = pool;
-        let rdate = resolutionDate;
+        const { openPriceTimestamp, endDate, poolid } = pool;
+        let rdate = endDate;
         if (this.isHistoricalPool(pool, context)) {
             const resolution = this.getResolutionPricePoint(pool, context);
             if (resolution === null || resolution === void 0 ? void 0 : resolution.timestamp)

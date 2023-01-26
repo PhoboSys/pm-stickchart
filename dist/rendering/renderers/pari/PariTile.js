@@ -522,7 +522,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             ], this.prizeStyle.text, this.prizeStyle.anchor), [pari.wager]);
             if (zeroState.new)
                 content.addChild(zero);
-            if (pari.claim)
+            if (pari.claimed)
                 zero.text = ui_1.default.erc20(pari.payout);
             else
                 zero.text = nocontest ? ui_1.default.erc20(pari.wager) : 0;
@@ -551,7 +551,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
-                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.resolutionDate]]);
+                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
                 const btnStyle = this.buttonStyle[position];
                 const [btnx, btny] = btnStyle.offset;
                 const [horizontal, vertical] = btnStyle.outside;
@@ -580,10 +580,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         const [rslvd] = this.read('resolved');
                         const [sttlmnt] = this.read('settlement');
                         if (rslvd) {
-                            context.eventTarget.dispatchEvent(new _events_1.ClaimPariEvent(pariid, erc20, e));
+                            context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
                         }
                         if (!rslvd && sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_1.SettlePoolEvent(poolid, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                            context.eventTarget.dispatchEvent(new _events_1.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
                         }
                     });
                 }

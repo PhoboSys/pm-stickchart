@@ -16,7 +16,7 @@ import { Graphics, Container, Sprite } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { PoolHoverEvent, PoolUnhoverEvent, ClaimPariEvent, SettlePoolEvent } from '@events'
+import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent, ResolveWithdrawEvent } from '@events'
 
 import { EPosition } from '@enums'
 
@@ -652,8 +652,8 @@ export class PariTile extends BaseParisRenderer {
             )
             if (zeroState.new) content.addChild(zero)
 
-            if (pari.claim) zero.text = ui.erc20(pari.payout)
-            else            zero.text = nocontest ? ui.erc20(pari.wager) : 0
+            if (pari.claimed) zero.text = ui.erc20(pari.payout)
+            else              zero.text = nocontest ? ui.erc20(pari.wager) : 0
 
             titleprofit.text = 'Return'
             titleprofit.position.set(
@@ -685,7 +685,7 @@ export class PariTile extends BaseParisRenderer {
 
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
-                const [settlement] = this.get('settlement', () => context.settlements?.[pool.resolutionDate], [context.settlements?.[pool.resolutionDate]])
+                const [settlement] = this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
 
                 const btnStyle = this.buttonStyle[position]
                 const [btnx, btny] = btnStyle.offset
@@ -718,7 +718,8 @@ export class PariTile extends BaseParisRenderer {
 
                         if (rslvd) {
                             context.eventTarget.dispatchEvent(
-                                new ClaimPariEvent(
+                                new WithdrawEvent(
+                                    poolid,
                                     pariid,
                                     erc20,
                                     e
@@ -728,8 +729,10 @@ export class PariTile extends BaseParisRenderer {
 
                         if (!rslvd && sttlmnt) {
                             context.eventTarget.dispatchEvent(
-                                new SettlePoolEvent(
+                                new ResolveWithdrawEvent(
                                     poolid,
+                                    pariid,
+                                    erc20,
                                     sttlmnt.resolutionPrice,
                                     sttlmnt.controlPrice,
                                     e

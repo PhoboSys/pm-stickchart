@@ -99,9 +99,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     updateBackground(pool, context, container) {
         const { width, height, } = context.screen;
-        const { lockDate, openDate, resolutionDate } = pool;
+        const { lockDate, startDate, endDate } = pool;
         const { timerange } = context.plotdata;
-        const [openx, lockx, rx, nowx] = datamath_1.default.scale([openDate, lockDate, resolutionDate, (0, utils_1.nowUnixTS)()], timerange, width);
+        const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, (0, utils_1.nowUnixTS)()], timerange, width);
         const tolockx = Math.max(nowx, openx);
         if (lockx >= nowx) {
             const [gradientlock, gradientlockState] = this.get('gradientlock', () => new pixi_1.Graphics()
@@ -155,7 +155,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     updateText(pool, context, container) {
         const { height, width } = context.screen;
-        const { lockDate, resolutionDate, poolid } = pool;
+        const { lockDate, endDate, poolid } = pool;
         const { xs, ys, } = context.plotdata;
         const x = Number(xs.at(-1));
         const y = Number(ys.at(-1));
@@ -163,7 +163,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const positioning = lockDate >= now;
         const countdownValue = positioning
             ? ui_1.default.duration24(lockDate - now + 1)
-            : ui_1.default.duration24(resolutionDate - now + 1);
+            : ui_1.default.duration24(endDate - now + 1);
         const [textgroup, textgroupstate] = this.get('textgroup', () => new pixi_1.Container());
         if (textgroupstate.new) {
             textgroup.alpha = 0;

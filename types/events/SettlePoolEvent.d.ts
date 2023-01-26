@@ -1,5 +1,5 @@
 import { PricefeedPoint } from '@chartdata';
-export declare class SettlePoolEvent extends Event {
+export declare class ResolveWithdrawEvent extends Event {
     static readonly NAME: string;
     readonly inner: Event;
     readonly poolid: string;

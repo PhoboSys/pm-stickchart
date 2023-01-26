@@ -20,7 +20,7 @@ __exportStar(require("./PointerleaveEvent"), exports);
 __exportStar(require("./CanvasErrorEvent"), exports);
 __exportStar(require("./PoolUnhoverEvent"), exports);
 __exportStar(require("./PoolHoverEvent"), exports);
-__exportStar(require("./SettlePoolEvent"), exports);
-__exportStar(require("./ClaimPariEvent"), exports);
+__exportStar(require("./ResolveWithdrawEvent"), exports);
+__exportStar(require("./WithdrawEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map
