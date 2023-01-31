@@ -2,8 +2,8 @@ import { PlotData } from '@chartdata';
 import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '@enums';
-export declare type DoneFunction = () => void;
-export declare type RenderingContext = {
+export type DoneFunction = () => void;
+export type RenderingContext = {
     metapool: any;
     pools: any[];
     paris: any[];
