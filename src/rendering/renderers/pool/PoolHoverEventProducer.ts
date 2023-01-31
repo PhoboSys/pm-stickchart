@@ -40,8 +40,8 @@ export class PoolHoverEventProducer extends BasePoolsRenderer {
         } = context.screen
 
         const { timerange } = context.plotdata
-        const { openDate, resolutionDate, poolid } = pool
-        const [ox, rx] = datamath.scale([openDate, resolutionDate], timerange, width)
+        const { startDate, endDate, poolid } = pool
+        const [ox, rx] = datamath.scale([startDate, endDate], timerange, width)
 
         const shape = [
             ox, 0,

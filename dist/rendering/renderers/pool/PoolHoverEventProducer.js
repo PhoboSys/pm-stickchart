@@ -23,8 +23,8 @@ class PoolHoverEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
     updateEvent(pool, context, container) {
         const { width, height, } = context.screen;
         const { timerange } = context.plotdata;
-        const { openDate, resolutionDate, poolid } = pool;
-        const [ox, rx] = datamath_1.default.scale([openDate, resolutionDate], timerange, width);
+        const { startDate, endDate, poolid } = pool;
+        const [ox, rx] = datamath_1.default.scale([startDate, endDate], timerange, width);
         const shape = [
             ox, 0,
             rx, 0,

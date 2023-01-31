@@ -133,10 +133,10 @@ export class PoolCountdown extends BasePoolsRenderer {
             height,
         } = context.screen
 
-        const { lockDate, openDate, resolutionDate } = pool
+        const { lockDate, startDate, endDate } = pool
         const { timerange } = context.plotdata
 
-        const [openx, lockx, rx, nowx] = datamath.scale([openDate, lockDate, resolutionDate, nowUnixTS()], timerange, width)
+        const [openx, lockx, rx, nowx] = datamath.scale([startDate, lockDate, endDate, nowUnixTS()], timerange, width)
         const tolockx = Math.max(nowx, openx)
 
         if (lockx >= nowx) {
@@ -208,7 +208,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             width
         } = context.screen
 
-        const { lockDate, resolutionDate, poolid } = pool
+        const { lockDate, endDate, poolid } = pool
 
         const {
             xs,
@@ -222,7 +222,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         const positioning = lockDate >= now
         const countdownValue = positioning
             ? ui.duration24(lockDate - now + 1)
-            : ui.duration24(resolutionDate - now + 1)
+            : ui.duration24(endDate - now + 1)
 
         const [textgroup, textgroupstate] = this.get('textgroup', () => new Container())
         if (textgroupstate.new) {

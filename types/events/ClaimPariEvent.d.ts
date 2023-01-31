@@ -1,4 +1,4 @@
-export declare class ClaimPariEvent extends Event {
+export declare class WithdrawEvent extends Event {
     static readonly NAME: string;
     readonly inner: Event;
     readonly pariid: string;

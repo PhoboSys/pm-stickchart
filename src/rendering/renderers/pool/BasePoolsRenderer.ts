@@ -86,13 +86,16 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         pool: any,
         context: RenderingContext,
     ): boolean {
-        if (nowUnixTS() < pool.lockDate) return false
 
-        const price = DataBuilder.getLatest(context.plotdata)
-        if (!price?.timestamp || price.timestamp < pool.lockDate) return false
+        if (this.isActualPool(pool)) {
+            if (nowUnixTS() < pool.lockDate) return false
 
-        // TODO: Implement Early Pool Resolution with NoContest
-        // if (this._isNoContestEmptyPool(pool)) return true
+            const price = DataBuilder.getLatest(context.plotdata)
+            if (!price?.timestamp || price.timestamp < pool.lockDate) return false
+
+            // TODO: Implement Early Pool Resolution with NoContest
+            // if (this._isNoContestEmptyPool(pool)) return true
+        }
 
         if (!this.isHistoricalPool(pool, context)) return false
         if (pool.resolved && pool.resolution === EPosition.NoContest) return true
@@ -134,7 +137,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         return (
             pool.resolved ||
-            context.settlements?.[pool.resolutionDate]
+            context.settlements?.[pool.endDate]
         )
     }
 
@@ -147,11 +150,11 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             return DataBuilder.getLatest(context.plotdata)
         }
 
-        const isResolveReady = !pool.resolved && context.settlements?.[pool.resolutionDate]
+        const isResolveReady = !pool.resolved && context.settlements?.[pool.endDate]
         if (isResolveReady) {
             return {
-                value: context.settlements[pool.resolutionDate].resolutionPrice.value,
-                timestamp: context.settlements[pool.resolutionDate].resolutionPrice.timestamp,
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             }
         }
 
@@ -164,7 +167,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         }
 
         const latest = DataBuilder.getLatest(context.plotdata)
-        if (pool.resolutionDate > latest.timestamp) {
+        if (pool.endDate > latest.timestamp) {
             return latest
         }
 
@@ -175,7 +178,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     protected isActualPool(
         pool: any,
     ): boolean {
-        return pool.resolutionDate > nowUnixTS()
+        return pool.endDate > nowUnixTS()
     }
 
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void
