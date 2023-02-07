@@ -3,18 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PoolLayerEventProducer = void 0;
+exports.PoolHoverEventProducer = void 0;
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const _events_1 = require("../../../events/index.js");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
-class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
+class PoolHoverEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
         this.isHover = {};
     }
     get rendererId() {
-        return PoolLayerEventProducer.POOL_HOVER_EVENT_PRODUCER_ID;
+        return PoolHoverEventProducer.POOL_HOVER_EVENT_PRODUCER_ID;
     }
     updatePool(pool, context, container) {
         container.alpha = 1;
@@ -51,6 +51,6 @@ class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
     }
 }
-exports.PoolLayerEventProducer = PoolLayerEventProducer;
-PoolLayerEventProducer.POOL_HOVER_EVENT_PRODUCER_ID = Symbol('POOL_HOVER_EVENT_PRODUCER_ID');
-//# sourceMappingURL=PoolHoverEventProducer.js.map
+exports.PoolHoverEventProducer = PoolHoverEventProducer;
+PoolHoverEventProducer.POOL_HOVER_EVENT_PRODUCER_ID = Symbol('POOL_HOVER_EVENT_PRODUCER_ID');
+//# sourceMappingURL=PoolHoverEventProducer%20copy.js.map

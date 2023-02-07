@@ -6,7 +6,7 @@ const utils_1 = require("../../../lib/utils");
 const _chartdata_1 = require("../../../chartdata/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const _constants_1 = require("../../../constants/index.js");
-class BasePoolsRenderer extends _rendering_1.BaseRenderer {
+class BasePoolsRenderer extends _rendering_1.BaseEntityRenderer {
     constructor() {
         super(...arguments);
         this.prevpools = {};
@@ -68,11 +68,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             // TODO: Implement Early Pool Resolution with NoContest
             // if (this._isNoContestEmptyPool(pool)) return true
         }
+        if (this.isNoContestEmptyPool(pool))
+            return true;
         if (!this.isHistoricalPool(pool, context))
             return false;
         if (pool.resolved && pool.resolution === _enums_1.EPosition.NoContest)
-            return true;
-        if (this._isNoContestEmptyPool(pool))
             return true;
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolutionByPrice(pool, rprice);
@@ -80,7 +80,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             return true;
         return false;
     }
-    _isNoContestEmptyPool(pool) {
+    isNoContestEmptyPool(pool) {
         const prizefundTotal = pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL];
         return (pool.prizefunds[_constants_1.PRIZEFUNDS.UP] == prizefundTotal ||
             pool.prizefunds[_constants_1.PRIZEFUNDS.ZERO] == prizefundTotal ||

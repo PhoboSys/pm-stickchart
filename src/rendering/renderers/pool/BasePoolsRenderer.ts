@@ -1,4 +1,4 @@
-import { RenderingContext, BaseRenderer } from '@rendering'
+import { RenderingContext, BaseEntityRenderer } from '@rendering'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
@@ -7,7 +7,7 @@ import { EPosition } from '@enums'
 
 import { PRIZEFUNDS } from '@constants'
 
-export abstract class BasePoolsRenderer extends BaseRenderer {
+export abstract class BasePoolsRenderer extends BaseEntityRenderer {
 
     protected prevpools: { [key:string]: string } = {}
 
@@ -82,7 +82,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return EPosition.Undefined
     }
 
-    protected isNoContestPool(
+    private isNoContestPool(
         pool: any,
         context: RenderingContext,
     ): boolean {
@@ -97,10 +97,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             // if (this._isNoContestEmptyPool(pool)) return true
         }
 
+        if (this.isNoContestEmptyPool(pool)) return true
+
         if (!this.isHistoricalPool(pool, context)) return false
         if (pool.resolved && pool.resolution === EPosition.NoContest) return true
-
-        if (this._isNoContestEmptyPool(pool)) return true
 
         const rprice = this.getResolutionPricePoint(pool, context)
         const resolution = this.getPoolResolutionByPrice(pool, rprice)
@@ -109,7 +109,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return false
     }
 
-    private _isNoContestEmptyPool(pool: any): boolean {
+    protected isNoContestEmptyPool(pool: any): boolean {
         const prizefundTotal = pool.prizefunds[PRIZEFUNDS.TOTAL]
 
         return (

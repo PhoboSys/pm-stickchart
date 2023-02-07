@@ -9,6 +9,8 @@ export type RenderingContext = {
     paris: any[];
     resolved: any[];
     settlements: any;
+    transactions: any;
+    latestBlockNumber: number;
     screen: Rectangle;
     textures: ITextureStorage;
     charttype: EChartType;

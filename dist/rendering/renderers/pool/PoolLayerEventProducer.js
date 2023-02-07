@@ -14,14 +14,14 @@ class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.isHover = {};
     }
     get rendererId() {
-        return PoolLayerEventProducer.POOL_HOVER_EVENT_PRODUCER_ID;
+        return PoolLayerEventProducer.POOL_LAYER_EVENT_PRODUCER_ID;
     }
     updatePool(pool, context, container) {
-        container.alpha = 1;
+        container.alpha = 0;
         this.updateEvent(pool, context, container);
     }
     updateEvent(pool, context, container) {
-        const { width, height, } = context.screen;
+        const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const { startDate, endDate, poolid } = pool;
         const [ox, rx] = datamath_1.default.scale([startDate, endDate], timerange, width);
@@ -31,26 +31,43 @@ class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
             rx, height,
             ox, height,
         ];
-        const [hover, hoverState] = this.get('hover', () => new pixi_1.Graphics());
-        hover
+        const [layer, layerState] = this.get('layer', () => new pixi_1.Graphics());
+        layer
             .clear()
             .beginFill()
             .drawPolygon(shape)
             .closePath()
             .endFill();
-        if (hoverState.new) {
-            container.addChild(hover);
-            hover.interactive = true;
-            hover.addEventListener('pointerover', (e) => {
-                console.log('pointerover');
+        if (layerState.new) {
+            container.addChild(layer);
+            layer.interactive = true;
+            context.eventTarget.addEventListener('poolpin', (e) => {
+                if (layerState.pined && e.poolid !== poolid) {
+                    layerState.pined = false;
+                    context.eventTarget.dispatchEvent(new _events_1.PoolUnpinEvent(poolid, e));
+                }
+            });
+            layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
             });
-            hover.addEventListener('pointerout', (e) => {
+            layer.addEventListener('pointerout', (e) => {
                 context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
             });
+            layer.addEventListener('pointertap', (e) => {
+                if (layerState.pined) {
+                    context.eventTarget.dispatchEvent(new _events_1.PoolUnpinEvent(poolid, e));
+                }
+                else {
+                    context.eventTarget.dispatchEvent(new _events_1.PoolPinEvent(poolid, e));
+                }
+                layerState.pined = !layerState.pined;
+            });
+        }
+        if (!this.isActualPool(pool)) {
+            layer.cursor = 'pointer';
         }
     }
 }
 exports.PoolLayerEventProducer = PoolLayerEventProducer;
-PoolLayerEventProducer.POOL_HOVER_EVENT_PRODUCER_ID = Symbol('POOL_HOVER_EVENT_PRODUCER_ID');
-//# sourceMappingURL=PoolHoverEventProducer.js.map
+PoolLayerEventProducer.POOL_LAYER_EVENT_PRODUCER_ID = Symbol('POOL_LAYER_EVENT_PRODUCER_ID');
+//# sourceMappingURL=PoolLayerEventProducer.js.map

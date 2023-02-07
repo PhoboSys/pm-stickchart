@@ -119,6 +119,8 @@ export class StickChart extends EventTarget {
         paris: any[],
         resolved: any[],
         settlements: any,
+        transactions: any,
+        latestBlockNumber: number,
     }): void {
         if (!context.metapool) {
             Logger.error('Cannot initiate chart "metapool" is not provided!')
@@ -138,6 +140,8 @@ export class StickChart extends EventTarget {
             pools: context.pools,
             paris: context.paris,
             settlements: context.settlements,
+            transactions: context.transactions,
+            latestBlockNumber: context.latestBlockNumber,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,

@@ -4,6 +4,8 @@ export * from './PointerleaveEvent'
 export * from './CanvasErrorEvent'
 export * from './PoolUnhoverEvent'
 export * from './PoolHoverEvent'
+export * from './PoolPinEvent'
+export * from './PoolUnpinEvent'
 export * from './ResolveWithdrawEvent'
 export * from './WithdrawEvent'
 

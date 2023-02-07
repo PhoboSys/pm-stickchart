@@ -16,7 +16,8 @@ import { Graphics, Container, Sprite } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent, ResolveWithdrawEvent } from '@events'
+import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent } from '@events'
+import { ResolveWithdrawEvent, PoolPinEvent, PoolUnpinEvent } from '@events'
 
 import { EPosition } from '@enums'
 
@@ -332,7 +333,7 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        hover_group_claimable: {
+        pin_group_claimable: {
             pixi: {
                 alpha: 1,
                 zIndex: 4,
@@ -341,14 +342,13 @@ export class PariTile extends BaseParisRenderer {
             ease: 'back.out(4)',
             clear: true,
         },
-        unhover_group_claimable: {
+        unpin_group_claimable: {
             pixi: {
                 alpha: 0,
                 zIndex: 1,
             },
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.9,
         },
         hide_group_claimable: {
             pixi: {
@@ -360,7 +360,7 @@ export class PariTile extends BaseParisRenderer {
             delay: 5,
             new: 'set'
         },
-        hover_group_unclaimable: {
+        pin_group_unclaimable: {
             pixi: {
                 alpha: 0.9,
                 zIndex: 3,
@@ -369,14 +369,13 @@ export class PariTile extends BaseParisRenderer {
             ease: 'power2.out',
             clear: true,
         },
-        unhover_group_unclaimable: {
+        unpin_group_unclaimable: {
             pixi: {
                 alpha: 0,
                 zIndex: 0,
             },
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.5,
             new: 'set'
         },
         hide_group: {
@@ -427,7 +426,7 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions)) return this.clear()
+        if (!(pari.position in this.validPariPositions || pool.phantom)) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
 
@@ -580,15 +579,23 @@ export class PariTile extends BaseParisRenderer {
         )
         if (titleprofitState.new) content.addChild(titleprofit)
 
+        const emptypool = this.isNoContestEmptyPool(pool)
+
         if (win) {
             this.clear('zero')
 
             const [prizeAmount] = this.get(
                 'prizeAmount',
-                () => pari.claimed ? ui.erc20(pari.payout)
-                    : ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
-                ,
-                [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest]
+                () => {
+                    if (pari.claimed) {
+                        return ui.erc20(pari.payout)
+                    } else if (emptypool) {
+                        return ui.erc20(pari.wager)
+                    } else {
+                        return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                    }
+                },
+                [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
             )
 
             const [pzox, pzoy] = this.prizeStyle.offset
@@ -653,7 +660,7 @@ export class PariTile extends BaseParisRenderer {
             if (zeroState.new) content.addChild(zero)
 
             if (pari.claimed) zero.text = ui.erc20(pari.payout)
-            else              zero.text = nocontest ? ui.erc20(pari.wager) : 0
+            else              zero.text = nocontest || emptypool ? ui.erc20(pari.wager) : 0
 
             titleprofit.text = 'Return'
             titleprofit.position.set(
@@ -678,9 +685,9 @@ export class PariTile extends BaseParisRenderer {
             }
 
             if (claimable) {
-                if (groupstate.animation !== 'hover_group_claimable') this.animate('group', 'hide_group_claimable')
+                if (groupstate.animation !== 'pin_group_claimable') this.animate('group', 'hide_group_claimable')
             } else {
-                if (groupstate.animation !== 'hover_group_unclaimable') this.animate('group', 'unhover_group_unclaimable')
+                if (groupstate.animation !== 'pin_group_unclaimable') this.animate('group', 'unpin_group_unclaimable')
             }
 
             if (claimable) {
@@ -700,13 +707,11 @@ export class PariTile extends BaseParisRenderer {
                     claim.cursor = 'pointer'
                     claim.addEventListener('pointerover', (e) => {
                         this.rebind(poolid, pariid)
-                        this.animate('group', 'hover_group_claimable')
                         this.animate('claim', 'hover_claim')
                         context.eventTarget.dispatchEvent(new PoolHoverEvent(poolid, e))
                     })
                     claim.addEventListener('pointerout', (e) => {
                         this.rebind(poolid, pariid)
-                        this.animate('group', 'unhover_group_claimable')
                         this.animate('claim', 'unhover_claim')
                         context.eventTarget.dispatchEvent(new PoolUnhoverEvent(poolid, e))
                     })
@@ -776,28 +781,27 @@ export class PariTile extends BaseParisRenderer {
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true
 
-                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                context.eventTarget.addEventListener('poolpin', (e: PoolPinEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
                     const [clble] = this.read('claimable')
-                    if (clble) this.animate('group', 'hover_group_claimable')
-                    else this.animate('group', 'hover_group_unclaimable')
+                    if (clble) this.animate('group', 'pin_group_claimable')
+                    else this.animate('group', 'pin_group_unclaimable')
                 })
 
-                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                context.eventTarget.addEventListener('poolunpin', (e: PoolUnpinEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
                     const [clble] = this.read('claimable')
-                    if (clble) this.animate('group', 'unhover_group_claimable')
-                    else this.animate('group', 'unhover_group_unclaimable')
+                    if (clble) this.animate('group', 'unpin_group_claimable')
+                    else this.animate('group', 'unpin_group_unclaimable')
                 })
 
             }
 
         } else {
-
             if (win) {
                 this.animate('background', 'winning_bg')
                 this.animate('group', 'winning_group')

@@ -9,7 +9,7 @@ import { PoolResolution } from './PoolResolution'
 import { PoolResolutionLine } from './PoolResolutionLine'
 import { PoolOpenPriceTag } from './PoolOpenPriceTag'
 import { PoolResolutionPriceTag } from './PoolResolutionPriceTag'
-import { PoolHoverEventProducer } from './PoolHoverEventProducer'
+import { PoolLayerEventProducer } from './PoolLayerEventProducer'
 
 export class Pool implements IRenderer {
 
@@ -19,7 +19,7 @@ export class Pool implements IRenderer {
         private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
-            new PoolHoverEventProducer(renderer),
+            new PoolLayerEventProducer(renderer),
             new PoolBackground(renderer),
             new PoolLock(renderer),
             new PoolOpen(renderer),

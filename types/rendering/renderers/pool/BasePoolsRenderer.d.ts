@@ -1,8 +1,8 @@
-import { RenderingContext, BaseRenderer } from '@rendering';
+import { RenderingContext, BaseEntityRenderer } from '@rendering';
 import { Container } from '../../../lib/pixi';
 import { PricePoint } from '@chartdata';
 import { EPosition } from '@enums';
-export declare abstract class BasePoolsRenderer extends BaseRenderer {
+export declare abstract class BasePoolsRenderer extends BaseEntityRenderer {
     protected prevpools: {
         [key: string]: string;
     };
@@ -14,8 +14,8 @@ export declare abstract class BasePoolsRenderer extends BaseRenderer {
     private cleanup;
     protected getPoolResolution(pool: any, context: RenderingContext): EPosition;
     protected getPoolResolutionByPrice(pool: any, resolutionPrice: PricePoint | null): EPosition;
-    protected isNoContestPool(pool: any, context: RenderingContext): boolean;
-    private _isNoContestEmptyPool;
+    private isNoContestPool;
+    protected isNoContestEmptyPool(pool: any): boolean;
     private _isNoContestPool;
     protected isHistoricalPool(pool: any, context: RenderingContext): boolean;
     protected getResolutionPricePoint(pool: any, context: RenderingContext): PricePoint | null;

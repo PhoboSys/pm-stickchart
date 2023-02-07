@@ -13,6 +13,7 @@ const pixi_1 = require("../../../lib/pixi");
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const calc_utils_1 = require("../../../lib/calc-utils");
 const _events_1 = require("../../../events/index.js");
+const _events_2 = require("../../../events/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
@@ -295,7 +296,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 clear: true,
                 new: 'set'
             },
-            hover_group_claimable: {
+            pin_group_claimable: {
                 pixi: {
                     alpha: 1,
                     zIndex: 4,
@@ -304,14 +305,13 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 ease: 'back.out(4)',
                 clear: true,
             },
-            unhover_group_claimable: {
+            unpin_group_claimable: {
                 pixi: {
                     alpha: 0,
                     zIndex: 1,
                 },
                 duration: 0.3,
                 ease: 'power2.out',
-                delay: 0.9,
             },
             hide_group_claimable: {
                 pixi: {
@@ -323,7 +323,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 delay: 5,
                 new: 'set'
             },
-            hover_group_unclaimable: {
+            pin_group_unclaimable: {
                 pixi: {
                     alpha: 0.9,
                     zIndex: 3,
@@ -332,14 +332,13 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 ease: 'power2.out',
                 clear: true,
             },
-            unhover_group_unclaimable: {
+            unpin_group_unclaimable: {
                 pixi: {
                     alpha: 0,
                     zIndex: 0,
                 },
                 duration: 0.3,
                 ease: 'power2.out',
-                delay: 0.5,
                 new: 'set'
             },
             hide_group: {
@@ -386,7 +385,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
-        if (!(pari.position in this.validPariPositions))
+        if (!(pari.position in this.validPariPositions || pool.phantom))
             return this.clear();
         const resolution = this.getPoolResolution(pool, context);
         this.updateTile(pool, pari, context, container, resolution);
@@ -487,10 +486,20 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         ], this.titleprofitStyle.text, this.titleprofitStyle.anchor));
         if (titleprofitState.new)
             content.addChild(titleprofit);
+        const emptypool = this.isNoContestEmptyPool(pool);
         if (win) {
             this.clear('zero');
-            const [prizeAmount] = this.get('prizeAmount', () => pari.claimed ? ui_1.default.erc20(pari.payout)
-                : ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position)), [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest]);
+            const [prizeAmount] = this.get('prizeAmount', () => {
+                if (pari.claimed) {
+                    return ui_1.default.erc20(pari.payout);
+                }
+                else if (emptypool) {
+                    return ui_1.default.erc20(pari.wager);
+                }
+                else {
+                    return ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position));
+                }
+            }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptypool]);
             const [pzox, pzoy] = this.prizeStyle.offset;
             const [prize, prizeState] = this.get('prize', () => _rendering_1.GraphicUtils.createText(prizeAmount, [
                 bgwidth + pzox,
@@ -525,7 +534,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (pari.claimed)
                 zero.text = ui_1.default.erc20(pari.payout);
             else
-                zero.text = nocontest ? ui_1.default.erc20(pari.wager) : 0;
+                zero.text = nocontest || emptypool ? ui_1.default.erc20(pari.wager) : 0;
             titleprofit.text = 'Return';
             titleprofit.position.set(bgwidth + tptox, tptoy);
         }
@@ -542,12 +551,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     this.animate('content', 'lost_contnet');
             }
             if (claimable) {
-                if (groupstate.animation !== 'hover_group_claimable')
+                if (groupstate.animation !== 'pin_group_claimable')
                     this.animate('group', 'hide_group_claimable');
             }
             else {
-                if (groupstate.animation !== 'hover_group_unclaimable')
-                    this.animate('group', 'unhover_group_unclaimable');
+                if (groupstate.animation !== 'pin_group_unclaimable')
+                    this.animate('group', 'unpin_group_unclaimable');
             }
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
@@ -564,13 +573,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     claim.cursor = 'pointer';
                     claim.addEventListener('pointerover', (e) => {
                         this.rebind(poolid, pariid);
-                        this.animate('group', 'hover_group_claimable');
                         this.animate('claim', 'hover_claim');
                         context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
                     });
                     claim.addEventListener('pointerout', (e) => {
                         this.rebind(poolid, pariid);
-                        this.animate('group', 'unhover_group_claimable');
                         this.animate('claim', 'unhover_claim');
                         context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
                     });
@@ -583,7 +590,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                             context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
                         }
                         if (!rslvd && sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_1.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
                         }
                     });
                 }
@@ -614,25 +621,25 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true;
-                context.eventTarget.addEventListener('poolhover', (e) => {
+                context.eventTarget.addEventListener('poolpin', (e) => {
                     if (e.poolid !== poolid)
                         return;
                     this.rebind(poolid, pariid);
                     const [clble] = this.read('claimable');
                     if (clble)
-                        this.animate('group', 'hover_group_claimable');
+                        this.animate('group', 'pin_group_claimable');
                     else
-                        this.animate('group', 'hover_group_unclaimable');
+                        this.animate('group', 'pin_group_unclaimable');
                 });
-                context.eventTarget.addEventListener('poolunhover', (e) => {
+                context.eventTarget.addEventListener('poolunpin', (e) => {
                     if (e.poolid !== poolid)
                         return;
                     this.rebind(poolid, pariid);
                     const [clble] = this.read('claimable');
                     if (clble)
-                        this.animate('group', 'unhover_group_claimable');
+                        this.animate('group', 'unpin_group_claimable');
                     else
-                        this.animate('group', 'unhover_group_unclaimable');
+                        this.animate('group', 'unpin_group_unclaimable');
                 });
             }
         }
