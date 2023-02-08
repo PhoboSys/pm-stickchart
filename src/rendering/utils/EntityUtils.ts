@@ -1,100 +1,85 @@
-import { pick, keys, filter, isEmpty } from 'lodash'
-
 import { RenderingContext } from '@rendering'
 import { ETransactionStatus } from '@enums'
-import { BaseRenderer } from './BaseRenderer'
 
-export abstract class BaseEntityRenderer extends BaseRenderer {
+export class EntityUtils {
 
-    private getTransactionsByEntityId(
+    static getTransactionsByEntityId(
         context: RenderingContext,
         entityid: string
     ): any {
-        const ids = context.transactions?.entity?.[entityid]
-        const txns = pick(context.transactions?.collection, keys(ids))
+        const tnxs = context.transactions?.[entityid]
 
-        return txns
+        return tnxs ? Object.values(tnxs) : []
     }
 
-    private getComittedTransactions(
+    static getComittedTransactions(
         context: RenderingContext,
         entityid: string
     ): any {
         const txns = this.getTransactionsByEntityId(context, entityid)
-        const commited = filter(txns, { status: ETransactionStatus.Commited })
+        const commited = txns.filter((txn) => txn.status === ETransactionStatus.Commited)
 
         return commited
     }
 
-    private getRevertedTransactions(
+    static getRevertedTransactions(
         context: RenderingContext,
         entityid: string
     ): any {
         const txns = this.getTransactionsByEntityId(context, entityid)
-        const reverted = filter(txns, { status: ETransactionStatus.Reverted })
+        const reverted = txns.filter((txn) => txn.status === ETransactionStatus.Reverted)
 
         return reverted
     }
 
-    private getPendingTransactions(
+    static getPendingTransactions(
         context: RenderingContext,
         entityid: string
     ): any {
         const txns = this.getTransactionsByEntityId(context, entityid)
-        const pending = filter(txns, { blockNumber: null, blockHash: null })
+        const pending = txns.filter((txn) => txn.blockNumber === null && txn.blockHash === null)
 
         return pending
     }
 
-    private getUnpropagatedTransactions(
+    static getUnpropagatedTransactions(
         context: RenderingContext,
         entityid: string
     ): any {
         const txns = this.getComittedTransactions(context, entityid)
-        const unpropagated = filter(txns, ({ blockNumber }) => blockNumber > context?.latestBlockNumber)
+        const unpropagated = txns.filter((txn) => txn.blockNumber > context?.latestBlockNumber)
 
         return unpropagated
     }
 
-    protected isEntityPropagating(
+    static isEntityPropagating(
         context: RenderingContext,
         entityid: string
-    ): any {
+    ): boolean {
         const pending = this.getPendingTransactions(context, entityid)
         const unpropagated = this.getUnpropagatedTransactions(context, entityid)
 
-        return (
-            !isEmpty(pending) ||
-            !isEmpty(unpropagated)
-        )
+        return pending.length !== 0 || unpropagated.length !== 0
     }
 
-    protected isEnityVerified(
+    static isEnityVerified(
         context: RenderingContext,
         entityid: string
-    ): any {
+    ): boolean {
         const commited = this.getComittedTransactions(context, entityid)
         const pending = this.getPendingTransactions(context, entityid)
 
-        return (
-            !isEmpty(commited) &&
-            isEmpty(pending)
-        )
+        return commited.length !== 0 && pending.length === 0
     }
 
-    protected isEnityReverted(
+    static isEnityReverted(
         context: RenderingContext,
         entityid: string
-    ): any {
+    ): boolean {
         const commited = this.getComittedTransactions(context, entityid)
         const pending = this.getPendingTransactions(context, entityid)
         const reverted = this.getRevertedTransactions(context, entityid)
 
-        return (
-            isEmpty(commited) &&
-            isEmpty(pending) &&
-            !isEmpty(reverted)
-        )
+        return commited.length === 0 && pending.length === 0 && reverted.length !== 0
     }
-
 }

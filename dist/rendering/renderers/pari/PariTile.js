@@ -385,7 +385,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
-        if (!(pari.position in this.validPariPositions || pool.phantom))
+        if (!(pari.position in this.validPariPositions) || pool.phantom)
             return this.clear();
         const resolution = this.getPoolResolution(pool, context);
         this.updateTile(pool, pari, context, container, resolution);
@@ -487,7 +487,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (titleprofitState.new)
             content.addChild(titleprofit);
         const emptypool = this.isNoContestEmptyPool(pool);
-        if (win) {
+        if (win && !emptypool) {
             this.clear('zero');
             const [prizeAmount] = this.get('prizeAmount', () => {
                 if (pari.claimed) {
@@ -644,7 +644,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
         }
         else {
-            if (win) {
+            if (win && !emptypool) {
                 this.animate('background', 'winning_bg');
                 this.animate('group', 'winning_group');
             }

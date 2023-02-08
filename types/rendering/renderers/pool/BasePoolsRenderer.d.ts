@@ -1,8 +1,8 @@
-import { RenderingContext, BaseEntityRenderer } from '@rendering';
+import { RenderingContext, BaseRenderer } from '@rendering';
 import { Container } from '../../../lib/pixi';
 import { PricePoint } from '@chartdata';
 import { EPosition } from '@enums';
-export declare abstract class BasePoolsRenderer extends BaseEntityRenderer {
+export declare abstract class BasePoolsRenderer extends BaseRenderer {
     protected prevpools: {
         [key: string]: string;
     };

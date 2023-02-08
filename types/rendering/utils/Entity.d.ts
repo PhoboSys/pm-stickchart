@@ -1,6 +1,4 @@
-import { RenderingContext } from '@rendering';
-import { BaseRenderer } from './BaseRenderer';
-export declare abstract class BaseEntityRenderer extends BaseRenderer {
+declare class Entity {
     private getTransactionsByEntityId;
     private getComittedTransactions;
     private getRevertedTransactions;

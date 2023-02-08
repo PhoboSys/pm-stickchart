@@ -18,4 +18,5 @@ __exportStar(require("./GraphicUtils"), exports);
 __exportStar(require("./RenderingCompositor"), exports);
 __exportStar(require("./RenderingPipelineFactory"), exports);
 __exportStar(require("./GraphicStorage"), exports);
+__exportStar(require("./EntityUtils"), exports);
 //# sourceMappingURL=index.js.map

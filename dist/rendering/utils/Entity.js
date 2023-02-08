@@ -1,9 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseEntityRenderer = void 0;
-const _enums_1 = require("../../enums/index.js");
-const BaseRenderer_1 = require("./BaseRenderer");
-class BaseEntityRenderer extends BaseRenderer_1.BaseRenderer {
+class Entity {
     getTransactionsByEntityId(context, entityid) {
         var _a, _b, _c;
         const result = [];
@@ -16,12 +11,12 @@ class BaseEntityRenderer extends BaseRenderer_1.BaseRenderer {
     }
     getComittedTransactions(context, entityid) {
         const txns = this.getTransactionsByEntityId(context, entityid);
-        const commited = txns.filter((txn) => txn.status === _enums_1.ETransactionStatus.Commited);
+        const commited = txns.filter((txn) => txn.status === ETransactionStatus.Commited);
         return commited;
     }
     getRevertedTransactions(context, entityid) {
         const txns = this.getTransactionsByEntityId(context, entityid);
-        const reverted = txns.filter((txn) => txn.status === _enums_1.ETransactionStatus.Reverted);
+        const reverted = txns.filter((txn) => txn.status === ETransactionStatus.Reverted);
         return reverted;
     }
     getPendingTransactions(context, entityid) {
@@ -51,5 +46,4 @@ class BaseEntityRenderer extends BaseRenderer_1.BaseRenderer {
         return !commited.length && !pending.length && reverted.length;
     }
 }
-exports.BaseEntityRenderer = BaseEntityRenderer;
-//# sourceMappingURL=BaseEntityRenderer.js.map
+//# sourceMappingURL=Entity.js.map

@@ -1,4 +1,4 @@
-import { RenderingContext, BaseEntityRenderer } from '@rendering'
+import { RenderingContext, BaseRenderer } from '@rendering'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
@@ -7,7 +7,7 @@ import { EPosition } from '@enums'
 
 import { PRIZEFUNDS } from '@constants'
 
-export abstract class BasePoolsRenderer extends BaseEntityRenderer {
+export abstract class BasePoolsRenderer extends BaseRenderer {
 
     protected prevpools: { [key:string]: string } = {}
 

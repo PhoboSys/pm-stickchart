@@ -6,7 +6,7 @@ const utils_1 = require("../../../lib/utils");
 const _chartdata_1 = require("../../../chartdata/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const _constants_1 = require("../../../constants/index.js");
-class BasePoolsRenderer extends _rendering_1.BaseEntityRenderer {
+class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     constructor() {
         super(...arguments);
         this.prevpools = {};

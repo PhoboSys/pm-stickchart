@@ -426,7 +426,7 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions || pool.phantom)) return this.clear()
+        if (!(pari.position in this.validPariPositions) || pool.phantom) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
 
@@ -581,7 +581,7 @@ export class PariTile extends BaseParisRenderer {
 
         const emptypool = this.isNoContestEmptyPool(pool)
 
-        if (win) {
+        if (win && !emptypool) {
             this.clear('zero')
 
             const [prizeAmount] = this.get(
@@ -802,7 +802,7 @@ export class PariTile extends BaseParisRenderer {
             }
 
         } else {
-            if (win) {
+            if (win && !emptypool) {
                 this.animate('background', 'winning_bg')
                 this.animate('group', 'winning_group')
             } else {
