@@ -6,6 +6,8 @@ export declare class EventsProducer {
     private readonly error;
     private readonly pointermove;
     private readonly pointerleave;
+    private readonly pointerup;
+    private readonly pointerdown;
     constructor(target: EventTarget, canvas: HTMLCanvasElement, stage: HTMLElement);
     destroy(): void;
 }

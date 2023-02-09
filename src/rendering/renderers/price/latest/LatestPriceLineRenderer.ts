@@ -56,8 +56,8 @@ export class LatestPriceLineRenderer extends BaseRenderer {
     ): Container {
 
         const {
-            ys,
-            prices,
+            latestY,
+            latest,
         } = context.plotdata
 
         const {
@@ -66,8 +66,8 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         } = context.screen
 
         const x = width
-        const y = Number(ys.at(-1))
-        const price = Number(prices.at(-1))
+        const y = latestY
+        const price = latest.value
 
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
             datamath.toFixedPrecision(price, 8),

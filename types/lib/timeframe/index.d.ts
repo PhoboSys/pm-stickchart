@@ -9,12 +9,26 @@ export declare const MIN_FRAME_DURATION: number;
 export declare const MAX_EXPAND_RATION = 3;
 export declare function nowUnixTS(): number;
 export declare class Timeframe {
-    private readonly zoomTarget;
-    private readonly onZoom;
+    private readonly eventTarget;
+    private readonly onUpdate;
     private _timerfamePreffered;
-    private since;
+    private _since;
+    private _until;
+    private set since(value);
+    private set until(value);
+    private untilmax;
+    private sincemin;
+    private get since();
+    private get until();
     private readonly zoomevent;
-    constructor(zoomTarget: EventTarget, onZoom: () => any);
+    private readonly pointerdown;
+    private readonly pointermove;
+    private readonly pointerup;
+    private shiftStartingPoint;
+    constructor(eventTarget: EventTarget, onUpdate: () => any);
+    private shiftstart;
+    private shiftprogress;
+    private shiftend;
     save(timeframe: any): this;
     get(): {
         since: number;
@@ -22,8 +36,6 @@ export declare class Timeframe {
     };
     destroy(): void;
     actualize(): this;
-    private getValid;
-    private tooBig;
-    private tooSmall;
+    private shift;
     private zoom;
 }

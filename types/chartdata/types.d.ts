@@ -15,6 +15,9 @@ export declare type DataPadding = {
     max: number;
 };
 export declare type PlotData = {
+    latestY: number;
+    latestX: number;
+    latest: PricePoint;
     timestamps: number[];
     prices: number[];
     timerange: [number, number];

@@ -111,7 +111,7 @@ export default {
 
     padding: {
         left: -20, // px
-        right: 450, // px
+        right: -10, // px
         top: 113, // px
         bottom: 210, // px
     },

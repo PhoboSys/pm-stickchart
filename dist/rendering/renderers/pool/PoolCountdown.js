@@ -156,9 +156,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     updateText(pool, context, container) {
         const { height, width } = context.screen;
         const { lockDate, endDate, poolid } = pool;
-        const { xs, ys, } = context.plotdata;
-        const x = Number(xs.at(-1));
-        const y = Number(ys.at(-1));
+        const { latestX, latestY, } = context.plotdata;
+        const x = latestX;
+        const y = latestY;
         const now = (0, utils_1.nowUnixTS)();
         const positioning = lockDate >= now;
         const countdownValue = positioning
