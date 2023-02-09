@@ -1,6 +1,6 @@
 import { PRIZEFUNDS } from '@constants'
 
-import { RenderingContext, GraphicUtils } from '@rendering'
+import { RenderingContext, GraphicUtils, EntityUtils } from '@rendering'
 import {
     UP_ICON_TEXTURE,
     DOWN_ICON_TEXTURE,
@@ -263,6 +263,20 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private configAnimations: any = {
+        propagating_bg: {
+            pixi: {
+                alpha: 0.03,
+            },
+            duration: 0.3,
+            ease: 'power2.out',
+        },
+        unpropagating_bg: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 0.3,
+            ease: 'power2.out',
+        },
         winning_bg: {
             pixi: {
                 alpha: 1,
@@ -525,6 +539,8 @@ export class PariTile extends BaseParisRenderer {
         const bgheight = bgStyle.height
         const bgy = vertical + bgheight * ay + ofy
 
+        const [groupMask] = this.get('groupMask', () => this.createGroupMask(position))
+
         const [group, groupstate] = this.get('group', () => new Container())
         if (groupstate.new) {
             group.alpha = 0
@@ -534,6 +550,8 @@ export class PariTile extends BaseParisRenderer {
 
             container.sortableChildren = true
             container.addChild(group)
+            group.addChild(groupMask)
+            group.mask = groupMask
         }
         group.position.set(bgx, bgy)
 
@@ -811,6 +829,33 @@ export class PariTile extends BaseParisRenderer {
             }
 
         }
+
+        const [propagatingBackground, propagatingBackgroundState] = this.get(
+            'propagatingBackground',
+            () => GraphicUtils.createPropagationBackground({
+                height: 310,
+                lineHeight: 18,
+                width: 300,
+                colors: [{ color: 0xffffff, alpha: 1 }],
+                duration: 1,
+            })
+        )
+
+        if (propagatingBackgroundState.new) {
+            propagatingBackground.rotation = 3*Math.PI/4
+            propagatingBackground.pivot.x = 150
+            propagatingBackground.pivot.y = 155
+            propagatingBackground.position.set(150, 50)
+            propagatingBackground.alpha = 0
+            group.addChild(propagatingBackground)
+        }
+
+        const propagating = EntityUtils.isEntityPropagating(context, pariid)
+        if (propagating) {
+            this.animate('propagatingBackground', 'propagating_bg')
+        } else {
+            this.animate('propagatingBackground', 'unpropagating_bg')
+        }
     }
 
     private getPositionIconTextureName(position: EPosition): symbol {
@@ -844,7 +889,28 @@ export class PariTile extends BaseParisRenderer {
         return icon
     }
 
-    private createBackground(position: EPosition, context: RenderingContext): Container {
+    private createGroupMask(position: EPosition): Graphics {
+        const {
+            width,
+            height,
+            background: {
+                offset: [ofx, ofy],
+                lineStyle,
+                radiuses,
+            }
+        } = this.groupStyle[position]
+
+        const mask = GraphicUtils.createRoundedRect(
+            [ofx, ofy],
+            [width, height],
+            radiuses,
+            { lineStyle }
+        )
+
+        return mask
+    }
+
+    private createBackground(position: EPosition, context: RenderingContext): Graphics {
         const {
             width,
             height,

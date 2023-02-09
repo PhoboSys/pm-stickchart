@@ -1,4 +1,5 @@
-import { Graphics, LineStyle, Text, Texture } from '../../lib/pixi';
+import { Graphics, LineStyle, Text } from '../../lib/pixi';
+import { Texture, Container } from '../../lib/pixi';
 export declare class GraphicUtils {
     static createCircle([x, y]: [number, number], radius: number, style: {
         color: any;
@@ -44,4 +45,11 @@ export declare class GraphicUtils {
     }): Graphics;
     static createLine([x1, y1]: [number, number], [x2, y2]: [number, number], linestyle: LineStyle): Graphics;
     static createText(value: any, [x, y]: [number, number], textstyle: object, anchor?: [number, number] | number): Text;
+    static createPropagationBackground({ lineHeight, width, height, colors, duration }: {
+        lineHeight: any;
+        width: any;
+        height: any;
+        colors: any;
+        duration: any;
+    }): Container;
 }

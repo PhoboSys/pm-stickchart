@@ -22,5 +22,6 @@ export declare class PariTile extends BaseParisRenderer {
     private updateTile;
     private getPositionIconTextureName;
     private createIcon;
+    private createGroupMask;
     private createBackground;
 }

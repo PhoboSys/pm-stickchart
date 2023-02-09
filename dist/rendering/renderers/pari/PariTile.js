@@ -226,6 +226,20 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
         this.configAnimations = {
+            propagating_bg: {
+                pixi: {
+                    alpha: 0.03,
+                },
+                duration: 0.3,
+                ease: 'power2.out',
+            },
+            unpropagating_bg: {
+                pixi: {
+                    alpha: 0,
+                },
+                duration: 0.3,
+                ease: 'power2.out',
+            },
             winning_bg: {
                 pixi: {
                     alpha: 1,
@@ -454,6 +468,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             return this.clear();
         const bgheight = bgStyle.height;
         const bgy = vertical + bgheight * ay + ofy;
+        const [groupMask] = this.get('groupMask', () => this.createGroupMask(position));
         const [group, groupstate] = this.get('group', () => new pixi_1.Container());
         if (groupstate.new) {
             group.alpha = 0;
@@ -461,6 +476,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             group.height = bgheight;
             container.sortableChildren = true;
             container.addChild(group);
+            group.addChild(groupMask);
+            group.mask = groupMask;
         }
         group.position.set(bgx, bgy);
         const [background, backgroundState] = this.get('background', () => this.createBackground(position, context));
@@ -653,6 +670,28 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 this.animate('group', 'loseing_group');
             }
         }
+        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => _rendering_1.GraphicUtils.createPropagationBackground({
+            height: 310,
+            lineHeight: 18,
+            width: 300,
+            colors: [{ color: 0xffffff, alpha: 1 }],
+            duration: 1,
+        }));
+        if (propagatingBackgroundState.new) {
+            propagatingBackground.rotation = 3 * Math.PI / 4;
+            propagatingBackground.pivot.x = 150;
+            propagatingBackground.pivot.y = 155;
+            propagatingBackground.position.set(150, 50);
+            propagatingBackground.alpha = 0;
+            group.addChild(propagatingBackground);
+        }
+        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pariid);
+        if (propagating) {
+            this.animate('propagatingBackground', 'propagating_bg');
+        }
+        else {
+            this.animate('propagatingBackground', 'unpropagating_bg');
+        }
     }
     getPositionIconTextureName(position) {
         switch (position) {
@@ -674,6 +713,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         icon.scale.set(this.iconStyle.size / icon.height);
         icon.position.set(...this.iconStyle.offset);
         return icon;
+    }
+    createGroupMask(position) {
+        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, } } = this.groupStyle[position];
+        const mask = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { lineStyle });
+        return mask;
     }
     createBackground(position, context) {
         const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, shadow: { points, colorStops } } } = this.groupStyle[position];
