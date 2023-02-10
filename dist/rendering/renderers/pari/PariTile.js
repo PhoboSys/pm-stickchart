@@ -468,7 +468,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             return this.clear();
         const bgheight = bgStyle.height;
         const bgy = vertical + bgheight * ay + ofy;
-        const [groupMask] = this.get('groupMask', () => this.createGroupMask(position));
         const [group, groupstate] = this.get('group', () => new pixi_1.Container());
         if (groupstate.new) {
             group.alpha = 0;
@@ -476,16 +475,21 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             group.height = bgheight;
             container.sortableChildren = true;
             container.addChild(group);
-            group.addChild(groupMask);
-            group.mask = groupMask;
         }
         group.position.set(bgx, bgy);
+        const [contentMask] = this.get('contentMask', () => this.createContentMask(position));
+        const [contentContainer, contentContainerState] = this.get('contentContainer', () => new pixi_1.Container());
+        if (contentContainerState.new) {
+            group.addChild(contentContainer);
+            contentContainer.addChild(contentMask);
+            contentContainer.mask = contentMask;
+        }
         const [background, backgroundState] = this.get('background', () => this.createBackground(position, context));
         if (backgroundState.new)
-            group.addChild(background);
+            contentContainer.addChild(background);
         const [content, contentState] = this.get('content', () => new pixi_1.Container());
         if (contentState.new)
-            group.addChild(content);
+            contentContainer.addChild(content);
         const [icon, iconState] = this.get('icon', () => this.createIcon(context, position));
         if (iconState.new)
             content.addChild(icon);
@@ -683,7 +687,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             propagatingBackground.pivot.y = 155;
             propagatingBackground.position.set(150, 50);
             propagatingBackground.alpha = 0;
-            group.addChild(propagatingBackground);
+            contentContainer.addChild(propagatingBackground);
         }
         const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pariid);
         if (propagating) {
@@ -714,7 +718,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         icon.position.set(...this.iconStyle.offset);
         return icon;
     }
-    createGroupMask(position) {
+    createContentMask(position) {
         const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, } } = this.groupStyle[position];
         const mask = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { lineStyle });
         return mask;

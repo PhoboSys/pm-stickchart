@@ -539,8 +539,6 @@ export class PariTile extends BaseParisRenderer {
         const bgheight = bgStyle.height
         const bgy = vertical + bgheight * ay + ofy
 
-        const [groupMask] = this.get('groupMask', () => this.createGroupMask(position))
-
         const [group, groupstate] = this.get('group', () => new Container())
         if (groupstate.new) {
             group.alpha = 0
@@ -550,16 +548,22 @@ export class PariTile extends BaseParisRenderer {
 
             container.sortableChildren = true
             container.addChild(group)
-            group.addChild(groupMask)
-            group.mask = groupMask
         }
         group.position.set(bgx, bgy)
 
+        const [contentMask] = this.get('contentMask', () => this.createContentMask(position))
+        const [contentContainer, contentContainerState] = this.get('contentContainer', () => new Container())
+        if (contentContainerState.new) {
+            group.addChild(contentContainer)
+            contentContainer.addChild(contentMask)
+            contentContainer.mask = contentMask
+        }
+
         const [background, backgroundState] = this.get('background', () => this.createBackground(position, context))
-        if (backgroundState.new) group.addChild(background)
+        if (backgroundState.new) contentContainer.addChild(background)
 
         const [content, contentState] = this.get('content', () => new Container())
-        if (contentState.new) group.addChild(content)
+        if (contentState.new) contentContainer.addChild(content)
 
         const [icon, iconState] = this.get('icon', () => this.createIcon(context, position))
         if (iconState.new) content.addChild(icon)
@@ -847,7 +851,7 @@ export class PariTile extends BaseParisRenderer {
             propagatingBackground.pivot.y = 155
             propagatingBackground.position.set(150, 50)
             propagatingBackground.alpha = 0
-            group.addChild(propagatingBackground)
+            contentContainer.addChild(propagatingBackground)
         }
 
         const propagating = EntityUtils.isEntityPropagating(context, pariid)
@@ -889,7 +893,7 @@ export class PariTile extends BaseParisRenderer {
         return icon
     }
 
-    private createGroupMask(position: EPosition): Graphics {
+    private createContentMask(position: EPosition): Graphics {
         const {
             width,
             height,
