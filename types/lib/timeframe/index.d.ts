@@ -11,31 +11,29 @@ export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly eventTarget;
     private readonly onUpdate;
-    private _timerfamePreffered;
-    private _since;
     private _until;
-    private set since(value);
+    private _timeframe;
+    private get timeframe();
+    private set timeframe(value);
+    private get until();
     private set until(value);
     private untilmax;
-    private sincemin;
     private get since();
-    private get until();
     private readonly zoomevent;
     private readonly pointerdown;
     private readonly pointermove;
     private readonly pointerup;
-    private shiftStartingPoint;
+    private shifting;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
     private shiftstart;
     private shiftprogress;
     private shiftend;
-    save(timeframe: any): this;
+    save(timeframe: any): void;
     get(): {
         since: number;
         until: number;
     };
     destroy(): void;
-    actualize(): this;
     private shift;
     private zoom;
 }

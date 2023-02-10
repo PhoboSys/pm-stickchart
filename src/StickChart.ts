@@ -131,7 +131,7 @@ export class StickChart extends EventTarget {
         const plotdata = DataBuilder.plotdata(
             chartdata,
             this.application.screen,
-            this.timeframe.actualize().get()
+            this.timeframe.get()
         )
         const ctx: RenderingContext = {
             metapool: context.metapool,

@@ -24,34 +24,30 @@ export function nowUnixTS() {
 type Point = { x: number, y: number }
 
 export class Timeframe {
-    private _timerfamePreffered: number = UNIX_DAY
 
-    private _since: number | null = null
     private _until: number | null = null
+    private _timeframe: number = MAX_FRAME_DURATION
 
-    private set since(since: number) {
+    private get timeframe(): number {
+        return this._timeframe
+    }
 
-        let timeframe = this.until - since
+    private set timeframe(timeframe: number) {
+        timeframe = timeframe || MAX_FRAME_DURATION
         timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
         timeframe = Math.max(timeframe, MIN_FRAME_DURATION)
-        since = this.until - timeframe
 
-        if (since > this.sincemin()) {
-            this._since = since
-        } else {
-            // null will always return current sincemin
-            this._since = null
-        }
+        this._timeframe = timeframe
+    }
+
+    private get until(): number {
+        if (this._until) return this._until
+
+        return this.untilmax(this.timeframe)
     }
 
     private set until(until: number) {
-
-        let timeframe = until - this.since
-        timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
-        timeframe = Math.max(timeframe, MIN_FRAME_DURATION)
-        until = this.since + timeframe
-
-        if (until < this.untilmax()) {
+        if (until < this.untilmax(this.timeframe)) {
             this._until = until
         } else {
             // null will always return current untilmax
@@ -59,26 +55,12 @@ export class Timeframe {
         }
     }
 
-    private untilmax(): number {
-        const now = nowUnixTS()
-        const timeframe = now - this.since
-        return Math.floor(now + timeframe * 0.36)
-    }
-
-    private sincemin(): number {
-        return nowUnixTS() - UNIX_DAY
+    private untilmax(timeframe: number): number {
+        return Math.floor(nowUnixTS() + timeframe * 0.382)
     }
 
     private get since(): number {
-        if (this._since) return this._since
-
-        return this.sincemin()
-    }
-
-    private get until(): number {
-        if (this._until) return this._until
-
-        return this.untilmax()
+        return this.until - this.timeframe
     }
 
     private readonly zoomevent: any
@@ -86,16 +68,16 @@ export class Timeframe {
     private readonly pointermove: any
     private readonly pointerup: any
 
-    private shiftStartingPoint: Point | null = null
+    private shifting: boolean = false
 
     constructor(
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
     ) {
         this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom), config.zoom.throttle, { trailing: false })
-        this.pointerdown = (e: PointerdownEvent) => this.shiftstart(e.position)
-        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.position, e), config.zoom.throttle, { trailing: false })
-        this.pointerup = (e: PointerupEvent) => this.shiftend(e.position)
+        this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
+        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX), config.zoom.throttle, { trailing: false })
+        this.pointerup = (e: PointerupEvent) => this.shiftend()
 
         this.eventTarget.addEventListener('zoom', this.zoomevent)
         this.eventTarget.addEventListener('pointerdown', this.pointerdown)
@@ -103,31 +85,20 @@ export class Timeframe {
         this.eventTarget.addEventListener('pointerup', this.pointerup)
     }
 
-    private shiftstart(position: Point): void {
-        if (isEmpty(this.shiftStartingPoint) && !isEmpty(position)) {
-            this.shiftStartingPoint = position
-        }
+    private shiftstart(): void {
+        if (!this.shifting) this.shifting = true
     }
 
-    private shiftprogress(position: Point, e: PointermoveEvent): void {
-        if (!isEmpty(this.shiftStartingPoint) && !isEmpty(position)) {
-            this.shift(Math.floor(position.x - this.shiftStartingPoint!.x), e)
-            this.shiftStartingPoint = position
-        }
+    private shiftprogress(shift: number): void {
+        if (this.shifting && shift) this.shift(shift)
     }
 
-    private shiftend(position: Point): void {
-        if (!isEmpty(this.shiftStartingPoint) && !isEmpty(position)) {
-            this.shiftStartingPoint = null
-        }
+    private shiftend(): void {
+        if (this.shifting) this.shifting = false
     }
 
-    public save(timeframe): this {
-
-        this.since = this.until - timeframe
-        this._timerfamePreffered = this.until - this.since
-
-        return this
+    public save(timeframe): void {
+        this.timeframe = timeframe
     }
 
     public get() {
@@ -141,51 +112,42 @@ export class Timeframe {
         this.eventTarget.removeEventListener('pointerup', this.pointerup)
     }
 
-    public actualize(): this {
-        // debugger
-        // const timeframeNow = this.until - this.since
-        // const timeframeMax = this._timerfamePreffered * MAX_EXPAND_RATION
+    private shift(shift: number): void {
 
-        // if (timeframeNow > timeframeMax) {
-        //     this.since = this.until - this._timerfamePreffered
-        // }
-
-        return this
-    }
-
-    private shift(shift: number, e: PointermoveEvent): void {
-
-        const timeframe = this.since - this.until
-        shift = Math.floor(timeframe * shift / 300)
-
-        const since = this.since + shift
-        const until = this.until + shift
+        const timeshift = Math.floor(this.timeframe * shift / 100)
+        const until = this.until - timeshift
+        const since = until - this.timeframe
 
         if (
-            since >= this.sincemin() &&
-            until <= this.untilmax()
+            until <= this.untilmax(this.timeframe) &&
+            since > nowUnixTS() - MAX_FRAME_DURATION
         ) {
-            this.since = since
             this.until = until
-
             this.onUpdate()
         }
     }
 
     private zoom(zoom: number): void {
 
-        let timeframe = this.until - this.since
-        timeframe = Math.round(timeframe * (1 + zoom))
+        const timeframe = Math.round(this.timeframe * (1 + zoom))
 
-        const since = this.until - timeframe
+        let until = this.until
+        const now2until = this.until - nowUnixTS()
+        if (now2until > 0) {
+            const percent = now2until / this.timeframe
+            const diff = this.timeframe - timeframe
+            until = this.until - Math.ceil(diff*percent)
+        }
+        const since = until - timeframe
 
         if (
-            since >= this.sincemin()
+            timeframe < MAX_FRAME_DURATION &&
+            timeframe > MIN_FRAME_DURATION &&
+            until <= this.untilmax(timeframe) &&
+            since > nowUnixTS() - MAX_FRAME_DURATION
         ) {
-            this.since = since
-
-            this._timerfamePreffered = timeframe
-
+            this.timeframe = timeframe
+            this.until = until
             this.onUpdate()
         }
     }

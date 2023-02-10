@@ -1,11 +1,9 @@
-export declare class PointermoveEvent extends Event {
+export declare class PointerupEvent extends Event {
     static readonly NAME: string;
     readonly inner: PointerEvent;
     readonly position: {
         x: number;
         y: number;
     };
-    readonly movementX: number;
-    readonly movementY: number;
     constructor(inner: PointerEvent);
 }
