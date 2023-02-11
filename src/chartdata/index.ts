@@ -20,11 +20,11 @@ export class DataBuilder {
     }
 
     static getLatest(
-        plotdata: PlotData,
+        chartdata: { timestamps, prices },
         back = 1
     ): PricePoint {
 
-        const { prices, timestamps } = plotdata
+        const { timestamps, prices } = chartdata
 
         return {
             value: Number(prices.at(-1*back)),
@@ -32,49 +32,11 @@ export class DataBuilder {
         }
     }
 
-    static fromPolyline(
-        polyline: SVGPolylineElement
-    ): { xs, ys } {
-
-        const all = polyline.getAttributeNS(null, 'points')
-
-        const xs: number[] = []
-        const ys: number[] = []
-        const points = <string[]>all?.split(' ')
-        for (const point of points) {
-            const [x, y] = point.split(',')
-
-            xs.push(Number(x))
-            ys.push(Number(y))
-        }
-
-        return { xs, ys }
-
-    }
-
-    static toPolyline(
-        plotdata: PlotData
-    ): SVGPolylineElement {
-
-        const { xs, ys } = plotdata
-
-        const result: string[] = []
-
-        for (const idx in xs) {
-            result.push(xs[idx] + ',' + ys[idx])
-        }
-
-        const points = result.join(' ')
-
-        const ns = 'http://www.w3.org/2000/svg'
-        const polyline = document.createElementNS(ns, 'polyline')
-        polyline.setAttributeNS(null, 'points', points)
-
-        return polyline
-
-    }
-
     static EMPTY_PLOTDATA: PlotData = {
+        latestY: 0,
+        latestX: 0,
+        latest: { value: 0, timestamp: 0 },
+
         timestamps: [],
         prices: [],
 
@@ -92,9 +54,10 @@ export class DataBuilder {
     static normalize(
         timestampsOrig,
         pricesOrig,
+        chartdata: { timestamps, prices },
+        timeframe: { since, until },
         screen: { width, height },
     ): PlotData {
-
         if (isEmpty(timestampsOrig) || isEmpty(pricesOrig)) return DataBuilder.EMPTY_PLOTDATA
 
         const timestamps = datamath.sample(timestampsOrig, config.maxdensity)
@@ -114,7 +77,7 @@ export class DataBuilder {
         const paddingLeft = config.padding.left / width
         const paddingRight = config.padding.right / width
         const timerange = datamath.range(
-            timestamps,
+            [timeframe.since, timeframe.until],
             paddingLeft,
             paddingRight,
         )
@@ -141,7 +104,15 @@ export class DataBuilder {
             width - config.padding.right
         ]
 
+        const latest = DataBuilder.getLatest(chartdata)
+        const [latestX] = datamath.scale([latest.timestamp], timerange, width)
+        const [latestY] = datamath.scaleReverse([latest.value], pricerange, height)
+
         return {
+            latestY,
+            latestX,
+            latest,
+
             timestamps,
             prices,
 
@@ -182,7 +153,10 @@ export class DataBuilder {
             const ts = timestamps[idx]
             const ps = prices[idx]
 
-            if (ts >= since) {
+            if (
+                ts >= since &&
+                ts <= until
+            ) {
 
                 tsframed.push(ts)
                 psframed.push(ps)
@@ -190,7 +164,7 @@ export class DataBuilder {
             }
         }
 
-        return DataBuilder.normalize(tsframed, psframed, screen)
+        return DataBuilder.normalize(tsframed, psframed, chartdata, timeframe, screen)
     }
 
 }

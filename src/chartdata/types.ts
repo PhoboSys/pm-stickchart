@@ -19,6 +19,10 @@ export type DataPadding = {
 }
 
 export type PlotData = {
+    latestY: number,
+    latestX: number,
+    latest: PricePoint,
+
     timestamps: number[],
     prices: number[],
 

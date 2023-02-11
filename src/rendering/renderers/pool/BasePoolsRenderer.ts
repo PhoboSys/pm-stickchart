@@ -90,7 +90,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         if (this.isActualPool(pool)) {
             if (nowUnixTS() < pool.lockDate) return false
 
-            const price = DataBuilder.getLatest(context.plotdata)
+            const price = DataBuilder.getLatest(context.chartdata)
             if (!price?.timestamp || price.timestamp < pool.lockDate) return false
 
             // TODO: Implement Early Pool Resolution with NoContest
@@ -147,7 +147,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): PricePoint | null {
 
         if (this.isActualPool(pool)) {
-            return DataBuilder.getLatest(context.plotdata)
+            return DataBuilder.getLatest(context.chartdata)
         }
 
         const isResolveReady = !pool.resolved && context.settlements?.[pool.endDate]
@@ -166,7 +166,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             }
         }
 
-        const latest = DataBuilder.getLatest(context.plotdata)
+        const latest = DataBuilder.getLatest(context.chartdata)
         if (pool.endDate > latest.timestamp) {
             return latest
         }
