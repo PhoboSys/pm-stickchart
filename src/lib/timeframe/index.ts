@@ -1,95 +1,166 @@
 import throttle from 'lodash.throttle'
 
-import { ZoomEvent } from '@events'
+import { ZoomEvent, PointerdownEvent, PointermoveEvent, PointerupEvent } from '@events'
+import { TimeframeChangedEvent, TimeframeStickToNowEvent } from '@events'
 import config from '@config'
-
-export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
-export const INVALID_DATE = new Date(NaN)
+import { isEmpty } from '@lib/utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
-export const UNIX_WEEK = 7 * UNIX_DAY
 
 export const MAX_FRAME_DURATION = UNIX_DAY
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
-
-export const MAX_EXPAND_RATION = 3
 
 export function nowUnixTS() {
     return Math.floor(Date.now() / 1000)
 }
 
+type Point = { x: number, y: number }
+type Rect = { width: number, height: number }
+
 export class Timeframe {
-    private _timerfamePreffered: number = UNIX_DAY
 
-    private since: number = nowUnixTS() - UNIX_DAY
+    private _until: number | null = null
+    private _timeframe: number = MAX_FRAME_DURATION
 
-    private readonly zoomevent: any
-
-    constructor(
-        private readonly zoomTarget: EventTarget,
-        private readonly onZoom: () => any,
-    ) {
-        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom),
-            config.zoom.throttle,
-            { trailing: false }
-        )
-        this.zoomTarget.addEventListener('zoom', this.zoomevent)
+    private get timeframe(): number {
+        return this._timeframe
     }
 
-    public save(timeframe): this {
-        timeframe = this.getValid(timeframe)
+    private set timeframe(timeframe: number) {
+        timeframe = timeframe || MAX_FRAME_DURATION
+        timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
+        timeframe = Math.max(timeframe, MIN_FRAME_DURATION)
 
-        this.since = nowUnixTS() - timeframe
-        this._timerfamePreffered = timeframe
+        const since = this.until - timeframe
+        if (since >= nowUnixTS() - MAX_FRAME_DURATION) {
+            this._timeframe = timeframe
+        }
+    }
 
-        return this
+    private get until(): number {
+        if (this._until) return this._until
+
+        return this.untilmax(this.timeframe)
+    }
+
+    private set until(until: number) {
+        if (until < this.untilmax(this.timeframe)) {
+            const since = until - this.timeframe
+            if (since >= nowUnixTS() - MAX_FRAME_DURATION) {
+                this._until = until
+            }
+        } else {
+            // null will always return current untilmax
+            this._until = null
+            this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
+        }
+    }
+
+    private untilmax(timeframe: number): number {
+        return Math.floor(nowUnixTS() + timeframe * 0.382)
+    }
+
+    private get since(): number {
+        return this.until - this.timeframe
+    }
+
+    private readonly zoomevent: any
+    private readonly pointerdown: any
+    private readonly pointermove: any
+    private readonly pointerup: any
+
+    private shifting: boolean = false
+
+    constructor(
+        private readonly eventTarget: EventTarget,
+        private readonly onUpdate: () => any,
+    ) {
+        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.position, e.screen), config.zoom.throttle, { trailing: false })
+        this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
+        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false })
+        this.pointerup = (e: PointerupEvent) => this.shiftend()
+
+        this.eventTarget.addEventListener('zoom', this.zoomevent)
+        this.eventTarget.addEventListener('pointerdown', this.pointerdown)
+        this.eventTarget.addEventListener('pointermove', this.pointermove)
+        this.eventTarget.addEventListener('pointerup', this.pointerup)
+        this.eventTarget.addEventListener('timeframechanged', this.onUpdate)
+    }
+
+    private shiftstart(): void {
+        if (!this.shifting) this.shifting = true
+    }
+
+    private shiftprogress(shift: number, screen: Rect): void {
+        if (this.shifting && shift) this.shift(shift, screen)
+    }
+
+    private shiftend(): void {
+        if (this.shifting) this.shifting = false
+    }
+
+    public save(timeframe): void {
+        this.timeframe = timeframe
+        this.until = this.untilmax(timeframe)
     }
 
     public get() {
-        return { since: this.since, until: nowUnixTS() }
+        return { since: this.since, until: this.until }
     }
 
     public destroy(): void {
-        this.zoomTarget.removeEventListener('zoom', this.zoomevent)
+        this.eventTarget.removeEventListener('zoom', this.zoomevent)
+        this.eventTarget.removeEventListener('pointerdown', this.pointerdown)
+        this.eventTarget.removeEventListener('pointermove', this.pointermove)
+        this.eventTarget.removeEventListener('pointerup', this.pointerup)
+        this.eventTarget.removeEventListener('timeframechanged', this.onUpdate)
     }
 
-    public actualize(): this {
-        const timeframeNow = nowUnixTS() - this.since
-        const timeframeMax = this.getValid(this._timerfamePreffered * MAX_EXPAND_RATION)
+    private shift(shift: number, screen: Rect): void {
 
-        if (timeframeNow > timeframeMax) {
-            this.since = nowUnixTS() - this._timerfamePreffered
+        const speed = 5
+        shift = shift / screen.width
+        const timeshift = Math.floor(this.timeframe * shift * speed)
+        const until = this.until - timeshift
+        const since = until - this.timeframe
+
+        if (
+            until <= this.untilmax(this.timeframe) &&
+            since >= nowUnixTS() - MAX_FRAME_DURATION
+        ) {
+            this.until = until
+            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+        }
+    }
+
+    private zoom(zoom: number, position: Point, screen: Rect): void {
+
+        const timeframe = Math.round(this.timeframe * (1 + zoom))
+
+        let until = this.until
+        const percent = 1 - position.x / screen.width
+        const diff = this.timeframe - timeframe
+        until = this.until - Math.ceil(diff*percent)
+        until = Math.min(until, this.untilmax(timeframe))
+
+        let since = until - timeframe
+        if (since < nowUnixTS() - MAX_FRAME_DURATION) {
+            until = this.since + timeframe
+            since = until - timeframe
         }
 
-        return this
+        if (
+            timeframe < MAX_FRAME_DURATION &&
+            timeframe > MIN_FRAME_DURATION &&
+            until <= this.untilmax(timeframe) &&
+            since >= nowUnixTS() - MAX_FRAME_DURATION
+        ) {
+            this.timeframe = timeframe
+            this.until = until
+            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+        }
     }
 
-    private getValid(timeframe): number {
-        if (this.tooBig(timeframe)) return MAX_FRAME_DURATION
-        if (this.tooSmall(timeframe)) return MIN_FRAME_DURATION
-
-        return timeframe
-    }
-
-    private tooBig(timeframe): boolean {
-        return timeframe > MAX_FRAME_DURATION
-    }
-
-    private tooSmall(timeframe): boolean {
-        return timeframe < MIN_FRAME_DURATION
-    }
-
-    private zoom(zoom: number): void {
-        const now = nowUnixTS()
-
-        let timeframe = now - this.since
-        timeframe += Math.round(timeframe * zoom)
-        timeframe = this.getValid(timeframe)
-
-        this.since = now - timeframe
-        this._timerfamePreffered = timeframe
-        this.onZoom()
-    }
 }

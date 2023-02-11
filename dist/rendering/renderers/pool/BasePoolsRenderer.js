@@ -62,7 +62,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (this.isActualPool(pool)) {
             if ((0, utils_1.nowUnixTS)() < pool.lockDate)
                 return false;
-            const price = _chartdata_1.DataBuilder.getLatest(context.plotdata);
+            const price = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
                 return false;
             // TODO: Implement Early Pool Resolution with NoContest
@@ -103,7 +103,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     getResolutionPricePoint(pool, context) {
         var _a;
         if (this.isActualPool(pool)) {
-            return _chartdata_1.DataBuilder.getLatest(context.plotdata);
+            return _chartdata_1.DataBuilder.getLatest(context.chartdata);
         }
         const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]);
         if (isResolveReady) {
@@ -119,7 +119,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
                 timestamp: pool.resolutionPriceTimestamp,
             };
         }
-        const latest = _chartdata_1.DataBuilder.getLatest(context.plotdata);
+        const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
         if (pool.endDate > latest.timestamp) {
             return latest;
         }

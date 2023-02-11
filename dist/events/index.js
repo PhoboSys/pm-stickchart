@@ -17,10 +17,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./ZoomEvent"), exports);
 __exportStar(require("./PointermoveEvent"), exports);
 __exportStar(require("./PointerleaveEvent"), exports);
+__exportStar(require("./PointerdownEvent"), exports);
+__exportStar(require("./PointerupEvent"), exports);
 __exportStar(require("./CanvasErrorEvent"), exports);
 __exportStar(require("./PoolUnhoverEvent"), exports);
 __exportStar(require("./PoolHoverEvent"), exports);
 __exportStar(require("./ResolveWithdrawEvent"), exports);
 __exportStar(require("./WithdrawEvent"), exports);
+__exportStar(require("./TimeframeStickToNowEvent"), exports);
+__exportStar(require("./TimeframeChangedEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map

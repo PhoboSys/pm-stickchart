@@ -55,12 +55,12 @@ export class LatestPricePointRenderer extends BaseRenderer {
     ): Container {
 
         const {
-            xs,
-            ys,
+            latestX,
+            latestY,
         } = context.plotdata
 
-        const x = Number(xs.at(-1))
-        const y = Number(ys.at(-1))
+        const x = latestX
+        const y = latestY
 
         const [point, pointState] = this.get('point', () => GraphicUtils.createCircle(
             [x, y],

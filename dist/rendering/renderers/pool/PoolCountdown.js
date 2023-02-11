@@ -12,9 +12,6 @@ const utils_1 = require("../../../lib/utils");
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
-    get animations() {
-        return this.configAnimations;
-    }
     constructor(renderer) {
         super(renderer);
         this.gradientStyle = {
@@ -75,6 +72,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             },
         };
         this.countdown();
+    }
+    get animations() {
+        return this.configAnimations;
     }
     get rendererId() {
         return PoolCountdown.POOL_LOCK_COUNTDOWN_ID;
@@ -156,9 +156,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     updateText(pool, context, container) {
         const { height, width } = context.screen;
         const { lockDate, endDate, poolid } = pool;
-        const { xs, ys, } = context.plotdata;
-        const x = Number(xs.at(-1));
-        const y = Number(ys.at(-1));
+        const { latestX, latestY, } = context.plotdata;
+        const x = latestX;
+        const y = latestY;
         const now = (0, utils_1.nowUnixTS)();
         const positioning = lockDate >= now;
         const countdownValue = positioning

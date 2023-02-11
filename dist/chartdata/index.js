@@ -27,38 +27,14 @@ class DataBuilder {
         return (start.timestamp === end.timestamp &&
             start.value === end.value);
     }
-    static getLatest(plotdata, back = 1) {
-        const { prices, timestamps } = plotdata;
+    static getLatest(chartdata, back = 1) {
+        const { timestamps, prices } = chartdata;
         return {
             value: Number(prices.at(-1 * back)),
             timestamp: Number(timestamps.at(-1 * back)),
         };
     }
-    static fromPolyline(polyline) {
-        const all = polyline.getAttributeNS(null, 'points');
-        const xs = [];
-        const ys = [];
-        const points = all === null || all === void 0 ? void 0 : all.split(' ');
-        for (const point of points) {
-            const [x, y] = point.split(',');
-            xs.push(Number(x));
-            ys.push(Number(y));
-        }
-        return { xs, ys };
-    }
-    static toPolyline(plotdata) {
-        const { xs, ys } = plotdata;
-        const result = [];
-        for (const idx in xs) {
-            result.push(xs[idx] + ',' + ys[idx]);
-        }
-        const points = result.join(' ');
-        const ns = 'http://www.w3.org/2000/svg';
-        const polyline = document.createElementNS(ns, 'polyline');
-        polyline.setAttributeNS(null, 'points', points);
-        return polyline;
-    }
-    static normalize(timestampsOrig, pricesOrig, screen) {
+    static normalize(timestampsOrig, pricesOrig, chartdata, timeframe, screen) {
         if ((0, utils_1.isEmpty)(timestampsOrig) || (0, utils_1.isEmpty)(pricesOrig))
             return DataBuilder.EMPTY_PLOTDATA;
         const timestamps = datamath_1.default.sample(timestampsOrig, _config_1.default.maxdensity);
@@ -73,7 +49,7 @@ class DataBuilder {
         const unwidth = width - (_config_1.default.padding.left + _config_1.default.padding.right);
         const paddingLeft = _config_1.default.padding.left / width;
         const paddingRight = _config_1.default.padding.right / width;
-        const timerange = datamath_1.default.range(timestamps, paddingLeft, paddingRight);
+        const timerange = datamath_1.default.range([timeframe.since, timeframe.until], paddingLeft, paddingRight);
         const unheight = height - (_config_1.default.padding.top + _config_1.default.padding.bottom);
         const paddingBottom = _config_1.default.padding.bottom / unheight;
         const paddingTop = _config_1.default.padding.top / unheight;
@@ -88,7 +64,13 @@ class DataBuilder {
             _config_1.default.padding.left,
             width - _config_1.default.padding.right
         ];
+        const latest = DataBuilder.getLatest(chartdata);
+        const [latestX] = datamath_1.default.scale([latest.timestamp], timerange, width);
+        const [latestY] = datamath_1.default.scaleReverse([latest.value], pricerange, height);
         return {
+            latestY,
+            latestX,
+            latest,
             timestamps,
             prices,
             timerange,
@@ -112,16 +94,20 @@ class DataBuilder {
         for (const idx in timestamps) {
             const ts = timestamps[idx];
             const ps = prices[idx];
-            if (ts >= since) {
+            if (ts >= since &&
+                ts <= until) {
                 tsframed.push(ts);
                 psframed.push(ps);
             }
         }
-        return DataBuilder.normalize(tsframed, psframed, screen);
+        return DataBuilder.normalize(tsframed, psframed, chartdata, timeframe, screen);
     }
 }
 exports.DataBuilder = DataBuilder;
 DataBuilder.EMPTY_PLOTDATA = {
+    latestY: 0,
+    latestX: 0,
+    latest: { value: 0, timestamp: 0 },
     timestamps: [],
     prices: [],
     timerange: [0, 0],

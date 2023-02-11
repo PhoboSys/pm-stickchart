@@ -211,12 +211,12 @@ export class PoolCountdown extends BasePoolsRenderer {
         const { lockDate, endDate, poolid } = pool
 
         const {
-            xs,
-            ys,
+            latestX,
+            latestY,
         } = context.plotdata
 
-        const x = Number(xs.at(-1))
-        const y = Number(ys.at(-1))
+        const x = latestX
+        const y = latestY
 
         const now = nowUnixTS()
         const positioning = lockDate >= now

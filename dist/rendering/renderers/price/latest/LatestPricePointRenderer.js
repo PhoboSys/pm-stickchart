@@ -36,9 +36,9 @@ class LatestPricePointRenderer extends _rendering_1.BaseRenderer {
         return LatestPricePointRenderer.LATEST_PRICE_POINT_ID;
     }
     update(context, container) {
-        const { xs, ys, } = context.plotdata;
-        const x = Number(xs.at(-1));
-        const y = Number(ys.at(-1));
+        const { latestX, latestY, } = context.plotdata;
+        const x = latestX;
+        const y = latestY;
         const [point, pointState] = this.get('point', () => _rendering_1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
         if (pointState.new)
             container.addChild(point);

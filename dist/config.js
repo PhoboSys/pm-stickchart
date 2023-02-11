@@ -100,8 +100,8 @@ exports.default = {
         },
     },
     padding: {
-        left: -20,
-        right: 450,
+        left: -100,
+        right: -100,
         top: 113,
         bottom: 210, // px
     },
