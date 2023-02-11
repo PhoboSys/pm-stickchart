@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.nowUnixTS = exports.MAX_EXPAND_RATION = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_WEEK = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = exports.INVALID_DATE = exports.MILLISECONDS_IN_DAY = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
+const _events_1 = require("../../events/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
 exports.MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 exports.INVALID_DATE = new Date(NaN);
@@ -34,6 +35,7 @@ class Timeframe {
         this.eventTarget.addEventListener('pointerdown', this.pointerdown);
         this.eventTarget.addEventListener('pointermove', this.pointermove);
         this.eventTarget.addEventListener('pointerup', this.pointerup);
+        this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
     }
     get timeframe() {
         return this._timeframe;
@@ -42,7 +44,10 @@ class Timeframe {
         timeframe = timeframe || exports.MAX_FRAME_DURATION;
         timeframe = Math.min(timeframe, exports.MAX_FRAME_DURATION);
         timeframe = Math.max(timeframe, exports.MIN_FRAME_DURATION);
-        this._timeframe = timeframe;
+        const since = this.until - timeframe;
+        if (since >= nowUnixTS() - exports.MAX_FRAME_DURATION) {
+            this._timeframe = timeframe;
+        }
     }
     get until() {
         if (this._until)
@@ -51,11 +56,15 @@ class Timeframe {
     }
     set until(until) {
         if (until < this.untilmax(this.timeframe)) {
-            this._until = until;
+            const since = until - this.timeframe;
+            if (since >= nowUnixTS() - exports.MAX_FRAME_DURATION) {
+                this._until = until;
+            }
         }
         else {
             // null will always return current untilmax
             this._until = null;
+            this.eventTarget.dispatchEvent(new _events_1.TimeframeStickToNowEvent(this.get()));
         }
     }
     untilmax(timeframe) {
@@ -78,9 +87,9 @@ class Timeframe {
     }
     save(timeframe) {
         this.timeframe = timeframe;
+        this.until = this.untilmax(timeframe);
     }
     get() {
-        console.log('this._until', this._until);
         return { since: this.since, until: this.until };
     }
     destroy() {
@@ -88,16 +97,16 @@ class Timeframe {
         this.eventTarget.removeEventListener('pointerdown', this.pointerdown);
         this.eventTarget.removeEventListener('pointermove', this.pointermove);
         this.eventTarget.removeEventListener('pointerup', this.pointerup);
+        this.eventTarget.removeEventListener('timeframechanged', this.onUpdate);
     }
     shift(shift) {
         const timeshift = Math.floor(this.timeframe * shift / 100);
-        let until = this.until - timeshift;
-        until = Math.min(until, this.untilmax(this.timeframe));
+        const until = this.until - timeshift;
         const since = until - this.timeframe;
         if (until <= this.untilmax(this.timeframe) &&
             since >= nowUnixTS() - exports.MAX_FRAME_DURATION) {
             this.until = until;
-            this.onUpdate();
+            this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
         }
     }
     zoom(zoom, position, screen) {
@@ -105,7 +114,7 @@ class Timeframe {
         let until = this.until;
         const percent = 1 - position.x / screen.width;
         const diff = this.timeframe - timeframe;
-        until = this.until - Math.floor(diff * percent);
+        until = this.until - Math.ceil(diff * percent);
         until = Math.min(until, this.untilmax(timeframe));
         let since = until - timeframe;
         if (since < nowUnixTS() - exports.MAX_FRAME_DURATION) {
@@ -118,7 +127,7 @@ class Timeframe {
             since >= nowUnixTS() - exports.MAX_FRAME_DURATION) {
             this.timeframe = timeframe;
             this.until = until;
-            this.onUpdate();
+            this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
         }
     }
 }

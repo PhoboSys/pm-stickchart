@@ -1,6 +1,7 @@
 import throttle from 'lodash.throttle'
 
 import { ZoomEvent, PointerdownEvent, PointermoveEvent, PointerupEvent } from '@events'
+import { TimeframeChangedEvent, TimeframeStickToNowEvent } from '@events'
 import config from '@config'
 import { isEmpty } from '@lib/utils'
 
@@ -38,7 +39,10 @@ export class Timeframe {
         timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
         timeframe = Math.max(timeframe, MIN_FRAME_DURATION)
 
-        this._timeframe = timeframe
+        const since = this.until - timeframe
+        if (since >= nowUnixTS() - MAX_FRAME_DURATION) {
+            this._timeframe = timeframe
+        }
     }
 
     private get until(): number {
@@ -49,10 +53,14 @@ export class Timeframe {
 
     private set until(until: number) {
         if (until < this.untilmax(this.timeframe)) {
-            this._until = until
+            const since = until - this.timeframe
+            if (since >= nowUnixTS() - MAX_FRAME_DURATION) {
+                this._until = until
+            }
         } else {
             // null will always return current untilmax
             this._until = null
+            this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
         }
     }
 
@@ -84,6 +92,7 @@ export class Timeframe {
         this.eventTarget.addEventListener('pointerdown', this.pointerdown)
         this.eventTarget.addEventListener('pointermove', this.pointermove)
         this.eventTarget.addEventListener('pointerup', this.pointerup)
+        this.eventTarget.addEventListener('timeframechanged', this.onUpdate)
     }
 
     private shiftstart(): void {
@@ -100,10 +109,10 @@ export class Timeframe {
 
     public save(timeframe): void {
         this.timeframe = timeframe
+        this.until = this.untilmax(timeframe)
     }
 
     public get() {
-        console.log('this._until', this._until)
         return { since: this.since, until: this.until }
     }
 
@@ -112,14 +121,13 @@ export class Timeframe {
         this.eventTarget.removeEventListener('pointerdown', this.pointerdown)
         this.eventTarget.removeEventListener('pointermove', this.pointermove)
         this.eventTarget.removeEventListener('pointerup', this.pointerup)
+        this.eventTarget.removeEventListener('timeframechanged', this.onUpdate)
     }
 
     private shift(shift: number): void {
 
         const timeshift = Math.floor(this.timeframe * shift / 100)
-        let until = this.until - timeshift
-        until = Math.min(until, this.untilmax(this.timeframe))
-
+        const until = this.until - timeshift
         const since = until - this.timeframe
 
         if (
@@ -127,7 +135,7 @@ export class Timeframe {
             since >= nowUnixTS() - MAX_FRAME_DURATION
         ) {
             this.until = until
-            this.onUpdate()
+            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
         }
     }
 
@@ -138,7 +146,7 @@ export class Timeframe {
         let until = this.until
         const percent = 1 - position.x / screen.width
         const diff = this.timeframe - timeframe
-        until = this.until - Math.floor(diff*percent)
+        until = this.until - Math.ceil(diff*percent)
         until = Math.min(until, this.untilmax(timeframe))
 
         let since = until - timeframe
@@ -155,7 +163,7 @@ export class Timeframe {
         ) {
             this.timeframe = timeframe
             this.until = until
-            this.onUpdate()
+            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
         }
     }
 

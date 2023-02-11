@@ -24,5 +24,7 @@ __exportStar(require("./PoolUnhoverEvent"), exports);
 __exportStar(require("./PoolHoverEvent"), exports);
 __exportStar(require("./ResolveWithdrawEvent"), exports);
 __exportStar(require("./WithdrawEvent"), exports);
+__exportStar(require("./TimeframeStickToNowEvent"), exports);
+__exportStar(require("./TimeframeChangedEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map
