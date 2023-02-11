@@ -22,6 +22,7 @@ export function nowUnixTS() {
 }
 
 type Point = { x: number, y: number }
+type Rect = { width: number, height: number }
 
 export class Timeframe {
 
@@ -74,7 +75,7 @@ export class Timeframe {
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
     ) {
-        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom), config.zoom.throttle, { trailing: false })
+        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.position, e.screen), config.zoom.throttle, { trailing: false })
         this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
         this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX), config.zoom.throttle, { trailing: false })
         this.pointerup = (e: PointerupEvent) => this.shiftend()
@@ -102,6 +103,7 @@ export class Timeframe {
     }
 
     public get() {
+        console.log('this._until', this._until)
         return { since: this.since, until: this.until }
     }
 
@@ -115,36 +117,41 @@ export class Timeframe {
     private shift(shift: number): void {
 
         const timeshift = Math.floor(this.timeframe * shift / 100)
-        const until = this.until - timeshift
+        let until = this.until - timeshift
+        until = Math.min(until, this.untilmax(this.timeframe))
+
         const since = until - this.timeframe
 
         if (
             until <= this.untilmax(this.timeframe) &&
-            since > nowUnixTS() - MAX_FRAME_DURATION
+            since >= nowUnixTS() - MAX_FRAME_DURATION
         ) {
             this.until = until
             this.onUpdate()
         }
     }
 
-    private zoom(zoom: number): void {
+    private zoom(zoom: number, position: Point, screen: Rect): void {
 
         const timeframe = Math.round(this.timeframe * (1 + zoom))
 
         let until = this.until
-        const now2until = this.until - nowUnixTS()
-        if (now2until > 0) {
-            const percent = now2until / this.timeframe
-            const diff = this.timeframe - timeframe
-            until = this.until - Math.ceil(diff*percent)
+        const percent = 1 - position.x / screen.width
+        const diff = this.timeframe - timeframe
+        until = this.until - Math.floor(diff*percent)
+        until = Math.min(until, this.untilmax(timeframe))
+
+        let since = until - timeframe
+        if (since < nowUnixTS() - MAX_FRAME_DURATION) {
+            until = this.since + timeframe
+            since = until - timeframe
         }
-        const since = until - timeframe
 
         if (
             timeframe < MAX_FRAME_DURATION &&
             timeframe > MIN_FRAME_DURATION &&
             until <= this.untilmax(timeframe) &&
-            since > nowUnixTS() - MAX_FRAME_DURATION
+            since >= nowUnixTS() - MAX_FRAME_DURATION
         ) {
             this.timeframe = timeframe
             this.until = until

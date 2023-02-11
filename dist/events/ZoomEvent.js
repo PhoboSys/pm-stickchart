@@ -11,6 +11,8 @@ class ZoomEvent extends Event {
         this.coefficient = 0.1 * (_config_1.default.zoom.speed / 100);
         this.inner = inner;
         this.zoom = this.coefficient * Math.sign(inner.deltaY);
+        this.position = { x: inner.offsetX, y: inner.offsetY };
+        this.screen = inner.target.getBoundingClientRect();
     }
 }
 exports.ZoomEvent = ZoomEvent;
