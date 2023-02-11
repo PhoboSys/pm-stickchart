@@ -5,18 +5,12 @@ import { TimeframeChangedEvent, TimeframeStickToNowEvent } from '@events'
 import config from '@config'
 import { isEmpty } from '@lib/utils'
 
-export const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000
-export const INVALID_DATE = new Date(NaN)
-
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
-export const UNIX_WEEK = 7 * UNIX_DAY
 
 export const MAX_FRAME_DURATION = UNIX_DAY
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
-
-export const MAX_EXPAND_RATION = 3
 
 export function nowUnixTS() {
     return Math.floor(Date.now() / 1000)
@@ -85,7 +79,7 @@ export class Timeframe {
     ) {
         this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.position, e.screen), config.zoom.throttle, { trailing: false })
         this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
-        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX), config.zoom.throttle, { trailing: false })
+        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false })
         this.pointerup = (e: PointerupEvent) => this.shiftend()
 
         this.eventTarget.addEventListener('zoom', this.zoomevent)
@@ -99,8 +93,8 @@ export class Timeframe {
         if (!this.shifting) this.shifting = true
     }
 
-    private shiftprogress(shift: number): void {
-        if (this.shifting && shift) this.shift(shift)
+    private shiftprogress(shift: number, screen: Rect): void {
+        if (this.shifting && shift) this.shift(shift, screen)
     }
 
     private shiftend(): void {
@@ -124,9 +118,11 @@ export class Timeframe {
         this.eventTarget.removeEventListener('timeframechanged', this.onUpdate)
     }
 
-    private shift(shift: number): void {
+    private shift(shift: number, screen: Rect): void {
 
-        const timeshift = Math.floor(this.timeframe * shift / 100)
+        const speed = 5
+        shift = shift / screen.width
+        const timeshift = Math.floor(this.timeframe * shift * speed)
         const until = this.until - timeshift
         const since = until - this.timeframe
 

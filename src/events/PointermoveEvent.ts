@@ -4,6 +4,7 @@ export class PointermoveEvent extends Event {
     public readonly inner: PointerEvent
 
     public readonly position: { x: number, y: number }
+    public readonly screen: { height: number, width: number }
     public readonly movementX: number
     public readonly movementY: number
 
@@ -14,5 +15,6 @@ export class PointermoveEvent extends Event {
         this.movementX = inner.movementX || 0
         this.movementY = inner.movementY || 0
         this.position = { x: inner.offsetX, y: inner.offsetY }
+        this.screen = (<Element>inner.target).getBoundingClientRect()
     }
 }

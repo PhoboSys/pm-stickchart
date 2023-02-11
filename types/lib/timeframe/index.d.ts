@@ -1,12 +1,8 @@
-export declare const MILLISECONDS_IN_DAY: number;
-export declare const INVALID_DATE: Date;
 export declare const UNIX_MINUTE = 60;
 export declare const UNIX_HOUR: number;
 export declare const UNIX_DAY: number;
-export declare const UNIX_WEEK: number;
 export declare const MAX_FRAME_DURATION: number;
 export declare const MIN_FRAME_DURATION: number;
-export declare const MAX_EXPAND_RATION = 3;
 export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly eventTarget;
