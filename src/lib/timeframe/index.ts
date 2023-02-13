@@ -120,7 +120,7 @@ export class Timeframe {
 
     private shift(shift: number, screen: Rect): void {
 
-        const speed = 5
+        const speed = 8
         shift = shift / screen.width
         const timeshift = Math.floor(this.timeframe * shift * speed)
         const until = this.until - timeshift

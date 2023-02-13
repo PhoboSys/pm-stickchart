@@ -14,5 +14,7 @@ export default class datamath {
     static toFixedScaled(value: number, stepsize: number): string;
     static toFixed(value: number, dp: number): string;
     static steps([minv, maxv]: [number, number], stepsize: number, maxsteps: number): number[];
-    static sample(data: number[], density: number): number[];
+    static fashhash(value: number): number;
+    static sampler(data: number[], density: number): number[];
+    static pick(data: number[], keys: number[]): number[];
 }
