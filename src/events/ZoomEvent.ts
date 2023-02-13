@@ -6,6 +6,7 @@ export class ZoomEvent extends Event {
     public readonly inner: WheelEvent
 
     public readonly zoom: number
+    public readonly shift: number
     public readonly position: { x: number, y: number }
     public readonly screen: { height: number, width: number }
 
@@ -16,6 +17,7 @@ export class ZoomEvent extends Event {
 
         this.inner = inner
         this.zoom = this.coefficient * Math.sign(inner.deltaY)
+        this.shift = inner.deltaX
         this.position = { x: inner.offsetX, y: inner.offsetY }
         this.screen = (<Element>inner.target).getBoundingClientRect()
     }

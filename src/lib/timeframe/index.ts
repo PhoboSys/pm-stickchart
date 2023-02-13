@@ -77,7 +77,7 @@ export class Timeframe {
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
     ) {
-        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.position, e.screen), config.zoom.throttle, { trailing: false })
+        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle, { trailing: false })
         this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
         this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false })
         this.pointerup = (e: PointerupEvent) => this.shiftend()
@@ -135,7 +135,7 @@ export class Timeframe {
         }
     }
 
-    private zoom(zoom: number, position: Point, screen: Rect): void {
+    private zoom(zoom: number, shift: number, position: Point, screen: Rect): void {
 
         const timeframe = Math.round(this.timeframe * (1 + zoom))
 
@@ -150,6 +150,12 @@ export class Timeframe {
             until = this.since + timeframe
             since = until - timeframe
         }
+
+        const speed = 5
+        shift = shift / screen.width
+        const timeshift = Math.floor(timeframe * shift * speed)
+        until = until - timeshift
+        since = until - timeframe
 
         if (
             timeframe < MAX_FRAME_DURATION &&

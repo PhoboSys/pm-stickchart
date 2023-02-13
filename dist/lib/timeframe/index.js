@@ -23,7 +23,7 @@ class Timeframe {
         this._until = null;
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = false;
-        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
+        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
         this.pointerdown = (e) => this.shiftstart();
         this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
         this.pointerup = (e) => this.shiftend();
@@ -107,7 +107,7 @@ class Timeframe {
             this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
         }
     }
-    zoom(zoom, position, screen) {
+    zoom(zoom, shift, position, screen) {
         const timeframe = Math.round(this.timeframe * (1 + zoom));
         let until = this.until;
         const percent = 1 - position.x / screen.width;
@@ -119,6 +119,11 @@ class Timeframe {
             until = this.since + timeframe;
             since = until - timeframe;
         }
+        const speed = 5;
+        shift = shift / screen.width;
+        const timeshift = Math.floor(timeframe * shift * speed);
+        until = until - timeshift;
+        since = until - timeframe;
         if (timeframe < exports.MAX_FRAME_DURATION &&
             timeframe > exports.MIN_FRAME_DURATION &&
             until <= this.untilmax(timeframe) &&
