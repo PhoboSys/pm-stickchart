@@ -137,17 +137,41 @@ class datamath {
         }
         return result;
     }
-    static sample(data, density) {
-        const amount = new big_js_1.default(data.length);
-        if (amount.lte(density))
-            return data;
+    static fashhash(value) {
+        return Math.floor(Math.sin(value) * 100000000);
+    }
+    static sampler(data, density) {
+        const amount = data.length;
         const result = [];
-        const sample = amount.div(density).round(0, big_js_1.default.roundUp).toNumber();
+        if (amount <= density) {
+            let idx = 0;
+            const lastIdx = data.length - 1;
+            while (idx <= lastIdx) {
+                result.push(idx);
+                idx++;
+            }
+        }
+        else {
+            const sample = datamath.roundpow2(Math.ceil(amount / density));
+            let idx = 0;
+            const lastIdx = data.length - 1;
+            while (idx <= lastIdx) {
+                const hash = datamath.fashhash(data[idx]);
+                if (!(hash % sample))
+                    result.push(idx);
+                idx++;
+            }
+        }
+        return result;
+    }
+    static pick(data, keys) {
+        const result = [];
         let idx = 0;
-        const lastIdx = data.length - 1;
+        const lastIdx = keys.length - 1;
         while (idx <= lastIdx) {
-            if (!(idx % sample))
-                result.push(data[idx]);
+            const key = keys[idx];
+            if (key in data)
+                result.push(data[key]);
             idx++;
         }
         return result;

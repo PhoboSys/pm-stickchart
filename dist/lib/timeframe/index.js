@@ -96,7 +96,7 @@ class Timeframe {
         this.eventTarget.removeEventListener('timeframechanged', this.onUpdate);
     }
     shift(shift, screen) {
-        const speed = 5;
+        const speed = 8;
         shift = shift / screen.width;
         const timeshift = Math.floor(this.timeframe * shift * speed);
         const until = this.until - timeshift;

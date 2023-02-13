@@ -198,22 +198,51 @@ export default class datamath {
         return result
     }
 
-    static sample(
+    static fashhash(value: number): number {
+        return Math.floor(Math.sin(value) * 100_000_000)
+    }
+
+    static sampler(
         data: number[],
         density: number,
     ): number[] {
 
-        const amount = new Big(data.length)
+        const amount = data.length
+        const result: number[] = []
 
-        if (amount.lte(density)) return data
+        if (amount <= density) {
+            let idx = 0
+            const lastIdx = data.length-1
+            while (idx <= lastIdx) {
+                result.push(idx)
+                idx++
+            }
+        } else {
+            const sample = datamath.roundpow2(Math.ceil(amount / density))
+            let idx = 0
+            const lastIdx = data.length-1
+            while (idx <= lastIdx) {
+                const hash = datamath.fashhash(data[idx])
+                if (!(hash % sample)) result.push(idx)
+                idx++
+            }
+        }
+
+        return result
+    }
+
+    static pick(
+        data: number[],
+        keys: number[],
+    ): number[] {
 
         const result: number[] = []
 
-        const sample = amount.div(density).round(0, Big.roundUp).toNumber()
         let idx = 0
-        const lastIdx = data.length-1
+        const lastIdx = keys.length-1
         while (idx <= lastIdx) {
-            if (!(idx % sample)) result.push(data[idx])
+            const key = keys[idx]
+            if (key in data) result.push(data[key])
             idx++
         }
 
