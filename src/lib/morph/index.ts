@@ -1,106 +1,103 @@
 import config from '@config'
 
 import { gsap } from '@lib/pixi'
-import { PricePoint, PlotData } from '@chartdata'
+import { PricePoint } from '@chartdata'
 import { DataBuilder } from '@chartdata'
 
-export default class MorphController {
-    private anim: gsap.core.Tween | null
+type ChartData = { prices: number[], timestamps: number[] }
 
-    private _lastTarget: PricePoint | null
+export default class MorphController {
+
+    #timeline: gsap.core.Timeline = gsap.timeline()
+
+    // private _lastTarget: PricePoint | null
 
     constructor(
-        private _onUpdate: (point: PricePoint) => void
-    ) {
-
-    }
+        private _onUpdate: () => void
+    ) { }
 
     public get isActive(): boolean {
-        return !!this.anim
+        return this.#timeline.isActive()
     }
 
-    public perform(lastplot?: PlotData, currentplot?: PlotData): this {
-        if (!(lastplot && currentplot && config.morph)) return this._clear()
+    public morph(previous?: ChartData, current?: ChartData): void {
+        if (!previous || !current || !config.morph) return
 
-        if (!this._lastTarget)
-            return this._performNew(lastplot, currentplot)
-
-        return this._perform(currentplot)
+        this.#perform(previous, current)
     }
 
-    private _performNew(lastplot: PlotData, currentplot: PlotData): this {
-        const target = DataBuilder.getLatest(currentplot)
-        const animated = DataBuilder.getLatest(lastplot)
+    #perform(previous: ChartData, current: ChartData): void {
+        // 0. Make sure to complite running animation and clear timeline
+        if (this.isActive) this.#timeline.progress(1)
+        this.#timeline.clear()
 
-        this
-            ._kill()
-            ._create({ animated, target }, config.morph)
+        // 1. Find all points that was added from previous to current
+        const frontdiff: number[] = []
+        const pts = previous.timestamps[previous.timestamps.length-1]
 
-        this._lastTarget = target
+        let cidx = current.timestamps.length
+        let intersect = false
+        while (!intersect && cidx-- && pts) {
+            const cts = current.timestamps[cidx]
 
-        return this
+            intersect = cts === pts
+            frontdiff.unshift(cidx)
+        }
+
+        // 2. If any intersaction found animate all points
+        if (intersect) {
+            let count = 0
+            let prevpoint: PricePoint | null = null
+            for (const idx of frontdiff) {
+                const target: PricePoint = {
+                    timestamp: current.timestamps[idx],
+                    value: current.prices[idx],
+                }
+
+                if (prevpoint) {
+                    this.#add(prevpoint, target, current, idx)
+                    count++
+                }
+
+                prevpoint = target
+            }
+
+            // 3. Removing points form current chart data
+            // in order to add them back animated via timeline
+            current.timestamps.splice(-count)
+            current.prices.splice(-count)
+
+            // 4. Speedup animation to make all timeline finish in config.morph.duration
+            this.#timeline.timeScale(count)
+        }
     }
 
-    private _perform(currentplot: PlotData): this {
-        const target = DataBuilder.getLatest(currentplot)
-        const lastTarget = this._lastTarget!
-
-        if (DataBuilder.isEqual(lastTarget, target)) return this
-
-        this
-            ._kill()
-            ._create({ animated: { ...lastTarget }, target }, config.morph)
-
-        this._lastTarget = target
-
-        return this
-    }
-
-    private _create({ animated, target }, animConfig): this {
-        this.anim = gsap.to(
+    #add(
+        animated: PricePoint,
+        end: PricePoint,
+        current: ChartData,
+        idx: number,
+    ): void {
+        this.#timeline.to(
             animated,
             {
-                ...target,
-                ...animConfig,
+                ...end,
+                ...config.morph,
                 onUpdate: () => {
-                    if (!DataBuilder.isEqual(animated, target)) {
-                        this._onUpdate(animated)
-                    }
-                },
-                onInterrupt: () => {
-                    if (!this._lastTarget) return
-
-                    // completes last animation on kill
-                    // to avoid animation glitching
-                    this._onUpdate(target)
+                    current.timestamps[idx] = animated.timestamp
+                    current.prices[idx] = animated.value
+                    this._onUpdate()
                 },
                 onComplete: () => {
                     // gsap has limited precision
-                    // in order to render exactly 'target'
-                    // we have to apply it in the end
-                    this._onUpdate(target)
-
-                    // to free memory and to allow StickChart.render
-                    this._kill()
+                    // in order to render exactly 'end'
+                    // we have to apply it explicitly
+                    current.timestamps[idx] = end.timestamp
+                    current.prices[idx] = end.value
+                    this._onUpdate()
                 }
             }
         )
-
-        return this
-    }
-
-    private _clear(): this {
-        this._lastTarget = null
-        this._kill()
-
-        return this
-    }
-
-    private _kill(): this {
-        this.anim?.kill()
-        this.anim = null
-
-        return this
     }
 
 }

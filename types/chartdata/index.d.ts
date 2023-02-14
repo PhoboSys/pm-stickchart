@@ -2,10 +2,18 @@ export * from './types';
 import { ChartData, PlotData, PricePoint } from './types';
 export declare class DataBuilder {
     static isEqual(start: PricePoint, end: PricePoint): boolean;
+    static getLatestPrice(chartdata: {
+        timestamps: any;
+        prices: any;
+    }): number;
+    static getLatestTS(chartdata: {
+        timestamps: any;
+        prices: any;
+    }): number;
     static getLatest(chartdata: {
         timestamps: any;
         prices: any;
-    }, back?: number): PricePoint;
+    }): PricePoint;
     static EMPTY_PLOTDATA: PlotData;
     static normalize(timestampsOrig: any, pricesOrig: any, chartdata: {
         timestamps: any;
