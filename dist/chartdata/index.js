@@ -27,11 +27,17 @@ class DataBuilder {
         return (start.timestamp === end.timestamp &&
             start.value === end.value);
     }
-    static getLatest(chartdata, back = 1) {
+    static getLatestPrice(chartdata) {
+        return Number(chartdata.prices.at(-1));
+    }
+    static getLatestTS(chartdata) {
+        return Number(chartdata.timestamps.at(-1));
+    }
+    static getLatest(chartdata) {
         const { timestamps, prices } = chartdata;
         return {
-            value: Number(prices.at(-1 * back)),
-            timestamp: Number(timestamps.at(-1 * back)),
+            value: Number(prices.at(-1)),
+            timestamp: Number(timestamps.at(-1)),
         };
     }
     static normalize(timestampsOrig, pricesOrig, chartdata, timeframe, screen) {

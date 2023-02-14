@@ -1,14 +1,12 @@
-import { PricePoint, PlotData } from '@chartdata';
+declare type ChartData = {
+    prices: number[];
+    timestamps: number[];
+};
 export default class MorphController {
+    #private;
     private _onUpdate;
-    private anim;
-    private _lastTarget;
-    constructor(_onUpdate: (point: PricePoint) => void);
+    constructor(_onUpdate: () => void);
     get isActive(): boolean;
-    perform(lastplot?: PlotData, currentplot?: PlotData): this;
-    private _performNew;
-    private _perform;
-    private _create;
-    private _clear;
-    private _kill;
+    morph(previous?: ChartData, current?: ChartData): void;
 }
+export {};
