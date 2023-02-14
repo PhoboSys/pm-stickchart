@@ -1,7 +1,8 @@
 import throttle from 'lodash.throttle'
 
 import { ZoomEvent, PointerdownEvent, PointermoveEvent, PointerupEvent } from '@events'
-import { TimeframeChangedEvent, TimeframeStickToNowEvent } from '@events'
+import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
+
 import config from '@config'
 import { isEmpty } from '@lib/utils'
 
@@ -54,12 +55,13 @@ export class Timeframe {
         if (until < this.untilmax(this.timeframe)) {
             const since = until - this.timeframe
             if (since >= this.nowTS - MAX_FRAME_DURATION) {
+                if (this._until === null) this.eventTarget.dispatchEvent(new TimeframeUnstickToNowEvent(this.get()))
                 this._until = until
             }
         } else {
             // null will always return current untilmax
+            if (this._until !== null) this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
             this._until = null
-            this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
         }
     }
 
@@ -92,18 +94,13 @@ export class Timeframe {
         this.eventTarget.addEventListener('pointermove', this.pointermove)
         this.eventTarget.addEventListener('pointerup', this.pointerup)
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate)
+
+        this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'))
+        this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'))
     }
 
     public save(timeframe): this {
         this.timeframe = timeframe
-
-        return this
-    }
-
-    public morphnow(now: number): this {
-        const since = this.since
-        this.nowTS = now
-        this.timeframe = this.timeframe + Math.max(this.since - since, 0)
 
         return this
     }
@@ -149,11 +146,17 @@ export class Timeframe {
         const since = until - this.timeframe
 
         if (
-            until <= this.untilmax(this.timeframe) &&
             since >= this.nowTS - MAX_FRAME_DURATION
         ) {
+            const prevuntil = this.until
+
             this.until = until
-            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+
+            if (
+                this.until !== prevuntil
+            ) {
+                this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+            }
         }
     }
 
@@ -185,9 +188,18 @@ export class Timeframe {
             until <= this.untilmax(timeframe) &&
             since >= this.nowTS - MAX_FRAME_DURATION
         ) {
+            const prevuntil = this.until
+            const prevtimeframe = this.timeframe
+
             this.timeframe = timeframe
             this.until = until
-            this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+
+            if (
+                this.timeframe !== prevuntil ||
+                this.until !== prevuntil
+            ) {
+                this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
+            }
         }
     }
 

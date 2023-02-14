@@ -84,7 +84,7 @@ export class StickChart extends EventTarget {
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,
             this.application.screen,
-            this.timeframe.morphnow(DataBuilder.getLatestTS(this._context.chartdata)).get(),
+            this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
         this.rerender('morph')
     }

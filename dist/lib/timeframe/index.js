@@ -29,6 +29,8 @@ class Timeframe {
         this.eventTarget.addEventListener('pointermove', this.pointermove);
         this.eventTarget.addEventListener('pointerup', this.pointerup);
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
+        this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'));
+        this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'));
     }
     get nowTS() {
         return this._now || Math.floor(Date.now() / 1000);
@@ -57,13 +59,16 @@ class Timeframe {
         if (until < this.untilmax(this.timeframe)) {
             const since = until - this.timeframe;
             if (since >= this.nowTS - exports.MAX_FRAME_DURATION) {
+                if (this._until === null)
+                    this.eventTarget.dispatchEvent(new _events_1.TimeframeUnstickToNowEvent(this.get()));
                 this._until = until;
             }
         }
         else {
             // null will always return current untilmax
+            if (this._until !== null)
+                this.eventTarget.dispatchEvent(new _events_1.TimeframeStickToNowEvent(this.get()));
             this._until = null;
-            this.eventTarget.dispatchEvent(new _events_1.TimeframeStickToNowEvent(this.get()));
         }
     }
     untilmax(timeframe) {
@@ -74,12 +79,6 @@ class Timeframe {
     }
     save(timeframe) {
         this.timeframe = timeframe;
-        return this;
-    }
-    morphnow(now) {
-        const since = this.since;
-        this.nowTS = now;
-        this.timeframe = this.timeframe + Math.max(this.since - since, 0);
         return this;
     }
     now(now) {
@@ -115,10 +114,12 @@ class Timeframe {
         const timeshift = Math.floor(this.timeframe * shift * speed);
         const until = this.until - timeshift;
         const since = until - this.timeframe;
-        if (until <= this.untilmax(this.timeframe) &&
-            since >= this.nowTS - exports.MAX_FRAME_DURATION) {
+        if (since >= this.nowTS - exports.MAX_FRAME_DURATION) {
+            const prevuntil = this.until;
             this.until = until;
-            this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
+            if (this.until !== prevuntil) {
+                this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
+            }
         }
     }
     zoom(zoom, shift, position, screen) {
@@ -142,9 +143,14 @@ class Timeframe {
             timeframe > exports.MIN_FRAME_DURATION &&
             until <= this.untilmax(timeframe) &&
             since >= this.nowTS - exports.MAX_FRAME_DURATION) {
+            const prevuntil = this.until;
+            const prevtimeframe = this.timeframe;
             this.timeframe = timeframe;
             this.until = until;
-            this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
+            if (this.timeframe !== prevuntil ||
+                this.until !== prevuntil) {
+                this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
+            }
         }
     }
 }

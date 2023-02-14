@@ -68,7 +68,7 @@ export class HorizontalGridRenderer extends BaseRenderer {
                 priceValue,
                 [width, y],
                 this.textStyle,
-                [1.2, 1.1],
+                [1.3, 1.1],
             ))
             if (textState.new) container.addChild(text)
             text.position.set(width, y)

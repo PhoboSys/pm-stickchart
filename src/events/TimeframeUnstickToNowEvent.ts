@@ -1,12 +1,12 @@
 import config from '@config'
 
-export class TimeframeStickToNowEvent extends Event {
-    public static readonly NAME: string = 'timeframeTonow'
+export class TimeframeUnstickToNowEvent extends Event {
+    public static readonly NAME: string = 'timeframeUnnow'
 
     public readonly timeframe: { since: number, until: number }
 
     constructor(timeframe: { since: number, until: number }) {
-        super(TimeframeStickToNowEvent.NAME)
+        super(TimeframeUnstickToNowEvent.NAME)
 
         this.timeframe = timeframe
     }

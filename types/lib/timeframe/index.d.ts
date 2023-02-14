@@ -24,7 +24,6 @@ export declare class Timeframe {
     private shifting;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
     save(timeframe: any): this;
-    morphnow(now: number): this;
     now(now: number): this;
     get(): {
         since: number;
