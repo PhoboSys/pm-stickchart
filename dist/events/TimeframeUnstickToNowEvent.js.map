@@ -1,0 +1,1 @@
+{"version":3,"file":"TimeframeUnstickToNowEvent.js","sourceRoot":"","sources":["../../src/events/TimeframeUnstickToNowEvent.ts"],"names":[],"mappings":";;;AAEA,MAAa,0BAA2B,SAAQ,KAAK;IAKjD,YAAY,SAA2C;QACnD,KAAK,CAAC,0BAA0B,CAAC,IAAI,CAAC,CAAA;QAEtC,IAAI,CAAC,SAAS,GAAG,SAAS,CAAA;IAC9B,CAAC;;AATL,gEAUC;AAT0B,+BAAI,GAAW,gBAAgB,CAAA"}
