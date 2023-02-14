@@ -46,7 +46,7 @@ export default class MorphController {
 
         // 2. If any intersaction found animate all points
         if (intersect) {
-            let count = 0
+            let animations = 0
             let prevpoint: PricePoint | null = null
             for (const idx of frontdiff) {
                 const target: PricePoint = {
@@ -56,19 +56,32 @@ export default class MorphController {
 
                 if (prevpoint) {
                     this.#add(prevpoint, target, current, idx)
-                    count++
+                    animations++
                 }
 
                 prevpoint = target
             }
 
-            // 3. Removing points form current chart data
-            // in order to add them back animated via timeline
-            current.timestamps.splice(-count)
-            current.prices.splice(-count)
+            // 3. Do nothing if there is not difference
+            if (animations === 0) return
 
-            // 4. Speedup animation to make all timeline finish in config.morph.duration
-            this.#timeline.timeScale(count)
+            // 4. Removing points form current chart data
+            // in order to add them back animated via timeline
+            current.timestamps.splice(-animations)
+            current.prices.splice(-animations)
+
+            if (animations > config.morph.maxstack) {
+
+                // 5. Clear if we need to go over move than config.morph.maxstack animations
+                this.#timeline.progress(1)
+                this.#timeline.clear()
+
+            } else {
+
+                // 6. Speedup animation to make all timeline finish in config.morph.duration
+                this.#timeline.timeScale(animations)
+
+            }
         }
     }
 

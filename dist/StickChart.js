@@ -87,7 +87,7 @@ class StickChart extends EventTarget {
             plotdata,
         };
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
-            // clear context if metaid changed
+            // clear context if metapoolid changed
             this._context = null;
         }
         window.requestAnimationFrame(() => {

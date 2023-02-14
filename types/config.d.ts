@@ -25,6 +25,7 @@ declare const _default: {
     antialias: boolean;
     resolution: number;
     morph: {
+        maxstack: number;
         duration: number;
         ease: string;
     };
