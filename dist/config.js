@@ -24,6 +24,7 @@ exports.default = {
     resolution: Math.ceil(window.devicePixelRatio),
     //chart morph animation
     morph: {
+        maxstack: 10,
         duration: 1.618,
         ease: 'power2.out',
     },

@@ -127,6 +127,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
         )
+
         const ctx: RenderingContext = {
             metapool: context.metapool,
             pools: context.pools,
@@ -143,7 +144,7 @@ export class StickChart extends EventTarget {
         }
 
         if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
-            // clear context if metaid changed
+            // clear context if metapoolid changed
             this._context = null
         }
 

@@ -47,7 +47,7 @@ _MorphController_timeline = new WeakMap(), _MorphController_instances = new Weak
     }
     // 2. If any intersaction found animate all points
     if (intersect) {
-        let count = 0;
+        let animations = 0;
         let prevpoint = null;
         for (const idx of frontdiff) {
             const target = {
@@ -56,16 +56,26 @@ _MorphController_timeline = new WeakMap(), _MorphController_instances = new Weak
             };
             if (prevpoint) {
                 __classPrivateFieldGet(this, _MorphController_instances, "m", _MorphController_add).call(this, prevpoint, target, current, idx);
-                count++;
+                animations++;
             }
             prevpoint = target;
         }
-        // 3. Removing points form current chart data
+        // 3. Do nothing if there is not difference
+        if (animations === 0)
+            return;
+        // 4. Removing points form current chart data
         // in order to add them back animated via timeline
-        current.timestamps.splice(-count);
-        current.prices.splice(-count);
-        // 4. Speedup animation to make all timeline finish in config.morph.duration
-        __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(count);
+        current.timestamps.splice(-animations);
+        current.prices.splice(-animations);
+        if (animations > _config_1.default.morph.maxstack) {
+            // 5. Clear if we need to go over move than config.morph.maxstack animations
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
+        }
+        else {
+            // 6. Speedup animation to make all timeline finish in config.morph.duration
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(animations);
+        }
     }
 }, _MorphController_add = function _MorphController_add(animated, end, current, idx) {
     __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph), { onUpdate: () => {
