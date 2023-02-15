@@ -60,21 +60,20 @@ _MorphController_timeline = new WeakMap(), _MorphController_instances = new Weak
             }
             prevpoint = target;
         }
-        // 3. Do nothing if there is not difference
-        if (animations === 0)
-            return;
-        // 4. Removing points form current chart data
-        // in order to add them back animated via timeline
-        current.timestamps.splice(-animations);
-        current.prices.splice(-animations);
-        if (animations > _config_1.default.morph.maxstack) {
-            // 5. Clear if we need to go over move than config.morph.maxstack animations
-            __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
-            __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
+        // 3. Check animations to be in valid range
+        if (animations <= _config_1.default.morph.maxstack &&
+            animations > 0) {
+            // 4. Removing points form current chart data
+            // in order to add them back animated via timeline
+            current.timestamps.splice(-animations);
+            current.prices.splice(-animations);
+            // 5. Speedup animation to make all timeline finish in config.morph.duration
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(animations);
         }
         else {
-            // 6. Speedup animation to make all timeline finish in config.morph.duration
-            __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(animations);
+            // 6. Clear if we need to go over move than config.morph.maxstack animations
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
+            this._onUpdate();
         }
     }
 }, _MorphController_add = function _MorphController_add(animated, end, current, idx) {
