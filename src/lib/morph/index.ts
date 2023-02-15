@@ -62,24 +62,25 @@ export default class MorphController {
                 prevpoint = target
             }
 
-            // 3. Do nothing if there is not difference
-            if (animations === 0) return
+            // 3. Check animations to be in valid range
+            if (
+                animations <= config.morph.maxstack &&
+                animations > 0
+            ) {
 
-            // 4. Removing points form current chart data
-            // in order to add them back animated via timeline
-            current.timestamps.splice(-animations)
-            current.prices.splice(-animations)
+                // 4. Removing points form current chart data
+                // in order to add them back animated via timeline
+                current.timestamps.splice(-animations)
+                current.prices.splice(-animations)
 
-            if (animations > config.morph.maxstack) {
-
-                // 5. Clear if we need to go over move than config.morph.maxstack animations
-                this.#timeline.progress(1)
-                this.#timeline.clear()
+                // 5. Speedup animation to make all timeline finish in config.morph.duration
+                this.#timeline.timeScale(animations)
 
             } else {
 
-                // 6. Speedup animation to make all timeline finish in config.morph.duration
-                this.#timeline.timeScale(animations)
+                // 6. Clear if we need to go over move than config.morph.maxstack animations
+                this.#timeline.clear()
+                this._onUpdate()
 
             }
         }
