@@ -6,6 +6,7 @@ export declare class StickChart extends EventTarget {
     private eventsProducer;
     private pipelineFactory;
     private textureStorage;
+    private morphController;
     private _context;
     private timeframe;
     constructor(stageElement: HTMLElement);
@@ -16,6 +17,7 @@ export declare class StickChart extends EventTarget {
     setTimeframe(timeframe: number): void;
     get canvas(): HTMLCanvasElement;
     private applyTimeframe;
+    private applyMorph;
     rerender(reason: string): void;
     render(context: {
         chartdata: ChartData;

@@ -8,5 +8,5 @@ class TimeframeStickToNowEvent extends Event {
     }
 }
 exports.TimeframeStickToNowEvent = TimeframeStickToNowEvent;
-TimeframeStickToNowEvent.NAME = 'timeframe2now';
+TimeframeStickToNowEvent.NAME = 'timeframeTonow';
 //# sourceMappingURL=TimeframeStickToNowEvent.js.map

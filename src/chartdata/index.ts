@@ -19,16 +19,25 @@ export class DataBuilder {
         )
     }
 
+    static getLatestPrice(
+        chartdata: { timestamps, prices },
+    ): number {
+        return Number(chartdata.prices.at(-1))
+    }
+
+    static getLatestTS(
+        chartdata: { timestamps, prices },
+    ): number {
+        return Number(chartdata.timestamps.at(-1))
+    }
+
     static getLatest(
         chartdata: { timestamps, prices },
-        back = 1
     ): PricePoint {
-
         const { timestamps, prices } = chartdata
-
         return {
-            value: Number(prices.at(-1*back)),
-            timestamp: Number(timestamps.at(-1*back)),
+            value: Number(prices.at(-1)),
+            timestamp: Number(timestamps.at(-1)),
         }
     }
 
@@ -60,8 +69,9 @@ export class DataBuilder {
     ): PlotData {
         if (isEmpty(timestampsOrig) || isEmpty(pricesOrig)) return DataBuilder.EMPTY_PLOTDATA
 
-        const timestamps = datamath.sample(timestampsOrig, config.maxdensity)
-        const prices = datamath.sample(pricesOrig, config.maxdensity)
+        const idxs = datamath.sampler(timestampsOrig, config.maxdensity)
+        const timestamps = datamath.pick(timestampsOrig, idxs)
+        const prices = datamath.pick(pricesOrig, idxs)
         const { width, height } = screen
 
         // return latest price if sampled out

@@ -11,6 +11,7 @@ export * from './PoolUnpinEvent'
 export * from './ResolveWithdrawEvent'
 export * from './WithdrawEvent'
 export * from './TimeframeStickToNowEvent'
+export * from './TimeframeUnstickToNowEvent'
 export * from './TimeframeChangedEvent'
 
 export * from './EventsProducer'

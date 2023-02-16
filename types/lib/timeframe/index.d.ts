@@ -3,12 +3,14 @@ export declare const UNIX_HOUR: number;
 export declare const UNIX_DAY: number;
 export declare const MAX_FRAME_DURATION: number;
 export declare const MIN_FRAME_DURATION: number;
-export declare function nowUnixTS(): number;
 export declare class Timeframe {
     private readonly eventTarget;
     private readonly onUpdate;
     private _until;
+    private _now;
     private _timeframe;
+    private get nowTS();
+    private set nowTS(value);
     private get timeframe();
     private set timeframe(value);
     private get until();
@@ -21,15 +23,16 @@ export declare class Timeframe {
     private readonly pointerup;
     private shifting;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
-    private shiftstart;
-    private shiftprogress;
-    private shiftend;
-    save(timeframe: any): void;
+    save(timeframe: any): this;
+    now(now: number): this;
     get(): {
         since: number;
         until: number;
     };
-    destroy(): void;
+    destroy(): this;
+    private shiftend;
+    private shiftstart;
+    private shiftprogress;
     private shift;
     private zoom;
 }

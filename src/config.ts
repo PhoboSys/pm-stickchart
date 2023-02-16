@@ -28,6 +28,7 @@ export default {
 
     //chart morph animation
     morph: {
+        maxstack: 10,
         duration: 1.618,
         ease: 'power2.out',
     },
@@ -110,8 +111,8 @@ export default {
     },
 
     padding: {
-        left: -100, // px
-        right: -100, // px
+        left: -30, // px
+        right: -30, // px
         top: 113, // px
         bottom: 210, // px
     },

@@ -24,7 +24,7 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
             color: 0x009797,
             paddingx: 5,
             paddingy: 2.5,
-            anchorx: 1,
+            anchorx: 1.2,
             anchory: 0.5,
             radius: 30,
             textstyle: {
