@@ -221,13 +221,15 @@ export class PariTile extends BaseParisRenderer {
 
     private prizeStyle: any = {
         text: {
-            fill: 0x00A573,
+            fill: 0xf07750,
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 16,
         },
         offset: [-7, 6],
-        anchor: [1, 0]
+        anchor: [1, 0],
+        winFill: 0x00A573,
+        loseFill: 0xf07750
     }
 
     private payoutStyle = {
@@ -694,6 +696,7 @@ export class PariTile extends BaseParisRenderer {
                     [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
                 )
                 prize.text = prizeAmount
+                prize.style.fill = this.prizeStyle.winFill
 
                 const [percent] = this.get(
                     'percent',
@@ -718,8 +721,19 @@ export class PariTile extends BaseParisRenderer {
             } else {
                 this.clear('profitBlock')
 
-                if (pari.claimed) prize.text = ui.erc20(pari.payout)
-                else              prize.text = nocontest || emptypool ? ui.erc20(pari.wager) : 0
+                let payout: any = 0
+
+                if (pari.claimed) {
+                    prize.style.fill = this.prizeStyle.winFill
+                    payout = ui.erc20(pari.payout)
+                } else if (nocontest || emptypool) {
+                    prize.style.fill = this.prizeStyle.winFill
+                    payout = ui.erc20(pari.wager)
+                } else {
+                    prize.style.fill = this.prizeStyle.loseFill
+                }
+
+                prize.text = payout
             }
 
             const [levelCurrency] = this.get('levelCurrency', () => this.createLevelCurrency(context))

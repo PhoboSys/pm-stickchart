@@ -175,13 +175,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         };
         this.prizeStyle = {
             text: {
-                fill: 0x00A573,
+                fill: 0xf07750,
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 16,
             },
             offset: [-7, 6],
-            anchor: [1, 0]
+            anchor: [1, 0],
+            winFill: 0x00A573,
+            loseFill: 0xf07750
         };
         this.payoutStyle = {
             height: 30,
@@ -567,6 +569,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     }
                 }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptypool]);
                 prize.text = prizeAmount;
+                prize.style.fill = this.prizeStyle.winFill;
                 const [percent] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
                 const [profit] = this.get('profit', () => _rendering_1.GraphicUtils.createText(percent, this.profitStyle.offset, this.profitStyle.text, this.profitStyle.anchor));
                 profit.text = percent;
@@ -576,10 +579,19 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             else {
                 this.clear('profitBlock');
-                if (pari.claimed)
-                    prize.text = ui_1.default.erc20(pari.payout);
-                else
-                    prize.text = nocontest || emptypool ? ui_1.default.erc20(pari.wager) : 0;
+                let payout = 0;
+                if (pari.claimed) {
+                    prize.style.fill = this.prizeStyle.winFill;
+                    payout = ui_1.default.erc20(pari.payout);
+                }
+                else if (nocontest || emptypool) {
+                    prize.style.fill = this.prizeStyle.winFill;
+                    payout = ui_1.default.erc20(pari.wager);
+                }
+                else {
+                    prize.style.fill = this.prizeStyle.loseFill;
+                }
+                prize.text = payout;
             }
             const [levelCurrency] = this.get('levelCurrency', () => this.createLevelCurrency(context));
             const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context));
