@@ -23,14 +23,14 @@ class EntityUtils {
         const pending = txns.filter((txn) => txn.blockNumber === null && txn.blockHash === null);
         return pending;
     }
-    static getUnpropagatedTransactions(context, entityid) {
+    static getUnpropagatedTransactions(context, entityid, entityBlock) {
         const txns = this.getComittedTransactions(context, entityid);
-        const unpropagated = txns.filter((txn) => txn.blockNumber > (context === null || context === void 0 ? void 0 : context.latestBlockNumber));
+        const unpropagated = txns.filter((txn) => txn.blockNumber > (entityBlock === null || entityBlock === void 0 ? void 0 : entityBlock.number));
         return unpropagated;
     }
-    static isEntityPropagating(context, entityid) {
+    static isEntityPropagating(context, entityid, entityBlock) {
         const pending = this.getPendingTransactions(context, entityid);
-        const unpropagated = this.getUnpropagatedTransactions(context, entityid);
+        const unpropagated = this.getUnpropagatedTransactions(context, entityid, entityBlock);
         return pending.length !== 0 || unpropagated.length !== 0;
     }
     static isEnityVerified(context, entityid) {

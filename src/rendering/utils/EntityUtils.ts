@@ -44,20 +44,22 @@ export class EntityUtils {
 
     static getUnpropagatedTransactions(
         context: RenderingContext,
-        entityid: string
+        entityid: string,
+        entityBlock: any
     ): any {
         const txns = this.getComittedTransactions(context, entityid)
-        const unpropagated = txns.filter((txn) => txn.blockNumber > context?.latestBlockNumber)
+        const unpropagated = txns.filter((txn) => txn.blockNumber > entityBlock?.number)
 
         return unpropagated
     }
 
     static isEntityPropagating(
         context: RenderingContext,
-        entityid: string
+        entityid: string,
+        entityBlock: any
     ): boolean {
         const pending = this.getPendingTransactions(context, entityid)
-        const unpropagated = this.getUnpropagatedTransactions(context, entityid)
+        const unpropagated = this.getUnpropagatedTransactions(context, entityid, entityBlock)
 
         return pending.length !== 0 || unpropagated.length !== 0
     }

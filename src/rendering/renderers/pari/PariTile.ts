@@ -911,7 +911,7 @@ export class PariTile extends BaseParisRenderer {
             contentContainer.addChild(propagatingBackground)
         }
 
-        const propagating = EntityUtils.isEntityPropagating(context, pariid)
+        const propagating = EntityUtils.isEntityPropagating(context, pariid, pari.block)
         if (propagating) {
             this.animate('propagatingBackground', 'propagating_bg')
         } else {
