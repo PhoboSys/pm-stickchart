@@ -12,6 +12,9 @@ const utils_1 = require("../../../lib/utils");
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
+    get animations() {
+        return this.configAnimations;
+    }
     constructor(renderer) {
         super(renderer);
         this.gradientStyle = {
@@ -72,9 +75,6 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             },
         };
         this.countdown();
-    }
-    get animations() {
-        return this.configAnimations;
     }
     get rendererId() {
         return PoolCountdown.POOL_LOCK_COUNTDOWN_ID;

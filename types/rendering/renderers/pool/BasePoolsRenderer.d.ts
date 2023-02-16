@@ -20,5 +20,6 @@ export declare abstract class BasePoolsRenderer extends BaseRenderer {
     protected isHistoricalPool(pool: any, context: RenderingContext): boolean;
     protected getResolutionPricePoint(pool: any, context: RenderingContext): PricePoint | null;
     protected isActualPool(pool: any): boolean;
+    protected getLevelTextureName(context: RenderingContext): symbol;
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void;
 }

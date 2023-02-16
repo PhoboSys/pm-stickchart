@@ -6,15 +6,32 @@ import {
     DOWN_ICON_TEXTURE,
     ZERO_ICON_TEXTURE,
     UNDEFINED_ICON_TEXTURE,
-    GRADIENT_TEXTURE
+    GRADIENT_TEXTURE,
+    UNKNOWN_DARK_TEXTURE,
+    ETH_DARK_TEXTURE,
+    USDT_DARK_TEXTURE,
+    USDC_DARK_TEXTURE
+} from '@rendering/textures'
+import {
+    AUD_TEXTURE,
+    CAD_TEXTURE,
+    CHF_TEXTURE,
+    JPY_TEXTURE,
+    ETH_TEXTURE,
+    BTC_TEXTURE,
+    SOL_TEXTURE,
+    MATIC_TEXTURE,
+    BNB_TEXTURE,
+    USD_TEXTURE
 } from '@rendering/textures'
 
 import { Logger } from '@infra'
 
 import datamath from '@lib/datamath'
-import { Graphics, Container, Sprite } from '@lib/pixi'
+import { Graphics, Container, Sprite, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
+import { nowUnixTS } from '@lib/utils'
 
 import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent } from '@events'
 import { ResolveWithdrawEvent, PoolPinEvent, PoolUnpinEvent } from '@events'
@@ -122,7 +139,7 @@ export class PariTile extends BaseParisRenderer {
             anchor: [0, 0],
             offset: [0, 40],
             width: 300,
-            height: 62,
+            height: 114,
             background: {
                 offset: [3, 0],
                 radiuses: [1, 20, 20, 1],
@@ -148,7 +165,7 @@ export class PariTile extends BaseParisRenderer {
             anchor: [0, -1],
             offset: [0, -134],
             width: 300,
-            height: 62,
+            height: 114,
             background: {
                 offset: [3, 0],
                 radiuses: [1, 20, 20, 1],
@@ -174,7 +191,7 @@ export class PariTile extends BaseParisRenderer {
             anchor: [-1, 0],
             offset: [0, 8],
             width: 300,
-            height: 62,
+            height: 114,
             background: {
                 offset: [-2, 0],
                 radiuses: [20, 1, 1, 20],
@@ -198,9 +215,69 @@ export class PariTile extends BaseParisRenderer {
 
     }
 
-    private iconStyle: any = {
+    private payoutContainerStyle = {
+        offset: [16, 68],
+    }
+
+    private prizeStyle: any = {
+        text: {
+            fill: 0x00A573,
+            fontWeight: 600,
+            fontFamily: 'Gilroy',
+            fontSize: 16,
+        },
+        offset: [-7, 6],
+        anchor: [1, 0]
+    }
+
+    private payoutStyle = {
+        height: 30,
+        width: 42,
+    }
+
+    private profitContainerStyle = {
+        offset: [8, 62],
+    }
+
+    private profitStyle: any = {
+        text: {
+            fill: 0x212233,
+            fontWeight: 600,
+            fontFamily: 'Gilroy',
+            fontSize: 12,
+        },
+        offset: [-2, -1],
+        anchor: [1, 0]
+    }
+
+    private profitBlockStyle: any = {
+        height: 12,
+        width: 6,
+        offset: [0, 2],
+    }
+
+    private timeingLinesStyle = {
+        offset: [16, 55],
+    }
+
+    private iconPositionStyle: any = {
+        size: 30,
+        offset: [16, 68]
+    }
+
+    private iconPariTitleStyle: any = {
         size: 30,
         offset: [16, 16]
+    }
+
+    private levelCurrencyStyle = {
+        radius: 10,
+        offset: [7, 6]
+    }
+
+    private iconCurrencyStyle: any = {
+        size: 16,
+        offset: [12, 8]
     }
 
     private wagerStyle: any = {
@@ -210,50 +287,17 @@ export class PariTile extends BaseParisRenderer {
             fontFamily: 'Gilroy',
             fontSize: 16,
         },
-        offset: [60, 28]
+        offset: [60, 74]
     }
 
-    private titlewagerStyle: any = {
+    private titlePariStyle: any = {
         text: {
             fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [60, 16]
-    }
-
-    private prizeStyle: any = {
-        text: {
-            fill: 0xFFFFFF,
-            fontWeight: 400,
+            fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 16,
         },
-        offset: [-22, 28],
-        anchor: [1, 0]
-    }
-
-    private profitStyle: any = {
-        text: {
-            fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [-22, 16],
-        anchor: [1, 0]
-    }
-
-    private titleprofitStyle: any = {
-        text: {
-            fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [-22, 16],
-        anchor: [1, 0]
+        offset: [60, 21]
     }
 
     private validPariPositions = {
@@ -497,6 +541,7 @@ export class PariTile extends BaseParisRenderer {
     ): void {
         const win = pari.position === resolution
         const nocontest = resolution === EPosition.NoContest
+        const undef = resolution === EPosition.Undefined
 
         const { width, height } = context.screen
 
@@ -551,13 +596,8 @@ export class PariTile extends BaseParisRenderer {
         }
         group.position.set(bgx, bgy)
 
-        const [contentMask] = this.get('contentMask', () => this.createContentMask(position))
-        const [contentContainer, contentContainerState] = this.get('contentContainer', () => new Container())
-        if (contentContainerState.new) {
-            group.addChild(contentContainer)
-            contentContainer.addChild(contentMask)
-            contentContainer.mask = contentMask
-        }
+        const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position))
+        if (contentContainerState.new) group.addChild(contentContainer)
 
         const [background, backgroundState] = this.get('background', () => this.createBackground(position, context))
         if (backgroundState.new) contentContainer.addChild(background)
@@ -565,8 +605,36 @@ export class PariTile extends BaseParisRenderer {
         const [content, contentState] = this.get('content', () => new Container())
         if (contentState.new) contentContainer.addChild(content)
 
-        const [icon, iconState] = this.get('icon', () => this.createIcon(context, position))
-        if (iconState.new) content.addChild(icon)
+        const [iconPariTitle, iconPariTitleState] = this.get('iconPariTitle', () => this.createPariTitleIcon(context))
+        if (iconPariTitleState.new) content.addChild(iconPariTitle)
+
+        const [iconPosition, iconPositionState] = this.get('iconPosition', () => this.createPositionIcon(context, position))
+        if (iconPositionState.new) content.addChild(iconPosition)
+
+        if (this.isHistoricalPool(pool, context)) {
+            this.clear('timeingLines')
+            const [historicalTimeingLine, historicalTimeingLineState] = this.get('historicalTimeingLine', () => new Graphics())
+            if (historicalTimeingLineState.new) {
+                historicalTimeingLine
+                    .beginFill(0x474c67)
+                    .drawRect(0, 2, bgwidth - 2 * this.timeingLinesStyle.offset[0], 1)
+                    .endFill()
+
+                historicalTimeingLine.position.set(...this.timeingLinesStyle.offset)
+                content.addChild(historicalTimeingLine)
+            }
+        } else {
+            const [timeingLines, timeingLinesState] = this.get('timeingLines', () => this.createTimeingLines(
+                context,
+                pool,
+                { width: bgwidth - 2 * this.timeingLinesStyle.offset[0], height: 5 }
+            ))
+
+            if (timeingLinesState.new) {
+                timeingLines.position.set(...this.timeingLinesStyle.offset)
+                content.addChild(timeingLines)
+            }
+        }
 
         const [wager, wagerState] = this.get('wager', () =>
             GraphicUtils.createText(
@@ -578,117 +646,92 @@ export class PariTile extends BaseParisRenderer {
         if (wagerState.new) content.addChild(wager)
         wager.text = ui.erc20(pari.wager)
 
-        const [titlewager, titlewagerState] = this.get('titlewager', () =>
+        const [titlePari, titlePariState] = this.get('titlePari', () =>
             GraphicUtils.createText(
-                'Wager',
-                this.titlewagerStyle.offset,
-                this.titlewagerStyle.text,
+                context.metapool.name,
+                this.titlePariStyle.offset,
+                this.titlePariStyle.text,
             )
         )
-        if (titlewagerState.new) content.addChild(titlewager)
-
-        const [tptox, tptoy] = this.titleprofitStyle.offset
-        const [titleprofit, titleprofitState] = this.get('titleprofit', () =>
-            GraphicUtils.createText(
-                'Profit',
-                [
-                    bgwidth + tptox,
-                    tptoy,
-                ],
-                this.titleprofitStyle.text,
-                this.titleprofitStyle.anchor
-            )
-        )
-        if (titleprofitState.new) content.addChild(titleprofit)
+        if (titlePariState.new) content.addChild(titlePari)
 
         const emptypool = this.isNoContestEmptyPool(pool)
 
-        if (win && !emptypool) {
-            this.clear('zero')
+        if (!undef) {
+            const [payoutContainer, payoutContainerState] = this.get('payoutContainer', () => new Graphics())
+            if (payoutContainerState.new) {
+                payoutContainer.position.set(bgwidth - this.payoutContainerStyle.offset[0], this.payoutContainerStyle.offset[1])
+                content.addChild(payoutContainer)
+            }
 
-            const [prizeAmount] = this.get(
-                'prizeAmount',
-                () => {
-                    if (pari.claimed) {
-                        return ui.erc20(pari.payout)
-                    } else if (emptypool) {
-                        return ui.erc20(pari.wager)
-                    } else {
-                        return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
-                    }
-                },
-                [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
-            )
+            const [profitContainer, profitContainerState] = this.get('profitContainer', () => new Graphics())
+            if (profitContainerState.new) {
+                profitContainer.position.set(bgwidth - this.profitContainerStyle.offset[0], this.profitContainerStyle.offset[1])
+                content.addChild(profitContainer)
+            }
 
-            const [pzox, pzoy] = this.prizeStyle.offset
-            const [prize, prizeState] = this.get('prize', () =>
-                GraphicUtils.createText(
-                    prizeAmount,
-                    [
-                        bgwidth + pzox,
-                        pzoy,
-                    ],
-                    this.prizeStyle.text,
-                    this.prizeStyle.anchor
-                )
-            )
-            if (prizeState.new) content.addChild(prize)
-            prize.text = prizeAmount
-
-            const [percent] = this.get(
-                'percent',
-                () => ui.percent(profitPercent(prizeAmount, pari.wager)),
-                [prizeAmount, pari.wager]
-            )
-
-            const [ptox, ptoy] = this.profitStyle.offset
-            const [profit, profitState] = this.get('profit', () =>
-                GraphicUtils.createText(
-                    percent,
-                    [
-                        bgwidth + ptox,
-                        ptoy,
-                    ],
-                    this.profitStyle.text,
-                    this.profitStyle.anchor
-                )
-            )
-            if (profitState.new) content.addChild(profit)
-            profit.text = percent
-
-            titleprofit.text = 'Profit'
-            titleprofit.position.set(
-                bgwidth + tptox - profit.width - 4, // 4px padding
-                tptoy,
-            )
-
-        } else {
-            this.clear('prize')
-            this.clear('profit')
-
-            const [pzox, pzoy] = this.prizeStyle.offset
-            const [zero, zeroState] = this.get('zero', () =>
+            const [prize] = this.get('prize', () =>
                 GraphicUtils.createText(
                     0,
-                    [
-                        bgwidth + pzox,
-                        pzoy,
-                    ],
+                    this.prizeStyle.offset,
                     this.prizeStyle.text,
                     this.prizeStyle.anchor
-                ),
-            [pari.wager]
+                )
             )
-            if (zeroState.new) content.addChild(zero)
 
-            if (pari.claimed) zero.text = ui.erc20(pari.payout)
-            else              zero.text = nocontest || emptypool ? ui.erc20(pari.wager) : 0
+            if (win && !emptypool) {
+                const [prizeAmount] = this.get(
+                    'prizeAmount',
+                    () => {
+                        if (pari.claimed) {
+                            return ui.erc20(pari.payout)
+                        } else if (emptypool) {
+                            return ui.erc20(pari.wager)
+                        } else {
+                            return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                        }
+                    },
+                    [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
+                )
+                prize.text = prizeAmount
 
-            titleprofit.text = 'Return'
-            titleprofit.position.set(
-                bgwidth + tptox,
-                tptoy,
-            )
+                const [percent] = this.get(
+                    'percent',
+                    () => ui.percent(profitPercent(prizeAmount, pari.wager)),
+                    [prizeAmount, pari.wager]
+                )
+
+                const [profit] = this.get('profit', () =>
+                    GraphicUtils.createText(
+                        percent,
+                        this.profitStyle.offset,
+                        this.profitStyle.text,
+                        this.profitStyle.anchor
+                    )
+                )
+
+                profit.text = percent
+
+                const [profitBlock, profitBlockState] = this.get('profitBlock', () => this.createProfitBlock(profit), [profit.width])
+                if (profitBlockState.new) profitContainer.addChild(profitBlock)
+
+            } else {
+                this.clear('profitBlock')
+
+                if (pari.claimed) prize.text = ui.erc20(pari.payout)
+                else              prize.text = nocontest || emptypool ? ui.erc20(pari.wager) : 0
+            }
+
+            const [levelCurrency] = this.get('levelCurrency', () => this.createLevelCurrency(context))
+
+            const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context))
+            if (currencyState.new) levelCurrency.addChild(currency)
+
+            const [payout, payoutState] = this.get('payout', () => this.createPayout(prize), [prize.width])
+            if (payoutState.new) {
+                payout.addChild(levelCurrency)
+                payoutContainer.addChild(payout)
+            }
         }
 
         if (this.isHistoricalPool(pool, context)) {
@@ -880,20 +923,140 @@ export class PariTile extends BaseParisRenderer {
 
     }
 
-    private createIcon(
+    private getPariTitleIconTextureName(currency): symbol {
+        switch (currency) {
+            case 'AUD':
+                return AUD_TEXTURE
+            case 'CAD':
+                return CAD_TEXTURE
+            case 'CHF':
+                return CHF_TEXTURE
+            case 'JPY':
+                return JPY_TEXTURE
+            case 'USD':
+                return USD_TEXTURE
+            case 'ETH':
+                return ETH_TEXTURE
+            case 'BTC':
+                return BTC_TEXTURE
+            case 'SOL':
+                return SOL_TEXTURE
+            case 'MATIC':
+                return MATIC_TEXTURE
+            case 'BNB':
+                return BNB_TEXTURE
+            default:
+                Logger.error(`currency "${currency}" is not supported, fallback to Undeliden`)
+
+                return UNDEFINED_ICON_TEXTURE
+        }
+    }
+
+    private getPariCurrencyIconTextureName(context: RenderingContext, theme = 'DARK'): symbol {
+        const key = [context.metapool?.currency, theme].join('_')
+
+        switch (key) {
+            case 'ETH_DARK':
+                return ETH_DARK_TEXTURE
+            case 'USDT_DARK':
+                return USDT_DARK_TEXTURE
+            case 'USDC_DARK':
+                return USDC_DARK_TEXTURE
+            default:
+                Logger.error(`currency "${key}" is not supported, fallback to Undeliden`)
+
+                return UNKNOWN_DARK_TEXTURE
+        }
+    }
+
+    private createPositionIcon(
         context: RenderingContext,
         position: EPosition,
     ): Container {
         const textureName = this.getPositionIconTextureName(position)
         const texture = context.textures.get(textureName)
         const icon = new Sprite(texture)
-        icon.scale.set(this.iconStyle.size / icon.height)
-        icon.position.set(...this.iconStyle.offset)
+        icon.scale.set(this.iconPositionStyle.size / icon.height)
+        icon.position.set(...this.iconPositionStyle.offset)
 
         return icon
     }
 
-    private createContentMask(position: EPosition): Graphics {
+    private createPariTitleIcon(
+        context: RenderingContext
+    ): Container {
+        const textureName = this.getPariTitleIconTextureName(context.metapool.base)
+        const texture = context.textures.get(textureName)
+        const icon = new Sprite(texture)
+        icon.scale.set(this.iconPariTitleStyle.size / icon.height)
+        icon.position.set(...this.iconPariTitleStyle.offset)
+
+        return icon
+    }
+
+    private createPariCurrencyIcon(
+        context: RenderingContext
+    ): Container {
+        const textureName = this.getPariCurrencyIconTextureName(context)
+        const texture = context.textures.get(textureName)
+        const icon = new Sprite(texture)
+        icon.scale.set(this.iconCurrencyStyle.size / icon.height)
+        icon.position.set(...this.iconCurrencyStyle.offset)
+
+        return icon
+    }
+
+    private createLevelCurrency(context: RenderingContext): Graphics {
+        const levelCurrency = new Graphics()
+        const textureName = this.getLevelTextureName(context)
+        const diagonal = 2 * this.levelCurrencyStyle.radius
+        const texture = context.textures.get(textureName, { height: diagonal, width: diagonal })
+        const pozx = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[0]
+        const pozy = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[1]
+
+        levelCurrency
+            .beginTextureFill({ texture })
+            .drawCircle(pozx, pozy, this.levelCurrencyStyle.radius)
+            .endFill()
+
+        return levelCurrency
+    }
+
+    private createPayout(prize): Graphics {
+        const payout = new Graphics()
+        const width = this.payoutStyle.width + prize.width
+        const height = this.payoutStyle.height
+
+        payout
+            .beginFill(0x212233)
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        payout.pivot.x = width
+        prize.x = width + this.prizeStyle.offset[0]
+        payout.addChild(prize)
+
+        return payout
+    }
+
+    private createProfitBlock(profit): Graphics {
+        const block = new Graphics()
+        const width = this.profitBlockStyle.width + profit.width
+        const height = this.profitBlockStyle.height
+
+        block
+            .beginFill(0x00a573)
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        block.pivot.x = width
+        profit.x = width + this.profitStyle.offset[0]
+        block.addChild(profit)
+
+        return block
+    }
+
+    private createContentContainer(position: EPosition): Container {
         const {
             width,
             height,
@@ -904,6 +1067,7 @@ export class PariTile extends BaseParisRenderer {
             }
         } = this.groupStyle[position]
 
+        const container = new Container()
         const mask = GraphicUtils.createRoundedRect(
             [ofx, ofy],
             [width, height],
@@ -911,7 +1075,10 @@ export class PariTile extends BaseParisRenderer {
             { lineStyle }
         )
 
-        return mask
+        container.addChild(mask)
+        container.mask = mask
+
+        return container
     }
 
     private createBackground(position: EPosition, context: RenderingContext): Graphics {
@@ -954,6 +1121,103 @@ export class PariTile extends BaseParisRenderer {
         background.alpha = 0
 
         return background
+    }
+
+    private createTimeingLines(context: RenderingContext, pool, { width, height }): Container {
+        const container = new Container()
+
+        const timeNow = nowUnixTS()
+        const fullTime = pool.endDate - pool.startDate
+        const timeToLock = Math.max(pool.lockDate - timeNow, 0)
+        const timeFromLockToEnd = Math.min(pool.endDate - pool.lockDate, pool.endDate - timeNow)
+
+        const radiuses: any = [height/2, height/2, height/2, height/2]
+
+        const mask = GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses)
+        container.mask = mask
+        container.addChild(mask)
+
+        const active = GraphicUtils.createPropagationBackground({
+            height: 310,
+            lineHeight: 18,
+            width: 300,
+            colors: [
+                { color: 0xffffff, alpha: 0.3 },
+                { color: 0xffffff, alpha: 0.6 }
+            ],
+            duration: 1,
+        })
+        active.rotation = 3*Math.PI/4
+        active.pivot.x = 150
+        active.pivot.y = 155
+        active.position.set(150, 50)
+        active.alpha = 0.1
+        container.addChild(active)
+
+        const widthToLock = (timeToLock / fullTime) * width
+        const widthToEnd = (timeFromLockToEnd / fullTime) * width
+
+        let toEnd = GraphicUtils.createRoundedRect([0, 0], [widthToEnd, height], radiuses, { color: 0x00A573 })
+        toEnd.pivot.x = widthToEnd
+        toEnd.pivot.y = height/2
+        toEnd.position.set(width, height/2)
+        const endTexture = context.textures.get(GRADIENT_TEXTURE, {
+            width: widthToEnd,
+            height,
+            points: [0, 0, widthToEnd, 0],
+            colorStops: [
+                { color: '#007397', offset: 0 },
+                { color: '#009797', offset: 1 },
+            ]
+        })
+        toEnd = GraphicUtils.createRoundedRect([0, 0], [widthToEnd, height], radiuses, { texture: endTexture }, toEnd)
+        container.addChild(toEnd)
+
+        if (timeToLock !== 0) {
+            let toLock = GraphicUtils.createRoundedRect([0, 0], [widthToLock, height], radiuses, { color: 0xF05350 })
+            toLock.pivot.x = widthToLock
+            toLock.pivot.y = height/2
+            toLock.position.set(width - widthToEnd, height/2)
+            const lockTexture = context.textures.get(GRADIENT_TEXTURE, {
+                width: widthToLock,
+                height,
+                points: [0, 0, widthToLock, 0],
+                colorStops: [
+                    { color: '#FFA000', offset: 0 },
+                    { color: '#FFC700', offset: 1 },
+                ]
+            })
+            toLock = GraphicUtils.createRoundedRect(
+                [0, 0],
+                [widthToLock, height],
+                radiuses,
+                { texture: lockTexture },
+                toLock
+            )
+            container.addChild(toLock)
+
+            gsap.to(toLock, {
+                pixi: { width: 0 },
+                duration: timeToLock,
+                ease: 'power0',
+                onComplete: () => {
+                    gsap.to(toEnd, {
+                        pixi: { width: 0 },
+                        duration: timeFromLockToEnd,
+                        ease: 'power0',
+                    })
+                }
+            })
+        } else {
+            gsap.to(toEnd, {
+                pixi: { width: 0 },
+                duration: timeFromLockToEnd,
+                ease: 'power0',
+            })
+        }
+
+        return container
+
     }
 
 }

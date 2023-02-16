@@ -12,5 +12,4 @@ export declare class PoolResolution extends BasePoolsRenderer {
     private createTitle;
     private createLine;
     private getLevelLineColors;
-    private getLevelTextureName;
 }

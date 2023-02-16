@@ -29,7 +29,7 @@ class GraphicUtils {
         torus.position.set(x, y);
         return torus;
     }
-    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }, rect) {
+    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 } = {}, rect) {
         rect = rect !== null && rect !== void 0 ? rect : new pixi_1.Graphics();
         rect.lineStyle(Object.assign({ width: 1, alpha: 0 }, lineStyle));
         if (texture) {

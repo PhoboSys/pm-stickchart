@@ -45,7 +45,7 @@ export class GraphicUtils {
         [x, y]: [number, number],
         [width, height]: [number, number],
         [r1, r2, r3, r4]: [number, number, number, number],
-        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? },
+        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? } = {},
         rect?: Graphics,
     ): Graphics {
         rect = rect ?? new Graphics()

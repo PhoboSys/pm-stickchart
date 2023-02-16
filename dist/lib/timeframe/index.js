@@ -17,22 +17,6 @@ function nowUnixTS() {
 }
 exports.nowUnixTS = nowUnixTS;
 class Timeframe {
-    constructor(eventTarget, onUpdate) {
-        this.eventTarget = eventTarget;
-        this.onUpdate = onUpdate;
-        this._until = null;
-        this._timeframe = exports.MAX_FRAME_DURATION;
-        this.shifting = false;
-        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerdown = (e) => this.shiftstart();
-        this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerup = (e) => this.shiftend();
-        this.eventTarget.addEventListener('zoom', this.zoomevent);
-        this.eventTarget.addEventListener('pointerdown', this.pointerdown);
-        this.eventTarget.addEventListener('pointermove', this.pointermove);
-        this.eventTarget.addEventListener('pointerup', this.pointerup);
-        this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
-    }
     get timeframe() {
         return this._timeframe;
     }
@@ -68,6 +52,22 @@ class Timeframe {
     }
     get since() {
         return this.until - this.timeframe;
+    }
+    constructor(eventTarget, onUpdate) {
+        this.eventTarget = eventTarget;
+        this.onUpdate = onUpdate;
+        this._until = null;
+        this._timeframe = exports.MAX_FRAME_DURATION;
+        this.shifting = false;
+        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
+        this.pointerdown = (e) => this.shiftstart();
+        this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
+        this.pointerup = (e) => this.shiftend();
+        this.eventTarget.addEventListener('zoom', this.zoomevent);
+        this.eventTarget.addEventListener('pointerdown', this.pointerdown);
+        this.eventTarget.addEventListener('pointermove', this.pointermove);
+        this.eventTarget.addEventListener('pointerup', this.pointerup);
+        this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
     }
     shiftstart() {
         if (!this.shifting)

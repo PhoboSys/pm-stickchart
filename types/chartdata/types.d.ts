@@ -1,20 +1,20 @@
-export declare type ChartData = {
+export type ChartData = {
     [key: number]: number;
 };
-export declare type PricePoint = {
+export type PricePoint = {
     value: number;
     timestamp: number;
 };
-export declare type PricefeedPoint = {
+export type PricefeedPoint = {
     value: number;
     timestamp: number;
     roundid: string;
 };
-export declare type DataPadding = {
+export type DataPadding = {
     min: number;
     max: number;
 };
-export declare type PlotData = {
+export type PlotData = {
     latestY: number;
     latestX: number;
     latest: PricePoint;

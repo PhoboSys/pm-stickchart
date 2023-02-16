@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasePoolsRenderer = void 0;
+const _infra_1 = require("../../../infra/index.js");
 const _rendering_1 = require("../../index.js");
+const symbols_1 = require("../../textures/symbols");
 const utils_1 = require("../../../lib/utils");
 const _chartdata_1 = require("../../../chartdata/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const _constants_1 = require("../../../constants/index.js");
+const _constants_2 = require("../../../constants/index.js");
 class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     constructor() {
         super(...arguments);
@@ -127,6 +130,20 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     }
     isActualPool(pool) {
         return pool.endDate > (0, utils_1.nowUnixTS)();
+    }
+    getLevelTextureName(context) {
+        var _a, _b;
+        switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
+            case _constants_2.SILVER:
+                return symbols_1.SILVER_LEVEL_TEXTURE;
+            case _constants_2.GOLD:
+                return symbols_1.GOLD_LEVEL_TEXTURE;
+            case _constants_2.ROYAL:
+                return symbols_1.ROYAL_LEVEL_TEXTURE;
+            default:
+                _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
+                return symbols_1.SILVER_LEVEL_TEXTURE;
+        }
     }
 }
 exports.BasePoolsRenderer = BasePoolsRenderer;
