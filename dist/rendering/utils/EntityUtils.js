@@ -31,7 +31,7 @@ class EntityUtils {
     static isEntityPropagating(context, entityid, entityBlock) {
         const pending = this.getPendingTransactions(context, entityid);
         const unpropagated = this.getUnpropagatedTransactions(context, entityid, entityBlock);
-        return pending.length !== 0 || unpropagated.length !== 0;
+        return pending.length !== 0 || unpropagated.length !== 0 || !(entityBlock === null || entityBlock === void 0 ? void 0 : entityBlock.number);
     }
     static isEnityVerified(context, entityid) {
         const commited = this.getComittedTransactions(context, entityid);
