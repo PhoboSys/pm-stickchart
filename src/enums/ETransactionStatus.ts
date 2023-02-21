@@ -1,4 +1,4 @@
 export enum ETransactionStatus {
-    Commited,
     Reverted,
+    Commited,
 }

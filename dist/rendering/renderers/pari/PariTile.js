@@ -4,16 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariTile = void 0;
+const lodash_1 = require("lodash");
 const _constants_1 = require("../../../constants/index.js");
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
-const textures_2 = require("../../textures");
 const _infra_1 = require("../../../infra/index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const ui_1 = __importDefault(require("../../../lib/ui"));
 const calc_utils_1 = require("../../../lib/calc-utils");
-const utils_1 = require("../../../lib/utils");
 const _events_1 = require("../../../events/index.js");
 const _events_2 = require("../../../events/index.js");
 const _enums_1 = require("../../../enums/index.js");
@@ -98,7 +97,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 anchor: [0, 0],
                 offset: [0, 40],
                 width: 300,
-                height: 114,
+                height: 62,
                 background: {
                     offset: [3, 0],
                     radiuses: [1, 20, 20, 1],
@@ -123,7 +122,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 anchor: [0, -1],
                 offset: [0, -134],
                 width: 300,
-                height: 114,
+                height: 62,
                 background: {
                     offset: [3, 0],
                     radiuses: [1, 20, 20, 1],
@@ -148,7 +147,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 anchor: [-1, 0],
                 offset: [0, 8],
                 width: 300,
-                height: 114,
+                height: 62,
                 background: {
                     offset: [-2, 0],
                     radiuses: [20, 1, 1, 20],
@@ -170,79 +169,155 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 }
             }
         };
+        this.stateBackgroundStyle = (0, lodash_1.merge)({}, this.groupStyle, {
+            [_enums_1.EPosition.Up]: {
+                background: {
+                    color: 0x343755,
+                    shadow: {
+                        colorStops: [
+                            { color: '#343755FF', offset: 0 },
+                            { color: '#343755FF', offset: 0.01 },
+                            { color: '#34375500', offset: 0.05 },
+                            { color: '#34375500', offset: 1 },
+                        ]
+                    },
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                background: {
+                    color: 0x343755,
+                    shadow: {
+                        colorStops: [
+                            { color: '#343755FF', offset: 0 },
+                            { color: '#343755FF', offset: 0.01 },
+                            { color: '#34375500', offset: 0.05 },
+                            { color: '#34375500', offset: 1 },
+                        ]
+                    },
+                }
+            },
+            [_enums_1.EPosition.Zero]: {
+                background: {
+                    color: 0x343755,
+                    shadow: {
+                        colorStops: [
+                            { color: '#343755FF', offset: 0 },
+                            { color: '#343755FF', offset: 0.01 },
+                            { color: '#34375500', offset: 0.05 },
+                            { color: '#34375500', offset: 1 },
+                        ]
+                    },
+                }
+            }
+        });
+        this.stateBackgroundAlphaStyle = {
+            winning: 1,
+            undef: 0.6,
+            phantom: 0.6,
+            loseing: 0.8,
+        };
+        this.orphanBackgroundStyle = (0, lodash_1.merge)({}, this.groupStyle, {
+            [_enums_1.EPosition.Up]: {
+                background: {
+                    color: 0xFF0000,
+                    shadow: {
+                        colorStops: [
+                            { color: '#FF0000FF', offset: 0 },
+                            { color: '#FF0000FF', offset: 0.01 },
+                            { color: '#FF000000', offset: 0.05 },
+                            { color: '#FF000000', offset: 1 },
+                        ]
+                    },
+                },
+                alpha: 0.06
+            },
+            [_enums_1.EPosition.Down]: {
+                background: {
+                    color: 0xFF0000,
+                    shadow: {
+                        colorStops: [
+                            { color: '#FF0000FF', offset: 0 },
+                            { color: '#FF0000FF', offset: 0.01 },
+                            { color: '#FF000000', offset: 0.05 },
+                            { color: '#FF000000', offset: 1 },
+                        ]
+                    },
+                },
+                alpha: 0.06
+            },
+            [_enums_1.EPosition.Zero]: {
+                background: {
+                    color: 0xFF0000,
+                    shadow: {
+                        colorStops: [
+                            { color: '#FF0000FF', offset: 0 },
+                            { color: '#FF0000FF', offset: 0.01 },
+                            { color: '#FF000000', offset: 0.05 },
+                            { color: '#FF000000', offset: 1 },
+                        ]
+                    },
+                },
+                alpha: 0.06
+            }
+        });
         this.payoutContainerStyle = {
-            offset: [16, 68],
+            offset: [18, 13],
         };
         this.prizeStyle = {
             text: {
                 fill: 0xf07750,
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
-                fontSize: 16,
+                fontSize: 18,
             },
-            offset: [-7, 6],
+            offset: [-9, 7],
             anchor: [1, 0],
             winFill: 0x00A573,
             loseFill: 0xf07750
         };
         this.payoutStyle = {
-            height: 30,
+            height: 36,
             width: 42,
+            fill: 0x212233,
         };
         this.profitContainerStyle = {
-            offset: [8, 62],
+            offset: [12, 4],
         };
         this.profitStyle = {
             text: {
                 fill: 0x212233,
-                fontWeight: 600,
+                fontWeight: 700,
                 fontFamily: 'Gilroy',
-                fontSize: 12,
+                fontSize: 13,
             },
-            offset: [-2, -1],
+            offset: [-3, 2],
             anchor: [1, 0]
         };
         this.profitBlockStyle = {
-            height: 12,
-            width: 6,
-            offset: [0, 2],
-        };
-        this.timeingLinesStyle = {
-            offset: [16, 55],
+            height: 18,
+            width: 8,
+            fill: 0x00a573,
         };
         this.iconPositionStyle = {
-            size: 30,
-            offset: [16, 68]
-        };
-        this.iconPariTitleStyle = {
             size: 30,
             offset: [16, 16]
         };
         this.levelCurrencyStyle = {
             radius: 10,
-            offset: [7, 6]
+            offset: [7, 8]
         };
         this.iconCurrencyStyle = {
             size: 16,
-            offset: [12, 8]
+            offset: [12, 10]
         };
         this.wagerStyle = {
             text: {
                 fill: 0xFFFFFF,
-                fontWeight: 400,
-                fontFamily: 'Gilroy',
-                fontSize: 16,
-            },
-            offset: [60, 74]
-        };
-        this.titlePariStyle = {
-            text: {
-                fill: 0xB7BDD7,
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 16,
             },
-            offset: [60, 21]
+            offset: [60, 22]
         };
         this.validPariPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
@@ -250,14 +325,14 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
         this.configAnimations = {
-            propagating_bg: {
+            show_propagating_bg: {
                 pixi: {
                     alpha: 0.03,
                 },
                 duration: 0.3,
                 ease: 'power2.out',
             },
-            unpropagating_bg: {
+            hide_propagating_bg: {
                 pixi: {
                     alpha: 0,
                 },
@@ -456,13 +531,20 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     }
     updateTile(pool, pari, context, container, resolution) {
         var _a;
-        const win = pari.position === resolution;
-        const nocontest = resolution === _enums_1.EPosition.NoContest;
-        const undef = resolution === _enums_1.EPosition.Undefined;
-        const { width, height } = context.screen;
         const poolid = pool.poolid;
         const pariid = pari.pariid;
-        if (!win && !nocontest && this.isHistoricalPool(pool, context)) {
+        const phantom = pari.phantom;
+        const undef = resolution === _enums_1.EPosition.Undefined;
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
+        const win = pari.position === resolution;
+        const lose = !win && !phantom;
+        const isHistorical = this.isHistoricalPool(pool, context);
+        const winning = win && !isHistorical && !phantom;
+        const loseing = lose && !isHistorical && !phantom;
+        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pariid);
+        const orphan = phantom && reverted;
+        const { width, height } = context.screen;
+        if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
                     this.rebind(poolid, pariid);
@@ -502,47 +584,31 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             container.addChild(group);
         }
         group.position.set(bgx, bgy);
+        const [background, backgroundState] = this.get('background', () => this.createBackground(this.groupStyle[position], context));
+        if (backgroundState.new)
+            group.addChild(background);
+        const [stateBackground, stateBackgroundState] = this.get('stateBackgroundState', () => this.createBackground(this.stateBackgroundStyle[position], context));
+        if (stateBackgroundState.new)
+            group.addChild(stateBackground);
+        stateBackground.alpha = this.getStateBackgroundAlpha({ winning, loseing, undef, phantom });
+        const [orphanBackground, orphanBackgroundState] = this.get('orphanBackground', () => this.createBackground(this.orphanBackgroundStyle[position], context));
+        if (orphanBackgroundState.new)
+            group.addChild(orphanBackground);
+        orphanBackground.alpha = orphan ? this.orphanBackgroundStyle[position].alpha : 0;
         const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position));
         if (contentContainerState.new)
             group.addChild(contentContainer);
-        const [background, backgroundState] = this.get('background', () => this.createBackground(position, context));
-        if (backgroundState.new)
-            contentContainer.addChild(background);
         const [content, contentState] = this.get('content', () => new pixi_1.Container());
         if (contentState.new)
             contentContainer.addChild(content);
-        const [iconPariTitle, iconPariTitleState] = this.get('iconPariTitle', () => this.createPariTitleIcon(context));
-        if (iconPariTitleState.new)
-            content.addChild(iconPariTitle);
+        content.alpha = this.getContentAlpha({ loseing, undef, phantom });
         const [iconPosition, iconPositionState] = this.get('iconPosition', () => this.createPositionIcon(context, position));
         if (iconPositionState.new)
             content.addChild(iconPosition);
-        if (this.isHistoricalPool(pool, context)) {
-            this.clear('timeingLines');
-            const [historicalTimeingLine, historicalTimeingLineState] = this.get('historicalTimeingLine', () => new pixi_1.Graphics());
-            if (historicalTimeingLineState.new) {
-                historicalTimeingLine
-                    .beginFill(0x474c67)
-                    .drawRect(0, 2, bgwidth - 2 * this.timeingLinesStyle.offset[0], 1)
-                    .endFill();
-                historicalTimeingLine.position.set(...this.timeingLinesStyle.offset);
-                content.addChild(historicalTimeingLine);
-            }
-        }
-        else {
-            const [timeingLines, timeingLinesState] = this.get('timeingLines', () => this.createTimeingLines(context, pool, { width: bgwidth - 2 * this.timeingLinesStyle.offset[0], height: 5 }));
-            if (timeingLinesState.new) {
-                timeingLines.position.set(...this.timeingLinesStyle.offset);
-                content.addChild(timeingLines);
-            }
-        }
         const [wager, wagerState] = this.get('wager', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle.offset, this.wagerStyle.text));
         if (wagerState.new)
             content.addChild(wager);
         wager.text = ui_1.default.erc20(pari.wager);
-        const [titlePari, titlePariState] = this.get('titlePari', () => _rendering_1.GraphicUtils.createText(context.metapool.name, this.titlePariStyle.offset, this.titlePariStyle.text));
-        if (titlePariState.new)
-            content.addChild(titlePari);
         const emptypool = this.isNoContestEmptyPool(pool);
         if (!undef) {
             const [payoutContainer, payoutContainerState] = this.get('payoutContainer', () => new pixi_1.Graphics());
@@ -603,7 +669,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payoutContainer.addChild(payout);
             }
         }
-        if (this.isHistoricalPool(pool, context)) {
+        if (isHistorical) {
             const [claimable] = this.get('claimable', () => !pari.claimed && (win || nocontest), [nocontest, win, pari.claimed]);
             if (win) {
                 this.animate('background', 'won_bg');
@@ -718,27 +784,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 this.animate('group', 'loseing_group');
             }
         }
-        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => _rendering_1.GraphicUtils.createPropagationBackground({
-            height: 310,
-            lineHeight: 18,
-            width: 300,
-            colors: [{ color: 0xffffff, alpha: 1 }],
-            duration: 1,
-        }));
-        if (propagatingBackgroundState.new) {
-            propagatingBackground.rotation = 3 * Math.PI / 4;
-            propagatingBackground.pivot.x = 150;
-            propagatingBackground.pivot.y = 155;
-            propagatingBackground.position.set(150, 50);
-            propagatingBackground.alpha = 0;
+        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => this.createPropagatingBackground());
+        if (propagatingBackgroundState.new)
             contentContainer.addChild(propagatingBackground);
-        }
         const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pariid, pari.block);
         if (propagating) {
-            this.animate('propagatingBackground', 'propagating_bg');
+            this.animate('propagatingBackground', 'show_propagating_bg');
         }
         else {
-            this.animate('propagatingBackground', 'unpropagating_bg');
+            this.animate('propagatingBackground', 'hide_propagating_bg');
         }
     }
     getPositionIconTextureName(position) {
@@ -751,33 +805,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 return textures_1.ZERO_ICON_TEXTURE;
             default:
                 _infra_1.Logger.error(`pari position "${position}" is not supported, fallback to Undeliden`);
-                return textures_1.UNDEFINED_ICON_TEXTURE;
-        }
-    }
-    getPariTitleIconTextureName(currency) {
-        switch (currency) {
-            case 'AUD':
-                return textures_2.AUD_TEXTURE;
-            case 'CAD':
-                return textures_2.CAD_TEXTURE;
-            case 'CHF':
-                return textures_2.CHF_TEXTURE;
-            case 'JPY':
-                return textures_2.JPY_TEXTURE;
-            case 'USD':
-                return textures_2.USD_TEXTURE;
-            case 'ETH':
-                return textures_2.ETH_TEXTURE;
-            case 'BTC':
-                return textures_2.BTC_TEXTURE;
-            case 'SOL':
-                return textures_2.SOL_TEXTURE;
-            case 'MATIC':
-                return textures_2.MATIC_TEXTURE;
-            case 'BNB':
-                return textures_2.BNB_TEXTURE;
-            default:
-                _infra_1.Logger.error(`currency "${currency}" is not supported, fallback to Undeliden`);
                 return textures_1.UNDEFINED_ICON_TEXTURE;
         }
     }
@@ -802,14 +829,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const icon = new pixi_1.Sprite(texture);
         icon.scale.set(this.iconPositionStyle.size / icon.height);
         icon.position.set(...this.iconPositionStyle.offset);
-        return icon;
-    }
-    createPariTitleIcon(context) {
-        const textureName = this.getPariTitleIconTextureName(context.metapool.base);
-        const texture = context.textures.get(textureName);
-        const icon = new pixi_1.Sprite(texture);
-        icon.scale.set(this.iconPariTitleStyle.size / icon.height);
-        icon.position.set(...this.iconPariTitleStyle.offset);
         return icon;
     }
     createPariCurrencyIcon(context) {
@@ -838,7 +857,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const width = this.payoutStyle.width + prize.width;
         const height = this.payoutStyle.height;
         payout
-            .beginFill(0x212233)
+            .beginFill(this.payoutStyle.fill)
             .drawRect(0, 0, width, height)
             .endFill();
         payout.pivot.x = width;
@@ -851,7 +870,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const width = this.profitBlockStyle.width + profit.width;
         const height = this.profitBlockStyle.height;
         block
-            .beginFill(0x00a573)
+            .beginFill(this.profitBlockStyle.fill)
             .drawRect(0, 0, width, height)
             .endFill();
         block.pivot.x = width;
@@ -867,8 +886,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         container.mask = mask;
         return container;
     }
-    createBackground(position, context) {
-        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, shadow: { points, colorStops } } } = this.groupStyle[position];
+    createBackground(style, context) {
+        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, shadow: { points, colorStops } } } = style;
         let background = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { color, lineStyle });
         const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, {
             width: width + lineStyle.width * 2,
@@ -880,86 +899,42 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         background.alpha = 0;
         return background;
     }
-    createTimeingLines(context, pool, { width, height }) {
-        const container = new pixi_1.Container();
-        const timeNow = (0, utils_1.nowUnixTS)();
-        const fullTime = pool.endDate - pool.startDate;
-        const timeToLock = Math.max(pool.lockDate - timeNow, 0);
-        const timeFromLockToEnd = Math.min(pool.endDate - pool.lockDate, pool.endDate - timeNow);
-        const radiuses = [height / 2, height / 2, height / 2, height / 2];
-        const mask = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses);
-        container.mask = mask;
-        container.addChild(mask);
-        const active = _rendering_1.GraphicUtils.createPropagationBackground({
+    createPropagatingBackground() {
+        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => _rendering_1.GraphicUtils.createPropagationBackground({
             height: 310,
             lineHeight: 18,
             width: 300,
-            colors: [
-                { color: 0xffffff, alpha: 0.3 },
-                { color: 0xffffff, alpha: 0.6 }
-            ],
+            colors: [{ color: 0xffffff, alpha: 1 }],
             duration: 1,
-        });
-        active.rotation = 3 * Math.PI / 4;
-        active.pivot.x = 150;
-        active.pivot.y = 155;
-        active.position.set(150, 50);
-        active.alpha = 0.1;
-        container.addChild(active);
-        const widthToLock = (timeToLock / fullTime) * width;
-        const widthToEnd = (timeFromLockToEnd / fullTime) * width;
-        let toEnd = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [widthToEnd, height], radiuses, { color: 0x00A573 });
-        toEnd.pivot.x = widthToEnd;
-        toEnd.pivot.y = height / 2;
-        toEnd.position.set(width, height / 2);
-        const endTexture = context.textures.get(textures_1.GRADIENT_TEXTURE, {
-            width: widthToEnd,
-            height,
-            points: [0, 0, widthToEnd, 0],
-            colorStops: [
-                { color: '#007397', offset: 0 },
-                { color: '#009797', offset: 1 },
-            ]
-        });
-        toEnd = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [widthToEnd, height], radiuses, { texture: endTexture }, toEnd);
-        container.addChild(toEnd);
-        if (timeToLock !== 0) {
-            let toLock = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [widthToLock, height], radiuses, { color: 0xF05350 });
-            toLock.pivot.x = widthToLock;
-            toLock.pivot.y = height / 2;
-            toLock.position.set(width - widthToEnd, height / 2);
-            const lockTexture = context.textures.get(textures_1.GRADIENT_TEXTURE, {
-                width: widthToLock,
-                height,
-                points: [0, 0, widthToLock, 0],
-                colorStops: [
-                    { color: '#FFA000', offset: 0 },
-                    { color: '#FFC700', offset: 1 },
-                ]
-            });
-            toLock = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [widthToLock, height], radiuses, { texture: lockTexture }, toLock);
-            container.addChild(toLock);
-            pixi_1.gsap.to(toLock, {
-                pixi: { width: 0 },
-                duration: timeToLock,
-                ease: 'power0',
-                onComplete: () => {
-                    pixi_1.gsap.to(toEnd, {
-                        pixi: { width: 0 },
-                        duration: timeFromLockToEnd,
-                        ease: 'power0',
-                    });
-                }
-            });
+        }));
+        if (propagatingBackgroundState.new) {
+            propagatingBackground.rotation = 3 * Math.PI / 4;
+            propagatingBackground.pivot.x = 150;
+            propagatingBackground.pivot.y = 155;
+            propagatingBackground.position.set(150, 50);
+            propagatingBackground.alpha = 0;
         }
-        else {
-            pixi_1.gsap.to(toEnd, {
-                pixi: { width: 0 },
-                duration: timeFromLockToEnd,
-                ease: 'power0',
-            });
-        }
-        return container;
+        return propagatingBackground;
+    }
+    getStateBackgroundAlpha({ winning, loseing, undef, phantom }) {
+        if (winning)
+            return this.stateBackgroundAlphaStyle.winning;
+        if (loseing)
+            return this.stateBackgroundAlphaStyle.loseing;
+        if (phantom)
+            return this.stateBackgroundAlphaStyle.phantom;
+        if (undef)
+            return this.stateBackgroundAlphaStyle.undef;
+        return 0;
+    }
+    getContentAlpha({ loseing, undef, phantom }) {
+        if (loseing)
+            return this.stateBackgroundAlphaStyle.loseing;
+        if (phantom)
+            return this.stateBackgroundAlphaStyle.phantom;
+        if (undef)
+            return this.stateBackgroundAlphaStyle.undef;
+        return 1;
     }
 }
 exports.PariTile = PariTile;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BNB_TEXTURE = exports.MATIC_TEXTURE = exports.SOL_TEXTURE = exports.BTC_TEXTURE = exports.ETH_TEXTURE = exports.USD_TEXTURE = exports.JPY_TEXTURE = exports.CHF_TEXTURE = exports.CAD_TEXTURE = exports.AUD_TEXTURE = exports.USDC_DARK_TEXTURE = exports.USDT_DARK_TEXTURE = exports.ETH_DARK_TEXTURE = exports.UNKNOWN_DARK_TEXTURE = exports.GRADIENT_TEXTURE = exports.POOL_CLAIM_TEXTURE = exports.RESOLUTION_COUNTDOWN_TEXTURE = exports.UNDEFINED_ICON_TEXTURE = exports.ZERO_ICON_TEXTURE = exports.DOWN_ICON_TEXTURE = exports.UP_ICON_TEXTURE = exports.LOCK_COUNTDOWN_TEXTURE = exports.ROYAL_LEVEL_TEXTURE = exports.GOLD_LEVEL_TEXTURE = exports.SILVER_LEVEL_TEXTURE = exports.UP_WAGET_TEXTURE = exports.DOWN_WAGET_TEXTURE = exports.LOCK_ICON_TEXTURE = exports.POOL_ROUND_TEXTURE = exports.PRICE_LINE_TEXTURE = void 0;
+exports.USDC_DARK_TEXTURE = exports.USDT_DARK_TEXTURE = exports.ETH_DARK_TEXTURE = exports.UNKNOWN_DARK_TEXTURE = exports.GRADIENT_TEXTURE = exports.POOL_CLAIM_TEXTURE = exports.RESOLUTION_COUNTDOWN_TEXTURE = exports.UNDEFINED_ICON_TEXTURE = exports.ZERO_ICON_TEXTURE = exports.DOWN_ICON_TEXTURE = exports.UP_ICON_TEXTURE = exports.LOCK_COUNTDOWN_TEXTURE = exports.ROYAL_LEVEL_TEXTURE = exports.GOLD_LEVEL_TEXTURE = exports.SILVER_LEVEL_TEXTURE = exports.UP_WAGET_TEXTURE = exports.DOWN_WAGET_TEXTURE = exports.LOCK_ICON_TEXTURE = exports.POOL_ROUND_TEXTURE = exports.PRICE_LINE_TEXTURE = void 0;
 exports.PRICE_LINE_TEXTURE = Symbol('PRICE_LINE_TEXTURE');
 exports.POOL_ROUND_TEXTURE = Symbol('POOL_ROUND_TEXTURE');
 exports.LOCK_ICON_TEXTURE = Symbol('LOCK_ICON_TEXTURE');
@@ -21,14 +21,4 @@ exports.UNKNOWN_DARK_TEXTURE = Symbol('UNKNOWN_DARK_TEXTURE');
 exports.ETH_DARK_TEXTURE = Symbol('ETH_DARK_TEXTURE');
 exports.USDT_DARK_TEXTURE = Symbol('USDT_DARK_TEXTURE');
 exports.USDC_DARK_TEXTURE = Symbol('USDC_DARK_TEXTURE');
-exports.AUD_TEXTURE = Symbol('AUD_TEXTURE');
-exports.CAD_TEXTURE = Symbol('CAD_TEXTURE');
-exports.CHF_TEXTURE = Symbol('CHF_TEXTURE');
-exports.JPY_TEXTURE = Symbol('JPY_TEXTURE');
-exports.USD_TEXTURE = Symbol('USD_TEXTURE');
-exports.ETH_TEXTURE = Symbol('ETH_TEXTURE');
-exports.BTC_TEXTURE = Symbol('BTC_TEXTURE');
-exports.SOL_TEXTURE = Symbol('SOL_TEXTURE');
-exports.MATIC_TEXTURE = Symbol('MATIC_TEXTURE');
-exports.BNB_TEXTURE = Symbol('BNB_TEXTURE');
 //# sourceMappingURL=symbols.js.map
