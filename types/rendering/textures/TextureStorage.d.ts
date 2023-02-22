@@ -1,6 +1,6 @@
 import { Application, RenderTexture } from '../../lib/pixi';
 import { ITextureStorage } from '../abstraction';
-import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, ETH_DARK_TEXTURE, USDT_DARK_TEXTURE, USDC_DARK_TEXTURE, UNKNOWN_DARK_TEXTURE } from './symbols';
+import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, ETH_DARK_TEXTURE, USDT_DARK_TEXTURE, USDC_DARK_TEXTURE, UNKNOWN_DARK_TEXTURE, CHAINLINK_TEXTURE } from './symbols';
 import { PRICE_LINE_TEXTURE, POOL_ROUND_TEXTURE } from './symbols';
 import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from './symbols';
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from './symbols';
@@ -35,4 +35,5 @@ export declare class TextureStorage implements ITextureStorage {
     private [USDT_DARK_TEXTURE];
     private [USDC_DARK_TEXTURE];
     private [UNKNOWN_DARK_TEXTURE];
+    private [CHAINLINK_TEXTURE];
 }
