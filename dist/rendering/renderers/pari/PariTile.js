@@ -756,6 +756,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     if (e.poolid !== poolid)
                         return;
                     this.rebind(poolid, pariid);
+                    const [claim] = this.read('claim');
+                    if (claim)
+                        claim.interactive = true;
                     const [clble] = this.read('claimable');
                     if (clble)
                         this.animate('group', 'pin_group_claimable');
@@ -766,6 +769,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     if (e.poolid !== poolid)
                         return;
                     this.rebind(poolid, pariid);
+                    const [claim] = this.read('claim');
+                    if (claim)
+                        claim.interactive = false;
                     const [clble] = this.read('claimable');
                     if (clble)
                         this.animate('group', 'unpin_group_claimable');

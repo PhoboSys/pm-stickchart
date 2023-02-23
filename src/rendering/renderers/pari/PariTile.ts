@@ -559,7 +559,7 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions)|| pool.phantom) return this.clear()
+        if (!(pari.position in this.validPariPositions) || pool.phantom) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
 
@@ -925,6 +925,10 @@ export class PariTile extends BaseParisRenderer {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
+
+                    const [claim] = this.read('claim')
+                    if (claim) claim.interactive = true
+
                     const [clble] = this.read('claimable')
                     if (clble) this.animate('group', 'pin_group_claimable')
                     else this.animate('group', 'pin_group_unclaimable')
@@ -934,6 +938,10 @@ export class PariTile extends BaseParisRenderer {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
+
+                    const [claim] = this.read('claim')
+                    if (claim) claim.interactive = false
+
                     const [clble] = this.read('claimable')
                     if (clble) this.animate('group', 'unpin_group_claimable')
                     else this.animate('group', 'unpin_group_unclaimable')
