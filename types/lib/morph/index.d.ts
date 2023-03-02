@@ -1,4 +1,4 @@
-type ChartData = {
+declare type ChartData = {
     prices: number[];
     timestamps: number[];
 };
