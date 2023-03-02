@@ -14,3 +14,8 @@ export declare const UNDEFINED_ICON_TEXTURE: unique symbol;
 export declare const RESOLUTION_COUNTDOWN_TEXTURE: unique symbol;
 export declare const POOL_CLAIM_TEXTURE: unique symbol;
 export declare const GRADIENT_TEXTURE: unique symbol;
+export declare const UNKNOWN_DARK_TEXTURE: unique symbol;
+export declare const ETH_DARK_TEXTURE: unique symbol;
+export declare const USDT_DARK_TEXTURE: unique symbol;
+export declare const USDC_DARK_TEXTURE: unique symbol;
+export declare const CHAINLINK_TEXTURE: unique symbol;

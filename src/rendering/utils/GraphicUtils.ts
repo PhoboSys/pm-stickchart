@@ -3,7 +3,8 @@ import { castArray } from 'lodash'
 import { Logger } from '@infra'
 
 import datamath from '@lib/datamath'
-import { Graphics, LineStyle, Text, TextStyle, Sprite, Texture, Matrix } from '@lib/pixi'
+import { Graphics, LineStyle, Text, TextStyle } from '@lib/pixi'
+import { Sprite, Texture, Matrix, Container, gsap } from '@lib/pixi'
 
 export class GraphicUtils {
 
@@ -44,7 +45,7 @@ export class GraphicUtils {
         [x, y]: [number, number],
         [width, height]: [number, number],
         [r1, r2, r3, r4]: [number, number, number, number],
-        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? },
+        { texture, color, lineStyle, alpha = 1 }: { texture?, color?, lineStyle?, alpha? } = {},
         rect?: Graphics,
     ): Graphics {
         rect = rect ?? new Graphics()
@@ -250,5 +251,47 @@ export class GraphicUtils {
 
         return text
 
+    }
+
+    static createPropagationBackground({
+        lineHeight,
+        width,
+        height,
+        colors,
+        duration
+    }): Container {
+        if (colors.length === 1) {
+            colors.push({ color: 0xffffff, alpha: 0 })
+        }
+
+        const container = new Container()
+        const lines = new Graphics()
+        const mask = new Graphics()
+        mask
+            .beginFill()
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        container.addChild(lines)
+        container.mask = mask
+        container.addChild(mask)
+
+        const colorsSize = colors.length
+        const linesSize = Math.ceil(height / lineHeight) + colorsSize
+        for (let i = 0; i < linesSize; i++) {
+            const color = colors[i%colorsSize]
+            lines.beginFill(color.color, color.alpha === undefined ? 1 : color.alpha)
+            lines.drawRect(0, i * lineHeight, width, lineHeight)
+            lines.endFill()
+        }
+
+        gsap.to(lines, {
+            pixi: { y: -1 * colorsSize * lineHeight },
+            duration,
+            repeat: -1,
+            ease: 'power0',
+        })
+
+        return container
     }
 }

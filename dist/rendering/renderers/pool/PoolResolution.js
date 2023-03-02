@@ -10,7 +10,6 @@ const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const _constants_1 = require("../../../constants/index.js");
-const symbols_1 = require("../../textures/symbols");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
@@ -94,20 +93,6 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
             default:
                 _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
                 return _config_1.default.style.levels.silverLineColors;
-        }
-    }
-    getLevelTextureName(context) {
-        var _a, _b;
-        switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
-            case _constants_1.SILVER:
-                return symbols_1.SILVER_LEVEL_TEXTURE;
-            case _constants_1.GOLD:
-                return symbols_1.GOLD_LEVEL_TEXTURE;
-            case _constants_1.ROYAL:
-                return symbols_1.ROYAL_LEVEL_TEXTURE;
-            default:
-                _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
-                return symbols_1.SILVER_LEVEL_TEXTURE;
         }
     }
 }

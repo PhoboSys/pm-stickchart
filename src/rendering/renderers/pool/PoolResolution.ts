@@ -6,7 +6,6 @@ import datamath from '@lib/datamath'
 import { Container, Text } from '@lib/pixi'
 
 import { SILVER, GOLD, ROYAL } from '@constants'
-import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@rendering/textures/symbols'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -150,24 +149,6 @@ export class PoolResolution extends BasePoolsRenderer {
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
 
                 return config.style.levels.silverLineColors
-        }
-
-    }
-
-    private getLevelTextureName(context: RenderingContext): symbol {
-
-        switch (context.metapool?.level) {
-            case SILVER:
-                return SILVER_LEVEL_TEXTURE
-            case GOLD:
-                return GOLD_LEVEL_TEXTURE
-            case ROYAL:
-                return ROYAL_LEVEL_TEXTURE
-
-            default:
-                Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
-
-                return SILVER_LEVEL_TEXTURE
         }
 
     }

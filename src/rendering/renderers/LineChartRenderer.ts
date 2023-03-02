@@ -3,6 +3,7 @@ import { DoneFunction, RenderingContext } from '@rendering'
 import { RenderingCompositor, PriceLineRenderer } from '@rendering'
 import { GridRenderer, LatestPriceRenderer } from '@rendering'
 import { Pool, Pari, CrosshairRenderer } from '@rendering'
+import { PricefeedInfoRenderer } from '@rendering'
 
 export class LineChartRenderer implements IRenderer {
 
@@ -12,6 +13,7 @@ export class LineChartRenderer implements IRenderer {
         private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
+            new PricefeedInfoRenderer(renderer),
             new GridRenderer(renderer),
             new PriceLineRenderer(renderer),
             new Pool(renderer),

@@ -22,6 +22,8 @@ __exportStar(require("./PointerupEvent"), exports);
 __exportStar(require("./CanvasErrorEvent"), exports);
 __exportStar(require("./PoolUnhoverEvent"), exports);
 __exportStar(require("./PoolHoverEvent"), exports);
+__exportStar(require("./PoolPinEvent"), exports);
+__exportStar(require("./PoolUnpinEvent"), exports);
 __exportStar(require("./ResolveWithdrawEvent"), exports);
 __exportStar(require("./WithdrawEvent"), exports);
 __exportStar(require("./TimeframeStickToNowEvent"), exports);

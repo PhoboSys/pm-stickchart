@@ -1,12 +1,18 @@
+import { merge } from 'lodash'
+
 import { PRIZEFUNDS } from '@constants'
 
-import { RenderingContext, GraphicUtils } from '@rendering'
+import { RenderingContext, GraphicUtils, EntityUtils } from '@rendering'
 import {
     UP_ICON_TEXTURE,
     DOWN_ICON_TEXTURE,
     ZERO_ICON_TEXTURE,
     UNDEFINED_ICON_TEXTURE,
-    GRADIENT_TEXTURE
+    GRADIENT_TEXTURE,
+    UNKNOWN_DARK_TEXTURE,
+    ETH_DARK_TEXTURE,
+    USDT_DARK_TEXTURE,
+    USDC_DARK_TEXTURE
 } from '@rendering/textures'
 
 import { Logger } from '@infra'
@@ -16,7 +22,8 @@ import { Graphics, Container, Sprite } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent, ResolveWithdrawEvent } from '@events'
+import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent } from '@events'
+import { ResolveWithdrawEvent, PoolPinEvent, PoolUnpinEvent } from '@events'
 
 import { EPosition } from '@enums'
 
@@ -197,62 +204,175 @@ export class PariTile extends BaseParisRenderer {
 
     }
 
-    private iconStyle: any = {
+    private stateBackgroundStyle: any = merge({}, this.groupStyle, {
+
+        [EPosition.Up]: {
+            background: {
+                color: 0x343755,
+                shadow: {
+                    colorStops: [
+                        { color: '#343755FF', offset: 0 },
+                        { color: '#343755FF', offset: 0.01 },
+                        { color: '#34375500', offset: 0.05 },
+                        { color: '#34375500', offset: 1 },
+                    ]
+                },
+            },
+        },
+
+        [EPosition.Down]: {
+            background: {
+                color: 0x343755,
+                shadow: {
+                    colorStops: [
+                        { color: '#343755FF', offset: 0 },
+                        { color: '#343755FF', offset: 0.01 },
+                        { color: '#34375500', offset: 0.05 },
+                        { color: '#34375500', offset: 1 },
+                    ]
+                },
+            }
+        },
+
+        [EPosition.Zero]: {
+            background: {
+                color: 0x343755,
+                shadow: {
+                    colorStops: [
+                        { color: '#343755FF', offset: 0 },
+                        { color: '#343755FF', offset: 0.01 },
+                        { color: '#34375500', offset: 0.05 },
+                        { color: '#34375500', offset: 1 },
+                    ]
+                },
+            }
+        }
+
+    })
+
+    private stateBackgroundAlphaStyle: any = {
+        winning: 1,
+        undef: 0.6,
+        phantom: 0.6,
+        loseing: 0.8,
+    }
+
+    private orphanBackgroundStyle = merge({}, this.groupStyle, {
+
+        [EPosition.Up]: {
+            background: {
+                color: 0xFF0000,
+                shadow: {
+                    colorStops: [
+                        { color: '#FF0000FF', offset: 0 },
+                        { color: '#FF0000FF', offset: 0.01 },
+                        { color: '#FF000000', offset: 0.05 },
+                        { color: '#FF000000', offset: 1 },
+                    ]
+                },
+            },
+            alpha: 0.06
+        },
+
+        [EPosition.Down]: {
+            background: {
+                color: 0xFF0000,
+                shadow: {
+                    colorStops: [
+                        { color: '#FF0000FF', offset: 0 },
+                        { color: '#FF0000FF', offset: 0.01 },
+                        { color: '#FF000000', offset: 0.05 },
+                        { color: '#FF000000', offset: 1 },
+                    ]
+                },
+            },
+            alpha: 0.06
+        },
+
+        [EPosition.Zero]: {
+            background: {
+                color: 0xFF0000,
+                shadow: {
+                    colorStops: [
+                        { color: '#FF0000FF', offset: 0 },
+                        { color: '#FF0000FF', offset: 0.01 },
+                        { color: '#FF000000', offset: 0.05 },
+                        { color: '#FF000000', offset: 1 },
+                    ]
+                },
+            },
+            alpha: 0.06
+        }
+
+    })
+
+    private payoutContainerStyle = {
+        offset: [18, 13],
+    }
+
+    private prizeStyle: any = {
+        text: {
+            fill: 0xf07750,
+            fontWeight: 600,
+            fontFamily: 'Gilroy',
+            fontSize: 18,
+        },
+        offset: [-9, 7],
+        anchor: [1, 0],
+        winFill: 0x00A573,
+        loseFill: 0xf07750
+    }
+
+    private payoutStyle = {
+        height: 36,
+        width: 42,
+        fill: 0x212233,
+    }
+
+    private profitContainerStyle = {
+        offset: [12, 4],
+    }
+
+    private profitStyle: any = {
+        text: {
+            fill: 0x212233,
+            fontWeight: 700,
+            fontFamily: 'Gilroy',
+            fontSize: 13,
+        },
+        offset: [-3, 2],
+        anchor: [1, 0]
+    }
+
+    private profitBlockStyle: any = {
+        height: 18,
+        width: 8,
+        fill: 0x00a573,
+    }
+
+    private iconPositionStyle: any = {
         size: 30,
         offset: [16, 16]
+    }
+
+    private levelCurrencyStyle = {
+        radius: 10,
+        offset: [7, 8]
+    }
+
+    private iconCurrencyStyle: any = {
+        size: 16,
+        offset: [12, 10]
     }
 
     private wagerStyle: any = {
         text: {
             fill: 0xFFFFFF,
-            fontWeight: 400,
+            fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 16,
         },
-        offset: [60, 28]
-    }
-
-    private titlewagerStyle: any = {
-        text: {
-            fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [60, 16]
-    }
-
-    private prizeStyle: any = {
-        text: {
-            fill: 0xFFFFFF,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 16,
-        },
-        offset: [-22, 28],
-        anchor: [1, 0]
-    }
-
-    private profitStyle: any = {
-        text: {
-            fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [-22, 16],
-        anchor: [1, 0]
-    }
-
-    private titleprofitStyle: any = {
-        text: {
-            fill: 0xB7BDD7,
-            fontWeight: 400,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
-        },
-        offset: [-22, 16],
-        anchor: [1, 0]
+        offset: [60, 22]
     }
 
     private validPariPositions = {
@@ -262,6 +382,20 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private configAnimations: any = {
+        show_propagating_bg: {
+            pixi: {
+                alpha: 0.03,
+            },
+            duration: 0.3,
+            ease: 'power2.out',
+        },
+        hide_propagating_bg: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 0.3,
+            ease: 'power2.out',
+        },
         winning_bg: {
             pixi: {
                 alpha: 1,
@@ -332,7 +466,7 @@ export class PariTile extends BaseParisRenderer {
             clear: true,
             new: 'set'
         },
-        hover_group_claimable: {
+        pin_group_claimable: {
             pixi: {
                 alpha: 1,
                 zIndex: 4,
@@ -341,14 +475,13 @@ export class PariTile extends BaseParisRenderer {
             ease: 'back.out(4)',
             clear: true,
         },
-        unhover_group_claimable: {
+        unpin_group_claimable: {
             pixi: {
                 alpha: 0,
                 zIndex: 1,
             },
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.9,
         },
         hide_group_claimable: {
             pixi: {
@@ -360,7 +493,7 @@ export class PariTile extends BaseParisRenderer {
             delay: 5,
             new: 'set'
         },
-        hover_group_unclaimable: {
+        pin_group_unclaimable: {
             pixi: {
                 alpha: 0.9,
                 zIndex: 3,
@@ -369,14 +502,13 @@ export class PariTile extends BaseParisRenderer {
             ease: 'power2.out',
             clear: true,
         },
-        unhover_group_unclaimable: {
+        unpin_group_unclaimable: {
             pixi: {
                 alpha: 0,
                 zIndex: 0,
             },
             duration: 0.3,
             ease: 'power2.out',
-            delay: 0.5,
             new: 'set'
         },
         hide_group: {
@@ -427,7 +559,7 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions)) return this.clear()
+        if (!(pari.position in this.validPariPositions) || pool.phantom) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
 
@@ -482,15 +614,23 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
         resolution: EPosition,
     ): void {
-        const win = pari.position === resolution
-        const nocontest = resolution === EPosition.NoContest
-
-        const { width, height } = context.screen
-
         const poolid = pool.poolid
         const pariid = pari.pariid
 
-        if (!win && !nocontest && this.isHistoricalPool(pool, context)) {
+        const phantom = pari.phantom
+        const undef = resolution === EPosition.Undefined
+        const nocontest = resolution === EPosition.NoContest
+        const win = pari.position === resolution
+        const lose = !win && !phantom
+        const isHistorical = this.isHistoricalPool(pool, context)
+        const winning = win && !isHistorical && !phantom
+        const loseing = lose && !isHistorical && !phantom
+        const reverted = EntityUtils.isEnityReverted(context, pariid)
+        const orphan = phantom && reverted
+
+        const { width, height } = context.screen
+
+        if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
                     this.rebind(poolid, pariid)
@@ -538,14 +678,35 @@ export class PariTile extends BaseParisRenderer {
         }
         group.position.set(bgx, bgy)
 
-        const [background, backgroundState] = this.get('background', () => this.createBackground(position, context))
+        const [background, backgroundState] = this.get(
+            'background',
+            () => this.createBackground(this.groupStyle[position], context)
+        )
         if (backgroundState.new) group.addChild(background)
 
-        const [content, contentState] = this.get('content', () => new Container())
-        if (contentState.new) group.addChild(content)
+        const [stateBackground, stateBackgroundState] = this.get(
+            'stateBackgroundState',
+            () => this.createBackground(this.stateBackgroundStyle[position], context)
+        )
+        if (stateBackgroundState.new) group.addChild(stateBackground)
+        stateBackground.alpha = this.getStateBackgroundAlpha({ winning, loseing, undef, phantom })
 
-        const [icon, iconState] = this.get('icon', () => this.createIcon(context, position))
-        if (iconState.new) content.addChild(icon)
+        const [orphanBackground, orphanBackgroundState] = this.get(
+            'orphanBackground',
+            () => this.createBackground(this.orphanBackgroundStyle[position], context)
+        )
+        if (orphanBackgroundState.new) group.addChild(orphanBackground)
+        orphanBackground.alpha = orphan ? this.orphanBackgroundStyle[position].alpha : 0
+
+        const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position))
+        if (contentContainerState.new) group.addChild(contentContainer)
+
+        const [content, contentState] = this.get('content', () => new Container())
+        if (contentState.new) contentContainer.addChild(content)
+        content.alpha = this.getContentAlpha({ loseing, undef, phantom })
+
+        const [iconPosition, iconPositionState] = this.get('iconPosition', () => this.createPositionIcon(context, position))
+        if (iconPositionState.new) content.addChild(iconPosition)
 
         const [wager, wagerState] = this.get('wager', () =>
             GraphicUtils.createText(
@@ -557,112 +718,98 @@ export class PariTile extends BaseParisRenderer {
         if (wagerState.new) content.addChild(wager)
         wager.text = ui.erc20(pari.wager)
 
-        const [titlewager, titlewagerState] = this.get('titlewager', () =>
-            GraphicUtils.createText(
-                'Wager',
-                this.titlewagerStyle.offset,
-                this.titlewagerStyle.text,
-            )
-        )
-        if (titlewagerState.new) content.addChild(titlewager)
+        const emptypool = this.isNoContestEmptyPool(pool)
 
-        const [tptox, tptoy] = this.titleprofitStyle.offset
-        const [titleprofit, titleprofitState] = this.get('titleprofit', () =>
-            GraphicUtils.createText(
-                'Profit',
-                [
-                    bgwidth + tptox,
-                    tptoy,
-                ],
-                this.titleprofitStyle.text,
-                this.titleprofitStyle.anchor
-            )
-        )
-        if (titleprofitState.new) content.addChild(titleprofit)
+        if (!undef) {
+            const [payoutContainer, payoutContainerState] = this.get('payoutContainer', () => new Graphics())
+            if (payoutContainerState.new) {
+                payoutContainer.position.set(bgwidth - this.payoutContainerStyle.offset[0], this.payoutContainerStyle.offset[1])
+                content.addChild(payoutContainer)
+            }
 
-        if (win) {
-            this.clear('zero')
+            const [profitContainer, profitContainerState] = this.get('profitContainer', () => new Graphics())
+            if (profitContainerState.new) {
+                profitContainer.position.set(bgwidth - this.profitContainerStyle.offset[0], this.profitContainerStyle.offset[1])
+                content.addChild(profitContainer)
+            }
 
-            const [prizeAmount] = this.get(
-                'prizeAmount',
-                () => pari.claimed ? ui.erc20(pari.payout)
-                    : ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
-                ,
-                [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest]
-            )
-
-            const [pzox, pzoy] = this.prizeStyle.offset
-            const [prize, prizeState] = this.get('prize', () =>
-                GraphicUtils.createText(
-                    prizeAmount,
-                    [
-                        bgwidth + pzox,
-                        pzoy,
-                    ],
-                    this.prizeStyle.text,
-                    this.prizeStyle.anchor
-                )
-            )
-            if (prizeState.new) content.addChild(prize)
-            prize.text = prizeAmount
-
-            const [percent] = this.get(
-                'percent',
-                () => ui.percent(profitPercent(prizeAmount, pari.wager)),
-                [prizeAmount, pari.wager]
-            )
-
-            const [ptox, ptoy] = this.profitStyle.offset
-            const [profit, profitState] = this.get('profit', () =>
-                GraphicUtils.createText(
-                    percent,
-                    [
-                        bgwidth + ptox,
-                        ptoy,
-                    ],
-                    this.profitStyle.text,
-                    this.profitStyle.anchor
-                )
-            )
-            if (profitState.new) content.addChild(profit)
-            profit.text = percent
-
-            titleprofit.text = 'Profit'
-            titleprofit.position.set(
-                bgwidth + tptox - profit.width - 4, // 4px padding
-                tptoy,
-            )
-
-        } else {
-            this.clear('prize')
-            this.clear('profit')
-
-            const [pzox, pzoy] = this.prizeStyle.offset
-            const [zero, zeroState] = this.get('zero', () =>
+            const [prize] = this.get('prize', () =>
                 GraphicUtils.createText(
                     0,
-                    [
-                        bgwidth + pzox,
-                        pzoy,
-                    ],
+                    this.prizeStyle.offset,
                     this.prizeStyle.text,
                     this.prizeStyle.anchor
-                ),
-            [pari.wager]
+                )
             )
-            if (zeroState.new) content.addChild(zero)
 
-            if (pari.claimed) zero.text = ui.erc20(pari.payout)
-            else              zero.text = nocontest ? ui.erc20(pari.wager) : 0
+            if (win && !emptypool) {
+                const [prizeAmount] = this.get(
+                    'prizeAmount',
+                    () => {
+                        if (pari.claimed) {
+                            return ui.erc20(pari.payout)
+                        } else if (emptypool) {
+                            return ui.erc20(pari.wager)
+                        } else {
+                            return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                        }
+                    },
+                    [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
+                )
+                prize.text = prizeAmount
+                prize.style.fill = this.prizeStyle.winFill
 
-            titleprofit.text = 'Return'
-            titleprofit.position.set(
-                bgwidth + tptox,
-                tptoy,
-            )
+                const [percent] = this.get(
+                    'percent',
+                    () => ui.percent(profitPercent(prizeAmount, pari.wager)),
+                    [prizeAmount, pari.wager]
+                )
+
+                const [profit] = this.get('profit', () =>
+                    GraphicUtils.createText(
+                        percent,
+                        this.profitStyle.offset,
+                        this.profitStyle.text,
+                        this.profitStyle.anchor
+                    )
+                )
+
+                profit.text = percent
+
+                const [profitBlock, profitBlockState] = this.get('profitBlock', () => this.createProfitBlock(profit), [profit.width])
+                if (profitBlockState.new) profitContainer.addChild(profitBlock)
+
+            } else {
+                this.clear('profitBlock')
+
+                let payout: any = 0
+
+                if (pari.claimed) {
+                    prize.style.fill = this.prizeStyle.winFill
+                    payout = ui.erc20(pari.payout)
+                } else if (nocontest || emptypool) {
+                    prize.style.fill = this.prizeStyle.winFill
+                    payout = ui.erc20(pari.wager)
+                } else {
+                    prize.style.fill = this.prizeStyle.loseFill
+                }
+
+                prize.text = payout
+            }
+
+            const [levelCurrency] = this.get('levelCurrency', () => this.createLevelCurrency(context))
+
+            const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context))
+            if (currencyState.new) levelCurrency.addChild(currency)
+
+            const [payout, payoutState] = this.get('payout', () => this.createPayout(prize), [prize.width])
+            if (payoutState.new) {
+                payout.addChild(levelCurrency)
+                payoutContainer.addChild(payout)
+            }
         }
 
-        if (this.isHistoricalPool(pool, context)) {
+        if (isHistorical) {
 
             const [claimable] = this.get('claimable', () =>
                 !pari.claimed && (win || nocontest),
@@ -678,9 +825,9 @@ export class PariTile extends BaseParisRenderer {
             }
 
             if (claimable) {
-                if (groupstate.animation !== 'hover_group_claimable') this.animate('group', 'hide_group_claimable')
+                if (groupstate.animation !== 'pin_group_claimable') this.animate('group', 'hide_group_claimable')
             } else {
-                if (groupstate.animation !== 'hover_group_unclaimable') this.animate('group', 'unhover_group_unclaimable')
+                if (groupstate.animation !== 'pin_group_unclaimable') this.animate('group', 'unpin_group_unclaimable')
             }
 
             if (claimable) {
@@ -700,13 +847,11 @@ export class PariTile extends BaseParisRenderer {
                     claim.cursor = 'pointer'
                     claim.addEventListener('pointerover', (e) => {
                         this.rebind(poolid, pariid)
-                        this.animate('group', 'hover_group_claimable')
                         this.animate('claim', 'hover_claim')
                         context.eventTarget.dispatchEvent(new PoolHoverEvent(poolid, e))
                     })
                     claim.addEventListener('pointerout', (e) => {
                         this.rebind(poolid, pariid)
-                        this.animate('group', 'unhover_group_claimable')
                         this.animate('claim', 'unhover_claim')
                         context.eventTarget.dispatchEvent(new PoolUnhoverEvent(poolid, e))
                     })
@@ -776,29 +921,36 @@ export class PariTile extends BaseParisRenderer {
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true
 
-                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                context.eventTarget.addEventListener('poolpin', (e: PoolPinEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
+
+                    const [claim] = this.read('claim')
+                    if (claim) claim.interactive = true
+
                     const [clble] = this.read('claimable')
-                    if (clble) this.animate('group', 'hover_group_claimable')
-                    else this.animate('group', 'hover_group_unclaimable')
+                    if (clble) this.animate('group', 'pin_group_claimable')
+                    else this.animate('group', 'pin_group_unclaimable')
                 })
 
-                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                context.eventTarget.addEventListener('poolunpin', (e: PoolUnpinEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid, pariid)
+
+                    const [claim] = this.read('claim')
+                    if (claim) claim.interactive = false
+
                     const [clble] = this.read('claimable')
-                    if (clble) this.animate('group', 'unhover_group_claimable')
-                    else this.animate('group', 'unhover_group_unclaimable')
+                    if (clble) this.animate('group', 'unpin_group_claimable')
+                    else this.animate('group', 'unpin_group_unclaimable')
                 })
 
             }
 
         } else {
-
-            if (win) {
+            if (win && !emptypool) {
                 this.animate('background', 'winning_bg')
                 this.animate('group', 'winning_group')
             } else {
@@ -806,6 +958,19 @@ export class PariTile extends BaseParisRenderer {
                 this.animate('group', 'loseing_group')
             }
 
+        }
+
+        const [propagatingBackground, propagatingBackgroundState] = this.get(
+            'propagatingBackground',
+            () => this.createPropagatingBackground()
+        )
+        if (propagatingBackgroundState.new) contentContainer.addChild(propagatingBackground)
+
+        const propagating = EntityUtils.isEntityPropagating(context, pariid, pari.block)
+        if (propagating) {
+            this.animate('propagatingBackground', 'show_propagating_bg')
+        } else {
+            this.animate('propagatingBackground', 'hide_propagating_bg')
         }
     }
 
@@ -827,20 +992,124 @@ export class PariTile extends BaseParisRenderer {
 
     }
 
-    private createIcon(
+    private getPariCurrencyIconTextureName(context: RenderingContext, theme = 'DARK'): symbol {
+        const key = [context.metapool?.currency, theme].join('_')
+
+        switch (key) {
+            case 'ETH_DARK':
+                return ETH_DARK_TEXTURE
+            case 'USDT_DARK':
+                return USDT_DARK_TEXTURE
+            case 'USDC_DARK':
+                return USDC_DARK_TEXTURE
+            default:
+                Logger.error(`currency "${key}" is not supported, fallback to Undeliden`)
+
+                return UNKNOWN_DARK_TEXTURE
+        }
+    }
+
+    private createPositionIcon(
         context: RenderingContext,
         position: EPosition,
     ): Container {
         const textureName = this.getPositionIconTextureName(position)
         const texture = context.textures.get(textureName)
         const icon = new Sprite(texture)
-        icon.scale.set(this.iconStyle.size / icon.height)
-        icon.position.set(...this.iconStyle.offset)
+        icon.scale.set(this.iconPositionStyle.size / icon.height)
+        icon.position.set(...this.iconPositionStyle.offset)
 
         return icon
     }
 
-    private createBackground(position: EPosition, context: RenderingContext): Container {
+    private createPariCurrencyIcon(
+        context: RenderingContext
+    ): Container {
+        const textureName = this.getPariCurrencyIconTextureName(context)
+        const texture = context.textures.get(textureName)
+        const icon = new Sprite(texture)
+        icon.scale.set(this.iconCurrencyStyle.size / icon.height)
+        icon.position.set(...this.iconCurrencyStyle.offset)
+
+        return icon
+    }
+
+    private createLevelCurrency(context: RenderingContext): Graphics {
+        const levelCurrency = new Graphics()
+        const textureName = this.getLevelTextureName(context)
+        const diagonal = 2 * this.levelCurrencyStyle.radius
+        const texture = context.textures.get(textureName, { height: diagonal, width: diagonal })
+        const pozx = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[0]
+        const pozy = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[1]
+
+        levelCurrency
+            .beginTextureFill({ texture })
+            .drawCircle(pozx, pozy, this.levelCurrencyStyle.radius)
+            .endFill()
+
+        return levelCurrency
+    }
+
+    private createPayout(prize): Graphics {
+        const payout = new Graphics()
+        const width = this.payoutStyle.width + prize.width
+        const height = this.payoutStyle.height
+
+        payout
+            .beginFill(this.payoutStyle.fill)
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        payout.pivot.x = width
+        prize.x = width + this.prizeStyle.offset[0]
+        payout.addChild(prize)
+
+        return payout
+    }
+
+    private createProfitBlock(profit): Graphics {
+        const block = new Graphics()
+        const width = this.profitBlockStyle.width + profit.width
+        const height = this.profitBlockStyle.height
+
+        block
+            .beginFill(this.profitBlockStyle.fill)
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        block.pivot.x = width
+        profit.x = width + this.profitStyle.offset[0]
+        block.addChild(profit)
+
+        return block
+    }
+
+    private createContentContainer(position: EPosition): Container {
+        const {
+            width,
+            height,
+            background: {
+                offset: [ofx, ofy],
+                lineStyle,
+                radiuses,
+            }
+        } = this.groupStyle[position]
+
+        const container = new Container()
+        const mask = GraphicUtils.createRoundedRect(
+            [ofx, ofy],
+            [width, height],
+            radiuses,
+            { lineStyle }
+        )
+
+        container.addChild(mask)
+        container.mask = mask
+
+        return container
+    }
+
+    private createBackground(style, context: RenderingContext): Graphics {
         const {
             width,
             height,
@@ -854,7 +1123,7 @@ export class PariTile extends BaseParisRenderer {
                     colorStops
                 }
             }
-        } = this.groupStyle[position]
+        } = style
 
         let background = GraphicUtils.createRoundedRect(
             [ofx, ofy],
@@ -880,6 +1149,46 @@ export class PariTile extends BaseParisRenderer {
         background.alpha = 0
 
         return background
+    }
+
+    private createPropagatingBackground(): Container {
+        const [propagatingBackground, propagatingBackgroundState] = this.get(
+            'propagatingBackground',
+            () => GraphicUtils.createPropagationBackground({
+                height: 310,
+                lineHeight: 18,
+                width: 300,
+                colors: [{ color: 0xffffff, alpha: 1 }],
+                duration: 1,
+            })
+        )
+
+        if (propagatingBackgroundState.new) {
+            propagatingBackground.rotation = 3*Math.PI/4
+            propagatingBackground.pivot.x = 150
+            propagatingBackground.pivot.y = 155
+            propagatingBackground.position.set(150, 50)
+            propagatingBackground.alpha = 0
+        }
+
+        return propagatingBackground
+    }
+
+    private getStateBackgroundAlpha({ winning, loseing, undef, phantom }): number {
+        if (winning) return this.stateBackgroundAlphaStyle.winning
+        if (loseing) return this.stateBackgroundAlphaStyle.loseing
+        if (phantom) return this.stateBackgroundAlphaStyle.phantom
+        if (undef) return this.stateBackgroundAlphaStyle.undef
+
+        return 0
+    }
+
+    private getContentAlpha({ loseing, undef, phantom }): number {
+        if (loseing) return this.stateBackgroundAlphaStyle.loseing
+        if (phantom) return this.stateBackgroundAlphaStyle.phantom
+        if (undef) return this.stateBackgroundAlphaStyle.undef
+
+        return 1
     }
 
 }

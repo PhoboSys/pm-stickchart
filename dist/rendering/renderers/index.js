@@ -15,6 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./price/history/PriceLineRenderer"), exports);
+__exportStar(require("./price/info/PricefeedInfoRenderer"), exports);
 __exportStar(require("./price/latest/LatestPriceRenderer"), exports);
 __exportStar(require("./grid/GridRenderer"), exports);
 __exportStar(require("./LineChartRenderer"), exports);

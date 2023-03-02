@@ -6,6 +6,8 @@ export * from './PointerupEvent';
 export * from './CanvasErrorEvent';
 export * from './PoolUnhoverEvent';
 export * from './PoolHoverEvent';
+export * from './PoolPinEvent';
+export * from './PoolUnpinEvent';
 export * from './ResolveWithdrawEvent';
 export * from './WithdrawEvent';
 export * from './TimeframeStickToNowEvent';

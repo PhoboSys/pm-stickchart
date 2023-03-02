@@ -8,6 +8,7 @@ const lodash_1 = require("lodash");
 const _infra_1 = require("../../infra/index.js");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
+const pixi_2 = require("../../lib/pixi");
 class GraphicUtils {
     static createCircle([x, y], radius, style) {
         const cirl = new pixi_1.Graphics()
@@ -28,11 +29,11 @@ class GraphicUtils {
         torus.position.set(x, y);
         return torus;
     }
-    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 }, rect) {
+    static createRoundedRect([x, y], [width, height], [r1, r2, r3, r4], { texture, color, lineStyle, alpha = 1 } = {}, rect) {
         rect = rect !== null && rect !== void 0 ? rect : new pixi_1.Graphics();
         rect.lineStyle(Object.assign({ width: 1, alpha: 0 }, lineStyle));
         if (texture) {
-            const matrix = new pixi_1.Matrix();
+            const matrix = new pixi_2.Matrix();
             matrix.tx = x;
             matrix.ty = y;
             rect.beginTextureFill({ texture, alpha, matrix });
@@ -56,7 +57,7 @@ class GraphicUtils {
     }
     static createCoveredIcon([x, y], style) {
         const { paddingx, paddingy } = style;
-        const icon = new pixi_1.Sprite(style.texture);
+        const icon = new pixi_2.Sprite(style.texture);
         const scale = style.iconstyle.size / icon.height;
         icon.position.set(paddingx, paddingy);
         icon.scale.set(scale);
@@ -137,6 +138,36 @@ class GraphicUtils {
         text.resolution = Math.ceil(window.devicePixelRatio);
         text.anchor.set(...(0, lodash_1.castArray)(anchor));
         return text;
+    }
+    static createPropagationBackground({ lineHeight, width, height, colors, duration }) {
+        if (colors.length === 1) {
+            colors.push({ color: 0xffffff, alpha: 0 });
+        }
+        const container = new pixi_2.Container();
+        const lines = new pixi_1.Graphics();
+        const mask = new pixi_1.Graphics();
+        mask
+            .beginFill()
+            .drawRect(0, 0, width, height)
+            .endFill();
+        container.addChild(lines);
+        container.mask = mask;
+        container.addChild(mask);
+        const colorsSize = colors.length;
+        const linesSize = Math.ceil(height / lineHeight) + colorsSize;
+        for (let i = 0; i < linesSize; i++) {
+            const color = colors[i % colorsSize];
+            lines.beginFill(color.color, color.alpha === undefined ? 1 : color.alpha);
+            lines.drawRect(0, i * lineHeight, width, lineHeight);
+            lines.endFill();
+        }
+        pixi_2.gsap.to(lines, {
+            pixi: { y: -1 * colorsSize * lineHeight },
+            duration,
+            repeat: -1,
+            ease: 'power0',
+        });
+        return container;
     }
 }
 exports.GraphicUtils = GraphicUtils;

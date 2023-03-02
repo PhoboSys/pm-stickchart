@@ -17,4 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./currencies"), exports);
 __exportStar(require("./poollevels"), exports);
 __exportStar(require("./prizefunds"), exports);
+__exportStar(require("./pricefeed"), exports);
 //# sourceMappingURL=index.js.map

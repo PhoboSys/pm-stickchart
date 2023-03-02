@@ -14,11 +14,12 @@ export declare abstract class BasePoolsRenderer extends BaseRenderer {
     private cleanup;
     protected getPoolResolution(pool: any, context: RenderingContext): EPosition;
     protected getPoolResolutionByPrice(pool: any, resolutionPrice: PricePoint | null): EPosition;
-    protected isNoContestPool(pool: any, context: RenderingContext): boolean;
-    private _isNoContestEmptyPool;
+    private isNoContestPool;
+    protected isNoContestEmptyPool(pool: any): boolean;
     private _isNoContestPool;
     protected isHistoricalPool(pool: any, context: RenderingContext): boolean;
     protected getResolutionPricePoint(pool: any, context: RenderingContext): PricePoint | null;
     protected isActualPool(pool: any): boolean;
+    protected getLevelTextureName(context: RenderingContext): symbol;
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void;
 }

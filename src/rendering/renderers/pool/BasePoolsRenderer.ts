@@ -1,4 +1,7 @@
+import { Logger } from '@infra'
+
 import { RenderingContext, BaseRenderer } from '@rendering'
+import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@rendering/textures/symbols'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
@@ -6,6 +9,7 @@ import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
 
 import { PRIZEFUNDS } from '@constants'
+import { SILVER, GOLD, ROYAL } from '@constants'
 
 export abstract class BasePoolsRenderer extends BaseRenderer {
 
@@ -82,7 +86,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return EPosition.Undefined
     }
 
-    protected isNoContestPool(
+    private isNoContestPool(
         pool: any,
         context: RenderingContext,
     ): boolean {
@@ -97,10 +101,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             // if (this._isNoContestEmptyPool(pool)) return true
         }
 
+        if (this.isNoContestEmptyPool(pool)) return true
+
         if (!this.isHistoricalPool(pool, context)) return false
         if (pool.resolved && pool.resolution === EPosition.NoContest) return true
-
-        if (this._isNoContestEmptyPool(pool)) return true
 
         const rprice = this.getResolutionPricePoint(pool, context)
         const resolution = this.getPoolResolutionByPrice(pool, rprice)
@@ -109,7 +113,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return false
     }
 
-    private _isNoContestEmptyPool(pool: any): boolean {
+    protected isNoContestEmptyPool(pool: any): boolean {
         const prizefundTotal = pool.prizefunds[PRIZEFUNDS.TOTAL]
 
         return (
@@ -179,6 +183,24 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         pool: any,
     ): boolean {
         return pool.endDate > nowUnixTS()
+    }
+
+    protected getLevelTextureName(context: RenderingContext): symbol {
+
+        switch (context.metapool?.level) {
+            case SILVER:
+                return SILVER_LEVEL_TEXTURE
+            case GOLD:
+                return GOLD_LEVEL_TEXTURE
+            case ROYAL:
+                return ROYAL_LEVEL_TEXTURE
+
+            default:
+                Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
+
+                return SILVER_LEVEL_TEXTURE
+        }
+
     }
 
     protected abstract updatePool(pool: any, context: RenderingContext, container: Container, index: number): void

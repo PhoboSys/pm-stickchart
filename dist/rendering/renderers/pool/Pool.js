@@ -10,12 +10,12 @@ const PoolResolution_1 = require("./PoolResolution");
 const PoolResolutionLine_1 = require("./PoolResolutionLine");
 const PoolOpenPriceTag_1 = require("./PoolOpenPriceTag");
 const PoolResolutionPriceTag_1 = require("./PoolResolutionPriceTag");
-const PoolHoverEventProducer_1 = require("./PoolHoverEventProducer");
+const PoolLayerEventProducer_1 = require("./PoolLayerEventProducer");
 class Pool {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new _rendering_1.RenderingCompositor([
-            new PoolHoverEventProducer_1.PoolHoverEventProducer(renderer),
+            new PoolLayerEventProducer_1.PoolLayerEventProducer(renderer),
             new PoolBackground_1.PoolBackground(renderer),
             new PoolLock_1.PoolLock(renderer),
             new PoolOpen_1.PoolOpen(renderer),
