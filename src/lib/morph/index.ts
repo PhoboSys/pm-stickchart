@@ -96,7 +96,7 @@ export default class MorphController {
             animated,
             {
                 ...end,
-                ...config.morph,
+                ...config.morph.animation,
                 onUpdate: () => {
                     current.timestamps[idx] = animated.timestamp
                     current.prices[idx] = animated.value

@@ -26,8 +26,10 @@ declare const _default: {
     resolution: number;
     morph: {
         maxstack: number;
-        duration: number;
-        ease: string;
+        animation: {
+            duration: number;
+            ease: string;
+        };
     };
     maxdensity: number;
     ui: {

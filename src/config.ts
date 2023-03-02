@@ -29,8 +29,10 @@ export default {
     //chart morph animation
     morph: {
         maxstack: 10,
-        duration: 1.618,
-        ease: 'power2.out',
+        animation: {
+            duration: 1.618,
+            ease: 'power2.out',
+        }
     },
 
     //data

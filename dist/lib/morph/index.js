@@ -77,7 +77,7 @@ _MorphController_timeline = new WeakMap(), _MorphController_instances = new Weak
         }
     }
 }, _MorphController_add = function _MorphController_add(animated, end, current, idx) {
-    __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph), { onUpdate: () => {
+    __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
             current.timestamps[idx] = animated.timestamp;
             current.prices[idx] = animated.value;
             this._onUpdate();

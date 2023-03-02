@@ -13,8 +13,8 @@ export class LineChartRenderer implements IRenderer {
         private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
-            new PricefeedInfoRenderer(renderer),
             new GridRenderer(renderer),
+            new PricefeedInfoRenderer(renderer),
             new PriceLineRenderer(renderer),
             new Pool(renderer),
             new LatestPriceRenderer(renderer),
