@@ -69,13 +69,13 @@ _MorphController_timeline = new WeakMap(), _MorphController_instances = new Weak
             current.prices.splice(-animations);
             // 5. Speedup animation to make all timeline finish in config.morph.duration
             __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(animations);
-        }
-        else {
-            // 6. Clear if we need to go over move than config.morph.maxstack animations
-            __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
-            this._onUpdate();
+            // 6. retrun in order to avoid defaul update/render if morph preformed
+            return;
         }
     }
+    // 7. Clear and repform default update/render
+    __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
+    this._onUpdate();
 }, _MorphController_add = function _MorphController_add(animated, end, current, idx) {
     __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
             current.timestamps[idx] = animated.timestamp;

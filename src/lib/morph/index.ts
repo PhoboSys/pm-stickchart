@@ -76,14 +76,17 @@ export default class MorphController {
                 // 5. Speedup animation to make all timeline finish in config.morph.duration
                 this.#timeline.timeScale(animations)
 
-            } else {
-
-                // 6. Clear if we need to go over move than config.morph.maxstack animations
-                this.#timeline.clear()
-                this._onUpdate()
+                // 6. retrun in order to avoid defaul update/render if morph preformed
+                return
 
             }
+
         }
+
+        // 7. Clear and repform default update/render
+        this.#timeline.clear()
+        this._onUpdate()
+
     }
 
     #add(

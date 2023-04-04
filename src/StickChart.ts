@@ -153,15 +153,13 @@ export class StickChart extends EventTarget {
         }
 
         window.requestAnimationFrame(() => {
-            if (this._context) this.morphController.morph(this._context.chartdata, ctx.chartdata)
-
-            if (!this.morphController.isActive) {
-
+            if (!this._context || !config.morph) {
                 pipeline.render(
                     ctx,
                     () => Logger.info('render')
                 )
-
+            } else {
+                this.morphController.morph(this._context.chartdata, ctx.chartdata)
             }
 
             // save latest rendered context

@@ -93,10 +93,11 @@ class StickChart extends EventTarget {
             this._context = null;
         }
         window.requestAnimationFrame(() => {
-            if (this._context)
-                this.morphController.morph(this._context.chartdata, ctx.chartdata);
-            if (!this.morphController.isActive) {
+            if (!this._context || !_config_1.default.morph) {
                 pipeline.render(ctx, () => _infra_1.Logger.info('render'));
+            }
+            else {
+                this.morphController.morph(this._context.chartdata, ctx.chartdata);
             }
             // save latest rendered context
             this._context = ctx;
