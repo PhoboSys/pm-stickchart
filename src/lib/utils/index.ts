@@ -49,6 +49,27 @@ export function forEach(
 
 }
 
+export function pick(
+    collection: any,
+    keys: any[]
+): object {
+    const result = {}
+
+    if (isEmpty(collection)) return result
+
+    let idx = 0
+    for (const idx in keys) {
+        const key = keys[idx]
+        const item = collection[key]
+        if (!isEmpty(item)) {
+            result[key] = item
+        }
+    }
+
+    return result
+
+}
+
 export function unixTStoDate(timestamp: number): Date {
     return new Date(timestamp * 1000)
 }

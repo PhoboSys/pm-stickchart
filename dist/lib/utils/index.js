@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
+exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
@@ -34,6 +34,21 @@ function forEach(collection, visitor) {
     }
 }
 exports.forEach = forEach;
+function pick(collection, keys) {
+    const result = {};
+    if (isEmpty(collection))
+        return result;
+    let idx = 0;
+    for (const idx in keys) {
+        const key = keys[idx];
+        const item = collection[key];
+        if (!isEmpty(item)) {
+            result[key] = item;
+        }
+    }
+    return result;
+}
+exports.pick = pick;
 function unixTStoDate(timestamp) {
     return new Date(timestamp * 1000);
 }

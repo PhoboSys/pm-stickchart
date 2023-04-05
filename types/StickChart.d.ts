@@ -27,8 +27,10 @@ export declare class StickChart extends EventTarget {
         paris: any[];
         resolved: any[];
         settlements: any;
+        blocksLatest: any;
         transactions: any;
-        latestBlockNumber: number;
+        blocksEntities: any;
+        transactionsEntities: any;
     }): void;
     destroy(): void;
 }

@@ -1,15 +1,25 @@
 import { RenderingContext } from '@rendering'
 import { ETransactionStatus } from '@enums'
 
+import { pick, isEmpty } from '@lib/utils'
+
 export class EntityUtils {
 
     static getTransactionsByEntityId(
         context: RenderingContext,
         entityid: string
-    ): any {
-        const tnxs = context.transactions?.[entityid]
+    ): any[] {
+        let result: any[] = []
 
-        return tnxs ? Object.values(tnxs) : []
+        const txnids = context.transactionsEntities?.[entityid]
+        if (isEmpty(txnids)) return result
+
+        const txns = pick(context.transactions, Object.keys(txnids))
+        if (isEmpty(txns)) return result
+
+        result = Object.values(txns)
+
+        return result
     }
 
     static getComittedTransactions(
@@ -44,10 +54,10 @@ export class EntityUtils {
 
     static getUnpropagatedTransactions(
         context: RenderingContext,
-        entityid: string,
-        entityBlock: any
+        entityid: string
     ): any {
         const txns = this.getComittedTransactions(context, entityid)
+        const entityBlock = context.blocksEntities?.[entityid] || context.blocksLatest
         const unpropagated = txns.filter((txn) => txn.blockNumber > entityBlock?.number)
 
         return unpropagated
@@ -55,13 +65,12 @@ export class EntityUtils {
 
     static isEntityPropagating(
         context: RenderingContext,
-        entityid: string,
-        entityBlock: any
+        entityid: string
     ): boolean {
         const pending = this.getPendingTransactions(context, entityid)
-        const unpropagated = this.getUnpropagatedTransactions(context, entityid, entityBlock)
+        const unpropagated = this.getUnpropagatedTransactions(context, entityid)
 
-        return pending.length !== 0 || unpropagated.length !== 0 || !entityBlock?.number
+        return pending.length !== 0 || unpropagated.length !== 0
     }
 
     static isEnityVerified(
