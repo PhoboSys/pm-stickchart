@@ -12,8 +12,10 @@ export type RenderingContext = {
     paris: any[]
     resolved: any[]
     settlements: any
+    blocksLatest: any,
     transactions: any
-    latestBlockNumber: number
+    blocksEntities: any,
+    transactionsEntities: any,
 
     screen: Rectangle
     textures: ITextureStorage

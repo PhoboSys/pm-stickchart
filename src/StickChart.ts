@@ -113,8 +113,10 @@ export class StickChart extends EventTarget {
         paris: any[],
         resolved: any[],
         settlements: any,
+        blocksLatest: any,
         transactions: any,
-        latestBlockNumber: number,
+        blocksEntities: any,
+        transactionsEntities: any,
     }): void {
         if (!context.metapool) {
             Logger.error('Cannot initiate chart "metapool" is not provided!')
@@ -135,8 +137,10 @@ export class StickChart extends EventTarget {
             pools: context.pools,
             paris: context.paris,
             settlements: context.settlements,
+            blocksLatest: context.blocksLatest,
             transactions: context.transactions,
-            latestBlockNumber: context.latestBlockNumber,
+            blocksEntities: context.blocksEntities,
+            transactionsEntities: context.transactionsEntities,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,
@@ -154,12 +158,16 @@ export class StickChart extends EventTarget {
 
         window.requestAnimationFrame(() => {
             if (!this._context || !config.morph) {
+
                 pipeline.render(
                     ctx,
                     () => Logger.info('render')
                 )
+
             } else {
+
                 this.morphController.morph(this._context.chartdata, ctx.chartdata)
+
             }
 
             // save latest rendered context
