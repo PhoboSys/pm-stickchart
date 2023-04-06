@@ -498,7 +498,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
-        if (!(pari.position in this.validPariPositions) || pool.phantom)
+        if (!(pari.position in this.validPariPositions))
             return this.clear();
         const resolution = this.getPoolResolution(pool, context);
         this.updateTile(pool, pari, context, container, resolution);

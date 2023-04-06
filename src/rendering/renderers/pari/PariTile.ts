@@ -559,7 +559,7 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions) || pool.phantom) return this.clear()
+        if (!(pari.position in this.validPariPositions)) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
 
