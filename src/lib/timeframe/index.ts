@@ -168,7 +168,6 @@ export class Timeframe {
         const percent = 1 - position.x / screen.width
         const diff = this.timeframe - timeframe
         until = this.until - Math.ceil(diff*percent)
-        until = Math.min(until, this.untilmax(timeframe))
 
         let since = until - timeframe
         if (since < this.nowTS - MAX_FRAME_DURATION) {
@@ -179,7 +178,8 @@ export class Timeframe {
         const speed = 8
         shift = shift / screen.width
         const timeshift = Math.floor(timeframe * shift * speed)
-        until = until - timeshift
+        until = until + timeshift
+        until = Math.min(until, this.untilmax(timeframe))
         since = until - timeframe
 
         if (
