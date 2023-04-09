@@ -66,6 +66,7 @@ class StickChart extends EventTarget {
     }
     render(context) {
         var _a;
+        console.log('first');
         if (!context.metapool) {
             _infra_1.Logger.error('Cannot initiate chart "metapool" is not provided!');
             return;

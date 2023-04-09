@@ -6,9 +6,13 @@ export class ResolveWithdrawEvent extends Event {
     public readonly inner: Event
 
     public readonly poolid: string
+
     public readonly pariid: string
+
     public readonly erc20: string
+
     public readonly resolutionPrice: PricefeedPoint
+
     public readonly controlPrice: PricefeedPoint
 
     constructor(

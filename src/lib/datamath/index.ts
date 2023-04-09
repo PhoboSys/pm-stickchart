@@ -35,7 +35,7 @@ export default class datamath {
     static scale(
         data: number[],
         [min, max]: [number, number],
-        factor: number = 1,
+        factor = 1,
     ): number[] {
 
         const scalesize = max - min
@@ -53,7 +53,7 @@ export default class datamath {
     static scaleReverse(
         data: number[],
         [min, max]: [number, number],
-        factor: number = 1,
+        factor = 1,
     ): number[] {
 
         const scalesize = max - min
@@ -70,8 +70,8 @@ export default class datamath {
 
     static range(
         data: number[],
-        minpadd: number = 0,
-        maxpadd: number = 0,
+        minpadd = 0,
+        maxpadd = 0,
     ): [number, number] {
 
         const [minv, maxv] = datamath.minmax(data)

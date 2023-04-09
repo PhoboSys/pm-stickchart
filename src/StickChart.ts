@@ -1,4 +1,4 @@
-import { DataBuilder, ChartData, PricePoint } from '@chartdata'
+import { DataBuilder, ChartData } from '@chartdata'
 import config from '@config'
 
 import { EChartType } from '@enums'
@@ -67,7 +67,7 @@ export class StickChart extends EventTarget {
         return this.application.view
     }
 
-    private applyTimeframe() {
+    private applyTimeframe(): void {
         if (!this._context) return
 
         this._context.plotdata = DataBuilder.plotdata(
