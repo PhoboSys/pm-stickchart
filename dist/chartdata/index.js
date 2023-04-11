@@ -53,7 +53,6 @@ class DataBuilder {
             timestamps.push(Number(timestampsOrig.at(-1)));
             prices.push(Number(pricesOrig.at(-1)));
         }
-        const unwidth = width - (_config_1.default.padding.left + _config_1.default.padding.right);
         const paddingLeft = _config_1.default.padding.left / width;
         const paddingRight = _config_1.default.padding.right / width;
         const timerange = datamath_1.default.range([timeframe.since, timeframe.until], paddingLeft, paddingRight);

@@ -832,6 +832,10 @@ export class PariTile extends BaseParisRenderer {
 
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const [settlement] = this.get('settlement', () =>
+                    context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]]
+                )
 
                 const btnStyle = this.buttonStyle[position]
                 const [btnx, btny] = btnStyle.offset

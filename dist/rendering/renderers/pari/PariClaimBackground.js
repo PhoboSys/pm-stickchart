@@ -69,7 +69,7 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
     updateBackground(pool, pari, context, container, resolutionPrice) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
-        const { openPriceTimestamp, endDate, poolid } = pool;
+        const { openPriceTimestamp, endDate } = pool;
         const rdate = (resolutionPrice === null || resolutionPrice === void 0 ? void 0 : resolutionPrice.timestamp) || endDate;
         const [ox, rx] = datamath_1.default.scale([openPriceTimestamp, rdate], timerange, width);
         const shape = [
