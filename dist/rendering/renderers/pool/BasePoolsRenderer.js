@@ -114,16 +114,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             };
         }
         const nocontest = this.isNoContestPool(pool, context);
-        if (nocontest) {
-            if ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate]) {
-                return {
-                    value: context.settlements[pool.endDate].resolutionPrice.value,
-                    timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
-                };
-            }
-            else {
-                return _chartdata_1.DataBuilder.getLatest(context.chartdata);
-            }
+        if (nocontest && ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate])) {
+            return {
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
+            };
         }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;
         if (isResolved) {

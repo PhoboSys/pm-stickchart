@@ -160,14 +160,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         }
 
         const nocontest = this.isNoContestPool(pool, context)
-        if (nocontest) {
-            if (context.settlements?.[pool.endDate]) {
-                return {
-                    value: context.settlements[pool.endDate].resolutionPrice.value,
-                    timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
-                }
-            } else {
-                return DataBuilder.getLatest(context.chartdata)
+        if (nocontest && context.settlements?.[pool.endDate]) {
+            return {
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             }
         }
 
