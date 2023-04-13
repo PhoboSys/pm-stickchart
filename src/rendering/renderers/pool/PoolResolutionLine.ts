@@ -40,6 +40,13 @@ export class PoolResolutionLine extends BasePoolsRenderer {
             outerr: 6,
             innerColor: 0x303550,
             outerColor: config.style.resolution.zerocolor,
+        },
+
+        [EPosition.NoContest]: {
+            innerr: 3,
+            outerr: 6,
+            innerColor: 0x303550,
+            outerColor: config.style.resolution.nocontest,
         }
 
     }
@@ -69,6 +76,12 @@ export class PoolResolutionLine extends BasePoolsRenderer {
             width: 3,
             alpha: 1,
         },
+
+        [EPosition.NoContest]: {
+            color: config.style.resolution.nocontest,
+            width: 3,
+            alpha: 1,
+        }
 
     }
 
@@ -139,7 +152,7 @@ export class PoolResolutionLine extends BasePoolsRenderer {
         const [line, linestate] = this.get('line', () => new Graphics())
         if (linestate.new) group.addChild(line)
 
-        const position = this.getPoolResolutionByPrice(pool, resolution)
+        const position = this.getPoolResolution(pool, context)
         line
             .clear()
             .lineStyle(this.lineStyle[position])

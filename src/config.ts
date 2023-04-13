@@ -61,6 +61,7 @@ export default {
             upcolor: 0x00A573,
             downcolor: 0xF05750,
             zerocolor: 0x007397,
+            nocontest: 0x474C67,
         },
         poolRoundColors: [
             { color: '#00A57300', offset: 0.0 },

@@ -52,6 +52,7 @@ declare const _default: {
             upcolor: number;
             downcolor: number;
             zerocolor: number;
+            nocontest: number;
         };
         poolRoundColors: {
             color: string;

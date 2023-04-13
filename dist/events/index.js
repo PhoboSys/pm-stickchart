@@ -25,6 +25,7 @@ __exportStar(require("./PoolHoverEvent"), exports);
 __exportStar(require("./PoolPinEvent"), exports);
 __exportStar(require("./PoolUnpinEvent"), exports);
 __exportStar(require("./ResolveWithdrawEvent"), exports);
+__exportStar(require("./ResolveWithdrawNocontestEvent"), exports);
 __exportStar(require("./WithdrawEvent"), exports);
 __exportStar(require("./TimeframeStickToNowEvent"), exports);
 __exportStar(require("./TimeframeUnstickToNowEvent"), exports);

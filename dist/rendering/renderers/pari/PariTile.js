@@ -15,6 +15,7 @@ const ui_1 = __importDefault(require("../../../lib/ui"));
 const calc_utils_1 = require("../../../lib/calc-utils");
 const _events_1 = require("../../../events/index.js");
 const _events_2 = require("../../../events/index.js");
+const _events_3 = require("../../../events/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
@@ -536,11 +537,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const phantom = pari.phantom;
         const undef = resolution === _enums_1.EPosition.Undefined;
         const nocontest = resolution === _enums_1.EPosition.NoContest;
+        const isHistorical = this.isHistoricalPool(pool, context);
         const win = pari.position === resolution;
         const lose = !win && !phantom;
-        const isHistorical = this.isHistoricalPool(pool, context);
         const winning = win && !isHistorical && !phantom;
         const loseing = lose && !isHistorical && !phantom;
+        const won = win && isHistorical && !nocontest && !phantom;
         const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pariid);
         const orphan = phantom && reverted;
         const { width, height } = context.screen;
@@ -669,8 +671,74 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payoutContainer.addChild(payout);
             }
         }
+        const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
+        const [claimable] = this.get('claimable', () => !pari.claimed && (won || nocontest), [nocontest, won, pari.claimed]);
+        if (claimable) {
+            const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
+            const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
+            const btnStyle = this.buttonStyle[position];
+            const [btnx, btny] = btnStyle.offset;
+            const [horizontal, vertical] = btnStyle.outside;
+            if (claimState.new) {
+                group.addChild(claim);
+                claim.width = btnStyle.size;
+                claim.height = btnStyle.size;
+                claim.interactive = true;
+                claim.cursor = 'pointer';
+                claim.addEventListener('pointerover', (e) => {
+                    this.rebind(poolid, pariid);
+                    this.animate('claim', 'hover_claim');
+                    context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
+                });
+                claim.addEventListener('pointerout', (e) => {
+                    this.rebind(poolid, pariid);
+                    this.animate('claim', 'unhover_claim');
+                    context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
+                });
+                claim.addEventListener('pointertap', (e) => {
+                    this.rebind(poolid, pariid);
+                    this.animate('claim', 'tab_claim');
+                    const [rslvd] = this.read('resolved');
+                    const [sttlmnt] = this.read('settlement');
+                    if (rslvd) {
+                        context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
+                    }
+                    if (!rslvd) {
+                        if (emptypool) {
+                            context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(poolid, pariid, erc20, e));
+                        }
+                        else if (sttlmnt) {
+                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                        }
+                    }
+                });
+            }
+            claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
+            const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
+            if (claimimgState.new) {
+                claim_img
+                    .beginFill(0xFFA000)
+                    .drawCircle(0, 0, btnStyle.size / 2)
+                    .endFill()
+                    .beginFill(0xFFA000)
+                    .drawCircle(0, 0, btnStyle.size / 3)
+                    .endFill();
+                if (!resolved) {
+                    claim_img
+                        .beginFill(0xFFF000)
+                        .drawCircle(0, 0, btnStyle.size / 3)
+                        .endFill();
+                }
+                claim.addChild(claim_img);
+            }
+        }
+        else {
+            this.clear('claim');
+            this.clear('claim_img');
+            this.clear('resolved');
+            this.clear('settlement');
+        }
         if (isHistorical) {
-            const [claimable] = this.get('claimable', () => !pari.claimed && (win || nocontest), [nocontest, win, pari.claimed]);
             if (win) {
                 this.animate('background', 'won_bg');
                 if (!claimable)
@@ -688,67 +756,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             else {
                 if (groupstate.animation !== 'pin_group_unclaimable')
                     this.animate('group', 'unpin_group_unclaimable');
-            }
-            if (claimable) {
-                const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
-                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
-                const btnStyle = this.buttonStyle[position];
-                const [btnx, btny] = btnStyle.offset;
-                const [horizontal, vertical] = btnStyle.outside;
-                const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
-                if (claimState.new) {
-                    group.addChild(claim);
-                    claim.width = btnStyle.size;
-                    claim.height = btnStyle.size;
-                    claim.interactive = true;
-                    claim.cursor = 'pointer';
-                    claim.addEventListener('pointerover', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'hover_claim');
-                        context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
-                    });
-                    claim.addEventListener('pointerout', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'unhover_claim');
-                        context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
-                    });
-                    claim.addEventListener('pointertap', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'tab_claim');
-                        const [rslvd] = this.read('resolved');
-                        const [sttlmnt] = this.read('settlement');
-                        if (rslvd) {
-                            context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
-                        }
-                        if (!rslvd && sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
-                        }
-                    });
-                }
-                claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-                const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
-                if (claimimgState.new) {
-                    claim_img
-                        .beginFill(0xFFA000)
-                        .drawCircle(0, 0, btnStyle.size / 2)
-                        .endFill()
-                        .beginFill(0xFFA000)
-                        .drawCircle(0, 0, btnStyle.size / 3)
-                        .endFill();
-                    if (!resolved) {
-                        claim_img
-                            .beginFill(0xFFF000)
-                            .drawCircle(0, 0, btnStyle.size / 3)
-                            .endFill();
-                    }
-                    claim.addChild(claim_img);
-                }
-            }
-            else {
-                this.clear('claim');
-                this.clear('claim_img');
-                this.clear('resolved');
-                this.clear('settlement');
             }
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true;

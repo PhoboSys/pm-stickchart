@@ -68,15 +68,13 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             const price = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
                 return false;
-            // TODO: Implement Early Pool Resolution with NoContest
-            // if (this._isNoContestEmptyPool(pool)) return true
         }
         if (this.isNoContestEmptyPool(pool))
             return true;
-        if (!this.isHistoricalPool(pool, context))
-            return false;
         if (pool.resolved && pool.resolution === _enums_1.EPosition.NoContest)
             return true;
+        if (!this.isHistoricalPool(pool, context))
+            return false;
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolutionByPrice(pool, rprice);
         if (this._isNoContestPool(pool, resolution))
@@ -104,7 +102,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
     }
     getResolutionPricePoint(pool, context) {
-        var _a;
+        var _a, _b;
         if (this.isActualPool(pool)) {
             return _chartdata_1.DataBuilder.getLatest(context.chartdata);
         }
@@ -114,6 +112,18 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
                 value: context.settlements[pool.endDate].resolutionPrice.value,
                 timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             };
+        }
+        const nocontest = this.isNoContestPool(pool, context);
+        if (nocontest) {
+            if ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate]) {
+                return {
+                    value: context.settlements[pool.endDate].resolutionPrice.value,
+                    timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
+                };
+            }
+            else {
+                return _chartdata_1.DataBuilder.getLatest(context.chartdata);
+            }
         }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;
         if (isResolved) {
