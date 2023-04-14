@@ -620,7 +620,7 @@ export class PariTile extends BaseParisRenderer {
 
         const phantom = pari.phantom
         const undef = resolution === EPosition.Undefined
-        const nocontest = resolution === EPosition.NoContest
+        const [nocontest] = this.get('nocontest', () => resolution === EPosition.NoContest, [resolution])
         const isHistorical = this.isHistoricalPool(pool, context)
         const win = pari.position === resolution
         const lose = !win && !phantom
@@ -848,6 +848,7 @@ export class PariTile extends BaseParisRenderer {
                     this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved')
                     const [sttlmnt] = this.read('settlement')
+                    const [nocontest] = this.read('nocontest')
 
                     if (rslvd) {
                         context.eventTarget.dispatchEvent(
@@ -861,7 +862,7 @@ export class PariTile extends BaseParisRenderer {
                     }
 
                     if (!rslvd) {
-                        if (emptypool) {
+                        if (nocontest) {
                             context.eventTarget.dispatchEvent(
                                 new ResolveWithdrawNocontestEvent(
                                     poolid,
