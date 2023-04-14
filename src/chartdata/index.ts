@@ -35,6 +35,7 @@ export class DataBuilder {
         chartdata: { timestamps, prices },
     ): PricePoint {
         const { timestamps, prices } = chartdata
+
         return {
             value: Number(prices.at(-1)),
             timestamp: Number(timestamps.at(-1)),
@@ -58,7 +59,6 @@ export class DataBuilder {
         xs: [],
         ys: [],
     }
-
 
     static normalize(
         timestampsOrig,
