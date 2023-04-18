@@ -53,7 +53,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     getPoolResolutionByPrice(pool, resolutionPrice) {
         if (!resolutionPrice)
             return _enums_1.EPosition.Undefined;
-        if (resolutionPrice.value === pool.openPriceValue)
+        if (resolutionPrice.value === Number(pool.openPriceValue))
             return _enums_1.EPosition.Zero;
         if (resolutionPrice.value > pool.openPriceValue)
             return _enums_1.EPosition.Up;

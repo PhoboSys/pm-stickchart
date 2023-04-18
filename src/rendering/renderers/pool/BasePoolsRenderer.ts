@@ -79,7 +79,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): EPosition {
 
         if (!resolutionPrice) return EPosition.Undefined
-        if (resolutionPrice.value === pool.openPriceValue) return EPosition.Zero
+        if (resolutionPrice.value === Number(pool.openPriceValue)) return EPosition.Zero
         if (resolutionPrice.value > pool.openPriceValue) return EPosition.Up
         if (resolutionPrice.value < pool.openPriceValue) return EPosition.Down
 
