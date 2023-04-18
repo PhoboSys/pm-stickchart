@@ -1,10 +1,8 @@
 import { RenderingContext, GraphicUtils } from '@rendering'
 
-import { PricePoint } from '@chartdata'
 import datamath from '@lib/datamath'
 import { Container } from '@lib/pixi'
 import ui from '@lib/ui/index'
-import { EPosition } from '@enums'
 
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
@@ -62,14 +60,13 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
         const resolution = this.getResolutionPricePoint(pool, context)
         if (!resolution) return this.clear()
 
-        this.updateOpenPriceTag(pool, context, container, resolution)
+        this.updateOpenPriceTag(pool, context, container)
     }
 
     private updateOpenPriceTag(
         pool: any,
         context: RenderingContext,
         container: Container,
-        resolution: PricePoint,
     ): void {
 
         const {

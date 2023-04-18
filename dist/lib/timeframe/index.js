@@ -66,15 +66,17 @@ class Timeframe {
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = false;
         this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerdown = (e) => this.shiftstart();
+        this.pointerdown = () => this.shiftstart();
         this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerup = (e) => this.shiftend();
+        this.pointerup = () => this.shiftend();
         this.eventTarget.addEventListener('zoom', this.zoomevent);
         this.eventTarget.addEventListener('pointerdown', this.pointerdown);
         this.eventTarget.addEventListener('pointermove', this.pointermove);
         this.eventTarget.addEventListener('pointerup', this.pointerup);
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
+        // eslint-disable-next-line no-console
         this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'));
+        // eslint-disable-next-line no-console
         this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'));
     }
     save(timeframe) {
@@ -144,7 +146,6 @@ class Timeframe {
             until <= this.untilmax(timeframe) &&
             since >= this.nowTS - exports.MAX_FRAME_DURATION) {
             const prevuntil = this.until;
-            const prevtimeframe = this.timeframe;
             this.timeframe = timeframe;
             this.until = until;
             if (this.timeframe !== prevuntil ||

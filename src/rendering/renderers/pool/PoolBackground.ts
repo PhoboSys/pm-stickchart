@@ -70,7 +70,7 @@ export class PoolBackground extends BasePoolsRenderer {
         } = context.screen
 
         const { timerange } = context.plotdata
-        const { openPriceTimestamp, endDate, poolid } = pool
+        const { openPriceTimestamp, endDate } = pool
 
         let rdate = endDate
         if (this.isHistoricalPool(pool, context)) {

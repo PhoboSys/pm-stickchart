@@ -8,6 +8,7 @@ export class NotSupportedChartTypeRenderer implements IRenderer {
 
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     render(data: any): void {
 
     }

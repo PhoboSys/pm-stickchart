@@ -832,7 +832,10 @@ export class PariTile extends BaseParisRenderer {
 
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
-                const [settlement] = this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const [settlement] = this.get('settlement', () =>
+                    context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]]
+                )
 
                 const btnStyle = this.buttonStyle[position]
                 const [btnx, btny] = btnStyle.offset
@@ -892,9 +895,9 @@ export class PariTile extends BaseParisRenderer {
                     btny + bgheight * vertical,
                 )
 
-                const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
+                const [claimimg, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
                 if (claimimgState.new) {
-                    claim_img
+                    claimimg
                         .beginFill(0xFFA000)
                         .drawCircle(0, 0, btnStyle.size / 2)
                         .endFill()
@@ -903,13 +906,13 @@ export class PariTile extends BaseParisRenderer {
                         .endFill()
 
                     if (!resolved) {
-                        claim_img
+                        claimimg
                             .beginFill(0xFFF000)
                             .drawCircle(0, 0, btnStyle.size / 3)
                             .endFill()
                     }
 
-                    claim.addChild(claim_img)
+                    claim.addChild(claimimg)
                 }
             } else {
                 this.clear('claim')

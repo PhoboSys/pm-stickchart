@@ -5,7 +5,7 @@ import { Container } from '@lib/pixi'
 import datamath from '@lib/datamath'
 import ui from '@lib/ui/index'
 
-import { IGraphicStorage, RenderingContext } from '@rendering'
+import { RenderingContext } from '@rendering'
 import { BaseRenderer, GraphicUtils } from '@rendering'
 
 export class HorizontalGridRenderer extends BaseRenderer {

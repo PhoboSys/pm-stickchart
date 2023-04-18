@@ -2,7 +2,6 @@ import config from '@config'
 
 import { gsap } from '@lib/pixi'
 import { PricePoint } from '@chartdata'
-import { DataBuilder } from '@chartdata'
 
 type ChartData = { prices: number[], timestamps: number[] }
 

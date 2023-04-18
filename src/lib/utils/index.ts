@@ -2,10 +2,10 @@ export function isEmpty(
     value: any
 ): boolean {
 
-  return value === undefined ||
+    return value === undefined ||
          value === null ||
-         (typeof value === "object" && Object.keys(value).length === 0) ||
-         (typeof value === "string" && value.trim().length === 0)
+         (typeof value === 'object' && Object.keys(value).length === 0) ||
+         (typeof value === 'string' && value.trim().length === 0)
 
 }
 
@@ -57,7 +57,6 @@ export function pick(
 
     if (isEmpty(collection)) return result
 
-    let idx = 0
     for (const idx in keys) {
         const key = keys[idx]
         const item = collection[key]
@@ -107,6 +106,7 @@ export function orderBy(
     ordered.sort((a, b) => {
         if (a[0] > b[0]) return apriority
         if (a[0] < b[0]) return bpriority
+
         return 0
     })
 

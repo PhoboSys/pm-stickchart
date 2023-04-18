@@ -104,7 +104,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         context: RenderingContext,
         layer: Container
     ): Container {
-        this._countdownTick = () => super.update(context, layer)
+        this._countdownTick = (): Container => super.update(context, layer)
 
         return this._countdownTick()
     }
@@ -202,11 +202,6 @@ export class PoolCountdown extends BasePoolsRenderer {
         context: RenderingContext,
         container: Container,
     ): void {
-
-        const {
-            height,
-            width
-        } = context.screen
 
         const { lockDate, endDate, poolid } = pool
 

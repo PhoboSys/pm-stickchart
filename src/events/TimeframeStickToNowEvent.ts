@@ -1,5 +1,3 @@
-import config from '@config'
-
 export class TimeframeStickToNowEvent extends Event {
     public static readonly NAME: string = 'timeframeTonow'
 

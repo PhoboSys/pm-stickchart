@@ -1,5 +1,3 @@
-import config from '@config'
-
 export class TimeframeChangedEvent extends Event {
     public static readonly NAME: string = 'timeframechanged'
 
