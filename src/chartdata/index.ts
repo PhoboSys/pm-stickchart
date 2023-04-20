@@ -36,6 +36,7 @@ export class DataBuilder {
         chartdata: { timestamps, prices },
     ): PricePoint {
         const { timestamps, prices } = chartdata
+
         return {
             value: prices.at(-1),
             timestamp: Number(timestamps.at(-1)),
@@ -60,7 +61,6 @@ export class DataBuilder {
         ys: [],
     }
 
-
     static normalize(
         timestampsOrig,
         pricesOrig,
@@ -84,7 +84,6 @@ export class DataBuilder {
             prices.push(Number(pricesOrig.at(-1)))
         }
 
-        const unwidth = width - (config.padding.left + config.padding.right)
         const paddingLeft = config.padding.left / width
         const paddingRight = config.padding.right / width
         const timerange = datamath.range(

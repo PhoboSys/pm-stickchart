@@ -62,7 +62,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         const {
             width,
-            height,
         } = context.screen
 
         const x = width

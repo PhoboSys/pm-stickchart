@@ -44,7 +44,7 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
     }
     update(context, container) {
         const { latestY, latest, } = context.plotdata;
-        const { width, height, } = context.screen;
+        const { width, } = context.screen;
         const x = width;
         const y = latestY;
         const price = latest.value;

@@ -691,6 +691,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
             if (claimable) {
                 const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
                 const btnStyle = this.buttonStyle[position];
                 const [btnx, btny] = btnStyle.offset;
@@ -726,9 +727,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     });
                 }
                 claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-                const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
+                const [claimimg, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
                 if (claimimgState.new) {
-                    claim_img
+                    claimimg
                         .beginFill(0xFFA000)
                         .drawCircle(0, 0, btnStyle.size / 2)
                         .endFill()
@@ -736,12 +737,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         .drawCircle(0, 0, btnStyle.size / 3)
                         .endFill();
                     if (!resolved) {
-                        claim_img
+                        claimimg
                             .beginFill(0xFFF000)
                             .drawCircle(0, 0, btnStyle.size / 3)
                             .endFill();
                     }
-                    claim.addChild(claim_img);
+                    claim.addChild(claimimg);
                 }
             }
             else {

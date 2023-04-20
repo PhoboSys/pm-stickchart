@@ -18,11 +18,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     }
     update(context, layer) {
         if ((0, utils_1.isEmpty)(context.pools)) {
-            this.cleanup(context);
+            this.cleanup();
             return layer;
         }
         this.updateEachPool(context, layer);
-        this.cleanup(context);
+        this.cleanup();
         return layer;
     }
     updateEachPool(context, layer) {
@@ -32,7 +32,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             this.newpools[pool.poolid] = pool.poolid;
         });
     }
-    cleanup(context) {
+    cleanup() {
         (0, utils_1.forEach)(this.prevpools, poolid => {
             if (poolid in this.newpools)
                 return;

@@ -23,13 +23,13 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         layer: Container,
     ): Container {
         if (isEmpty(context.pools)) {
-            this.cleanup(context)
+            this.cleanup()
 
             return layer
         }
 
         this.updateEachPool(context, layer)
-        this.cleanup(context)
+        this.cleanup()
 
         return layer
     }
@@ -47,7 +47,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     }
 
-    private cleanup(context: RenderingContext): void {
+    private cleanup(): void {
 
         forEach(this.prevpools, poolid => {
             if (poolid in this.newpools) return

@@ -1,5 +1,3 @@
-import config from '@config'
-
 export class TimeframeUnstickToNowEvent extends Event {
     public static readonly NAME: string = 'timeframeUnnow'
 

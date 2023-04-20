@@ -23,8 +23,8 @@ class PriceLineRenderer extends _rendering_1.BaseRenderer {
         return PriceLineRenderer.PRICE_LINE_ID;
     }
     update(context, container) {
-        const { width, height } = context.screen;
-        const { xs, ys, pricerange, timerange } = context.plotdata;
+        const { height } = context.screen;
+        const { xs, ys } = context.plotdata;
         if (xs.length === 0)
             return container;
         const shape = [];

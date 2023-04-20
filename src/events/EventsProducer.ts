@@ -8,8 +8,11 @@ export class EventsProducer {
     private readonly error: (e: Event) => any
 
     private readonly pointermove: (e: PointerEvent) => any
+
     private readonly pointerleave: (e: PointerEvent) => any
+
     private readonly pointerup: (e: PointerEvent) => any
+
     private readonly pointerdown: (e: PointerEvent) => any
 
     constructor(
@@ -18,13 +21,13 @@ export class EventsProducer {
         private readonly stage: HTMLElement,
     ) {
         // bind to instance
-        this.scroll = (e: WheelEvent) => this.target.dispatchEvent(new ZoomEvent(e))
-        this.error = (e: Event) => this.target.dispatchEvent(new CanvasErrorEvent(e))
+        this.scroll = (e: WheelEvent): boolean => this.target.dispatchEvent(new ZoomEvent(e))
+        this.error = (e: Event): boolean => this.target.dispatchEvent(new CanvasErrorEvent(e))
 
-        this.pointermove = (e: PointerEvent) => this.target.dispatchEvent(new PointermoveEvent(e))
-        this.pointerleave = (e: PointerEvent) => this.target.dispatchEvent(new PointerleaveEvent(e))
-        this.pointerup = (e: PointerEvent) => this.target.dispatchEvent(new PointerupEvent(e))
-        this.pointerdown = (e: PointerEvent) => this.target.dispatchEvent(new PointerdownEvent(e))
+        this.pointermove = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointermoveEvent(e))
+        this.pointerleave = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerleaveEvent(e))
+        this.pointerup = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerupEvent(e))
+        this.pointerdown = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerdownEvent(e))
 
         this.canvas.addEventListener('webglcontextlost', this.error)
         this.stage.addEventListener('wheel', this.scroll)

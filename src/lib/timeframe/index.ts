@@ -1,10 +1,9 @@
 import throttle from 'lodash.throttle'
 
-import { ZoomEvent, PointerdownEvent, PointermoveEvent, PointerupEvent } from '@events'
+import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
 
 import config from '@config'
-import { isEmpty } from '@lib/utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
@@ -19,7 +18,9 @@ type Rect = { width: number, height: number }
 export class Timeframe {
 
     private _until: number | null = null
+
     private _now: number | null = null
+
     private _timeframe: number = MAX_FRAME_DURATION
 
     private get nowTS(): number {
@@ -74,20 +75,27 @@ export class Timeframe {
     }
 
     private readonly zoomevent: any
+
     private readonly pointerdown: any
+
     private readonly pointermove: any
+
     private readonly pointerup: any
 
-    private shifting: boolean = false
+    private shifting = false
 
     constructor(
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
     ) {
-        this.zoomevent = throttle((e: ZoomEvent) => this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle, { trailing: false })
-        this.pointerdown = (e: PointerdownEvent) => this.shiftstart()
-        this.pointermove = throttle((e: PointermoveEvent) => this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false })
-        this.pointerup = (e: PointerupEvent) => this.shiftend()
+        this.zoomevent = throttle((e: ZoomEvent) =>
+            this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle, { trailing: false }
+        )
+        this.pointerdown = (): void => this.shiftstart()
+        this.pointermove = throttle((e: PointermoveEvent) =>
+            this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false }
+        )
+        this.pointerup = (): void => this.shiftend()
 
         this.eventTarget.addEventListener('zoom', this.zoomevent)
         this.eventTarget.addEventListener('pointerdown', this.pointerdown)
@@ -95,7 +103,9 @@ export class Timeframe {
         this.eventTarget.addEventListener('pointerup', this.pointerup)
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate)
 
+        // eslint-disable-next-line no-console
         this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'))
+        // eslint-disable-next-line no-console
         this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'))
     }
 
@@ -189,7 +199,6 @@ export class Timeframe {
             since >= this.nowTS - MAX_FRAME_DURATION
         ) {
             const prevuntil = this.until
-            const prevtimeframe = this.timeframe
 
             this.timeframe = timeframe
             this.until = until

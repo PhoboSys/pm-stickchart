@@ -52,9 +52,9 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const resolution = this.getResolutionPricePoint(pool, context);
         if (!resolution)
             return this.clear();
-        this.updateOpenPriceTag(pool, context, container, resolution);
+        this.updateOpenPriceTag(pool, context, container);
     }
-    updateOpenPriceTag(pool, context, container, resolution) {
+    updateOpenPriceTag(pool, context, container) {
         const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([pool.openPriceTimestamp], timerange, width);

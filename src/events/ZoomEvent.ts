@@ -6,8 +6,11 @@ export class ZoomEvent extends Event {
     public readonly inner: WheelEvent
 
     public readonly zoom: number
+
     public readonly shift: number
+
     public readonly position: { x: number, y: number }
+
     public readonly screen: { height: number, width: number }
 
     public readonly coefficient: number = 0.1 * (config.zoom.speed / 100)

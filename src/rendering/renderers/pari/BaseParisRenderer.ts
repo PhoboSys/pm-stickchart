@@ -17,13 +17,13 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
     ): Container {
         const paris = context.paris?.[pool.poolid]
         if (isEmpty(paris)) {
-            this.cleanupPari(pool, context)
+            this.cleanupPari(pool)
 
             return layer
         }
 
         this.updateEachPari(pool, paris, context, layer)
-        this.cleanupPari(pool, context)
+        this.cleanupPari(pool)
 
         return layer
     }
@@ -43,10 +43,7 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
 
     }
 
-    private cleanupPari(
-        pool: any,
-        context: RenderingContext,
-    ): void {
+    private cleanupPari(pool: any): void {
 
         forEach(this.prevparis, pariid => {
             if (pariid in this.newparis) return

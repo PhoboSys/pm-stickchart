@@ -4,7 +4,9 @@ export class WithdrawEvent extends Event {
     public readonly inner: Event
 
     public readonly poolid: string
+
     public readonly pariid: string
+
     public readonly erc20: string
 
     constructor(

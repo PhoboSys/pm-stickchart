@@ -4,8 +4,8 @@ exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = 
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
-        (typeof value === "object" && Object.keys(value).length === 0) ||
-        (typeof value === "string" && value.trim().length === 0);
+        (typeof value === 'object' && Object.keys(value).length === 0) ||
+        (typeof value === 'string' && value.trim().length === 0);
 }
 exports.isEmpty = isEmpty;
 function isFunction(value) {
@@ -38,7 +38,6 @@ function pick(collection, keys) {
     const result = {};
     if (isEmpty(collection))
         return result;
-    let idx = 0;
     for (const idx in keys) {
         const key = keys[idx];
         const item = collection[key];
