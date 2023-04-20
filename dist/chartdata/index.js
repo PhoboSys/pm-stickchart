@@ -22,13 +22,14 @@ __exportStar(require("./types"), exports);
 const _config_1 = __importDefault(require("../config.js"));
 const datamath_1 = __importDefault(require("../lib/datamath"));
 const utils_1 = require("../lib/utils");
+const calc_utils_1 = require("../lib/calc-utils");
 class DataBuilder {
     static isEqual(start, end) {
         return (start.timestamp === end.timestamp &&
-            start.value === end.value);
+            (0, calc_utils_1.eq)(start.value, end.value));
     }
     static getLatestPrice(chartdata) {
-        return Number(chartdata.prices.at(-1));
+        return chartdata.prices.at(-1);
     }
     static getLatestTS(chartdata) {
         return Number(chartdata.timestamps.at(-1));
@@ -36,7 +37,7 @@ class DataBuilder {
     static getLatest(chartdata) {
         const { timestamps, prices } = chartdata;
         return {
-            value: Number(prices.at(-1)),
+            value: prices.at(-1),
             timestamp: Number(timestamps.at(-1)),
         };
     }
@@ -73,7 +74,7 @@ class DataBuilder {
         ];
         const latest = DataBuilder.getLatest(chartdata);
         const [latestX] = datamath_1.default.scale([latest.timestamp], timerange, width);
-        const [latestY] = datamath_1.default.scaleReverse([latest.value], pricerange, height);
+        const [latestY] = datamath_1.default.scaleReverse([Number(latest.value)], pricerange, height);
         return {
             latestY,
             latestX,
@@ -114,7 +115,7 @@ exports.DataBuilder = DataBuilder;
 DataBuilder.EMPTY_PLOTDATA = {
     latestY: 0,
     latestX: 0,
-    latest: { value: 0, timestamp: 0 },
+    latest: { value: '0', timestamp: 0 },
     timestamps: [],
     prices: [],
     timerange: [0, 0],

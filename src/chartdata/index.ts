@@ -4,6 +4,7 @@ import config from '@config'
 
 import datamath from '@lib/datamath'
 import { isEmpty } from '@lib/utils'
+import { eq } from '@lib/calc-utils'
 
 import { ChartData, PlotData, PricePoint } from './types'
 
@@ -15,14 +16,14 @@ export class DataBuilder {
     ): boolean {
         return (
             start.timestamp === end.timestamp &&
-            start.value === end.value
+            eq(start.value, end.value)
         )
     }
 
     static getLatestPrice(
         chartdata: { timestamps, prices },
     ): number {
-        return Number(chartdata.prices.at(-1))
+        return chartdata.prices.at(-1)
     }
 
     static getLatestTS(
@@ -36,7 +37,7 @@ export class DataBuilder {
     ): PricePoint {
         const { timestamps, prices } = chartdata
         return {
-            value: Number(prices.at(-1)),
+            value: prices.at(-1),
             timestamp: Number(timestamps.at(-1)),
         }
     }
@@ -44,7 +45,7 @@ export class DataBuilder {
     static EMPTY_PLOTDATA: PlotData = {
         latestY: 0,
         latestX: 0,
-        latest: { value: 0, timestamp: 0 },
+        latest: { value: '0', timestamp: 0 },
 
         timestamps: [],
         prices: [],
@@ -116,7 +117,7 @@ export class DataBuilder {
 
         const latest = DataBuilder.getLatest(chartdata)
         const [latestX] = datamath.scale([latest.timestamp], timerange, width)
-        const [latestY] = datamath.scaleReverse([latest.value], pricerange, height)
+        const [latestY] = datamath.scaleReverse([Number(latest.value)], pricerange, height)
 
         return {
             latestY,

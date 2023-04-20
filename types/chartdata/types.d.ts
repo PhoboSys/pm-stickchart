@@ -1,8 +1,8 @@
 export type ChartData = {
-    [key: number]: number;
+    [key: number]: string;
 };
 export type PricePoint = {
-    value: number;
+    value: string;
     timestamp: number;
 };
 export type PricefeedPoint = {

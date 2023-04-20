@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.profitPercent = exports.actualReturn = exports.futureReturn = void 0;
+exports.lte = exports.lt = exports.eq = exports.gte = exports.gt = exports.profitPercent = exports.actualReturn = exports.futureReturn = void 0;
 const big_js_1 = __importDefault(require("big.js"));
 const _constants_1 = require("../../constants/index.js");
 const utils_1 = require("../utils");
@@ -55,4 +55,34 @@ function profitPercent(prize, wager) {
     return prize.div(wager).minus(1).toString();
 }
 exports.profitPercent = profitPercent;
+function gt(number1, number2) {
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1.gt(number2);
+}
+exports.gt = gt;
+function gte(number1, number2) {
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1.gte(number2);
+}
+exports.gte = gte;
+function eq(number1, number2) {
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1.eq(number2);
+}
+exports.eq = eq;
+function lt(number1, number2) {
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1.lt(number2);
+}
+exports.lt = lt;
+function lte(number1, number2) {
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1.lte(number2);
+}
+exports.lte = lte;
 //# sourceMappingURL=index.js.map

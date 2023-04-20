@@ -71,3 +71,43 @@ export function profitPercent(prize, wager) {
 
     return prize.div(wager).minus(1).toString()
 }
+
+export function gt(number1, number2): boolean {
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1.gt(number2)
+}
+
+export function gte(number1, number2): boolean {
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1.gte(number2)
+}
+
+export function eq(number1, number2): boolean {
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1.eq(number2)
+}
+
+export function lt(number1, number2): boolean {
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1.lt(number2)
+}
+
+export function lte(number1, number2): boolean {
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1.lte(number2)
+}
