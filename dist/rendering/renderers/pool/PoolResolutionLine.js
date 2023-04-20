@@ -37,6 +37,12 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
                 outerr: 6,
                 innerColor: 0x303550,
                 outerColor: _config_1.default.style.resolution.zerocolor,
+            },
+            [_enums_1.EPosition.NoContest]: {
+                innerr: 3,
+                outerr: 6,
+                innerColor: 0x303550,
+                outerColor: _config_1.default.style.resolution.nocontest,
             }
         };
         this.lineStyle = {
@@ -60,6 +66,11 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
                 width: 3,
                 alpha: 1,
             },
+            [_enums_1.EPosition.NoContest]: {
+                color: _config_1.default.style.resolution.nocontest,
+                width: 3,
+                alpha: 1,
+            }
         };
         this.configAnimations = {
             fadein: {
@@ -105,7 +116,7 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
         if (linestate.new)
             group.addChild(line);
-        const position = this.getPoolResolutionByPrice(pool, resolution);
+        const position = this.getPoolResolution(pool, context);
         line
             .clear()
             .lineStyle(this.lineStyle[position])

@@ -24,6 +24,7 @@ import { actualReturn, profitPercent } from '@lib/calc-utils'
 
 import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent } from '@events'
 import { ResolveWithdrawEvent, PoolPinEvent, PoolUnpinEvent } from '@events'
+import { ResolveWithdrawNocontestEvent } from '@events'
 
 import { EPosition } from '@enums'
 
@@ -619,12 +620,13 @@ export class PariTile extends BaseParisRenderer {
 
         const phantom = pari.phantom
         const undef = resolution === EPosition.Undefined
-        const nocontest = resolution === EPosition.NoContest
+        const [nocontest] = this.get('nocontest', () => resolution === EPosition.NoContest, [resolution])
+        const isHistorical = this.isHistoricalPool(pool, context)
         const win = pari.position === resolution
         const lose = !win && !phantom
-        const isHistorical = this.isHistoricalPool(pool, context)
         const winning = win && !isHistorical && !phantom
         const loseing = lose && !isHistorical && !phantom
+        const won = win && isHistorical && !nocontest && !phantom
         const reverted = EntityUtils.isEnityReverted(context, pariid)
         const orphan = phantom && reverted
 
@@ -809,12 +811,115 @@ export class PariTile extends BaseParisRenderer {
             }
         }
 
-        if (isHistorical) {
+        const [claim, claimState] = this.get('claim', () => new Container(), [pari.claimed])
 
-            const [claimable] = this.get('claimable', () =>
-                !pari.claimed && (win || nocontest),
-            [nocontest, win, pari.claimed]
+        const [claimable] = this.get('claimable', () =>
+            !pari.claimed && (won || nocontest),
+        [nocontest, won, pari.claimed]
+        )
+
+        if (claimable) {
+            const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const [settlement] = this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
+
+            const btnStyle = this.buttonStyle[position]
+            const [btnx, btny] = btnStyle.offset
+            const [horizontal, vertical] = btnStyle.outside
+
+            if (claimState.new) {
+                group.addChild(claim)
+
+                claim.width = btnStyle.size
+                claim.height = btnStyle.size
+                claim.interactive = true
+                claim.cursor = 'pointer'
+                claim.addEventListener('pointerover', (e) => {
+                    this.rebind(poolid, pariid)
+                    this.animate('claim', 'hover_claim')
+                    context.eventTarget.dispatchEvent(new PoolHoverEvent(poolid, e))
+                })
+                claim.addEventListener('pointerout', (e) => {
+                    this.rebind(poolid, pariid)
+                    this.animate('claim', 'unhover_claim')
+                    context.eventTarget.dispatchEvent(new PoolUnhoverEvent(poolid, e))
+                })
+                claim.addEventListener('pointertap', (e) => {
+                    this.rebind(poolid, pariid)
+                    this.animate('claim', 'tab_claim')
+                    const [rslvd] = this.read('resolved')
+                    const [sttlmnt] = this.read('settlement')
+                    const [nocontest] = this.read('nocontest')
+
+                    if (rslvd) {
+                        context.eventTarget.dispatchEvent(
+                            new WithdrawEvent(
+                                poolid,
+                                pariid,
+                                erc20,
+                                e
+                            )
+                        )
+                    }
+
+                    if (!rslvd) {
+                        if (nocontest) {
+                            context.eventTarget.dispatchEvent(
+                                new ResolveWithdrawNocontestEvent(
+                                    poolid,
+                                    pariid,
+                                    erc20,
+                                    e
+                                )
+                            )
+                        } else if (sttlmnt) {
+                            context.eventTarget.dispatchEvent(
+                                new ResolveWithdrawEvent(
+                                    poolid,
+                                    pariid,
+                                    erc20,
+                                    sttlmnt.resolutionPrice,
+                                    sttlmnt.controlPrice,
+                                    e
+                                )
+                            )
+                        }
+                    }
+                })
+            }
+
+            claim.position.set(
+                btnx + bgwidth * horizontal,
+                btny + bgheight * vertical,
             )
+
+            const [claim_img, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
+            if (claimimgState.new) {
+                claim_img
+                    .beginFill(0xFFA000)
+                    .drawCircle(0, 0, btnStyle.size / 2)
+                    .endFill()
+                    .beginFill(0xFFA000)
+                    .drawCircle(0, 0, btnStyle.size / 3)
+                    .endFill()
+
+                if (!resolved) {
+                    claim_img
+                        .beginFill(0xFFF000)
+                        .drawCircle(0, 0, btnStyle.size / 3)
+                        .endFill()
+                }
+
+                claim.addChild(claim_img)
+            }
+        } else {
+            this.clear('claim')
+            this.clear('claim_img')
+            this.clear('resolved')
+            this.clear('settlement')
+        }
+
+        if (isHistorical) {
 
             if (win) {
                 this.animate('background', 'won_bg')

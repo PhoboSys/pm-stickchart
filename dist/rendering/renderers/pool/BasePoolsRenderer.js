@@ -69,15 +69,13 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             const price = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < pool.lockDate)
                 return false;
-            // TODO: Implement Early Pool Resolution with NoContest
-            // if (this._isNoContestEmptyPool(pool)) return true
         }
         if (this.isNoContestEmptyPool(pool))
             return true;
-        if (!this.isHistoricalPool(pool, context))
-            return false;
         if (pool.resolved && pool.resolution === _enums_1.EPosition.NoContest)
             return true;
+        if (!this.isHistoricalPool(pool, context))
+            return false;
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolutionByPrice(pool, rprice);
         if (this._isNoContestPool(pool, resolution))
@@ -105,12 +103,19 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
     }
     getResolutionPricePoint(pool, context) {
-        var _a;
+        var _a, _b;
         if (this.isActualPool(pool)) {
             return _chartdata_1.DataBuilder.getLatest(context.chartdata);
         }
         const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]);
         if (isResolveReady) {
+            return {
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
+            };
+        }
+        const nocontest = this.isNoContestPool(pool, context);
+        if (nocontest && ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate])) {
             return {
                 value: context.settlements[pool.endDate].resolutionPrice.value,
                 timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
@@ -127,7 +132,43 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (pool.endDate > latest.timestamp) {
             return latest;
         }
-        return null;
+        return this.getPoolResolutionPriceFormPricefeed(pool.endDate, context.chartdata);
+    }
+    getPoolResolutionPriceFormPricefeed(endDate, chartdata) {
+        const { timestamps, prices } = chartdata;
+        let midIndex = Math.floor(timestamps.length / 2);
+        let start = 0;
+        let end = timestamps.length - 1;
+        let index = null;
+        while (true) {
+            if (timestamps[midIndex] === endDate) {
+                index = midIndex;
+                break;
+            }
+            else if (end - start === 1) {
+                if (timestamps[end] <= endDate) {
+                    index = end;
+                }
+                else if (timestamps[start] <= endDate) {
+                    index = start;
+                }
+                break;
+            }
+            else if (timestamps[midIndex] < endDate) {
+                start = midIndex;
+                midIndex = Math.floor((end + start) / 2);
+            }
+            else if (timestamps[midIndex] > endDate) {
+                end = midIndex;
+                midIndex = Math.floor((end + start) / 2);
+            }
+        }
+        if (index === null)
+            return null;
+        return {
+            timestamp: timestamps[index],
+            value: prices[index],
+        };
     }
     isActualPool(pool) {
         return pool.endDate > (0, utils_1.nowUnixTS)();
