@@ -144,7 +144,7 @@ export class PoolResolutionLine extends BasePoolsRenderer {
         } = context.screen
 
         const [x1, x2] = datamath.scale([pool.openPriceTimestamp, resolution.timestamp], timerange, width)
-        const [y1, y2] = datamath.scaleReverse([pool.openPriceValue, resolution.value], pricerange, height)
+        const [y1, y2] = datamath.scaleReverse([pool.openPriceValue, Number(resolution.value)], pricerange, height)
 
         const [group, groupstate] = this.get('group', () => new Graphics())
         if (groupstate.new) container.addChild(group)

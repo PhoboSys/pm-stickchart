@@ -69,7 +69,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const price = latest.value
 
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
-            datamath.toFixedPrecision(price, 8),
+            datamath.toFixedPrecision(Number(price), 8),
             [x, y],
             this.textCoverStyle,
         ))

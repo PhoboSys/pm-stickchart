@@ -21,7 +21,7 @@ export type RenderingContext = {
     textures: ITextureStorage
     charttype: EChartType
     plotdata: PlotData
-    chartdata: { prices: number[], timestamps: number[] }
+    chartdata: { prices: string[], timestamps: number[] }
 
     eventTarget: EventTarget
     rerender?: boolean
