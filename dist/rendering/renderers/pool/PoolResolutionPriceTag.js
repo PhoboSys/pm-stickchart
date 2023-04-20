@@ -58,7 +58,7 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([resolution.timestamp], timerange, width);
-        const [y] = datamath_1.default.scaleReverse([resolution.value], pricerange, height);
+        const [y] = datamath_1.default.scaleReverse([Number(resolution.value)], pricerange, height);
         const priceValue = index_1.default.currency(resolution.value, context.metapool.quote);
         const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createText(priceValue, [0, 0], this.coverStyle.textStyle, this.coverStyle.anchor));
         if (coverState.new)

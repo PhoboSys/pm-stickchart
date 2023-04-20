@@ -48,7 +48,7 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
         const x = width;
         const y = latestY;
         const price = latest.value;
-        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(price, 8), [x, y], this.textCoverStyle));
+        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(Number(price), 8), [x, y], this.textCoverStyle));
         if (coveredTextState.new)
             container.addChild(coveredText);
         const textGraphic = coveredText.getChildAt(1);

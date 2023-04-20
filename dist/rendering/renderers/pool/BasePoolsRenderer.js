@@ -5,6 +5,7 @@ const _infra_1 = require("../../../infra/index.js");
 const _rendering_1 = require("../../index.js");
 const symbols_1 = require("../../textures/symbols");
 const utils_1 = require("../../../lib/utils");
+const calc_utils_1 = require("../../../lib/calc-utils");
 const _chartdata_1 = require("../../../chartdata/index.js");
 const _enums_1 = require("../../../enums/index.js");
 const _constants_1 = require("../../../constants/index.js");
@@ -53,11 +54,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     getPoolResolutionByPrice(pool, resolutionPrice) {
         if (!resolutionPrice)
             return _enums_1.EPosition.Undefined;
-        if (resolutionPrice.value === pool.openPriceValue)
+        if ((0, calc_utils_1.eq)(resolutionPrice.value, pool.openPriceValue))
             return _enums_1.EPosition.Zero;
-        if (resolutionPrice.value > pool.openPriceValue)
+        if ((0, calc_utils_1.gt)(resolutionPrice.value, pool.openPriceValue))
             return _enums_1.EPosition.Up;
-        if (resolutionPrice.value < pool.openPriceValue)
+        if ((0, calc_utils_1.lt)(resolutionPrice.value, pool.openPriceValue))
             return _enums_1.EPosition.Down;
         return _enums_1.EPosition.Undefined;
     }

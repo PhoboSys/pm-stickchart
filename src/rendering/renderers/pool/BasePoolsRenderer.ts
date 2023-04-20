@@ -5,6 +5,7 @@ import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
+import { eq, gt, lt } from '@lib/calc-utils'
 import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
 
@@ -79,9 +80,9 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): EPosition {
 
         if (!resolutionPrice) return EPosition.Undefined
-        if (resolutionPrice.value === pool.openPriceValue) return EPosition.Zero
-        if (resolutionPrice.value > pool.openPriceValue) return EPosition.Up
-        if (resolutionPrice.value < pool.openPriceValue) return EPosition.Down
+        if (eq(resolutionPrice.value, pool.openPriceValue)) return EPosition.Zero
+        if (gt(resolutionPrice.value, pool.openPriceValue)) return EPosition.Up
+        if (lt(resolutionPrice.value, pool.openPriceValue)) return EPosition.Down
 
         return EPosition.Undefined
     }

@@ -3,7 +3,7 @@ import config from '@config'
 import { gsap } from '@lib/pixi'
 import { PricePoint } from '@chartdata'
 
-type ChartData = { prices: number[], timestamps: number[] }
+type ChartData = { prices: string[], timestamps: number[] }
 
 export default class MorphController {
 

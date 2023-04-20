@@ -1,5 +1,5 @@
 type ChartData = {
-    prices: number[];
+    prices: string[];
     timestamps: number[];
 };
 export default class MorphController {

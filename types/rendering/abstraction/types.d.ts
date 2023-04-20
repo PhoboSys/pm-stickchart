@@ -18,7 +18,7 @@ export type RenderingContext = {
     charttype: EChartType;
     plotdata: PlotData;
     chartdata: {
-        prices: number[];
+        prices: string[];
         timestamps: number[];
     };
     eventTarget: EventTarget;
