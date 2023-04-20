@@ -5,6 +5,7 @@ class NotSupportedChartTypeRenderer {
     constructor(renderer) {
         this.renderer = renderer;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     render(data) {
     }
 }

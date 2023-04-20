@@ -13,11 +13,11 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
         var _a;
         const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[pool.poolid];
         if ((0, utils_1.isEmpty)(paris)) {
-            this.cleanupPari(pool, context);
+            this.cleanupPari(pool);
             return layer;
         }
         this.updateEachPari(pool, paris, context, layer);
-        this.cleanupPari(pool, context);
+        this.cleanupPari(pool);
         return layer;
     }
     updateEachPari(pool, paris, context, layer) {
@@ -27,7 +27,7 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
             this.newparis[pari.pariid] = pari.pariid;
         });
     }
-    cleanupPari(pool, context) {
+    cleanupPari(pool) {
         (0, utils_1.forEach)(this.prevparis, pariid => {
             if (pariid in this.newparis)
                 return;

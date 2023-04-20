@@ -820,6 +820,7 @@ export class PariTile extends BaseParisRenderer {
 
         if (claimable) {
             const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [settlement] = this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
 
             const btnStyle = this.buttonStyle[position]
@@ -932,6 +933,97 @@ export class PariTile extends BaseParisRenderer {
                 if (groupstate.animation !== 'pin_group_claimable') this.animate('group', 'hide_group_claimable')
             } else {
                 if (groupstate.animation !== 'pin_group_unclaimable') this.animate('group', 'unpin_group_unclaimable')
+            }
+
+            if (claimable) {
+                const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved])
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const [settlement] = this.get('settlement', () =>
+                    context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]]
+                )
+
+                const btnStyle = this.buttonStyle[position]
+                const [btnx, btny] = btnStyle.offset
+                const [horizontal, vertical] = btnStyle.outside
+                const [claim, claimState] = this.get('claim', () => new Container(), [pari.claimed])
+                if (claimState.new) {
+                    group.addChild(claim)
+
+                    claim.width = btnStyle.size
+                    claim.height = btnStyle.size
+                    claim.interactive = true
+                    claim.cursor = 'pointer'
+                    claim.addEventListener('pointerover', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('claim', 'hover_claim')
+                        context.eventTarget.dispatchEvent(new PoolHoverEvent(poolid, e))
+                    })
+                    claim.addEventListener('pointerout', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('claim', 'unhover_claim')
+                        context.eventTarget.dispatchEvent(new PoolUnhoverEvent(poolid, e))
+                    })
+                    claim.addEventListener('pointertap', (e) => {
+                        this.rebind(poolid, pariid)
+                        this.animate('claim', 'tab_claim')
+                        const [rslvd] = this.read('resolved')
+                        const [sttlmnt] = this.read('settlement')
+
+                        if (rslvd) {
+                            context.eventTarget.dispatchEvent(
+                                new WithdrawEvent(
+                                    poolid,
+                                    pariid,
+                                    erc20,
+                                    e
+                                )
+                            )
+                        }
+
+                        if (!rslvd && sttlmnt) {
+                            context.eventTarget.dispatchEvent(
+                                new ResolveWithdrawEvent(
+                                    poolid,
+                                    pariid,
+                                    erc20,
+                                    sttlmnt.resolutionPrice,
+                                    sttlmnt.controlPrice,
+                                    e
+                                )
+                            )
+                        }
+                    })
+                }
+
+                claim.position.set(
+                    btnx + bgwidth * horizontal,
+                    btny + bgheight * vertical,
+                )
+
+                const [claimimg, claimimgState] = this.get('claim_img', () => new Graphics(), [resolved])
+                if (claimimgState.new) {
+                    claimimg
+                        .beginFill(0xFFA000)
+                        .drawCircle(0, 0, btnStyle.size / 2)
+                        .endFill()
+                        .beginFill(0xFFA000)
+                        .drawCircle(0, 0, btnStyle.size / 3)
+                        .endFill()
+
+                    if (!resolved) {
+                        claimimg
+                            .beginFill(0xFFF000)
+                            .drawCircle(0, 0, btnStyle.size / 3)
+                            .endFill()
+                    }
+
+                    claim.addChild(claimimg)
+                }
+            } else {
+                this.clear('claim')
+                this.clear('claim_img')
+                this.clear('resolved')
+                this.clear('settlement')
             }
 
             if (!groupstate.subscribed) {

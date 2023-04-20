@@ -90,7 +90,7 @@ export class PariClaimBackground extends BaseParisRenderer {
 
         const { width, height } = context.screen
         const { timerange } = context.plotdata
-        const { openPriceTimestamp, endDate, poolid } = pool
+        const { openPriceTimestamp, endDate } = pool
         const rdate = resolutionPrice?.timestamp || endDate
 
         const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)

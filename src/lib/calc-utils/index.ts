@@ -7,7 +7,7 @@ const ZERO = Big(0)
 
 const VIGORISH = Big(0.01)
 
-function __inNotZeroNumbers(...args) {
+function __inNotZeroNumbers(...args): boolean {
     for (const num of args) {
         if (!Number(num)) return false
     }
@@ -15,7 +15,7 @@ function __inNotZeroNumbers(...args) {
     return true
 }
 
-function __futureReturn(prizefunds, wager, position) {
+function __futureReturn(prizefunds, wager, position): Big {
     if (!__inNotZeroNumbers(prizefunds?.[PRIZEFUNDS.TOTAL], prizefunds?.[position], wager)) return ZERO
 
     wager = Big(wager)
@@ -34,13 +34,13 @@ function __futureReturn(prizefunds, wager, position) {
     return result
 }
 
-export function futureReturn(prizefunds, wager, position) {
+export function futureReturn(prizefunds, wager, position): string {
     const result = __futureReturn(prizefunds, wager, position)
 
     return result.toString()
 }
 
-function __actualReturn(prizefunds, wager, position) {
+function __actualReturn(prizefunds, wager, position): Big {
     if (!__inNotZeroNumbers(prizefunds?.[PRIZEFUNDS.TOTAL], prizefunds?.[position], wager)) return ZERO
 
     wager = Big(wager)
@@ -57,13 +57,13 @@ function __actualReturn(prizefunds, wager, position) {
     return result
 }
 
-export function actualReturn(prizefunds, wager, position) {
+export function actualReturn(prizefunds, wager, position): string {
     const result = __actualReturn(prizefunds, wager, position)
 
     return result.toString()
 }
 
-export function profitPercent(prize, wager) {
+export function profitPercent(prize, wager): string {
     if (!__inNotZeroNumbers(prize, wager)) return ZERO.toString()
 
     prize = Big(prize)

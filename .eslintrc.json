@@ -136,6 +136,17 @@
             "always-multiline"
         ],
         "no-return-await": "off",
-        "@typescript-eslint/return-await": "error"
+        "@typescript-eslint/return-await": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-shadow": "off",
+        "@typescript-eslint/naming-convention": ["error",
+          {
+            "selector": "function",
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allowSingleOrDouble",
+            "trailingUnderscore": "allow"
+          }
+        ]
     }
 }

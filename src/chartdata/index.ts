@@ -83,7 +83,6 @@ export class DataBuilder {
             prices.push(Number(pricesOrig.at(-1)))
         }
 
-        const unwidth = width - (config.padding.left + config.padding.right)
         const paddingLeft = config.padding.left / width
         const paddingRight = config.padding.right / width
         const timerange = datamath.range(

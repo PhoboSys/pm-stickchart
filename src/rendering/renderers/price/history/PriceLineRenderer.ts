@@ -25,8 +25,8 @@ export class PriceLineRenderer extends BaseRenderer {
         container: Container,
     ): Container {
 
-        const { width, height } = context.screen
-        const { xs, ys, pricerange, timerange } = context.plotdata
+        const { height } = context.screen
+        const { xs, ys } = context.plotdata
 
         if (xs.length === 0) return container
 
