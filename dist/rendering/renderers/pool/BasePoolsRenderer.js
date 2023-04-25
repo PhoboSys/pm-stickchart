@@ -52,7 +52,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         return resolution;
     }
     getPoolResolutionByPrice(pool, resolutionPrice) {
-        if (!resolutionPrice)
+        if (!resolutionPrice || !pool.openPriceValue)
             return _enums_1.EPosition.Undefined;
         if ((0, calc_utils_1.eq)(resolutionPrice.value, pool.openPriceValue))
             return _enums_1.EPosition.Zero;

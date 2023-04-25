@@ -79,7 +79,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         resolutionPrice: PricePoint | null,
     ): EPosition {
 
-        if (!resolutionPrice) return EPosition.Undefined
+        if (!resolutionPrice || !pool.openPriceValue) return EPosition.Undefined
         if (eq(resolutionPrice.value, pool.openPriceValue)) return EPosition.Zero
         if (gt(resolutionPrice.value, pool.openPriceValue)) return EPosition.Up
         if (lt(resolutionPrice.value, pool.openPriceValue)) return EPosition.Down
@@ -185,7 +185,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     }
 
-    getPoolResolutionPriceFormPricefeed(
+    protected getPoolResolutionPriceFormPricefeed(
         endDate,
         chartdata: { timestamps, prices }
     ): PricePoint | null {

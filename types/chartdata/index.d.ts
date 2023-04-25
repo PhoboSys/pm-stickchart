@@ -5,7 +5,7 @@ export declare class DataBuilder {
     static getLatestPrice(chartdata: {
         timestamps: any;
         prices: any;
-    }): number;
+    }): string;
     static getLatestTS(chartdata: {
         timestamps: any;
         prices: any;
