@@ -22,7 +22,7 @@ export class DataBuilder {
 
     static getLatestPrice(
         chartdata: { timestamps, prices },
-    ): number {
+    ): string {
         return chartdata.prices.at(-1)
     }
 

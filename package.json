@@ -17,8 +17,7 @@
     "build": "tsc && tsc-alias",
     "build:lde": "./bin/dev.sh",
     "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
-    "lint": "echo 'truend off until fixed'",
-    "lint-orig": "eslint --ext .ts .",
+    "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
   },

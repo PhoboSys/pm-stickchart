@@ -185,7 +185,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     }
 
-    getPoolResolutionPriceFormPricefeed(
+    protected getPoolResolutionPriceFormPricefeed(
         endDate,
         chartdata: { timestamps, prices }
     ): PricePoint | null {
