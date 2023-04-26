@@ -671,7 +671,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payoutContainer.addChild(payout);
             }
         }
-        const [claimable] = this.get('claimable', () => !pari.claimed && (won || nocontest), [nocontest, won, pari.claimed]);
+        const [claimable] = this.get('claimable', () => !pari.claimed && (won || nocontest) && !orphan, [nocontest, won, pari.claimed, orphan]);
         if (claimable) {
             const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -706,7 +706,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
                     }
                     if (!rslvd) {
-                        if (nocontest) {
+                        if (nocontest && emptypool) {
                             context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(poolid, pariid, erc20, e));
                         }
                         else if (sttlmnt) {

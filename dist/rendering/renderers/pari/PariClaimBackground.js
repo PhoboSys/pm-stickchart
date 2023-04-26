@@ -8,6 +8,7 @@ const textures_1 = require("../../textures");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const _enums_1 = require("../../../enums/index.js");
+const _rendering_1 = require("../../index.js");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
@@ -54,9 +55,11 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
         const resolution = this.getPoolResolution(pool, context);
         const win = pari.position === resolution;
         const nocontest = resolution === _enums_1.EPosition.NoContest;
-        const claimable = !pari.claimed && (win || nocontest);
         const poolid = pool.poolid;
         const pariid = pari.pariid;
+        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pariid);
+        const orphan = pari.phantom && reverted;
+        const claimable = !pari.claimed && (win || nocontest) && !orphan;
         if (!claimable)
             return this.animate('group', 'hide', {
                 onComplete: () => {
