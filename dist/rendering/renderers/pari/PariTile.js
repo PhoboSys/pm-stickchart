@@ -531,7 +531,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         line.position.y = -group.position.y;
     }
     updateTile(pool, pari, context, container, resolution) {
-        var _a, _b;
+        var _a;
         const poolid = pool.poolid;
         const pariid = pari.pariid;
         const phantom = pari.phantom;
@@ -716,9 +716,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 });
             }
             claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-            const [claim_img, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
+            const [claimimg, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
             if (claimimgState.new) {
-                claim_img
+                claimimg
                     .beginFill(0xFFA000)
                     .drawCircle(0, 0, btnStyle.size / 2)
                     .endFill()
@@ -726,12 +726,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     .drawCircle(0, 0, btnStyle.size / 3)
                     .endFill();
                 if (!resolved) {
-                    claim_img
+                    claimimg
                         .beginFill(0xFFF000)
                         .drawCircle(0, 0, btnStyle.size / 3)
                         .endFill();
                 }
-                claim.addChild(claim_img);
+                claim.addChild(claimimg);
             }
         }
         else {
@@ -758,68 +758,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             else {
                 if (groupstate.animation !== 'pin_group_unclaimable')
                     this.animate('group', 'unpin_group_unclaimable');
-            }
-            if (claimable) {
-                const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate]]);
-                const btnStyle = this.buttonStyle[position];
-                const [btnx, btny] = btnStyle.offset;
-                const [horizontal, vertical] = btnStyle.outside;
-                const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
-                if (claimState.new) {
-                    group.addChild(claim);
-                    claim.width = btnStyle.size;
-                    claim.height = btnStyle.size;
-                    claim.interactive = true;
-                    claim.cursor = 'pointer';
-                    claim.addEventListener('pointerover', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'hover_claim');
-                        context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
-                    });
-                    claim.addEventListener('pointerout', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'unhover_claim');
-                        context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
-                    });
-                    claim.addEventListener('pointertap', (e) => {
-                        this.rebind(poolid, pariid);
-                        this.animate('claim', 'tab_claim');
-                        const [rslvd] = this.read('resolved');
-                        const [sttlmnt] = this.read('settlement');
-                        if (rslvd) {
-                            context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
-                        }
-                        if (!rslvd && sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
-                        }
-                    });
-                }
-                claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-                const [claimimg, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
-                if (claimimgState.new) {
-                    claimimg
-                        .beginFill(0xFFA000)
-                        .drawCircle(0, 0, btnStyle.size / 2)
-                        .endFill()
-                        .beginFill(0xFFA000)
-                        .drawCircle(0, 0, btnStyle.size / 3)
-                        .endFill();
-                    if (!resolved) {
-                        claimimg
-                            .beginFill(0xFFF000)
-                            .drawCircle(0, 0, btnStyle.size / 3)
-                            .endFill();
-                    }
-                    claim.addChild(claimimg);
-                }
-            }
-            else {
-                this.clear('claim');
-                this.clear('claim_img');
-                this.clear('resolved');
-                this.clear('settlement');
             }
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true;
