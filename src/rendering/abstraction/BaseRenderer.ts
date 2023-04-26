@@ -91,7 +91,7 @@ export abstract class BaseRenderer implements IRenderer {
 
                 state.new = false
 
-                return [<T>g, state, dependencies]
+                return [<T>g, state, deps]
 
             } else {
 

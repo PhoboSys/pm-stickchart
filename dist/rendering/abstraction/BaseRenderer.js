@@ -64,7 +64,7 @@ class BaseRenderer {
             const [g, state, deps] = stored;
             if (this.isEqual(deps, dependencies)) {
                 state.new = false;
-                return [g, state, dependencies];
+                return [g, state, deps];
             }
             else {
                 this.clear(name);
