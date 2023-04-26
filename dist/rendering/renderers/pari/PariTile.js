@@ -671,7 +671,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payoutContainer.addChild(payout);
             }
         }
-        const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
         const [claimable] = this.get('claimable', () => !pari.claimed && (won || nocontest), [nocontest, won, pari.claimed]);
         if (claimable) {
             const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
@@ -680,6 +679,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             const btnStyle = this.buttonStyle[position];
             const [btnx, btny] = btnStyle.offset;
             const [horizontal, vertical] = btnStyle.outside;
+            const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
             if (claimState.new) {
                 group.addChild(claim);
                 claim.width = btnStyle.size;

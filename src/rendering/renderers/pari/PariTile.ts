@@ -811,11 +811,9 @@ export class PariTile extends BaseParisRenderer {
             }
         }
 
-        const [claim, claimState] = this.get('claim', () => new Container(), [pari.claimed])
-
-        const [claimable] = this.get('claimable', () =>
-            !pari.claimed && (won || nocontest),
-        [nocontest, won, pari.claimed]
+        const [claimable] = this.get('claimable',
+            () => !pari.claimed && (won || nocontest),
+            [nocontest, won, pari.claimed]
         )
 
         if (claimable) {
@@ -827,6 +825,7 @@ export class PariTile extends BaseParisRenderer {
             const [btnx, btny] = btnStyle.offset
             const [horizontal, vertical] = btnStyle.outside
 
+            const [claim, claimState] = this.get('claim', () => new Container(), [pari.claimed])
             if (claimState.new) {
                 group.addChild(claim)
 
