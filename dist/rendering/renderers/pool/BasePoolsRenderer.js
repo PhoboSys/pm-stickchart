@@ -140,9 +140,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         let start = 0;
         let end = timestamps.length - 1;
         let index = null;
-        let iteractions = 0;
         while (true) {
-            iteractions++;
             if (timestamps[midIndex] === endDate) {
                 index = midIndex;
                 break;
@@ -165,7 +163,6 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
                 midIndex = Math.floor((end + start) / 2);
             }
         }
-        console.log('getPoolResolutionPriceFormPricefeed', { iteractions });
         if (index === null)
             return null;
         return {

@@ -195,10 +195,8 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         let start = 0
         let end = timestamps.length - 1
         let index: number | null = null
-        let iteractions = 0
 
         while (true) {
-            iteractions++
             if (timestamps[midIndex] === endDate) {
                 index = midIndex
                 break
@@ -217,8 +215,6 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
                 midIndex = Math.floor((end + start) / 2)
             }
         }
-
-        console.log('getPoolResolutionPriceFormPricefeed', { iteractions })
 
         if (index === null) return null
 
