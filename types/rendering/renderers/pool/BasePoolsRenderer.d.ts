@@ -13,7 +13,7 @@ export declare abstract class BasePoolsRenderer extends BaseRenderer {
     private updateEachPool;
     private cleanup;
     protected getPoolResolution(pool: any, context: RenderingContext): EPosition;
-    protected getPoolResolutionByPrice(pool: any, resolutionPrice: PricePoint | null): EPosition;
+    private getPoolResolutionByPrice;
     private isNoContestPool;
     protected isNoContestEmptyPool(pool: any): boolean;
     private _isNoContestPool;

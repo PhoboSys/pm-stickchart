@@ -114,18 +114,18 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
                 timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             };
         }
-        const nocontest = this.isNoContestPool(pool, context);
-        if (nocontest && ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate])) {
-            return {
-                value: context.settlements[pool.endDate].resolutionPrice.value,
-                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
-            };
-        }
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue;
         if (isResolved) {
             return {
                 value: pool.resolutionPriceValue,
                 timestamp: pool.resolutionPriceTimestamp,
+            };
+        }
+        const isResolvedNoResolutionPrice = pool.resolved && (!pool.resolutionPriceTimestamp || !pool.resolutionPriceValue);
+        if (isResolvedNoResolutionPrice && ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[pool.endDate])) {
+            return {
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             };
         }
         const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
@@ -140,7 +140,9 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         let start = 0;
         let end = timestamps.length - 1;
         let index = null;
+        let iteractions = 0;
         while (true) {
+            iteractions++;
             if (timestamps[midIndex] === endDate) {
                 index = midIndex;
                 break;
@@ -163,6 +165,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
                 midIndex = Math.floor((end + start) / 2);
             }
         }
+        console.log('getPoolResolutionPriceFormPricefeed', { iteractions });
         if (index === null)
             return null;
         return {

@@ -74,7 +74,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         return resolution
     }
 
-    protected getPoolResolutionByPrice(
+    private getPoolResolutionByPrice(
         pool: any,
         resolutionPrice: PricePoint | null,
     ): EPosition {
@@ -160,19 +160,19 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
             }
         }
 
-        const nocontest = this.isNoContestPool(pool, context)
-        if (nocontest && context.settlements?.[pool.endDate]) {
-            return {
-                value: context.settlements[pool.endDate].resolutionPrice.value,
-                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
-            }
-        }
-
         const isResolved = pool.resolved && pool.resolutionPriceTimestamp && pool.resolutionPriceValue
         if (isResolved) {
             return {
                 value: pool.resolutionPriceValue,
                 timestamp: pool.resolutionPriceTimestamp,
+            }
+        }
+
+        const isResolvedNoResolutionPrice = pool.resolved && (!pool.resolutionPriceTimestamp || !pool.resolutionPriceValue)
+        if (isResolvedNoResolutionPrice && context.settlements?.[pool.endDate]) {
+            return {
+                value: context.settlements[pool.endDate].resolutionPrice.value,
+                timestamp: context.settlements[pool.endDate].resolutionPrice.timestamp,
             }
         }
 
@@ -195,8 +195,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         let start = 0
         let end = timestamps.length - 1
         let index: number | null = null
+        let iteractions = 0
 
         while (true) {
+            iteractions++
             if (timestamps[midIndex] === endDate) {
                 index = midIndex
                 break
@@ -215,6 +217,8 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
                 midIndex = Math.floor((end + start) / 2)
             }
         }
+
+        console.log('getPoolResolutionPriceFormPricefeed', { iteractions })
 
         if (index === null) return null
 
