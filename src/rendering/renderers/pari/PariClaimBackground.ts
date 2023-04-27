@@ -6,6 +6,8 @@ import datamath from '@lib/datamath'
 import { Graphics, Container } from '@lib/pixi'
 import { EPosition } from '@enums'
 
+import { EntityUtils } from '@rendering'
+
 import { BaseParisRenderer } from './BaseParisRenderer'
 
 export class PariClaimBackground extends BaseParisRenderer {
@@ -64,10 +66,13 @@ export class PariClaimBackground extends BaseParisRenderer {
         const win = pari.position === resolution
         const nocontest = resolution === EPosition.NoContest
 
-        const claimable = !pari.claimed && (win || nocontest)
-
         const poolid = pool.poolid
         const pariid = pari.pariid
+
+        const reverted = EntityUtils.isEnityReverted(context, pariid)
+        const orphan = pari.phantom && reverted
+
+        const claimable = !pari.claimed && (win || nocontest) && !orphan
 
         if (!claimable) return this.animate('group', 'hide', {
             onComplete: () => {

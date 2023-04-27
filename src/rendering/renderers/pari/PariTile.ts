@@ -812,8 +812,8 @@ export class PariTile extends BaseParisRenderer {
         }
 
         const [claimable] = this.get('claimable',
-            () => !pari.claimed && (won || nocontest),
-            [nocontest, won, pari.claimed]
+            () => !pari.claimed && (won || nocontest) && !orphan,
+            [nocontest, won, pari.claimed, orphan]
         )
 
         if (claimable) {
@@ -864,7 +864,7 @@ export class PariTile extends BaseParisRenderer {
                     }
 
                     if (!rslvd) {
-                        if (nocontest) {
+                        if (nocontest && emptypool) {
                             context.eventTarget.dispatchEvent(
                                 new ResolveWithdrawNocontestEvent(
                                     poolid,
