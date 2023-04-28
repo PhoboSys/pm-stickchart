@@ -1,6 +1,5 @@
 import Big from 'big.js'
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default class datamath {
 
     static min(data: number[]): number {
@@ -124,35 +123,6 @@ export default class datamath {
         const v = new Big(value)
 
         return v.round(significant, Big.roundDown).toNumber()
-    }
-
-    static precision(value: number, significant: number): number {
-
-        const v = new Big(value)
-
-        return v.prec(significant).toNumber()
-    }
-
-    static toFixedPrecision(value: number, significant: number): string {
-
-        const v = datamath.precision(value, significant)
-        if (v % 1) {
-            return v.toString().padEnd(significant+1, '0')
-        }
-
-        const more = significant - v.toString().length
-        if (more > 0) {
-            return v.toFixed(more)
-        }
-
-        return v.toFixed(0)
-    }
-
-    static toFixedScaled(value: number, stepsize: number): string {
-
-        const step = new Big(stepsize)
-
-        return datamath.toFixed(value, -step.e)
     }
 
     static toFixed(value: number, dp: number): string {

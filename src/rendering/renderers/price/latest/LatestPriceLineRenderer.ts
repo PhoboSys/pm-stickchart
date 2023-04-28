@@ -1,7 +1,6 @@
 import { IGraphicStorage, RenderingContext, BaseRenderer, GraphicUtils } from '@rendering'
 import config from '@config'
 
-import datamath from '@lib/datamath'
 import { Graphics, Container, Text } from '@lib/pixi'
 import ui from '@lib/ui'
 import { USD } from '@constants'
@@ -68,15 +67,16 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const y = latestY
         const price = latest.value
 
+        const text = ui.currency(price, USD)
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
-            datamath.toFixedPrecision(Number(price), 8),
+            text,
             [x, y],
             this.textCoverStyle,
         ))
         if (coveredTextState.new) container.addChild(coveredText)
 
         const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = ui.currency(price, USD)
+        textGraphic.text = text
 
         const { paddingx, paddingy } = this.textCoverStyle
         const coverGraphic = <Graphics>coveredText.getChildAt(0)

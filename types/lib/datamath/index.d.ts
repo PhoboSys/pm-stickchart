@@ -9,9 +9,6 @@ export default class datamath {
     static roundpow2(value: number): number;
     static percent(value: number, significant: number): number;
     static round(value: number, significant: number): number;
-    static precision(value: number, significant: number): number;
-    static toFixedPrecision(value: number, significant: number): string;
-    static toFixedScaled(value: number, stepsize: number): string;
     static toFixed(value: number, dp: number): string;
     static steps([minv, maxv]: [number, number], stepsize: number, maxsteps: number): number[];
     static fashhash(value: number): number;
