@@ -47,8 +47,8 @@ _a = CurrencyFormatter, _CurrencyFormatter_get = function _CurrencyFormatter_get
         return __classPrivateFieldGet(CurrencyFormatter, _a, "m", _CurrencyFormatter_createCustom).call(CurrencyFormatter, currency, options);
     }
 }, _CurrencyFormatter_createStandard = function _CurrencyFormatter_createStandard(currency, options) {
-    const fSymboled = new Intl.NumberFormat('en-US', Object.assign({ style: 'currency', currency, currencyDisplay: 'narrowSymbol' }, options));
-    const fCoded = new Intl.NumberFormat('en-US', Object.assign({ style: 'currency', currency, currencyDisplay: 'code' }, options));
+    const fSymboled = new Intl.NumberFormat(undefined, Object.assign({ style: 'currency', currency, currencyDisplay: 'narrowSymbol' }, options));
+    const fCoded = new Intl.NumberFormat(undefined, Object.assign({ style: 'currency', currency, currencyDisplay: 'code' }, options));
     const formatter = {
         formatUnsymboled: (amount) => fCoded.format(amount).replace(new RegExp(`\s+${currency}\s+`), ''),
         formatSymboled: (amount) => fSymboled.format(amount),
@@ -57,7 +57,7 @@ _a = CurrencyFormatter, _CurrencyFormatter_get = function _CurrencyFormatter_get
     _infra_1.Logger.info('Standard Currency Formatter Create: "%s"', currency);
     return formatter;
 }, _CurrencyFormatter_createCustom = function _CurrencyFormatter_createCustom(currency, options) {
-    const fDefault = new Intl.NumberFormat('en-US', Object.assign({ style: 'currency', currency: 'USD' }, options));
+    const fDefault = new Intl.NumberFormat(undefined, Object.assign({ style: 'currency', currency: 'USD' }, options));
     const formatter = {
         formatUnsymboled: (amount) => fDefault.format(amount).replace('$', ''),
         formatSymboled: (amount) => fDefault.format(amount).replace('$', (SYMBOLS[currency] || '')),

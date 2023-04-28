@@ -63,14 +63,14 @@ export class CurrencyFormatter {
     }
 
     static #createStandard(currency, options): Formatter {
-        const fSymboled = new Intl.NumberFormat('en-US', {
+        const fSymboled = new Intl.NumberFormat(undefined, {
             style: 'currency',
             currency,
             currencyDisplay: 'narrowSymbol',
             ...options,
         })
 
-        const fCoded = new Intl.NumberFormat('en-US', {
+        const fCoded = new Intl.NumberFormat(undefined, {
             style: 'currency',
             currency,
             currencyDisplay: 'code',
@@ -90,7 +90,7 @@ export class CurrencyFormatter {
     }
 
     static #createCustom(currency, options): Formatter {
-        const fDefault = new Intl.NumberFormat('en-US', {
+        const fDefault = new Intl.NumberFormat(undefined, {
             style: 'currency',
             currency: 'USD',
             ...options,
