@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceLineRenderer = void 0;
 const _rendering_1 = require("../../../index.js");
 const _config_1 = __importDefault(require("../../../../config.js"));
-const datamath_1 = __importDefault(require("../../../../lib/datamath"));
 const ui_1 = __importDefault(require("../../../../lib/ui"));
 const _constants_1 = require("../../../../constants/index.js");
 class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
@@ -48,11 +47,12 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
         const x = width;
         const y = latestY;
         const price = latest.value;
-        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(datamath_1.default.toFixedPrecision(Number(price), 8), [x, y], this.textCoverStyle));
+        const text = ui_1.default.currency(price, _constants_1.USD);
+        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(text, [x, y], this.textCoverStyle));
         if (coveredTextState.new)
             container.addChild(coveredText);
         const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = ui_1.default.currency(price, _constants_1.USD);
+        textGraphic.text = text;
         const { paddingx, paddingy } = this.textCoverStyle;
         const coverGraphic = coveredText.getChildAt(0);
         coverGraphic.width = textGraphic.width + paddingx * 2;

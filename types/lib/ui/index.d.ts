@@ -5,8 +5,8 @@ export declare const UNIX_WEEK: number;
 export default class ui {
     static percent(amount: any): string;
     static erc20(amount: any): string;
-    static currency(price: any, currently?: string): string;
-    static currencyScaled(price: any, currently: any, scale: number): string;
+    static currency(price: any, currency: any): string;
+    static currencyScaled(price: any, currency: any, scale: number): string;
     static time24(timestamp: number): string;
     static duration24(duration: number): string;
 }
