@@ -162,13 +162,6 @@ export class StickChart extends EventTarget {
         const priceframe = this.priceframe.get()
         const newPriceframe = this.priceframe.getByPrices(framedata.prices)
 
-        console.log({
-            priceframeSince: newPriceframe.since,
-            priceframeUntil: newPriceframe.until,
-            newPriceframeSince: newPriceframe.since,
-            newPriceframeUntil: newPriceframe.until,
-        })
-
         const plotdata = DataBuilder.plotdata(
             chartdata,
             framedata,
