@@ -9,6 +9,7 @@ export declare class StickChart extends EventTarget {
     private morphController;
     private _context;
     private timeframe;
+    private priceframe;
     constructor(stageElement: HTMLElement);
     setScreenSize({ width, height }: {
         width: any;

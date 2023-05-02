@@ -2,37 +2,59 @@ import config from '@config'
 
 import { gsap } from '@lib/pixi'
 import { PricePoint } from '@chartdata'
+import { Priceframe } from '@lib/priceframe'
+import { Timeframe } from '@lib/timeframe'
+import { eq } from '@lib/calc-utils'
 
 type ChartData = { prices: string[], timestamps: number[] }
-
+type PriceFrame = { since: number, until: number }
 export default class MorphController {
 
-    #timeline: gsap.core.Timeline = gsap.timeline()
+    private pointsTimeline: gsap.core.Timeline = gsap.timeline()
 
-    // private _lastTarget: PricePoint | null
+    public priceframeTimeline: gsap.core.Timeline = gsap.timeline()
 
     constructor(
+        private timeframe: Timeframe,
+        private priceframe: Priceframe,
         private _onUpdate: () => void
     ) { }
 
-    public get isActive(): boolean {
-        return this.#timeline.isActive()
-    }
+    public morph(
+        previousChartData: ChartData,
+        currentChartData: ChartData,
+        previousPriceframe: PriceFrame,
+        currentPriceframe: PriceFrame,
 
-    public morph(previous?: ChartData, current?: ChartData): void {
-        if (!previous || !current || !config.morph) return
+    ): void {
+        if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !config.morph) return
 
-        this.#perform(previous, current)
-    }
-
-    #perform(previous: ChartData, current: ChartData): void {
-        // 0. Make sure to complite running animation and clear timeline
-        if (this.isActive) this.#timeline.progress(1)
-        this.#timeline.clear()
+        // 0. Make sure to complite running animations and clear timeline
+        this.terminatePointsTimeline()
+        this.terminatePriceframeTimeline()
 
         // 1. Find all points that was added from previous to current
+        const { indeces, intersect, animations } = this.getFrontPoints(previousChartData, currentChartData)
+
+        // 3. If any intersaction found and animations are in valid range perform animations
+        const shouldAnimate = animations <= config.morph.maxstack && animations > 0
+        if (intersect && shouldAnimate) {
+
+            this.performNewPoints(currentChartData, indeces, animations)
+            this.performPriceframe(previousPriceframe, currentPriceframe)
+
+            // 5. retrun in order to avoid defaul update/render if morph preformed
+            return
+        }
+
+        // 4. Perform default update/render
+        this.priceframe.set(currentPriceframe)
+        this._onUpdate()
+    }
+
+    private getFrontPoints(previous, current): { indeces: number[], intersect: boolean, animations: number } {
         const frontdiff: number[] = []
-        const pts = previous.timestamps[previous.timestamps.length-1]
+        const pts = previous.timestamps[previous.timestamps.length - 1]
 
         let cidx = current.timestamps.length
         let intersect = false
@@ -43,58 +65,51 @@ export default class MorphController {
             frontdiff.unshift(cidx)
         }
 
-        // 2. If any intersaction found animate all points
-        if (intersect) {
-            let animations = 0
-            let prevpoint: PricePoint | null = null
-            for (const idx of frontdiff) {
-                const target: PricePoint = {
-                    timestamp: current.timestamps[idx],
-                    value: current.prices[idx],
-                }
+        return {
+            indeces: frontdiff,
+            intersect,
+            animations: frontdiff.length ? frontdiff.length - 1 : 0,
+        }
+    }
 
-                if (prevpoint) {
-                    this.#add(prevpoint, target, current, idx)
-                    animations++
-                }
+    private terminatePointsTimeline(): void {
+        if (this.pointsTimeline.isActive()) this.pointsTimeline.progress(1)
+        this.pointsTimeline.clear()
+    }
 
-                prevpoint = target
+    private performNewPoints(chartdata: ChartData, pointsIndeces: number[], animations: number): void {
+        let prevpoint: PricePoint | null = null
+        for (const idx of pointsIndeces) {
+            const target: PricePoint = {
+                timestamp: chartdata.timestamps[idx],
+                value: chartdata.prices[idx],
             }
 
-            // 3. Check animations to be in valid range
-            if (
-                animations <= config.morph.maxstack &&
-                animations > 0
-            ) {
-
-                // 4. Removing points form current chart data
-                // in order to add them back animated via timeline
-                current.timestamps.splice(-animations)
-                current.prices.splice(-animations)
-
-                // 5. Speedup animation to make all timeline finish in config.morph.duration
-                this.#timeline.timeScale(animations)
-
-                // 6. retrun in order to avoid defaul update/render if morph preformed
-                return
-
+            if (prevpoint) {
+                this.addPoint(prevpoint, target, chartdata, idx)
             }
 
+            prevpoint = target
         }
 
-        // 7. Clear and repform default update/render
-        this.#timeline.clear()
-        this._onUpdate()
+        // 0. Removing points form current chart data in order to add them back animated via timeline
+        chartdata.timestamps.splice(-animations)
+        chartdata.prices.splice(-animations)
+
+        // 1. Speedup animation to make all timeline finish in config.morph.duration
+        this.pointsTimeline.timeScale(animations)
+
+        return
 
     }
 
-    #add(
+    private addPoint(
         animated: PricePoint,
         end: PricePoint,
         current: ChartData,
         idx: number,
     ): void {
-        this.#timeline.to(
+        this.pointsTimeline.to(
             animated,
             {
                 ...end,
@@ -116,4 +131,40 @@ export default class MorphController {
         )
     }
 
+    public terminatePriceframeTimeline(): void {
+        if (this.priceframeTimeline) {
+            if (this.priceframeTimeline.isActive()) this.priceframeTimeline.progress(1)
+            this.priceframeTimeline.clear()
+        }
+    }
+
+    private performPriceframe(previous: PriceFrame, current: PriceFrame): void {
+        if (eq(previous.since, current.since) && eq(previous.until, current.until)) return
+
+        this.terminatePriceframeTimeline()
+
+        this.addPriceframe({ ...previous }, current)
+
+    }
+
+    private addPriceframe(animated, end): void {
+        this.priceframeTimeline.to(
+            animated,
+            {
+                ...end,
+                ...config.morph.animation,
+                onUpdate: () => {
+                    this.priceframe.set({ since: animated.since, until: animated.until })
+                    this._onUpdate()
+                },
+                onComplete: () => {
+                    // gsap has limited precision
+                    // in order to render exactly 'end'
+                    // we have to apply it explicitly
+                    this.priceframe.set({ since: end.since, until: end.until })
+                    this._onUpdate()
+                }
+            }
+        )
+    }
 }

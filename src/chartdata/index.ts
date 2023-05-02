@@ -61,28 +61,72 @@ export class DataBuilder {
         ys: [],
     }
 
-    static normalize(
-        timestampsOrig,
-        pricesOrig,
+    static chartdata(
+        chartdata: ChartData
+    ): { timestamps, prices } {
+        const timestamps = Object.keys(chartdata).map(k => Number(k))
+        const prices = Object.values(chartdata)
+
+        return { timestamps, prices }
+    }
+
+    static framedata(
         chartdata: { timestamps, prices },
         timeframe: { since, until },
-        screen: { width, height },
-    ): PlotData {
-        if (isEmpty(timestampsOrig) || isEmpty(pricesOrig)) return DataBuilder.EMPTY_PLOTDATA
+    ): { prices, timestamps } {
 
-        const idxs = datamath.sampler(timestampsOrig, config.maxdensity)
-        const timestamps = datamath.pick(timestampsOrig, idxs)
-        const prices = datamath.pick(pricesOrig, idxs)
-        const { width, height } = screen
+        const tsframed: number[] = []
+        const psframed: number[] = []
+
+        const { timestamps: timestampsOrig, prices: pricesOrig } = chartdata
+        const { since, until } = timeframe
+        for (const idx in timestampsOrig) {
+
+            const ts = timestampsOrig[idx]
+            const ps = pricesOrig[idx]
+
+            if (
+                ts >= since &&
+                ts <= until
+            ) {
+
+                tsframed.push(ts)
+                psframed.push(ps)
+
+            }
+        }
+
+        const idxs = datamath.sampler(tsframed, config.maxdensity)
+        const timestamps = datamath.pick(tsframed, idxs)
+        const prices = datamath.pick(psframed, idxs)
 
         // return latest price if sampled out
         if (
-            timestamps.at(-1) !== timestampsOrig.at(-1) ||
-            prices.at(-1) !== pricesOrig.at(-1)
+            timestamps.at(-1) !== tsframed.at(-1) ||
+            prices.at(-1) !== psframed.at(-1)
         ) {
-            timestamps.push(Number(timestampsOrig.at(-1)))
-            prices.push(Number(pricesOrig.at(-1)))
+            timestamps.push(Number(tsframed.at(-1)))
+            prices.push(Number(psframed.at(-1)))
         }
+
+        return {
+            timestamps,
+            prices
+        }
+    }
+
+    static plotdata(
+        chartdata: { timestamps, prices },
+        framedata: { timestamps, prices },
+        timeframe: { since, until },
+        priceframe: { since, until },
+        screen: { width, height },
+    ): PlotData {
+        const { timestamps, prices } = framedata
+
+        if (isEmpty(timestamps) || isEmpty(prices)) return DataBuilder.EMPTY_PLOTDATA
+
+        const { width, height } = screen
 
         const paddingLeft = config.padding.left / width
         const paddingRight = config.padding.right / width
@@ -96,7 +140,7 @@ export class DataBuilder {
         const paddingBottom = config.padding.bottom / unheight
         const paddingTop = config.padding.top / unheight
         const pricerange = datamath.range(
-            prices,
+            [priceframe.since, priceframe.until],
             paddingBottom,
             paddingTop,
         )
@@ -136,45 +180,6 @@ export class DataBuilder {
             ys,
         }
 
-    }
-
-    static chartdata(
-        chartdata: ChartData
-    ): { timestamps, prices } {
-        const timestamps = Object.keys(chartdata).map(k => Number(k))
-        const prices = Object.values(chartdata)
-
-        return { timestamps, prices }
-    }
-
-    static plotdata(
-        chartdata: { timestamps, prices },
-        screen: { width, height },
-        timeframe: { since, until },
-    ): PlotData {
-
-        const tsframed: number[] = []
-        const psframed: number[] = []
-
-        const { timestamps, prices } = chartdata
-        const { since, until } = timeframe
-        for (const idx in timestamps) {
-
-            const ts = timestamps[idx]
-            const ps = prices[idx]
-
-            if (
-                ts >= since &&
-                ts <= until
-            ) {
-
-                tsframed.push(ts)
-                psframed.push(ps)
-
-            }
-        }
-
-        return DataBuilder.normalize(tsframed, psframed, chartdata, timeframe, screen)
     }
 
 }

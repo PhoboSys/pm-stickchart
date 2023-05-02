@@ -8,6 +8,7 @@ import { EventsProducer } from '@events'
 import MorphController from '@lib/morph'
 import { Application, EventSystem } from '@lib/pixi'
 import { Timeframe } from '@lib/timeframe'
+import { Priceframe } from '@lib/priceframe'
 
 import { RenderingPipelineFactory, RenderingContext } from '@rendering'
 import { TextureStorage, GraphicStorage } from '@rendering'
@@ -27,6 +28,8 @@ export class StickChart extends EventTarget {
     private _context: RenderingContext | null
 
     private timeframe: Timeframe
+
+    private priceframe: Priceframe
 
     constructor(
         private stageElement: HTMLElement
@@ -48,7 +51,8 @@ export class StickChart extends EventTarget {
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
         this.timeframe = new Timeframe(this, () => this.applyTimeframe())
-        this.morphController = new MorphController(() => this.applyMorph())
+        this.priceframe = new Priceframe()
+        this.morphController = new MorphController(this.timeframe, this.priceframe, () => this.applyMorph())
 
         const renderer = new GraphicStorage(this.application.stage)
 
@@ -70,22 +74,40 @@ export class StickChart extends EventTarget {
     private applyTimeframe(): void {
         if (!this._context) return
 
+        this.morphController.terminatePriceframeTimeline()
+
+        const chartdata = this._context.chartdata
+        const timeframe = this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
+        const framedata = DataBuilder.framedata(chartdata, timeframe)
+        const priceframe = this.priceframe.setByPrices(framedata.prices).get()
+
         this._context.plotdata = DataBuilder.plotdata(
-            this._context.chartdata,
+            chartdata,
+            framedata,
+            timeframe,
+            priceframe,
             this.application.screen,
-            this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
+
         this.rerender('timeframe')
     }
 
     private applyMorph(): void {
         if (!this._context) return
 
+        const chartdata = this._context.chartdata
+        const timeframe = this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
+        const framedata = DataBuilder.framedata(chartdata, timeframe)
+        const priceframe = this.priceframe.get()
+
         this._context.plotdata = DataBuilder.plotdata(
-            this._context.chartdata,
+            chartdata,
+            framedata,
+            timeframe,
+            priceframe,
             this.application.screen,
-            this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
+
         this.rerender('morph')
     }
 
@@ -125,11 +147,34 @@ export class StickChart extends EventTarget {
         }
 
         const pipeline = this.pipelineFactory.get(context.charttype)
+
         const chartdata = DataBuilder.chartdata(context.chartdata)
+        const timeframe = this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
+        const framedata = DataBuilder.framedata(chartdata, timeframe)
+        if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
+            // clear context if metapoolid changed
+            this._context = null
+            this.morphController.priceframeTimeline.kill()
+            this.priceframe.setByPrices(framedata.prices)
+        }
+        if (!this.priceframe.isInitialized()) this.priceframe.initialize(framedata.prices)
+
+        const priceframe = this.priceframe.get()
+        const newPriceframe = this.priceframe.getByPrices(framedata.prices)
+
+        console.log({
+            priceframeSince: newPriceframe.since,
+            priceframeUntil: newPriceframe.until,
+            newPriceframeSince: newPriceframe.since,
+            newPriceframeUntil: newPriceframe.until,
+        })
+
         const plotdata = DataBuilder.plotdata(
             chartdata,
+            framedata,
+            timeframe,
+            newPriceframe,
             this.application.screen,
-            this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
         )
 
         const ctx: RenderingContext = {
@@ -151,11 +196,6 @@ export class StickChart extends EventTarget {
             plotdata,
         }
 
-        if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
-            // clear context if metapoolid changed
-            this._context = null
-        }
-
         window.requestAnimationFrame(() => {
             if (!this._context || !config.morph) {
 
@@ -166,7 +206,12 @@ export class StickChart extends EventTarget {
 
             } else {
 
-                this.morphController.morph(this._context.chartdata, ctx.chartdata)
+                this.morphController.morph(
+                    this._context.chartdata,
+                    ctx.chartdata,
+                    priceframe,
+                    newPriceframe,
+                )
 
             }
 

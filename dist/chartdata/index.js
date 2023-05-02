@@ -41,26 +41,51 @@ class DataBuilder {
             timestamp: Number(timestamps.at(-1)),
         };
     }
-    static normalize(timestampsOrig, pricesOrig, chartdata, timeframe, screen) {
-        if ((0, utils_1.isEmpty)(timestampsOrig) || (0, utils_1.isEmpty)(pricesOrig))
-            return DataBuilder.EMPTY_PLOTDATA;
-        const idxs = datamath_1.default.sampler(timestampsOrig, _config_1.default.maxdensity);
-        const timestamps = datamath_1.default.pick(timestampsOrig, idxs);
-        const prices = datamath_1.default.pick(pricesOrig, idxs);
-        const { width, height } = screen;
-        // return latest price if sampled out
-        if (timestamps.at(-1) !== timestampsOrig.at(-1) ||
-            prices.at(-1) !== pricesOrig.at(-1)) {
-            timestamps.push(Number(timestampsOrig.at(-1)));
-            prices.push(Number(pricesOrig.at(-1)));
+    static chartdata(chartdata) {
+        const timestamps = Object.keys(chartdata).map(k => Number(k));
+        const prices = Object.values(chartdata);
+        return { timestamps, prices };
+    }
+    static framedata(chartdata, timeframe) {
+        const tsframed = [];
+        const psframed = [];
+        const { timestamps: timestampsOrig, prices: pricesOrig } = chartdata;
+        const { since, until } = timeframe;
+        for (const idx in timestampsOrig) {
+            const ts = timestampsOrig[idx];
+            const ps = pricesOrig[idx];
+            if (ts >= since &&
+                ts <= until) {
+                tsframed.push(ts);
+                psframed.push(ps);
+            }
         }
+        const idxs = datamath_1.default.sampler(tsframed, _config_1.default.maxdensity);
+        const timestamps = datamath_1.default.pick(tsframed, idxs);
+        const prices = datamath_1.default.pick(psframed, idxs);
+        // return latest price if sampled out
+        if (timestamps.at(-1) !== tsframed.at(-1) ||
+            prices.at(-1) !== psframed.at(-1)) {
+            timestamps.push(Number(tsframed.at(-1)));
+            prices.push(Number(psframed.at(-1)));
+        }
+        return {
+            timestamps,
+            prices
+        };
+    }
+    static plotdata(chartdata, framedata, timeframe, priceframe, screen) {
+        const { timestamps, prices } = framedata;
+        if ((0, utils_1.isEmpty)(timestamps) || (0, utils_1.isEmpty)(prices))
+            return DataBuilder.EMPTY_PLOTDATA;
+        const { width, height } = screen;
         const paddingLeft = _config_1.default.padding.left / width;
         const paddingRight = _config_1.default.padding.right / width;
         const timerange = datamath_1.default.range([timeframe.since, timeframe.until], paddingLeft, paddingRight);
         const unheight = height - (_config_1.default.padding.top + _config_1.default.padding.bottom);
         const paddingBottom = _config_1.default.padding.bottom / unheight;
         const paddingTop = _config_1.default.padding.top / unheight;
-        const pricerange = datamath_1.default.range(prices, paddingBottom, paddingTop);
+        const pricerange = datamath_1.default.range([priceframe.since, priceframe.until], paddingBottom, paddingTop);
         const xs = datamath_1.default.scale(timestamps, timerange, width);
         const ys = datamath_1.default.scaleReverse(prices, pricerange, height);
         const paddingY = [
@@ -87,27 +112,6 @@ class DataBuilder {
             xs,
             ys,
         };
-    }
-    static chartdata(chartdata) {
-        const timestamps = Object.keys(chartdata).map(k => Number(k));
-        const prices = Object.values(chartdata);
-        return { timestamps, prices };
-    }
-    static plotdata(chartdata, screen, timeframe) {
-        const tsframed = [];
-        const psframed = [];
-        const { timestamps, prices } = chartdata;
-        const { since, until } = timeframe;
-        for (const idx in timestamps) {
-            const ts = timestamps[idx];
-            const ps = prices[idx];
-            if (ts >= since &&
-                ts <= until) {
-                tsframed.push(ts);
-                psframed.push(ps);
-            }
-        }
-        return DataBuilder.normalize(tsframed, psframed, chartdata, timeframe, screen);
     }
 }
 exports.DataBuilder = DataBuilder;

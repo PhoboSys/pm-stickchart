@@ -1,93 +1,118 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _MorphController_instances, _MorphController_timeline, _MorphController_perform, _MorphController_add;
 Object.defineProperty(exports, "__esModule", { value: true });
 const _config_1 = __importDefault(require("../../config.js"));
 const pixi_1 = require("../pixi");
+const calc_utils_1 = require("../calc-utils");
 class MorphController {
-    // private _lastTarget: PricePoint | null
-    constructor(_onUpdate) {
+    constructor(timeframe, priceframe, _onUpdate) {
+        this.timeframe = timeframe;
+        this.priceframe = priceframe;
         this._onUpdate = _onUpdate;
-        _MorphController_instances.add(this);
-        _MorphController_timeline.set(this, pixi_1.gsap.timeline()
-        // private _lastTarget: PricePoint | null
-        );
+        this.pointsTimeline = pixi_1.gsap.timeline();
+        this.priceframeTimeline = pixi_1.gsap.timeline();
     }
-    get isActive() {
-        return __classPrivateFieldGet(this, _MorphController_timeline, "f").isActive();
-    }
-    morph(previous, current) {
-        if (!previous || !current || !_config_1.default.morph)
+    morph(previousChartData, currentChartData, previousPriceframe, currentPriceframe) {
+        if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !_config_1.default.morph)
             return;
-        __classPrivateFieldGet(this, _MorphController_instances, "m", _MorphController_perform).call(this, previous, current);
+        // 0. Make sure to complite running animations and clear timeline
+        this.terminatePointsTimeline();
+        this.terminatePriceframeTimeline();
+        // 1. Find all points that was added from previous to current
+        const { indeces, intersect, animations } = this.getFrontPoints(previousChartData, currentChartData);
+        // 3. If any intersaction found and animations are in valid range perform animations
+        const shouldAnimate = animations <= _config_1.default.morph.maxstack && animations > 0;
+        if (intersect && shouldAnimate) {
+            this.performNewPoints(currentChartData, indeces, animations);
+            this.performPriceframe(previousPriceframe, currentPriceframe);
+            // 5. retrun in order to avoid defaul update/render if morph preformed
+            return;
+        }
+        // 4. Perform default update/render
+        this.priceframe.set(currentPriceframe);
+        this._onUpdate();
     }
-}
-exports.default = MorphController;
-_MorphController_timeline = new WeakMap(), _MorphController_instances = new WeakSet(), _MorphController_perform = function _MorphController_perform(previous, current) {
-    // 0. Make sure to complite running animation and clear timeline
-    if (this.isActive)
-        __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
-    __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
-    // 1. Find all points that was added from previous to current
-    const frontdiff = [];
-    const pts = previous.timestamps[previous.timestamps.length - 1];
-    let cidx = current.timestamps.length;
-    let intersect = false;
-    while (!intersect && cidx-- && pts) {
-        const cts = current.timestamps[cidx];
-        intersect = cts === pts;
-        frontdiff.unshift(cidx);
+    getFrontPoints(previous, current) {
+        const frontdiff = [];
+        const pts = previous.timestamps[previous.timestamps.length - 1];
+        let cidx = current.timestamps.length;
+        let intersect = false;
+        while (!intersect && cidx-- && pts) {
+            const cts = current.timestamps[cidx];
+            intersect = cts === pts;
+            frontdiff.unshift(cidx);
+        }
+        return {
+            indeces: frontdiff,
+            intersect,
+            animations: frontdiff.length ? frontdiff.length - 1 : 0,
+        };
     }
-    // 2. If any intersaction found animate all points
-    if (intersect) {
-        let animations = 0;
+    terminatePointsTimeline() {
+        if (this.pointsTimeline.isActive())
+            this.pointsTimeline.progress(1);
+        this.pointsTimeline.clear();
+    }
+    performNewPoints(chartdata, pointsIndeces, animations) {
         let prevpoint = null;
-        for (const idx of frontdiff) {
+        for (const idx of pointsIndeces) {
             const target = {
-                timestamp: current.timestamps[idx],
-                value: current.prices[idx],
+                timestamp: chartdata.timestamps[idx],
+                value: chartdata.prices[idx],
             };
             if (prevpoint) {
-                __classPrivateFieldGet(this, _MorphController_instances, "m", _MorphController_add).call(this, prevpoint, target, current, idx);
-                animations++;
+                this.addPoint(prevpoint, target, chartdata, idx);
             }
             prevpoint = target;
         }
-        // 3. Check animations to be in valid range
-        if (animations <= _config_1.default.morph.maxstack &&
-            animations > 0) {
-            // 4. Removing points form current chart data
-            // in order to add them back animated via timeline
-            current.timestamps.splice(-animations);
-            current.prices.splice(-animations);
-            // 5. Speedup animation to make all timeline finish in config.morph.duration
-            __classPrivateFieldGet(this, _MorphController_timeline, "f").timeScale(animations);
-            // 6. retrun in order to avoid defaul update/render if morph preformed
-            return;
+        // 0. Removing points form current chart data in order to add them back animated via timeline
+        chartdata.timestamps.splice(-animations);
+        chartdata.prices.splice(-animations);
+        // 1. Speedup animation to make all timeline finish in config.morph.duration
+        this.pointsTimeline.timeScale(animations);
+        return;
+    }
+    addPoint(animated, end, current, idx) {
+        this.pointsTimeline.to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
+                current.timestamps[idx] = animated.timestamp;
+                current.prices[idx] = animated.value;
+                this._onUpdate();
+            }, onComplete: () => {
+                // gsap has limited precision
+                // in order to render exactly 'end'
+                // we have to apply it explicitly
+                current.timestamps[idx] = end.timestamp;
+                current.prices[idx] = end.value;
+                this._onUpdate();
+            } }));
+    }
+    terminatePriceframeTimeline() {
+        if (this.priceframeTimeline) {
+            if (this.priceframeTimeline.isActive())
+                this.priceframeTimeline.progress(1);
+            this.priceframeTimeline.clear();
         }
     }
-    // 7. Clear and repform default update/render
-    __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
-    this._onUpdate();
-}, _MorphController_add = function _MorphController_add(animated, end, current, idx) {
-    __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
-            current.timestamps[idx] = animated.timestamp;
-            current.prices[idx] = animated.value;
-            this._onUpdate();
-        }, onComplete: () => {
-            // gsap has limited precision
-            // in order to render exactly 'end'
-            // we have to apply it explicitly
-            current.timestamps[idx] = end.timestamp;
-            current.prices[idx] = end.value;
-            this._onUpdate();
-        } }));
-};
+    performPriceframe(previous, current) {
+        if ((0, calc_utils_1.eq)(previous.since, current.since) && (0, calc_utils_1.eq)(previous.until, current.until))
+            return;
+        this.terminatePriceframeTimeline();
+        this.addPriceframe(Object.assign({}, previous), current);
+    }
+    addPriceframe(animated, end) {
+        this.priceframeTimeline.to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
+                this.priceframe.set({ since: animated.since, until: animated.until });
+                this._onUpdate();
+            }, onComplete: () => {
+                // gsap has limited precision
+                // in order to render exactly 'end'
+                // we have to apply it explicitly
+                this.priceframe.set({ since: end.since, until: end.until });
+                this._onUpdate();
+            } }));
+    }
+}
+exports.default = MorphController;
 //# sourceMappingURL=index.js.map
