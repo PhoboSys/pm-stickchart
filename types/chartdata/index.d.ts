@@ -29,10 +29,7 @@ export declare class DataBuilder {
         prices: any;
         timestamps: any;
     };
-    static plotdata(chartdata: {
-        timestamps: any;
-        prices: any;
-    }, framedata: {
+    static plotdata(framedata: {
         timestamps: any;
         prices: any;
     }, timeframe: {

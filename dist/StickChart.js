@@ -54,7 +54,7 @@ class StickChart extends EventTarget {
         const timeframe = this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get();
         const framedata = _chartdata_1.DataBuilder.framedata(chartdata, timeframe);
         const priceframe = this.priceframe.setByPrices(framedata.prices).get();
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, framedata, timeframe, priceframe, this.application.screen);
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, priceframe, this.application.screen);
         this.rerender('timeframe');
     }
     applyMorph() {
@@ -64,7 +64,7 @@ class StickChart extends EventTarget {
         const timeframe = this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get();
         const framedata = _chartdata_1.DataBuilder.framedata(chartdata, timeframe);
         const priceframe = this.priceframe.get();
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, framedata, timeframe, priceframe, this.application.screen);
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, priceframe, this.application.screen);
         this.rerender('morph');
     }
     rerender(reason) {
@@ -95,7 +95,7 @@ class StickChart extends EventTarget {
             this.priceframe.initialize(framedata.prices);
         const priceframe = this.priceframe.get();
         const newPriceframe = this.priceframe.getByPrices(framedata.prices);
-        const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, framedata, timeframe, newPriceframe, this.application.screen);
+        const plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, newPriceframe, this.application.screen);
         const ctx = {
             metapool: context.metapool,
             pools: context.pools,

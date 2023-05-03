@@ -116,7 +116,6 @@ export class DataBuilder {
     }
 
     static plotdata(
-        chartdata: { timestamps, prices },
         framedata: { timestamps, prices },
         timeframe: { since, until },
         priceframe: { since, until },
@@ -158,7 +157,7 @@ export class DataBuilder {
             width - config.padding.right
         ]
 
-        const latest = DataBuilder.getLatest(chartdata)
+        const latest = DataBuilder.getLatest(framedata)
         const [latestX] = datamath.scale([latest.timestamp], timerange, width)
         const [latestY] = datamath.scaleReverse([Number(latest.value)], pricerange, height)
 

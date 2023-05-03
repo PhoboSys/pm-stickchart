@@ -74,7 +74,7 @@ class DataBuilder {
             prices
         };
     }
-    static plotdata(chartdata, framedata, timeframe, priceframe, screen) {
+    static plotdata(framedata, timeframe, priceframe, screen) {
         const { timestamps, prices } = framedata;
         if ((0, utils_1.isEmpty)(timestamps) || (0, utils_1.isEmpty)(prices))
             return DataBuilder.EMPTY_PLOTDATA;
@@ -96,7 +96,7 @@ class DataBuilder {
             _config_1.default.padding.left,
             width - _config_1.default.padding.right
         ];
-        const latest = DataBuilder.getLatest(chartdata);
+        const latest = DataBuilder.getLatest(framedata);
         const [latestX] = datamath_1.default.scale([latest.timestamp], timerange, width);
         const [latestY] = datamath_1.default.scaleReverse([Number(latest.value)], pricerange, height);
         return {

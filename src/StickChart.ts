@@ -82,7 +82,6 @@ export class StickChart extends EventTarget {
         const priceframe = this.priceframe.setByPrices(framedata.prices).get()
 
         this._context.plotdata = DataBuilder.plotdata(
-            chartdata,
             framedata,
             timeframe,
             priceframe,
@@ -101,7 +100,6 @@ export class StickChart extends EventTarget {
         const priceframe = this.priceframe.get()
 
         this._context.plotdata = DataBuilder.plotdata(
-            chartdata,
             framedata,
             timeframe,
             priceframe,
@@ -163,7 +161,6 @@ export class StickChart extends EventTarget {
         const newPriceframe = this.priceframe.getByPrices(framedata.prices)
 
         const plotdata = DataBuilder.plotdata(
-            chartdata,
             framedata,
             timeframe,
             newPriceframe,
