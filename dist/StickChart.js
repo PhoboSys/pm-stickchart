@@ -15,6 +15,7 @@ const priceframe_1 = require("./lib/priceframe");
 const framedata_1 = require("./lib/framedata");
 const _rendering_1 = require("./rendering/index.js");
 const _rendering_2 = require("./rendering/index.js");
+const Meta_1 = __importDefault(require("./Meta"));
 class StickChart extends EventTarget {
     constructor(stageElement) {
         super();
@@ -56,6 +57,7 @@ class StickChart extends EventTarget {
         const chartdata = this._context.chartdata;
         const timeframe = this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get();
         const framedata = this.framedata.calculate(chartdata, timeframe);
+        console.log(`applyTimeframe of ${Meta_1.default.render}:`, framedata);
         const priceframe = this.priceframe.calculate(framedata.prices);
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, priceframe, this.application.screen);
         this.rerender('timeframe');
@@ -88,6 +90,8 @@ class StickChart extends EventTarget {
         const timeframe = this.timeframe.calculate(chartdata);
         const framedata = this.framedata.calculate(chartdata, timeframe);
         const priceframe = this.priceframe.calculate(framedata.prices);
+        console.log(`current framedata of ${Meta_1.default.render}`, this.framedata.get());
+        console.log(`next framedata of ${Meta_1.default.render}:`, framedata);
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
             // clear context if metapoolid changed
             this._context = null;
@@ -126,6 +130,8 @@ class StickChart extends EventTarget {
             else {
                 this.morphController.morph(timeframe, framedata, priceframe);
             }
+            console.log(`complite framedata of ${Meta_1.default.render}:`, this.framedata.get());
+            Meta_1.default.render = Meta_1.default.render + 1;
             // save latest rendered context
             this._context = ctx;
         });

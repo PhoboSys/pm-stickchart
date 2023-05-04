@@ -82,9 +82,11 @@ export class StickChart extends EventTarget {
         this.morphController.terminatePointsTimeline()
 
         const chartdata = this._context.chartdata
-        const timeframe = this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
+        const timeframe = this.timeframe.calculate(chartdata)
         const framedata = this.framedata.calculate(chartdata, timeframe)
         const priceframe = this.priceframe.calculate(framedata.prices)
+
+        this.timeframe.now(timeframe.until)
 
         this._context.plotdata = DataBuilder.plotdata(
             framedata,
