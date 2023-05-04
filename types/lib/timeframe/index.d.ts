@@ -1,3 +1,4 @@
+import { GetSet } from '../utils';
 export declare const UNIX_MINUTE = 60;
 export declare const UNIX_HOUR: number;
 export declare const UNIX_DAY: number;
@@ -32,10 +33,7 @@ export declare class Timeframe {
     calculate(chartdata: {
         timestamps: any;
         prices: any;
-    }): {
-        since: number;
-        until: number;
-    };
+    }): GetSet;
     destroy(): this;
     private shiftend;
     private shiftstart;

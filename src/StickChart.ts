@@ -82,11 +82,10 @@ export class StickChart extends EventTarget {
         this.morphController.terminatePointsTimeline()
 
         const chartdata = this._context.chartdata
-        const timeframe = this.timeframe.calculate(chartdata)
-        const framedata = this.framedata.calculate(chartdata, timeframe)
-        const priceframe = this.priceframe.calculate(framedata.prices)
 
-        this.timeframe.now(timeframe.until)
+        const timeframe = this.timeframe.calculate(chartdata).set().get()
+        const framedata = this.framedata.calculate(chartdata, timeframe).set().get()
+        const priceframe = this.priceframe.calculate(framedata.prices).set().get()
 
         this._context.plotdata = DataBuilder.plotdata(
             framedata,
@@ -101,14 +100,10 @@ export class StickChart extends EventTarget {
     private applyMorph(): void {
         if (!this._context) return
 
-        const timeframe = this.timeframe.get()
-        const framedata = this.framedata.get()
-        const priceframe = this.priceframe.get()
-
         this._context.plotdata = DataBuilder.plotdata(
-            framedata,
-            timeframe,
-            priceframe,
+            this.framedata.get(),
+            this.timeframe.get(),
+            this.priceframe.get(),
             this.application.screen,
         )
 
@@ -153,16 +148,16 @@ export class StickChart extends EventTarget {
         const pipeline = this.pipelineFactory.get(context.charttype)
 
         const chartdata = DataBuilder.chartdata(context.chartdata)
-        const timeframe = this.timeframe.calculate(chartdata)
-        const framedata = this.framedata.calculate(chartdata, timeframe)
-        const priceframe = this.priceframe.calculate(framedata.prices)
+        const timeframe = this.timeframe.calculate(chartdata).get()
+        const framedata = this.framedata.calculate(chartdata, timeframe).get()
+        const priceframe = this.priceframe.calculate(framedata.prices).get()
 
         if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
             // clear context if metapoolid changed
             this._context = null
             this.morphController.terminatePriceframeTimeline()
             this.morphController.terminatePointsTimeline()
-            this.timeframe.now(timeframe.until)
+            this.timeframe.calculate(chartdata).set()
             this.framedata.set(framedata)
             this.priceframe.set(priceframe)
         }
@@ -206,7 +201,12 @@ export class StickChart extends EventTarget {
 
             } else {
 
-                this.morphController.morph(timeframe, framedata, priceframe)
+                this.morphController.morph(framedata, priceframe, () => {
+                    this.timeframe.calculate(chartdata).set()
+                    this.framedata.set(framedata)
+                    this.priceframe.set(priceframe)
+                    this.applyMorph()
+                })
 
             }
 

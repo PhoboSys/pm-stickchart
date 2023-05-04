@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
+exports.GetSet = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
@@ -89,4 +89,18 @@ function orderBy(collection, visitor, order = 'asc') {
     return result;
 }
 exports.orderBy = orderBy;
+class GetSet {
+    constructor(getter, setter) {
+        this.getter = getter;
+        this.setter = setter;
+    }
+    get() {
+        return this.getter();
+    }
+    set() {
+        this.setter(this.getter());
+        return this;
+    }
+}
+exports.GetSet = GetSet;
 //# sourceMappingURL=index.js.map

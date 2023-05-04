@@ -15,7 +15,7 @@ class MorphController {
         this.pointsTimeline = pixi_1.gsap.timeline();
         this.priceframeTimeline = pixi_1.gsap.timeline();
     }
-    morph(currentTimeframe, currentChartData, currentPriceframe) {
+    morph(currentChartData, currentPriceframe, defaultUpdate) {
         const previousChartData = this.framedata.get();
         const previousPriceframe = this.priceframe.get();
         if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !_config_1.default.morph)
@@ -34,10 +34,7 @@ class MorphController {
             return;
         }
         // 4. Perform default update/render
-        this.timeframe.now(currentTimeframe.until);
-        this.framedata.set(currentChartData);
-        this.priceframe.set(currentPriceframe);
-        this._onUpdate();
+        defaultUpdate();
     }
     getFrontPoints(previous, current) {
         const frontdiff = [];

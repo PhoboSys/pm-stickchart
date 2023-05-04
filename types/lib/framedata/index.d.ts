@@ -1,4 +1,5 @@
 import { PricePoint } from '@chartdata';
+import { GetSet } from '../utils';
 type Prices = string[];
 type Timestamps = number[];
 type FrameData = {
@@ -17,7 +18,8 @@ export declare class Framedata {
     }, timeframe: {
         since: any;
         until: any;
-    }): FrameData;
+    }): GetSet;
+    private updatePoint;
     createUpdater(): (animated: PricePoint, timeframe: {
         since: number;
         until: number;

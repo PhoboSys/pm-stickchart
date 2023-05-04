@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Priceframe = void 0;
 const datamath_1 = __importDefault(require("../datamath"));
+const utils_1 = require("../utils");
 class Priceframe {
     get() {
         return { since: this.since, until: this.until };
@@ -21,7 +22,8 @@ class Priceframe {
     }
     calculate(prices) {
         const [since, until] = datamath_1.default.minmax(prices.map(Number));
-        return { since, until };
+        const priceframe = { since, until };
+        return new utils_1.GetSet(() => priceframe, this.set);
     }
 }
 exports.Priceframe = Priceframe;

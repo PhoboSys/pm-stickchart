@@ -1,4 +1,5 @@
 import datamath from '@lib/datamath'
+import { GetSet } from '@lib/utils'
 
 export class Priceframe {
 
@@ -21,10 +22,12 @@ export class Priceframe {
         return (!!this.since || this.since === 0) && (!!this.until || this.until === 0)
     }
 
-    public calculate(prices: Array<string | number>): { since: number, until: number } {
+    public calculate(prices: Array<string | number>): GetSet {
         const [since, until] = datamath.minmax(prices.map(Number))
 
-        return { since, until }
+        const priceframe = { since, until }
+
+        return new GetSet(() => priceframe, this.set)
     }
 
 }

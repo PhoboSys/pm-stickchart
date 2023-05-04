@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
+const _chartdata_1 = require("../../chartdata/index.js");
 const _events_1 = require("../../events/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
+const utils_1 = require("../utils");
 exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
@@ -89,6 +91,13 @@ class Timeframe {
     }
     get() {
         return { since: this.since, until: this.until };
+    }
+    calculate(chartdata) {
+        const timestamp = _chartdata_1.DataBuilder.getLatestTS(chartdata);
+        const until = this._until ? this._until : timestamp + this.timeframe * 0.382;
+        const since = until - this.timeframe;
+        const timeframe = { since, until };
+        return new utils_1.GetSet(() => timeframe, () => this.now(timestamp));
     }
     destroy() {
         this.eventTarget.removeEventListener('zoom', this.zoomevent);

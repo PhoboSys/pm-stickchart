@@ -1,4 +1,5 @@
 import { DataBuilder, PricePoint } from '@chartdata'
+import { GetSet } from '@lib/utils'
 
 type Prices = string[]
 type Timestamps = number[]
@@ -25,21 +26,26 @@ export class Framedata {
         return !!(this.prices && this.timestamps)
     }
 
-    public calculate(chartdata: { timestamps, prices }, timeframe: { since, until }): FrameData {
-        return DataBuilder.framedata(chartdata, timeframe)
+    public calculate(chartdata: { timestamps, prices }, timeframe: { since, until }): GetSet {
+        const framedata = DataBuilder.framedata(chartdata, timeframe)
+
+        return new GetSet(() => framedata, this.set)
+    }
+
+    private updatePoint(point: PricePoint, timeframe: { since: number, until: number }, index: number): this {
+        this.timestamps[index] = point.timestamp
+        this.prices[index] = point.value
+        this.calculate({ timestamps: this.timestamps, prices: this.prices }, timeframe).set().get()
+
+        return this
     }
 
     public createUpdater(): (animated: PricePoint, timeframe: { since: number, until: number }) => this {
         let index = this.get().timestamps.length
 
         return (animated, timeframe) => {
-            const timestamps = [...this.timestamps]
-            const prices = [...this.prices]
-            timestamps[index] = animated.timestamp
-            prices[index] = animated.value
-            const framedata = this.calculate({ timestamps, prices }, timeframe)
+            const framedata = this.updatePoint(animated, timeframe, index).get()
             index = framedata.timestamps.length - 1
-            this.set(framedata)
 
             return this
         }

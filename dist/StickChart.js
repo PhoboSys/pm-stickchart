@@ -54,20 +54,16 @@ class StickChart extends EventTarget {
         this.morphController.terminatePriceframeTimeline();
         this.morphController.terminatePointsTimeline();
         const chartdata = this._context.chartdata;
-        const timeframe = this.timeframe.calculate(chartdata);
-        const framedata = this.framedata.calculate(chartdata, timeframe);
-        const priceframe = this.priceframe.calculate(framedata.prices);
-        this.timeframe.now(timeframe.until);
+        const timeframe = this.timeframe.calculate(chartdata).set().get();
+        const framedata = this.framedata.calculate(chartdata, timeframe).set().get();
+        const priceframe = this.priceframe.calculate(framedata.prices).set().get();
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, priceframe, this.application.screen);
         this.rerender('timeframe');
     }
     applyMorph() {
         if (!this._context)
             return;
-        const timeframe = this.timeframe.get();
-        const framedata = this.framedata.get();
-        const priceframe = this.priceframe.get();
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, priceframe, this.application.screen);
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this.framedata.get(), this.timeframe.get(), this.priceframe.get(), this.application.screen);
         this.rerender('morph');
     }
     rerender(reason) {
@@ -86,15 +82,15 @@ class StickChart extends EventTarget {
         }
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
-        const timeframe = this.timeframe.calculate(chartdata);
-        const framedata = this.framedata.calculate(chartdata, timeframe);
-        const priceframe = this.priceframe.calculate(framedata.prices);
+        const timeframe = this.timeframe.calculate(chartdata).get();
+        const framedata = this.framedata.calculate(chartdata, timeframe).get();
+        const priceframe = this.priceframe.calculate(framedata.prices).get();
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
             // clear context if metapoolid changed
             this._context = null;
             this.morphController.terminatePriceframeTimeline();
             this.morphController.terminatePointsTimeline();
-            this.timeframe.now(timeframe.until);
+            this.timeframe.calculate(chartdata).set();
             this.framedata.set(framedata);
             this.priceframe.set(priceframe);
         }
@@ -125,7 +121,12 @@ class StickChart extends EventTarget {
                 pipeline.render(ctx, () => _infra_1.Logger.info('render'));
             }
             else {
-                this.morphController.morph(timeframe, framedata, priceframe);
+                this.morphController.morph(framedata, priceframe, () => {
+                    this.timeframe.calculate(chartdata).set();
+                    this.framedata.set(framedata);
+                    this.priceframe.set(priceframe);
+                    this.applyMorph();
+                });
             }
             // save latest rendered context
             this._context = ctx;

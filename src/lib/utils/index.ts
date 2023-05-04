@@ -117,3 +117,18 @@ export function orderBy(
 
     return result
 }
+
+export class GetSet {
+    constructor(private getter, private setter) {}
+
+    public get(): any {
+
+        return this.getter()
+    }
+
+    public set(): this {
+        this.setter(this.getter())
+
+        return this
+    }
+}

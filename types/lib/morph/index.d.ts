@@ -9,10 +9,6 @@ type PriceFrame = {
     since: number;
     until: number;
 };
-type TimeFrame = {
-    since: number;
-    until: number;
-};
 export default class MorphController {
     private timeframe;
     private priceframe;
@@ -21,7 +17,7 @@ export default class MorphController {
     pointsTimeline: gsap.core.Timeline;
     priceframeTimeline: gsap.core.Timeline;
     constructor(timeframe: Timeframe, priceframe: Priceframe, framedata: Framedata, _onUpdate: () => void);
-    morph(currentTimeframe: TimeFrame, currentChartData: ChartData, currentPriceframe: PriceFrame): void;
+    morph(currentChartData: ChartData, currentPriceframe: PriceFrame, defaultUpdate: () => void): void;
     private getFrontPoints;
     terminatePointsTimeline(): void;
     private performNewPoints;

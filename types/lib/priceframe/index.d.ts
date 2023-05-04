@@ -1,3 +1,4 @@
+import { GetSet } from '../utils';
 export declare class Priceframe {
     private since;
     private until;
@@ -10,8 +11,5 @@ export declare class Priceframe {
         until: number;
     }): Priceframe;
     isInitialized(): boolean;
-    calculate(prices: Array<string | number>): {
-        since: number;
-        until: number;
-    };
+    calculate(prices: Array<string | number>): GetSet;
 }

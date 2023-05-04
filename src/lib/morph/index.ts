@@ -9,7 +9,6 @@ import { eq } from '@lib/calc-utils'
 
 type ChartData = { prices: string[], timestamps: number[] }
 type PriceFrame = { since: number, until: number }
-type TimeFrame = { since: number, until: number }
 
 export default class MorphController {
 
@@ -25,9 +24,9 @@ export default class MorphController {
     ) { }
 
     public morph(
-        currentTimeframe: TimeFrame,
         currentChartData: ChartData,
         currentPriceframe: PriceFrame,
+        defaultUpdate: () => void,
     ): void {
         const previousChartData = this.framedata.get()
         const previousPriceframe = this.priceframe.get()
@@ -53,10 +52,7 @@ export default class MorphController {
         }
 
         // 4. Perform default update/render
-        this.timeframe.now(currentTimeframe.until)
-        this.framedata.set(currentChartData)
-        this.priceframe.set(currentPriceframe)
-        this._onUpdate()
+        defaultUpdate()
     }
 
     private getFrontPoints(previous, current): { indeces: number[], intersect: boolean, animations: number } {

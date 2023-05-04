@@ -5,6 +5,7 @@ import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
 
 import config from '@config'
+import { GetSet } from '@lib/utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
@@ -126,12 +127,14 @@ export class Timeframe {
         return { since: this.since, until: this.until }
     }
 
-    public calculate(chartdata: { timestamps, prices }): { since: number, until: number } {
+    public calculate(chartdata: { timestamps, prices }): GetSet {
         const timestamp = DataBuilder.getLatestTS(chartdata)
         const until = this._until ? this._until : timestamp + this.timeframe * 0.382
         const since = until - this.timeframe
 
-        return { since, until }
+        const timeframe = { since, until }
+
+        return new GetSet(() => timeframe, () => this.now(timestamp))
     }
 
     public destroy(): this {
