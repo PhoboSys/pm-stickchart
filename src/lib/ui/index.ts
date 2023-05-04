@@ -1,14 +1,15 @@
+import Big from 'big.js'
+
 import config from '@config'
-import { USD } from '@constants'
 import datamath from '@lib/datamath'
 import { unixTStoDate } from '@lib/utils'
+import { CurrencyFormatter } from '@lib/currency'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
 export const UNIX_WEEK = 7 * UNIX_DAY
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export default class ui {
 
     static percent(amount): string {
@@ -26,27 +27,32 @@ export default class ui {
         return datamath.round(amount, config.ui.precision.erc20).toString()
     }
 
-    static currency(price, currently = ''): string {
-        let symb = ''
-        if (currently && config.price.showSymbols) {
-            const symbols = {
-                [USD]: '$'
-            }
-            symb = symbols[currently]
+    static currency(price, currency): string {
+        const options = {
+            minimumFractionDigits: config.price.minimumFractionDigits,
+            maximumFractionDigits: config.price.maximumFractionDigits,
         }
 
-        return symb + datamath.toFixedPrecision(price, config.price.precision)
+        if (config.price.showSymbols) {
+            return CurrencyFormatter.formatSymboled(price, currency, options)
+        }
+
+        return CurrencyFormatter.formatUnsymboled(price, currency, options)
     }
 
-    static currencyScaled(price, currently, scale: number): string {
-        const symbols = {
-            [USD]: '$'
+    static currencyScaled(price, currency, scale: number): string {
+        const step = new Big(scale)
+        const fractionDigits = Math.max(-step.e, 0)
+        const options = {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits,
         }
 
-        let symb = symbols[currently] || ''
-        if (!config.price.showSymbols) symb = ''
+        if (config.price.showSymbols) {
+            return CurrencyFormatter.formatSymboled(price, currency, options)
+        }
 
-        return symb + datamath.toFixedScaled(price, scale)
+        return CurrencyFormatter.formatUnsymboled(price, currency, options)
     }
 
     static time24(timestamp: number): string {

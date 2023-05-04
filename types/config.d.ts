@@ -40,7 +40,8 @@ declare const _default: {
     };
     price: {
         showSymbols: boolean;
-        precision: number;
+        minimumFractionDigits: number;
+        maximumFractionDigits: number;
     };
     style: {
         background: number;

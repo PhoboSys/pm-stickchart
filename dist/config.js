@@ -40,7 +40,8 @@ exports.default = {
     },
     price: {
         showSymbols: true,
-        precision: 8,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 6,
     },
     //chart
     style: {
