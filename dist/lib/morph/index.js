@@ -7,14 +7,17 @@ const _config_1 = __importDefault(require("../../config.js"));
 const pixi_1 = require("../pixi");
 const calc_utils_1 = require("../calc-utils");
 class MorphController {
-    constructor(timeframe, priceframe, _onUpdate) {
+    constructor(timeframe, priceframe, framedata, _onUpdate) {
         this.timeframe = timeframe;
         this.priceframe = priceframe;
+        this.framedata = framedata;
         this._onUpdate = _onUpdate;
         this.pointsTimeline = pixi_1.gsap.timeline();
         this.priceframeTimeline = pixi_1.gsap.timeline();
     }
-    morph(previousChartData, currentChartData, previousPriceframe, currentPriceframe) {
+    morph(currentTimeframe, currentChartData, currentPriceframe) {
+        const previousChartData = this.framedata.get();
+        const previousPriceframe = this.priceframe.get();
         if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !_config_1.default.morph)
             return;
         // 0. Make sure to complite running animations and clear timeline
@@ -31,6 +34,8 @@ class MorphController {
             return;
         }
         // 4. Perform default update/render
+        this.timeframe.now(currentTimeframe.until);
+        this.framedata.set(currentChartData);
         this.priceframe.set(currentPriceframe);
         this._onUpdate();
     }
@@ -63,28 +68,26 @@ class MorphController {
                 value: chartdata.prices[idx],
             };
             if (prevpoint) {
-                this.addPoint(prevpoint, target, chartdata, idx);
+                this.addPoint(prevpoint, target);
             }
             prevpoint = target;
         }
-        // 0. Removing points form current chart data in order to add them back animated via timeline
-        chartdata.timestamps.splice(-animations);
-        chartdata.prices.splice(-animations);
-        // 1. Speedup animation to make all timeline finish in config.morph.duration
+        // Speedup animation to make all timeline finish in config.morph.duration
         this.pointsTimeline.timeScale(animations);
         return;
     }
-    addPoint(animated, end, current, idx) {
+    addPoint(animated, end) {
+        const updateFramedata = this.framedata.createUpdater();
         this.pointsTimeline.to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
-                current.timestamps[idx] = animated.timestamp;
-                current.prices[idx] = animated.value;
+                const timeframe = this.timeframe.now(animated.timestamp).get();
+                updateFramedata(animated, timeframe);
                 this._onUpdate();
             }, onComplete: () => {
                 // gsap has limited precision
                 // in order to render exactly 'end'
                 // we have to apply it explicitly
-                current.timestamps[idx] = end.timestamp;
-                current.prices[idx] = end.value;
+                const timeframe = this.timeframe.now(end.timestamp).get();
+                updateFramedata(end, timeframe);
                 this._onUpdate();
             } }));
     }
@@ -98,7 +101,6 @@ class MorphController {
     performPriceframe(previous, current) {
         if ((0, calc_utils_1.eq)(previous.since, current.since) && (0, calc_utils_1.eq)(previous.until, current.until))
             return;
-        this.terminatePriceframeTimeline();
         this.addPriceframe(Object.assign({}, previous), current);
     }
     addPriceframe(animated, end) {

@@ -10,6 +10,7 @@ export declare class StickChart extends EventTarget {
     private _context;
     private timeframe;
     private priceframe;
+    private framedata;
     constructor(stageElement: HTMLElement);
     setScreenSize({ width, height }: {
         width: any;

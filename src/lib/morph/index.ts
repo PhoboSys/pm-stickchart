@@ -4,29 +4,34 @@ import { gsap } from '@lib/pixi'
 import { PricePoint } from '@chartdata'
 import { Priceframe } from '@lib/priceframe'
 import { Timeframe } from '@lib/timeframe'
+import { Framedata } from '@lib/framedata'
 import { eq } from '@lib/calc-utils'
 
 type ChartData = { prices: string[], timestamps: number[] }
 type PriceFrame = { since: number, until: number }
+type TimeFrame = { since: number, until: number }
+
 export default class MorphController {
 
-    private pointsTimeline: gsap.core.Timeline = gsap.timeline()
+    public pointsTimeline: gsap.core.Timeline = gsap.timeline()
 
     public priceframeTimeline: gsap.core.Timeline = gsap.timeline()
 
     constructor(
         private timeframe: Timeframe,
         private priceframe: Priceframe,
+        private framedata: Framedata,
         private _onUpdate: () => void
     ) { }
 
     public morph(
-        previousChartData: ChartData,
+        currentTimeframe: TimeFrame,
         currentChartData: ChartData,
-        previousPriceframe: PriceFrame,
         currentPriceframe: PriceFrame,
-
     ): void {
+        const previousChartData = this.framedata.get()
+        const previousPriceframe = this.priceframe.get()
+
         if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !config.morph) return
 
         // 0. Make sure to complite running animations and clear timeline
@@ -48,6 +53,8 @@ export default class MorphController {
         }
 
         // 4. Perform default update/render
+        this.timeframe.now(currentTimeframe.until)
+        this.framedata.set(currentChartData)
         this.priceframe.set(currentPriceframe)
         this._onUpdate()
     }
@@ -72,7 +79,7 @@ export default class MorphController {
         }
     }
 
-    private terminatePointsTimeline(): void {
+    public terminatePointsTimeline(): void {
         if (this.pointsTimeline.isActive()) this.pointsTimeline.progress(1)
         this.pointsTimeline.clear()
     }
@@ -86,17 +93,13 @@ export default class MorphController {
             }
 
             if (prevpoint) {
-                this.addPoint(prevpoint, target, chartdata, idx)
+                this.addPoint(prevpoint, target)
             }
 
             prevpoint = target
         }
 
-        // 0. Removing points form current chart data in order to add them back animated via timeline
-        chartdata.timestamps.splice(-animations)
-        chartdata.prices.splice(-animations)
-
-        // 1. Speedup animation to make all timeline finish in config.morph.duration
+        // Speedup animation to make all timeline finish in config.morph.duration
         this.pointsTimeline.timeScale(animations)
 
         return
@@ -106,25 +109,24 @@ export default class MorphController {
     private addPoint(
         animated: PricePoint,
         end: PricePoint,
-        current: ChartData,
-        idx: number,
     ): void {
+        const updateFramedata = this.framedata.createUpdater()
         this.pointsTimeline.to(
             animated,
             {
                 ...end,
                 ...config.morph.animation,
                 onUpdate: () => {
-                    current.timestamps[idx] = animated.timestamp
-                    current.prices[idx] = animated.value
+                    const timeframe = this.timeframe.now(animated.timestamp).get()
+                    updateFramedata(animated, timeframe)
                     this._onUpdate()
                 },
                 onComplete: () => {
                     // gsap has limited precision
                     // in order to render exactly 'end'
                     // we have to apply it explicitly
-                    current.timestamps[idx] = end.timestamp
-                    current.prices[idx] = end.value
+                    const timeframe = this.timeframe.now(end.timestamp).get()
+                    updateFramedata(end, timeframe)
                     this._onUpdate()
                 }
             }
@@ -140,8 +142,6 @@ export default class MorphController {
 
     private performPriceframe(previous: PriceFrame, current: PriceFrame): void {
         if (eq(previous.since, current.since) && eq(previous.until, current.until)) return
-
-        this.terminatePriceframeTimeline()
 
         this.addPriceframe({ ...previous }, current)
 

@@ -29,6 +29,13 @@ export declare class Timeframe {
         since: number;
         until: number;
     };
+    calculate(chartdata: {
+        timestamps: any;
+        prices: any;
+    }): {
+        since: number;
+        until: number;
+    };
     destroy(): this;
     private shiftend;
     private shiftstart;

@@ -1,5 +1,6 @@
 import throttle from 'lodash.throttle'
 
+import { DataBuilder } from '@chartdata'
 import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
 
@@ -123,6 +124,14 @@ export class Timeframe {
 
     public get(): { since: number, until: number } {
         return { since: this.since, until: this.until }
+    }
+
+    public calculate(chartdata: { timestamps, prices }): { since: number, until: number } {
+        const timestamp = DataBuilder.getLatestTS(chartdata)
+        const until = this._until ? this._until : timestamp + this.timeframe * 0.382
+        const since = until - this.timeframe
+
+        return { since, until }
     }
 
     public destroy(): this {
