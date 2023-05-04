@@ -27,7 +27,7 @@ export class Priceframe {
 
         const priceframe = { since, until }
 
-        return new GetSet(() => priceframe, this.set)
+        return new GetSet(() => priceframe, this.set.bind(this))
     }
 
 }

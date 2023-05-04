@@ -23,7 +23,7 @@ class Priceframe {
     calculate(prices) {
         const [since, until] = datamath_1.default.minmax(prices.map(Number));
         const priceframe = { since, until };
-        return new utils_1.GetSet(() => priceframe, this.set);
+        return new utils_1.GetSet(() => priceframe, this.set.bind(this));
     }
 }
 exports.Priceframe = Priceframe;

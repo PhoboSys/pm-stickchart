@@ -29,7 +29,7 @@ export class Framedata {
     public calculate(chartdata: { timestamps, prices }, timeframe: { since, until }): GetSet {
         const framedata = DataBuilder.framedata(chartdata, timeframe)
 
-        return new GetSet(() => framedata, this.set)
+        return new GetSet(() => framedata, this.set.bind(this))
     }
 
     private updatePoint(point: PricePoint, timeframe: { since: number, until: number }, index: number): this {

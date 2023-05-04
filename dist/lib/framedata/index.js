@@ -17,7 +17,7 @@ class Framedata {
     }
     calculate(chartdata, timeframe) {
         const framedata = _chartdata_1.DataBuilder.framedata(chartdata, timeframe);
-        return new utils_1.GetSet(() => framedata, this.set);
+        return new utils_1.GetSet(() => framedata, this.set.bind(this));
     }
     updatePoint(point, timeframe, index) {
         this.timestamps[index] = point.timestamp;
