@@ -33,7 +33,10 @@ export declare class Timeframe {
     calculate(chartdata: {
         timestamps: any;
         prices: any;
-    }): GetSet;
+    }): GetSet<{
+        since: number;
+        until: number;
+    }>;
     destroy(): this;
     private shiftend;
     private shiftstart;

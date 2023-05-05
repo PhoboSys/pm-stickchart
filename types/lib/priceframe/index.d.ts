@@ -11,5 +11,8 @@ export declare class Priceframe {
         until: number;
     }): Priceframe;
     isInitialized(): boolean;
-    calculate(prices: Array<string | number>): GetSet;
+    calculate(prices: Array<string | number>): GetSet<{
+        since: number;
+        until: number;
+    }>;
 }

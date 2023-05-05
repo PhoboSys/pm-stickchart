@@ -118,10 +118,13 @@ export function orderBy(
     return result
 }
 
-export class GetSet {
-    constructor(private getter, private setter) {}
+export class GetSet<T> {
+    constructor(
+        private readonly getter: () => T,
+        private readonly setter: (arg: T) => void
+    ) {}
 
-    public get(): any {
+    public get(): T {
 
         return this.getter()
     }

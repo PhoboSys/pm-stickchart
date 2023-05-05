@@ -3,7 +3,6 @@ import { GetSet } from '@lib/utils'
 
 type Prices = string[]
 type Timestamps = number[]
-type FrameData = { prices: Prices, timestamps: Timestamps }
 
 export class Framedata {
 
@@ -11,11 +10,13 @@ export class Framedata {
 
     private timestamps: Timestamps
 
-    public get(): FrameData {
+    public get(): { prices: Prices, timestamps: Timestamps } {
         return { prices: this.prices, timestamps: this.timestamps }
     }
 
-    public set({ prices, timestamps }: FrameData): Framedata {
+    public set({
+        prices, timestamps }: { prices: Prices, timestamps: Timestamps }
+    ): Framedata {
         this.prices = prices
         this.timestamps = timestamps
 
@@ -26,13 +27,19 @@ export class Framedata {
         return !!(this.prices && this.timestamps)
     }
 
-    public calculate(chartdata: { timestamps, prices }, timeframe: { since, until }): GetSet {
+    public calculate(
+        chartdata: { timestamps, prices },
+        timeframe: { since, until }
+    ): GetSet<{ prices: Prices, timestamps: Timestamps }> {
         const framedata = DataBuilder.framedata(chartdata, timeframe)
 
         return new GetSet(() => framedata, this.set.bind(this))
     }
 
-    private updatePoint(point: PricePoint, timeframe: { since: number, until: number }, index: number): this {
+    private updatePoint(
+        point: PricePoint,
+        timeframe: { since: number, until: number }, index: number
+    ): this {
         this.timestamps[index] = point.timestamp
         this.prices[index] = point.value
         this.calculate({ timestamps: this.timestamps, prices: this.prices }, timeframe).set().get()

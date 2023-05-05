@@ -127,7 +127,7 @@ export class Timeframe {
         return { since: this.since, until: this.until }
     }
 
-    public calculate(chartdata: { timestamps, prices }): GetSet {
+    public calculate(chartdata: { timestamps, prices }): GetSet<{ since: number, until: number }> {
         const timestamp = DataBuilder.getLatestTS(chartdata)
         const until = this._until ? this._until : timestamp + this.timeframe * 0.382
         const since = until - this.timeframe

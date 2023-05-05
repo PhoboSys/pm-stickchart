@@ -7,7 +7,7 @@ import { Timeframe } from '@lib/timeframe'
 import { Framedata } from '@lib/framedata'
 import { eq } from '@lib/calc-utils'
 
-type ChartData = { prices: string[], timestamps: number[] }
+type FrameData = { prices: string[], timestamps: number[] }
 type PriceFrame = { since: number, until: number }
 
 export default class MorphController {
@@ -24,28 +24,28 @@ export default class MorphController {
     ) { }
 
     public morph(
-        currentChartData: ChartData,
-        currentPriceframe: PriceFrame,
+        nextFramedata: FrameData,
+        nextPriceframe: PriceFrame,
         defaultUpdate: () => void,
     ): void {
-        const previousChartData = this.framedata.get()
-        const previousPriceframe = this.priceframe.get()
+        const currentFramedata = this.framedata.get()
+        const currentPriceframe = this.priceframe.get()
 
-        if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !config.morph) return
+        if (!currentFramedata || !nextFramedata || !currentPriceframe || !nextPriceframe || !config.morph) return
 
         // 0. Make sure to complite running animations and clear timeline
         this.terminatePointsTimeline()
         this.terminatePriceframeTimeline()
 
         // 1. Find all points that was added from previous to current
-        const { indeces, intersect, animations } = this.getFrontPoints(previousChartData, currentChartData)
+        const { indeces, intersect, animations } = this.getFrontPoints(currentFramedata, nextFramedata)
 
         // 3. If any intersaction found and animations are in valid range perform animations
         const shouldAnimate = animations <= config.morph.maxstack && animations > 0
         if (intersect && shouldAnimate) {
 
-            this.performNewPoints(currentChartData, indeces, animations)
-            this.performPriceframe(previousPriceframe, currentPriceframe)
+            this.performNewPoints(nextFramedata, indeces, animations)
+            this.performPriceframe(currentPriceframe, nextPriceframe)
 
             // 5. retrun in order to avoid defaul update/render if morph preformed
             return
@@ -80,12 +80,12 @@ export default class MorphController {
         this.pointsTimeline.clear()
     }
 
-    private performNewPoints(chartdata: ChartData, pointsIndeces: number[], animations: number): void {
+    private performNewPoints(framedata: FrameData, pointsIndeces: number[], animations: number): void {
         let prevpoint: PricePoint | null = null
         for (const idx of pointsIndeces) {
             const target: PricePoint = {
-                timestamp: chartdata.timestamps[idx],
-                value: chartdata.prices[idx],
+                timestamp: framedata.timestamps[idx],
+                value: framedata.prices[idx],
             }
 
             if (prevpoint) {

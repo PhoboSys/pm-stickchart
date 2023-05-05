@@ -22,12 +22,12 @@ export class Priceframe {
         return (!!this.since || this.since === 0) && (!!this.until || this.until === 0)
     }
 
-    public calculate(prices: Array<string | number>): GetSet {
+    public calculate(prices: Array<string | number>): GetSet<{ since: number, until: number }> {
         const [since, until] = datamath.minmax(prices.map(Number))
 
         const priceframe = { since, until }
 
-        return new GetSet(() => priceframe, this.set.bind(this))
+        return new GetSet((): { since: number, until: number } => priceframe, this.set.bind(this))
     }
 
 }
