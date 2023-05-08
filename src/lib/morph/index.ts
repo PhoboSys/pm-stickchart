@@ -118,7 +118,7 @@ export default class MorphController {
                     // gsap has limited precision
                     // in order to render exactly 'end'
                     // we have to apply it explicitly
-                    this.chartdata.updatePoint(animated, idx).get()
+                    this.chartdata.updatePoint(end, idx).get()
                     this._onUpdate()
                 }
             }
