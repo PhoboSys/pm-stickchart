@@ -3,11 +3,10 @@ import config from '@config'
 import { gsap } from '@lib/pixi'
 import { PricePoint } from '@chartdata'
 import { Priceframe } from '@lib/priceframe'
-import { Timeframe } from '@lib/timeframe'
-import { Framedata } from '@lib/framedata'
+import { Chartdata } from '@lib/chartdata'
 import { eq } from '@lib/calc-utils'
 
-type FrameData = { prices: string[], timestamps: number[] }
+type ChartData = { prices: string[], timestamps: number[] }
 type PriceFrame = { since: number, until: number }
 
 export default class MorphController {
@@ -17,37 +16,36 @@ export default class MorphController {
     public priceframeTimeline: gsap.core.Timeline = gsap.timeline()
 
     constructor(
-        private timeframe: Timeframe,
+        private chartdata: Chartdata,
         private priceframe: Priceframe,
-        private framedata: Framedata,
         private _onUpdate: () => void
     ) { }
 
     public morph(
-        nextFramedata: FrameData,
+        nextChartdata: ChartData,
         nextPriceframe: PriceFrame,
         defaultUpdate: () => void,
     ): void {
-        const currentFramedata = this.framedata.get()
+        const currentChartdata = this.chartdata.get()
         const currentPriceframe = this.priceframe.get()
 
-        if (!currentFramedata || !nextFramedata || !currentPriceframe || !nextPriceframe || !config.morph) return
+        if (!currentChartdata || !nextChartdata || !currentPriceframe || !nextPriceframe || !config.morph) return
 
         // 0. Make sure to complite running animations and clear timeline
         this.terminatePointsTimeline()
         this.terminatePriceframeTimeline()
 
         // 1. Find all points that was added from previous to current
-        const { indeces, intersect, animations } = this.getFrontPoints(currentFramedata, nextFramedata)
+        const { indeces, intersect, animations } = this.getFrontPoints(currentChartdata, nextChartdata)
 
         // 3. If any intersaction found and animations are in valid range perform animations
         const shouldAnimate = animations <= config.morph.maxstack && animations > 0
         if (intersect && shouldAnimate) {
 
-            this.performNewPoints(nextFramedata, indeces, animations)
+            this.performNewPoints(nextChartdata, indeces, animations)
             this.performPriceframe(currentPriceframe, nextPriceframe)
 
-            // 5. retrun in order to avoid defaul update/render if morph preformed
+            // 4. retrun in order to avoid defaul update/render if morph preformed
             return
         }
 
@@ -80,16 +78,16 @@ export default class MorphController {
         this.pointsTimeline.clear()
     }
 
-    private performNewPoints(framedata: FrameData, pointsIndeces: number[], animations: number): void {
+    private performNewPoints(chartdata: ChartData, pointsIndeces: number[], animations: number): void {
         let prevpoint: PricePoint | null = null
         for (const idx of pointsIndeces) {
             const target: PricePoint = {
-                timestamp: framedata.timestamps[idx],
-                value: framedata.prices[idx],
+                timestamp: chartdata.timestamps[idx],
+                value: chartdata.prices[idx],
             }
 
             if (prevpoint) {
-                this.addPoint(prevpoint, target)
+                this.addPoint(prevpoint, target, idx)
             }
 
             prevpoint = target
@@ -105,24 +103,22 @@ export default class MorphController {
     private addPoint(
         animated: PricePoint,
         end: PricePoint,
+        idx: number,
     ): void {
-        const updateFramedata = this.framedata.createUpdater()
         this.pointsTimeline.to(
             animated,
             {
                 ...end,
                 ...config.morph.animation,
                 onUpdate: () => {
-                    const timeframe = this.timeframe.now(animated.timestamp).get()
-                    updateFramedata(animated, timeframe)
+                    this.chartdata.updatePoint(animated, idx)
                     this._onUpdate()
                 },
                 onComplete: () => {
                     // gsap has limited precision
                     // in order to render exactly 'end'
                     // we have to apply it explicitly
-                    const timeframe = this.timeframe.now(end.timestamp).get()
-                    updateFramedata(end, timeframe)
+                    this.chartdata.updatePoint(animated, idx).get()
                     this._onUpdate()
                 }
             }

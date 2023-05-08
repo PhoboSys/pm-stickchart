@@ -31,8 +31,8 @@ export declare class Timeframe {
         until: number;
     };
     calculate(chartdata: {
-        timestamps: any;
-        prices: any;
+        prices: string[];
+        timestamps: number[];
     }): GetSet<{
         since: number;
         until: number;

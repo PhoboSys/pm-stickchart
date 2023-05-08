@@ -1,9 +1,10 @@
+import { ChartData, PricePoint } from '@chartdata';
 import { GetSet } from '../utils';
 type Prices = string[];
 type Timestamps = number[];
-export declare class Framedata {
-    private prices;
-    private timestamps;
+export declare class Chartdata {
+    prices: Prices;
+    timestamps: Timestamps;
     get(): {
         prices: Prices;
         timestamps: Timestamps;
@@ -11,17 +12,12 @@ export declare class Framedata {
     set({ prices, timestamps }: {
         prices: Prices;
         timestamps: Timestamps;
-    }): Framedata;
+    }): Chartdata;
     isInitialized(): boolean;
-    calculate(chartdata: {
-        timestamps: any;
-        prices: any;
-    }, timeframe: {
-        since: any;
-        until: any;
-    }): GetSet<{
+    calculate(chartdataOrig: ChartData): GetSet<{
         prices: Prices;
         timestamps: Timestamps;
     }>;
+    updatePoint(point: PricePoint, index: number): this;
 }
 export {};

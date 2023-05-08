@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Framedata = void 0;
+exports.Chartdata = void 0;
 const _chartdata_1 = require("../../chartdata/index.js");
 const utils_1 = require("../utils");
-class Framedata {
+class Chartdata {
     get() {
         return { prices: this.prices, timestamps: this.timestamps };
     }
@@ -15,10 +15,15 @@ class Framedata {
     isInitialized() {
         return !!(this.prices && this.timestamps);
     }
-    calculate(chartdata, timeframe) {
-        const framedata = _chartdata_1.DataBuilder.framedata(chartdata, timeframe);
-        return new utils_1.GetSet(() => framedata, this.set.bind(this));
+    calculate(chartdataOrig) {
+        const chartdata = _chartdata_1.DataBuilder.chartdata(chartdataOrig);
+        return new utils_1.GetSet(() => chartdata, this.set.bind(this));
+    }
+    updatePoint(point, index) {
+        this.timestamps[index] = point.timestamp;
+        this.prices[index] = point.value;
+        return this;
     }
 }
-exports.Framedata = Framedata;
+exports.Chartdata = Chartdata;
 //# sourceMappingURL=index.js.map

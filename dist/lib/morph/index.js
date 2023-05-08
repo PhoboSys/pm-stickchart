@@ -7,30 +7,29 @@ const _config_1 = __importDefault(require("../../config.js"));
 const pixi_1 = require("../pixi");
 const calc_utils_1 = require("../calc-utils");
 class MorphController {
-    constructor(timeframe, priceframe, framedata, _onUpdate) {
-        this.timeframe = timeframe;
+    constructor(chartdata, priceframe, _onUpdate) {
+        this.chartdata = chartdata;
         this.priceframe = priceframe;
-        this.framedata = framedata;
         this._onUpdate = _onUpdate;
         this.pointsTimeline = pixi_1.gsap.timeline();
         this.priceframeTimeline = pixi_1.gsap.timeline();
     }
-    morph(currentChartData, currentPriceframe, defaultUpdate) {
-        const previousChartData = this.framedata.get();
-        const previousPriceframe = this.priceframe.get();
-        if (!previousChartData || !currentChartData || !previousPriceframe || !currentPriceframe || !_config_1.default.morph)
+    morph(nextChartdata, nextPriceframe, defaultUpdate) {
+        const currentChartdata = this.chartdata.get();
+        const currentPriceframe = this.priceframe.get();
+        if (!currentChartdata || !nextChartdata || !currentPriceframe || !nextPriceframe || !_config_1.default.morph)
             return;
         // 0. Make sure to complite running animations and clear timeline
         this.terminatePointsTimeline();
         this.terminatePriceframeTimeline();
         // 1. Find all points that was added from previous to current
-        const { indeces, intersect, animations } = this.getFrontPoints(previousChartData, currentChartData);
+        const { indeces, intersect, animations } = this.getFrontPoints(currentChartdata, nextChartdata);
         // 3. If any intersaction found and animations are in valid range perform animations
         const shouldAnimate = animations <= _config_1.default.morph.maxstack && animations > 0;
         if (intersect && shouldAnimate) {
-            this.performNewPoints(currentChartData, indeces, animations);
-            this.performPriceframe(previousPriceframe, currentPriceframe);
-            // 5. retrun in order to avoid defaul update/render if morph preformed
+            this.performNewPoints(nextChartdata, indeces, animations);
+            this.performPriceframe(currentPriceframe, nextPriceframe);
+            // 4. retrun in order to avoid defaul update/render if morph preformed
             return;
         }
         // 4. Perform default update/render
@@ -65,7 +64,7 @@ class MorphController {
                 value: chartdata.prices[idx],
             };
             if (prevpoint) {
-                this.addPoint(prevpoint, target);
+                this.addPoint(prevpoint, target, idx);
             }
             prevpoint = target;
         }
@@ -73,18 +72,15 @@ class MorphController {
         this.pointsTimeline.timeScale(animations);
         return;
     }
-    addPoint(animated, end) {
-        const updateFramedata = this.framedata.createUpdater();
+    addPoint(animated, end, idx) {
         this.pointsTimeline.to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onUpdate: () => {
-                const timeframe = this.timeframe.now(animated.timestamp).get();
-                updateFramedata(animated, timeframe);
+                this.chartdata.updatePoint(animated, idx);
                 this._onUpdate();
             }, onComplete: () => {
                 // gsap has limited precision
                 // in order to render exactly 'end'
                 // we have to apply it explicitly
-                const timeframe = this.timeframe.now(end.timestamp).get();
-                updateFramedata(end, timeframe);
+                this.chartdata.updatePoint(animated, idx).get();
                 this._onUpdate();
             } }));
     }

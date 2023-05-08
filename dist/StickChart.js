@@ -13,6 +13,7 @@ const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const priceframe_1 = require("./lib/priceframe");
 const framedata_1 = require("./lib/framedata");
+const chartdata_1 = require("./lib/chartdata");
 const _rendering_1 = require("./rendering/index.js");
 const _rendering_2 = require("./rendering/index.js");
 class StickChart extends EventTarget {
@@ -35,7 +36,8 @@ class StickChart extends EventTarget {
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
         this.framedata = new framedata_1.Framedata();
         this.priceframe = new priceframe_1.Priceframe();
-        this.morphController = new morph_1.default(this.timeframe, this.priceframe, this.framedata, () => this.applyMorph());
+        this.chartdata = new chartdata_1.Chartdata();
+        this.morphController = new morph_1.default(this.chartdata, this.priceframe, () => this.applyMorph());
         const renderer = new _rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new _rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -63,7 +65,10 @@ class StickChart extends EventTarget {
     applyMorph() {
         if (!this._context)
             return;
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this.framedata.get(), this.timeframe.get(), this.priceframe.get(), this.application.screen);
+        const chartdata = this.chartdata.get();
+        const timeframe = this.timeframe.calculate(chartdata).set().get();
+        const framedata = this.framedata.calculate(chartdata, timeframe).set().get();
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(framedata, timeframe, this.priceframe.get(), this.application.screen);
         this.rerender('morph');
     }
     rerender(reason) {
@@ -81,7 +86,7 @@ class StickChart extends EventTarget {
             return;
         }
         const pipeline = this.pipelineFactory.get(context.charttype);
-        const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
+        const chartdata = this.chartdata.calculate(context.chartdata).get();
         const timeframe = this.timeframe.calculate(chartdata).get();
         const framedata = this.framedata.calculate(chartdata, timeframe).get();
         const priceframe = this.priceframe.calculate(framedata.prices).get();
@@ -90,10 +95,13 @@ class StickChart extends EventTarget {
             this._context = null;
             this.morphController.terminatePriceframeTimeline();
             this.morphController.terminatePointsTimeline();
+            this.chartdata.set(chartdata);
             this.timeframe.calculate(chartdata).set();
             this.framedata.set(framedata);
             this.priceframe.set(priceframe);
         }
+        if (!this.chartdata.isInitialized())
+            this.chartdata.set(chartdata);
         if (!this.framedata.isInitialized())
             this.framedata.set(framedata);
         if (!this.priceframe.isInitialized())
@@ -113,7 +121,7 @@ class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
             eventTarget: this,
-            chartdata,
+            chartdata: this.chartdata,
             plotdata,
         };
         window.requestAnimationFrame(() => {
@@ -121,7 +129,8 @@ class StickChart extends EventTarget {
                 pipeline.render(ctx, () => _infra_1.Logger.info('render'));
             }
             else {
-                this.morphController.morph(framedata, priceframe, () => {
+                this.morphController.morph(chartdata, priceframe, () => {
+                    this.chartdata.set(chartdata);
                     this.timeframe.calculate(chartdata).set();
                     this.framedata.set(framedata);
                     this.priceframe.set(priceframe);
