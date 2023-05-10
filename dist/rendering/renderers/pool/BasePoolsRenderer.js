@@ -100,7 +100,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         if (this.isActualPool(pool))
             return false;
         return (pool.resolved ||
-            ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
+            !!((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
     }
     getResolutionPricePoint(pool, context) {
         var _a, _b;
