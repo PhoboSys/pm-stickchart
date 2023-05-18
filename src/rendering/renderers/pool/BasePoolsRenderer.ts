@@ -139,7 +139,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
         return (
             pool.resolved ||
-            context.settlements?.[pool.endDate]
+            !!context.settlements?.[pool.endDate]
         )
     }
 
