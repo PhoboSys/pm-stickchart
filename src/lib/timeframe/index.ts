@@ -12,6 +12,8 @@ export const UNIX_DAY = 24 * UNIX_HOUR
 export const MAX_FRAME_DURATION = UNIX_DAY
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
 
+export const PADDING_RIGHT = 0.382
+
 type Point = { x: number, y: number }
 type Rect = { width: number, height: number }
 
@@ -67,7 +69,7 @@ export class Timeframe {
     }
 
     private untilmax(timeframe: number): number {
-        return this.nowTS + timeframe * 0.382
+        return this.nowTS + timeframe * PADDING_RIGHT
     }
 
     private get since(): number {
@@ -116,6 +118,12 @@ export class Timeframe {
     }
 
     public now(now: number): this {
+
+        // NOTE: this will keep since locked in place if until locked to now
+        if (!this._until) {
+            this.timeframe = this.timeframe + (now - this.nowTS) / (1 - PADDING_RIGHT)
+        }
+
         this.nowTS = now
 
         return this
