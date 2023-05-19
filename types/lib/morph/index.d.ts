@@ -7,6 +7,6 @@ export default class MorphController {
     private _onUpdate;
     constructor(_onUpdate: () => void);
     get isActive(): boolean;
-    morph(previous?: ChartData, current?: ChartData): void;
+    morph(previous?: ChartData, next?: ChartData): void;
 }
 export {};
