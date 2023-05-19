@@ -11,12 +11,8 @@ export declare class PariTile extends BaseParisRenderer {
     private stateBackgroundStyle;
     private stateBackgroundAlphaStyle;
     private orphanBackgroundStyle;
-    private payoutContainerStyle;
-    private prizeStyle;
     private payoutStyle;
-    private profitContainerStyle;
     private profitStyle;
-    private profitBlockStyle;
     private iconPositionStyle;
     private levelCurrencyStyle;
     private iconCurrencyStyle;
@@ -32,8 +28,6 @@ export declare class PariTile extends BaseParisRenderer {
     private createPositionIcon;
     private createPariCurrencyIcon;
     private createLevelCurrency;
-    private createPayout;
-    private createProfitBlock;
     private createContentContainer;
     private createBackground;
     private createPropagatingBackground;
