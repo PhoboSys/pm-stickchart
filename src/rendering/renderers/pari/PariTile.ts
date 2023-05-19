@@ -665,6 +665,7 @@ export class PariTile extends BaseParisRenderer {
             container.addChild(group)
         }
         group.position.set(bgx, bgy)
+        if (!isHistorical) group.zIndex = 10
 
         const [background, backgroundState] = this.get(
             'background',

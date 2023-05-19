@@ -576,6 +576,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             container.addChild(group);
         }
         group.position.set(bgx, bgy);
+        if (!isHistorical)
+            group.zIndex = 10;
         const [background, backgroundState] = this.get('background', () => this.createBackground(this.groupStyle[position], context));
         if (backgroundState.new)
             group.addChild(background);

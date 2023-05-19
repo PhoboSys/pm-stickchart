@@ -7,55 +7,58 @@ type ChartData = { prices: string[], timestamps: number[] }
 
 export default class MorphController {
 
-    #timeline: gsap.core.Timeline = gsap.timeline()
+    #timeline: gsap.core.Timeline
 
-    // private _lastTarget: PricePoint | null
+    #active: { timestamps: number[], prices: string[] }
 
     constructor(
         private _onUpdate: () => void
-    ) { }
+    ) {
+        this.#timeline = gsap.timeline()
+        this.#active = { timestamps: [], prices: [] }
+    }
 
     public get isActive(): boolean {
         return this.#timeline.isActive()
     }
 
-    public morph(previous?: ChartData, current?: ChartData): void {
-        if (!previous || !current || !config.morph) return
+    public morph(previous?: ChartData, next?: ChartData): void {
+        if (!previous || !next || !config.morph) return
 
-        this.#perform(previous, current)
+        this.#perform(previous, next)
     }
 
-    #perform(previous: ChartData, current: ChartData): void {
-        // 0. Make sure to complite running animation and clear timeline
-        if (this.isActive) this.#timeline.progress(1)
-        this.#timeline.clear()
+    #perform(previous: ChartData, next: ChartData): void {
+        // TODO: implement morph of some intermidiate data and not chartdata itself
+        // in order to be able to detect and add new animations during active animation
+        // for not we going to keep active points in memory to compare with next chartdata
 
-        // 1. Find all points that was added from previous to current
+        // 1. Find all points that was added from previous to next
         const frontdiff: number[] = []
         const pts = previous.timestamps[previous.timestamps.length-1]
+        const ats = this.#active.timestamps[this.#active.timestamps.length-1]
 
-        let cidx = current.timestamps.length
+        let cidx = next.timestamps.length
         let intersect = false
         while (!intersect && cidx-- && pts) {
-            const cts = current.timestamps[cidx]
+            const nts = next.timestamps[cidx]
 
-            intersect = cts === pts
+            intersect = nts === pts || this.isActive && nts === ats
             frontdiff.unshift(cidx)
         }
 
         // 2. If any intersaction found animate all points
         if (intersect) {
-            let animations = 0
+            const animations = new Array<() => void>()
             let prevpoint: PricePoint | null = null
             for (const idx of frontdiff) {
                 const target: PricePoint = {
-                    timestamp: current.timestamps[idx],
-                    value: current.prices[idx],
+                    timestamp: next.timestamps[idx],
+                    value: next.prices[idx],
                 }
 
                 if (prevpoint) {
-                    this.#add(prevpoint, target, current, idx)
-                    animations++
+                    animations.push(this.#add.bind(this, prevpoint, target, next, idx))
                 }
 
                 prevpoint = target
@@ -63,35 +66,47 @@ export default class MorphController {
 
             // 3. Check animations to be in valid range
             if (
-                animations <= config.morph.maxstack &&
-                animations > 0
+                animations.length <= config.morph.maxstack &&
+                animations.length > 0
             ) {
+                // 4. Make sure to complite running animation and clear timeline
+                if (this.isActive) this.#timeline.progress(1)
+                this.#timeline.clear()
 
-                // 4. Removing points form current chart data
+                // 5. Removing points form next chart data
                 // in order to add them back animated via timeline
-                current.timestamps.splice(-animations)
-                current.prices.splice(-animations)
+                const timestamps = next.timestamps.splice(-animations.length)
+                const prices = next.prices.splice(-animations.length)
 
-                // 5. Speedup animation to make all timeline finish in config.morph.duration
-                this.#timeline.timeScale(animations)
+                this.#active = { timestamps, prices }
 
-                // 6. retrun in order to avoid defaul update/render if morph preformed
-                return
+                // 6. Execute animations
+                for (const animation of animations) animation()
 
+                // 7. Speedup animation to make all timeline finish in config.morph.duration
+                this.#timeline.timeScale(animations.length)
+
+            } else if (this.isActive) {
+                // 8. Have to revert changes in order to make amination finish
+                next.timestamps = previous.timestamps
+                next.prices = previous.prices
             }
 
-        }
+        } else {
 
-        // 7. Clear and repform default update/render
-        this.#timeline.clear()
-        this._onUpdate()
+            // 8. Clear and reperform default update/render
+            if (this.isActive) this.#timeline.progress(1)
+            this.#timeline.clear()
+            this._onUpdate()
+
+        }
 
     }
 
     #add(
         animated: PricePoint,
         end: PricePoint,
-        current: ChartData,
+        next: ChartData,
         idx: number,
     ): void {
         this.#timeline.to(
@@ -100,16 +115,16 @@ export default class MorphController {
                 ...end,
                 ...config.morph.animation,
                 onUpdate: () => {
-                    current.timestamps[idx] = animated.timestamp
-                    current.prices[idx] = animated.value
+                    next.timestamps[idx] = animated.timestamp
+                    next.prices[idx] = animated.value
                     this._onUpdate()
                 },
                 onComplete: () => {
                     // gsap has limited precision
                     // in order to render exactly 'end'
                     // we have to apply it explicitly
-                    current.timestamps[idx] = end.timestamp
-                    current.prices[idx] = end.value
+                    next.timestamps[idx] = end.timestamp
+                    next.prices[idx] = end.value
                     this._onUpdate()
                 }
             }

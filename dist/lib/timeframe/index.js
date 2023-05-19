@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Timeframe = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
+exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
 const _events_1 = require("../../events/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
@@ -12,6 +12,7 @@ exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.MAX_FRAME_DURATION = exports.UNIX_DAY;
 exports.MIN_FRAME_DURATION = 5 * exports.UNIX_MINUTE;
+exports.PADDING_RIGHT = 0.382;
 class Timeframe {
     get nowTS() {
         return this._now || Math.floor(Date.now() / 1000);
@@ -53,7 +54,7 @@ class Timeframe {
         }
     }
     untilmax(timeframe) {
-        return this.nowTS + timeframe * 0.382;
+        return this.nowTS + timeframe * exports.PADDING_RIGHT;
     }
     get since() {
         return this.until - this.timeframe;
@@ -84,6 +85,10 @@ class Timeframe {
         return this;
     }
     now(now) {
+        // NOTE: this will keep since locked in place if until locked to now
+        if (!this._until) {
+            this.timeframe = this.timeframe + (now - this.nowTS) / (1 - exports.PADDING_RIGHT);
+        }
         this.nowTS = now;
         return this;
     }
