@@ -1,7 +1,7 @@
 import { IGraphicStorage, RenderingContext, BaseRenderer, GraphicUtils } from '@rendering'
 import config from '@config'
 
-import { Graphics, Container, Text } from '@lib/pixi'
+import { Container } from '@lib/pixi'
 import ui from '@lib/ui'
 import { USD } from '@constants'
 
@@ -27,10 +27,8 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
         this.textCoverStyle = {
             color: config.style.linecolor,
-            paddingx: 8,
-            paddingy: 6,
-            anchorx: 1.1,
-            anchory: 0.5,
+            padding: [6, 8],
+            anchor: [1.1, 0.5],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -67,27 +65,14 @@ export class LatestPriceLineRenderer extends BaseRenderer {
         const y = latestY
         const price = latest.value
 
-        const text = ui.currency(price, USD)
         const [coveredText, coveredTextState] = this.get('coveredText', () => GraphicUtils.createCoveredText(
-            text,
+            ui.currency(price, USD),
             [x, y],
             this.textCoverStyle,
         ))
+
         if (coveredTextState.new) container.addChild(coveredText)
-
-        const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = text
-
-        const { paddingx, paddingy } = this.textCoverStyle
-        const coverGraphic = <Graphics>coveredText.getChildAt(0)
-        coverGraphic.width = textGraphic.width + paddingx * 2
-        coverGraphic.height = textGraphic.height + paddingy * 2
-
-        const { anchorx, anchory } = this.textCoverStyle
-        coveredText.position.set(
-            x - coveredText.width * anchorx,
-            y - coveredText.height * anchory
-        )
+        else coveredText.update((textGraphic) => textGraphic.text = ui.currency(price, USD), [x, y], this.textCoverStyle)
 
         const padding = coveredText.width + this.lineStyle.paddingx
         const [line, lineState] = this.get('line', () => GraphicUtils.createLine(

@@ -17,15 +17,13 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
             alpha: 0.6,
             join: 'round',
             cap: 'round',
-            paddingRight: 5,
+            paddingRight: 10,
             paddingBottom: 5,
         };
         this.priceCoverStyle = {
             color: 0x009797,
-            paddingx: 5,
-            paddingy: 2.5,
-            anchorx: 1.2,
-            anchory: 0.5,
+            padding: [2.5, 5],
+            anchor: [1.2, 0.5],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -36,10 +34,8 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
         };
         this.timeCoverStyle = {
             color: 0x009797,
-            paddingx: 5,
-            paddingy: 2.5,
-            anchorx: .5,
-            anchory: 1,
+            padding: [2.5, 5],
+            anchor: [.5, 1],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -82,24 +78,17 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
         const { x } = this._position;
         const timedif = maxtime - mintime;
         const [timestamp] = datamath_1.default.scale([x], [0, width], timedif);
-        const time24 = ui_1.default.time24(mintime + timestamp);
-        const [coveredText, coveredTextState] = this.get('timeCoveredText', () => _rendering_1.GraphicUtils.createCoveredText(time24, [x, height], this.timeCoverStyle));
-        const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = time24;
-        const { paddingx, paddingy } = this.timeCoverStyle;
-        const coverGraphic = coveredText.getChildAt(0);
-        coverGraphic.width = textGraphic.width + paddingx * 2;
-        coverGraphic.height = textGraphic.height + paddingy * 2;
-        const { anchorx, anchory } = this.timeCoverStyle;
-        coveredText.position.set(x - coveredText.width * anchorx, height - coveredText.height * anchory);
+        const [coveredText, coveredTextState] = this.get('timeCoveredText', () => _rendering_1.GraphicUtils.createCoveredText(ui_1.default.time24(mintime + timestamp), [x, height], this.timeCoverStyle));
+        if (coveredTextState.new)
+            container.addChild(coveredText);
+        else
+            coveredText.update((textGraphic) => textGraphic.text = ui_1.default.time24(mintime + timestamp), [x, height], this.timeCoverStyle);
         const padding = coveredText.height + this.lineStyle.paddingBottom;
         const [horizontal, horizontalState] = this.get('vertical', () => _rendering_1.GraphicUtils.createLine([0, 0], [0, height], this.lineStyle));
         horizontal.position.set(x, 0);
         horizontal.height = height - padding;
         if (horizontalState.new)
             container.addChild(horizontal);
-        if (coveredTextState.new)
-            container.addChild(coveredText);
     }
     updateHorizontal(container) {
         const { width, height } = this._context.screen;
@@ -108,22 +97,16 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
         const pricedif = maxprice - minprice;
         const price = minprice + datamath_1.default.scaleReverse([y], [0, height], pricedif)[0];
         const [coveredText, coveredTextState] = this.get('priceCoveredText', () => _rendering_1.GraphicUtils.createCoveredText(ui_1.default.currency(price, _constants_1.USD), [width, y], this.priceCoverStyle));
-        const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = ui_1.default.currency(price, _constants_1.USD);
-        const { paddingx, paddingy } = this.priceCoverStyle;
-        const coverGraphic = coveredText.getChildAt(0);
-        coverGraphic.width = textGraphic.width + paddingx * 2;
-        coverGraphic.height = textGraphic.height + paddingy * 2;
-        const { anchorx, anchory } = this.priceCoverStyle;
-        coveredText.position.set(width - coveredText.width * anchorx, y - coveredText.height * anchory);
+        if (coveredTextState.new)
+            container.addChild(coveredText);
+        else
+            coveredText.update((textGraphic) => textGraphic.text = ui_1.default.currency(price, _constants_1.USD), [width, y], this.priceCoverStyle);
         const padding = coveredText.width + this.lineStyle.paddingRight;
         const [horizontal, horizontalState] = this.get('horizontal', () => _rendering_1.GraphicUtils.createLine([0, 0], [width, 0], this.lineStyle));
         horizontal.position.set(0, y);
         horizontal.width = width - padding;
         if (horizontalState.new)
             container.addChild(horizontal);
-        if (coveredTextState.new)
-            container.addChild(coveredText);
     }
     clear(name) {
         if (!name)

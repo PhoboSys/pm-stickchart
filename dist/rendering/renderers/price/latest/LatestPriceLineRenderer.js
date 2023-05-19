@@ -21,10 +21,8 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
         };
         this.textCoverStyle = {
             color: _config_1.default.style.linecolor,
-            paddingx: 8,
-            paddingy: 6,
-            anchorx: 1.1,
-            anchory: 0.5,
+            padding: [6, 8],
+            anchor: [1.1, 0.5],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -47,18 +45,11 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
         const x = width;
         const y = latestY;
         const price = latest.value;
-        const text = ui_1.default.currency(price, _constants_1.USD);
-        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(text, [x, y], this.textCoverStyle));
+        const [coveredText, coveredTextState] = this.get('coveredText', () => _rendering_1.GraphicUtils.createCoveredText(ui_1.default.currency(price, _constants_1.USD), [x, y], this.textCoverStyle));
         if (coveredTextState.new)
             container.addChild(coveredText);
-        const textGraphic = coveredText.getChildAt(1);
-        textGraphic.text = text;
-        const { paddingx, paddingy } = this.textCoverStyle;
-        const coverGraphic = coveredText.getChildAt(0);
-        coverGraphic.width = textGraphic.width + paddingx * 2;
-        coverGraphic.height = textGraphic.height + paddingy * 2;
-        const { anchorx, anchory } = this.textCoverStyle;
-        coveredText.position.set(x - coveredText.width * anchorx, y - coveredText.height * anchory);
+        else
+            coveredText.update((textGraphic) => textGraphic.text = ui_1.default.currency(price, _constants_1.USD), [x, y], this.textCoverStyle);
         const padding = coveredText.width + this.lineStyle.paddingx;
         const [line, lineState] = this.get('line', () => _rendering_1.GraphicUtils.createLine([0, 0], [width, 0], this.lineStyle));
         if (lineState.new)

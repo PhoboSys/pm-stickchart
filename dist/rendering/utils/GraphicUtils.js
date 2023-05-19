@@ -3,12 +3,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GraphicUtils = void 0;
+exports.GraphicUtils = exports.CoveredText = void 0;
 const lodash_1 = require("lodash");
 const _infra_1 = require("../../infra/index.js");
 const datamath_1 = __importDefault(require("../../lib/datamath"));
 const pixi_1 = require("../../lib/pixi");
 const pixi_2 = require("../../lib/pixi");
+class CoveredText extends pixi_1.Graphics {
+    update(updater, position, style) {
+        this.updateText(updater, style);
+        this.updatePosition(position, style);
+    }
+    updateText(updater, style) {
+        const textGraphic = this.getChildAt(1);
+        updater(textGraphic);
+        const { padding = [0, 0] } = style;
+        const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding;
+        const coverGraphic = this.getChildAt(0);
+        coverGraphic.width = textGraphic.width + leftPadding + rightPadding;
+        coverGraphic.height = textGraphic.height + topPadding + bottomPadding;
+    }
+    updatePosition([x, y], style) {
+        const { anchor = [0, 0] } = style;
+        this.position.set(x - this.width * anchor[0], y - this.height * anchor[1]);
+    }
+}
+exports.CoveredText = CoveredText;
 class GraphicUtils {
     static createCircle([x, y], radius, style) {
         const cirl = new pixi_1.Graphics()
@@ -75,19 +95,21 @@ class GraphicUtils {
         return result;
     }
     static createCoveredText(value, [x, y], style) {
-        const { paddingx, paddingy } = style;
-        const text = GraphicUtils.createText(value, [paddingx, paddingy], style.textstyle, [0, 0]);
-        const coverwidth = text.width + paddingx * 2;
-        const coverheight = text.height + paddingy * 2;
+        var _a, _b;
+        const { padding = [0, 0] } = style;
+        const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding;
+        const text = GraphicUtils.createText(value, [leftPadding, topPadding], style.textstyle, [0, 0]);
+        const coverwidth = text.width + leftPadding + rightPadding;
+        const coverheight = text.height + topPadding + bottomPadding;
         const cover = new pixi_1.Graphics()
             .beginFill(style.color)
             .lineStyle(style.linestyle)
             .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
             .endFill();
-        const coveredText = new pixi_1.Graphics();
+        const coveredText = new CoveredText();
         coveredText.addChild(cover, text);
-        const { anchorx, anchory } = style;
-        coveredText.position.set(x - cover.width * (anchorx !== null && anchorx !== void 0 ? anchorx : 0), y - cover.height * (anchory !== null && anchory !== void 0 ? anchory : 0));
+        const { anchor = [0, 0] } = style;
+        coveredText.position.set(x - cover.width * ((_a = anchor[0]) !== null && _a !== void 0 ? _a : 0), y - cover.height * ((_b = anchor[1]) !== null && _b !== void 0 ? _b : 0));
         return coveredText;
     }
     static createVerticalDashLine(x, [y1, y2], linestyle) {

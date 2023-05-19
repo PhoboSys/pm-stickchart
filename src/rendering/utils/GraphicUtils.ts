@@ -6,6 +6,30 @@ import datamath from '@lib/datamath'
 import { Graphics, LineStyle, Text, TextStyle } from '@lib/pixi'
 import { Sprite, Texture, Matrix, Container, gsap } from '@lib/pixi'
 
+export class CoveredText extends Graphics {
+
+    public update(updater: (textGraphic: Text) => void, position: [number, number], style: { padding, anchor }): void {
+        this.updateText(updater, style)
+        this.updatePosition(position, style)
+    }
+
+    private updateText(updater: (textGraphic: Text) => void, style: { padding }): void {
+        const textGraphic = <Text> this.getChildAt(1)
+        updater(textGraphic)
+
+        const { padding = [0, 0] } = style
+        const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding
+
+        const coverGraphic = <Graphics> this.getChildAt(0)
+        coverGraphic.width = textGraphic.width + leftPadding + rightPadding
+        coverGraphic.height = textGraphic.height + topPadding + bottomPadding
+    }
+
+    private updatePosition([x, y], style: { anchor }): void {
+        const { anchor = [0, 0] } = style
+        this.position.set(x - this.width * anchor[0], y - this.height * anchor[1])
+    }
+}
 export class GraphicUtils {
 
     static createCircle(
@@ -126,19 +150,21 @@ export class GraphicUtils {
     static createCoveredText(
         value: any,
         [x, y]: [number, number],
-        style: { textstyle, paddingx, paddingy, color, radius, anchorx, anchory, linestyle },
-    ): Graphics {
-        const { paddingx, paddingy } = style
+        style: { textstyle, padding, color, radius, anchor, linestyle },
+    ): CoveredText {
+        const { padding = [0, 0] } = style
+
+        const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding
 
         const text = GraphicUtils.createText(
             value,
-            [paddingx, paddingy],
+            [leftPadding, topPadding],
             style.textstyle,
             [0, 0],
         )
 
-        const coverwidth = text.width + paddingx * 2
-        const coverheight = text.height + paddingy * 2
+        const coverwidth = text.width + leftPadding + rightPadding
+        const coverheight = text.height + topPadding + bottomPadding
 
         const cover = new Graphics()
             .beginFill(style.color)
@@ -146,14 +172,14 @@ export class GraphicUtils {
             .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
             .endFill()
 
-        const coveredText = new Graphics()
+        const coveredText = new CoveredText()
 
         coveredText.addChild(cover, text)
-        const { anchorx, anchory } = style
 
+        const { anchor = [0, 0] } = style
         coveredText.position.set(
-            x - cover.width * (anchorx ?? 0),
-            y - cover.height * (anchory ?? 0),
+            x - cover.width * (anchor[0] ?? 0),
+            y - cover.height * (anchor[1] ?? 0),
         )
 
         return coveredText

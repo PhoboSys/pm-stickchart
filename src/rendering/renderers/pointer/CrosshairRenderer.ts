@@ -3,7 +3,7 @@ import { RenderingContext, IGraphicStorage, BaseRenderer, GraphicUtils } from '@
 import { PointermoveEvent } from '@events'
 
 import datamath from '@lib/datamath'
-import { Graphics, Container, Text } from '@lib/pixi'
+import { Container } from '@lib/pixi'
 import ui from '@lib/ui'
 
 import { USD } from '@constants'
@@ -35,16 +35,14 @@ export class CrosshairRenderer extends BaseRenderer {
             alpha: 0.6,
             join: 'round',
             cap: 'round',
-            paddingRight: 5,
+            paddingRight: 10,
             paddingBottom: 5,
         }
 
         this.priceCoverStyle = {
             color: 0x009797,
-            paddingx: 5,
-            paddingy: 2.5,
-            anchorx: 1.2,
-            anchory: 0.5,
+            padding: [2.5, 5],
+            anchor: [1.2, 0.5],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -56,10 +54,8 @@ export class CrosshairRenderer extends BaseRenderer {
 
         this.timeCoverStyle = {
             color: 0x009797,
-            paddingx: 5,
-            paddingy: 2.5,
-            anchorx: .5,
-            anchory: 1,
+            padding: [2.5, 5],
+            anchor: [.5, 1],
             radius: 30,
             textstyle: {
                 fill: 0xFFFFFF,
@@ -115,30 +111,18 @@ export class CrosshairRenderer extends BaseRenderer {
 
         const timedif = maxtime - mintime
         const [timestamp] = datamath.scale([x], [0, width], timedif)
-        const time24 = ui.time24(mintime + timestamp)
 
         const [coveredText, coveredTextState] = this.get(
             'timeCoveredText',
             () => GraphicUtils.createCoveredText(
-                time24,
+                ui.time24(mintime + timestamp),
                 [x, height],
                 this.timeCoverStyle,
             )
         )
 
-        const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = time24
-
-        const { paddingx, paddingy } = this.timeCoverStyle
-        const coverGraphic = <Graphics>coveredText.getChildAt(0)
-        coverGraphic.width = textGraphic.width + paddingx * 2
-        coverGraphic.height = textGraphic.height + paddingy * 2
-
-        const { anchorx, anchory } = this.timeCoverStyle
-        coveredText.position.set(
-            x - coveredText.width * anchorx,
-            height - coveredText.height * anchory
-        )
+        if (coveredTextState.new) container.addChild(coveredText)
+        else coveredText.update((textGraphic) => textGraphic.text = ui.time24(mintime + timestamp), [x, height], this.timeCoverStyle)
 
         const padding = coveredText.height + this.lineStyle.paddingBottom
         const [horizontal, horizontalState] = this.get(
@@ -153,7 +137,6 @@ export class CrosshairRenderer extends BaseRenderer {
         horizontal.height = height - padding
 
         if (horizontalState.new) container.addChild(horizontal)
-        if (coveredTextState.new) container.addChild(coveredText)
     }
 
     protected updateHorizontal(container: Container): void {
@@ -173,19 +156,8 @@ export class CrosshairRenderer extends BaseRenderer {
             )
         )
 
-        const textGraphic = <Text>coveredText.getChildAt(1)
-        textGraphic.text = ui.currency(price, USD)
-
-        const { paddingx, paddingy } = this.priceCoverStyle
-        const coverGraphic = <Graphics>coveredText.getChildAt(0)
-        coverGraphic.width = textGraphic.width + paddingx * 2
-        coverGraphic.height = textGraphic.height + paddingy * 2
-
-        const { anchorx, anchory } = this.priceCoverStyle
-        coveredText.position.set(
-            width - coveredText.width * anchorx,
-            y - coveredText.height * anchory
-        )
+        if (coveredTextState.new) container.addChild(coveredText)
+        else coveredText.update((textGraphic) => textGraphic.text = ui.currency(price, USD), [width, y], this.priceCoverStyle)
 
         const padding = coveredText.width + this.lineStyle.paddingRight
         const [horizontal, horizontalState] = this.get('horizontal', () => GraphicUtils.createLine(
@@ -197,7 +169,6 @@ export class CrosshairRenderer extends BaseRenderer {
         horizontal.width = width - padding
 
         if (horizontalState.new) container.addChild(horizontal)
-        if (coveredTextState.new) container.addChild(coveredText)
     }
 
     protected clear(name?: string): void {

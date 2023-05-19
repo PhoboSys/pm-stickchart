@@ -1,5 +1,13 @@
 import { Graphics, LineStyle, Text } from '../../lib/pixi';
 import { Texture, Container } from '../../lib/pixi';
+export declare class CoveredText extends Graphics {
+    update(updater: (textGraphic: Text) => void, position: [number, number], style: {
+        padding: any;
+        anchor: any;
+    }): void;
+    private updateText;
+    private updatePosition;
+}
 export declare class GraphicUtils {
     static createCircle([x, y]: [number, number], radius: number, style: {
         color: any;
@@ -26,14 +34,12 @@ export declare class GraphicUtils {
     }): Graphics;
     static createCoveredText(value: any, [x, y]: [number, number], style: {
         textstyle: any;
-        paddingx: any;
-        paddingy: any;
+        padding: any;
         color: any;
         radius: any;
-        anchorx: any;
-        anchory: any;
+        anchor: any;
         linestyle: any;
-    }): Graphics;
+    }): CoveredText;
     static createVerticalDashLine(x: number, [y1, y2]: [number, number], linestyle: LineStyle & {
         gap: any;
         dash: any;

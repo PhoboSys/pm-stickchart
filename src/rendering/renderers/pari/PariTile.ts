@@ -307,48 +307,34 @@ export class PariTile extends BaseParisRenderer {
 
     })
 
-    private payoutContainerStyle = {
+    private payoutStyle: any = {
+        color: 0x212233,
         offset: [18, 13],
-    }
-
-    private prizeStyle: any = {
-        text: {
+        padding: [8, 8, 8, 36],
+        anchor: [1, 0],
+        radius: 0,
+        textstyle: {
             fill: 0xf07750,
             fontWeight: 600,
             fontFamily: 'Gilroy',
             fontSize: 18,
         },
-        offset: [-9, 7],
-        anchor: [1, 0],
         winFill: 0x00A573,
         loseFill: 0xf07750
     }
 
-    private payoutStyle = {
-        height: 36,
-        width: 42,
-        fill: 0x212233,
-    }
-
-    private profitContainerStyle = {
-        offset: [12, 4],
-    }
-
     private profitStyle: any = {
-        text: {
+        color: 0x00a573,
+        offset: [12, 4],
+        padding: [2, 4],
+        anchor: [1, 0],
+        radius: 0,
+        textstyle: {
             fill: 0x212233,
             fontWeight: 700,
             fontFamily: 'Gilroy',
             fontSize: 13,
         },
-        offset: [-3, 2],
-        anchor: [1, 0]
-    }
-
-    private profitBlockStyle: any = {
-        height: 18,
-        width: 8,
-        fill: 0x00a573,
     }
 
     private iconPositionStyle: any = {
@@ -724,26 +710,19 @@ export class PariTile extends BaseParisRenderer {
         const emptypool = this.isNoContestEmptyPool(pool)
 
         if (!undef) {
-            const [payoutContainer, payoutContainerState] = this.get('payoutContainer', () => new Graphics())
-            if (payoutContainerState.new) {
-                payoutContainer.position.set(bgwidth - this.payoutContainerStyle.offset[0], this.payoutContainerStyle.offset[1])
-                content.addChild(payoutContainer)
-            }
+            const payoutPosition: [number, number] = [bgwidth - this.payoutStyle.offset[0], this.payoutStyle.offset[1]]
+            const [payout, payoutState] = this.get('payout', () => GraphicUtils.createCoveredText(
+                0,
+                payoutPosition,
+                this.payoutStyle,
+            ))
+            if (payoutState.new) content.addChild(payout)
 
-            const [profitContainer, profitContainerState] = this.get('profitContainer', () => new Graphics())
-            if (profitContainerState.new) {
-                profitContainer.position.set(bgwidth - this.profitContainerStyle.offset[0], this.profitContainerStyle.offset[1])
-                content.addChild(profitContainer)
-            }
+            const [levelCurrency, levelCurrencyState] = this.get('levelCurrency', () => this.createLevelCurrency(context))
+            if (levelCurrencyState.new) payout.addChild(levelCurrency)
 
-            const [prize] = this.get('prize', () =>
-                GraphicUtils.createText(
-                    0,
-                    this.prizeStyle.offset,
-                    this.prizeStyle.text,
-                    this.prizeStyle.anchor
-                )
-            )
+            const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context))
+            if (currencyState.new) levelCurrency.addChild(currency)
 
             if (win && !emptypool) {
                 const [prizeAmount] = this.get(
@@ -759,8 +738,11 @@ export class PariTile extends BaseParisRenderer {
                     },
                     [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
                 )
-                prize.text = prizeAmount
-                prize.style.fill = this.prizeStyle.winFill
+
+                payout.update((textGraphic) => {
+                    textGraphic.text = prizeAmount
+                    textGraphic.style.fill = this.payoutStyle.winFill
+                }, payoutPosition, this.payoutStyle)
 
                 const [percent] = this.get(
                     'percent',
@@ -768,47 +750,35 @@ export class PariTile extends BaseParisRenderer {
                     [prizeAmount, pari.wager]
                 )
 
-                const [profit] = this.get('profit', () =>
-                    GraphicUtils.createText(
-                        percent,
-                        this.profitStyle.offset,
-                        this.profitStyle.text,
-                        this.profitStyle.anchor
-                    )
-                )
-
-                profit.text = percent
-
-                const [profitBlock, profitBlockState] = this.get('profitBlock', () => this.createProfitBlock(profit), [profit.width])
-                if (profitBlockState.new) profitContainer.addChild(profitBlock)
+                const profitPosition: [number, number] = [bgwidth - this.profitStyle.offset[0], this.profitStyle.offset[1]]
+                const [profit, profitState] = this.get('profit', () => GraphicUtils.createCoveredText(
+                    percent,
+                    profitPosition,
+                    this.profitStyle,
+                ))
+                if (profitState.new) content.addChild(profit)
+                else profit.update((textGraphic) => textGraphic.text = percent, profitPosition, this.profitStyle)
 
             } else {
-                this.clear('profitBlock')
+                this.clear('profit')
 
-                let payout: any = 0
+                let fill: any
+                let payoutAmount: any = 0
 
                 if (pari.claimed) {
-                    prize.style.fill = this.prizeStyle.winFill
-                    payout = ui.erc20(pari.payout)
+                    fill = this.payoutStyle.winFill
+                    payoutAmount = ui.erc20(pari.payout)
                 } else if (nocontest || emptypool) {
-                    prize.style.fill = this.prizeStyle.winFill
-                    payout = ui.erc20(pari.wager)
+                    fill = this.payoutStyle.winFill
+                    payoutAmount = ui.erc20(pari.wager)
                 } else {
-                    prize.style.fill = this.prizeStyle.loseFill
+                    fill = this.payoutStyle.loseFill
                 }
 
-                prize.text = payout
-            }
-
-            const [levelCurrency] = this.get('levelCurrency', () => this.createLevelCurrency(context))
-
-            const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context))
-            if (currencyState.new) levelCurrency.addChild(currency)
-
-            const [payout, payoutState] = this.get('payout', () => this.createPayout(prize), [prize.width])
-            if (payoutState.new) {
-                payout.addChild(levelCurrency)
-                payoutContainer.addChild(payout)
+                payout.update((textGraphic) => {
+                    textGraphic.text = payoutAmount
+                    textGraphic.style.fill = fill
+                }, payoutPosition, this.payoutStyle)
             }
         }
 
@@ -1067,40 +1037,6 @@ export class PariTile extends BaseParisRenderer {
             .endFill()
 
         return levelCurrency
-    }
-
-    private createPayout(prize): Graphics {
-        const payout = new Graphics()
-        const width = this.payoutStyle.width + prize.width
-        const height = this.payoutStyle.height
-
-        payout
-            .beginFill(this.payoutStyle.fill)
-            .drawRect(0, 0, width, height)
-            .endFill()
-
-        payout.pivot.x = width
-        prize.x = width + this.prizeStyle.offset[0]
-        payout.addChild(prize)
-
-        return payout
-    }
-
-    private createProfitBlock(profit): Graphics {
-        const block = new Graphics()
-        const width = this.profitBlockStyle.width + profit.width
-        const height = this.profitBlockStyle.height
-
-        block
-            .beginFill(this.profitBlockStyle.fill)
-            .drawRect(0, 0, width, height)
-            .endFill()
-
-        block.pivot.x = width
-        profit.x = width + this.profitStyle.offset[0]
-        block.addChild(profit)
-
-        return block
     }
 
     private createContentContainer(position: EPosition): Container {
