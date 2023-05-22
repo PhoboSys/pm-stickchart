@@ -15,23 +15,25 @@ export declare class DataBuilder {
         prices: any;
     }): PricePoint;
     static EMPTY_PLOTDATA: PlotData;
-    static normalize(timestampsOrig: any, pricesOrig: any, chartdata: {
+    static chartdata(chartdata: ChartData): {
+        timestamps: any;
+        prices: any;
+    };
+    static framedata(chartdata: {
         timestamps: any;
         prices: any;
     }, timeframe: {
         since: any;
         until: any;
-    }, screen: {
-        width: any;
-        height: any;
-    }): PlotData;
-    static chartdata(chartdata: ChartData): {
-        timestamps: any;
+    }): {
         prices: any;
+        timestamps: any;
+        latest: any;
     };
-    static plotdata(chartdata: {
+    static plotdata(framedata: {
         timestamps: any;
         prices: any;
+        latest: any;
     }, screen: {
         width: any;
         height: any;

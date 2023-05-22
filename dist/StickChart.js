@@ -47,13 +47,13 @@ class StickChart extends EventTarget {
     applyTimeframe() {
         if (!this._context)
             return;
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.framedata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
         this.rerender('timeframe');
     }
     applyMorph() {
         if (!this._context)
             return;
-        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.framedata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
         this.rerender('morph');
     }
     rerender(reason) {
@@ -72,7 +72,9 @@ class StickChart extends EventTarget {
         }
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
-        const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get());
+        const timeframe = this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get();
+        const framedata = _chartdata_1.DataBuilder.framedata(chartdata, timeframe);
+        const plotdata = _chartdata_1.DataBuilder.plotdata(framedata, this.application.screen, timeframe);
         const ctx = {
             metapool: context.metapool,
             pools: context.pools,
@@ -88,6 +90,7 @@ class StickChart extends EventTarget {
             textures: this.textureStorage,
             eventTarget: this,
             chartdata,
+            framedata,
             plotdata,
         };
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
@@ -99,7 +102,7 @@ class StickChart extends EventTarget {
                 pipeline.render(ctx, () => _infra_1.Logger.info('render'));
             }
             else {
-                this.morphController.morph(this._context.chartdata, ctx.chartdata);
+                this.morphController.morph(this._context.framedata, ctx.framedata);
             }
             // save latest rendered context
             this._context = ctx;

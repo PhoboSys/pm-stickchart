@@ -1,4 +1,4 @@
-import { PlotData } from '@chartdata'
+import { PlotData, PricePoint } from '@chartdata'
 import { Rectangle } from '@lib/pixi'
 import { ITextureStorage } from './interfaces'
 
@@ -21,6 +21,7 @@ export type RenderingContext = {
     textures: ITextureStorage
     charttype: EChartType
     plotdata: PlotData
+    framedata: { prices: string[], timestamps: number[], latest: PricePoint }
     chartdata: { prices: string[], timestamps: number[] }
 
     eventTarget: EventTarget

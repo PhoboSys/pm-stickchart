@@ -71,7 +71,7 @@ export class StickChart extends EventTarget {
         if (!this._context) return
 
         this._context.plotdata = DataBuilder.plotdata(
-            this._context.chartdata,
+            this._context.framedata,
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
@@ -82,7 +82,7 @@ export class StickChart extends EventTarget {
         if (!this._context) return
 
         this._context.plotdata = DataBuilder.plotdata(
-            this._context.chartdata,
+            this._context.framedata,
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
@@ -126,11 +126,9 @@ export class StickChart extends EventTarget {
 
         const pipeline = this.pipelineFactory.get(context.charttype)
         const chartdata = DataBuilder.chartdata(context.chartdata)
-        const plotdata = DataBuilder.plotdata(
-            chartdata,
-            this.application.screen,
-            this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
-        )
+        const timeframe = this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
+        const framedata = DataBuilder.framedata(chartdata, timeframe)
+        const plotdata = DataBuilder.plotdata(framedata, this.application.screen, timeframe)
 
         const ctx: RenderingContext = {
             metapool: context.metapool,
@@ -148,6 +146,7 @@ export class StickChart extends EventTarget {
 
             eventTarget: this,
             chartdata,
+            framedata,
             plotdata,
         }
 
@@ -166,7 +165,7 @@ export class StickChart extends EventTarget {
 
             } else {
 
-                this.morphController.morph(this._context.chartdata, ctx.chartdata)
+                this.morphController.morph(this._context.framedata, ctx.framedata)
 
             }
 
