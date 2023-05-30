@@ -18,7 +18,7 @@ import {
 import { Logger } from '@infra'
 
 import datamath from '@lib/datamath'
-import { Graphics, Container, Sprite } from '@lib/pixi'
+import { Graphics, Container, Sprite, Matrix } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
@@ -140,6 +140,9 @@ export class PariTile extends BaseParisRenderer {
                     alpha: 1,
                 },
                 shadow: {
+                    width: 300,
+                    height: 64,
+                    offset: [1.5, -1],
                     points: [0, 0, 300, 0],
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
@@ -166,6 +169,9 @@ export class PariTile extends BaseParisRenderer {
                     alpha: 1,
                 },
                 shadow: {
+                    width: 300,
+                    height: 64,
+                    offset: [1.5, -1],
                     points: [0, 0, 300, 0],
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
@@ -192,6 +198,9 @@ export class PariTile extends BaseParisRenderer {
                     alpha: 1,
                 },
                 shadow: {
+                    width: 300,
+                    height: 64,
+                    offset: [-0.5, -1],
                     points: [300, 0, 0, 0],
                     colorStops: [
                         { color: '#22273FFF', offset: 0 },
@@ -669,23 +678,29 @@ export class PariTile extends BaseParisRenderer {
 
         const [background, backgroundState] = this.get(
             'background',
-            () => this.createBackground(this.groupStyle[position], context)
+            () => this.createBackground(this.groupStyle[position])
         )
         if (backgroundState.new) group.addChild(background)
 
         const [stateBackground, stateBackgroundState] = this.get(
             'stateBackgroundState',
-            () => this.createBackground(this.stateBackgroundStyle[position], context)
+            () => this.createBackground(this.stateBackgroundStyle[position])
         )
         if (stateBackgroundState.new) group.addChild(stateBackground)
         stateBackground.alpha = this.getStateBackgroundAlpha({ winning, loseing, undef, phantom })
 
         const [orphanBackground, orphanBackgroundState] = this.get(
             'orphanBackground',
-            () => this.createBackground(this.orphanBackgroundStyle[position], context)
+            () => this.createBackground(this.orphanBackgroundStyle[position])
         )
         if (orphanBackgroundState.new) group.addChild(orphanBackground)
         orphanBackground.alpha = orphan ? this.orphanBackgroundStyle[position].alpha : 0
+
+        const [shadow, shadowState] = this.get(
+            'shadow',
+            () => this.createShadow(this.groupStyle[position].background.shadow, context)
+        )
+        if (shadowState.new) group.addChild(shadow)
 
         const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position))
         if (contentContainerState.new) group.addChild(contentContainer)
@@ -1064,7 +1079,7 @@ export class PariTile extends BaseParisRenderer {
         return container
     }
 
-    private createBackground(style, context: RenderingContext): Graphics {
+    private createBackground(style): Graphics {
         const {
             width,
             height,
@@ -1073,32 +1088,14 @@ export class PariTile extends BaseParisRenderer {
                 lineStyle,
                 radiuses,
                 color,
-                shadow: {
-                    points,
-                    colorStops
-                }
             }
         } = style
 
-        let background = GraphicUtils.createRoundedRect(
+        const background = GraphicUtils.createRoundedRect(
             [ofx, ofy],
             [width, height],
             radiuses,
             { color, lineStyle }
-        )
-
-        const texture = context.textures.get(GRADIENT_TEXTURE, {
-            width: width + lineStyle.width*2,
-            height: height + lineStyle.width*2,
-            points,
-            colorStops
-        })
-        background = GraphicUtils.createRoundedRect(
-            [ofx - lineStyle.width, ofy - lineStyle.width/2],
-            [width + lineStyle.width + lineStyle.width/2, height + lineStyle.width],
-            radiuses,
-            { texture },
-            background
         )
 
         background.alpha = 0
@@ -1127,6 +1124,34 @@ export class PariTile extends BaseParisRenderer {
         }
 
         return propagatingBackground
+    }
+
+    private createShadow(style, context: RenderingContext): Graphics {
+        const { width, height, offset: [ofx, ofy], points, colorStops } = style
+
+        const shadow = new Graphics()
+
+        // We need mask to hide weird line at the and of shadow graphic.
+        const mask = new Graphics()
+            .beginFill(0x000000)
+            .drawRect(ofx, ofy, width - 1, height)
+            .endFill()
+
+        shadow.addChild(mask)
+        shadow.mask = mask
+
+        const texture = context.textures.get(GRADIENT_TEXTURE, { width, height, points, colorStops })
+
+        const matrix = new Matrix()
+        matrix.tx = ofx
+        matrix.ty = ofy
+
+        shadow
+            .beginTextureFill({ texture, matrix })
+            .drawRect(ofx, ofy, width, height)
+            .endFill()
+
+        return shadow
     }
 
     private getStateBackgroundAlpha({ winning, loseing, undef, phantom }): number {
