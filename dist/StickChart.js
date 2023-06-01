@@ -37,6 +37,10 @@ class StickChart extends EventTarget {
     }
     setScreenSize({ width, height }) {
         this.application.renderer.resize(width, height);
+        if (!this._context)
+            return;
+        this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
+        this.rerender('resize');
     }
     setTimeframe(timeframe) {
         this.timeframe.save(timeframe);
