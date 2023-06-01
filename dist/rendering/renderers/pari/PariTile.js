@@ -109,6 +109,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         alpha: 1,
                     },
                     shadow: {
+                        width: 300,
+                        height: 64,
+                        offset: [1.5, -1],
                         points: [0, 0, 300, 0],
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
@@ -134,6 +137,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         alpha: 1,
                     },
                     shadow: {
+                        width: 300,
+                        height: 64,
+                        offset: [1.5, -1],
                         points: [0, 0, 300, 0],
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
@@ -159,6 +165,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         alpha: 1,
                     },
                     shadow: {
+                        width: 300,
+                        height: 64,
+                        offset: [-0.5, -1],
                         points: [300, 0, 0, 0],
                         colorStops: [
                             { color: '#22273FFF', offset: 0 },
@@ -578,17 +587,20 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         group.position.set(bgx, bgy);
         if (!isHistorical)
             group.zIndex = 10;
-        const [background, backgroundState] = this.get('background', () => this.createBackground(this.groupStyle[position], context));
+        const [background, backgroundState] = this.get('background', () => this.createBackground(this.groupStyle[position]));
         if (backgroundState.new)
             group.addChild(background);
-        const [stateBackground, stateBackgroundState] = this.get('stateBackgroundState', () => this.createBackground(this.stateBackgroundStyle[position], context));
+        const [stateBackground, stateBackgroundState] = this.get('stateBackgroundState', () => this.createBackground(this.stateBackgroundStyle[position]));
         if (stateBackgroundState.new)
             group.addChild(stateBackground);
         stateBackground.alpha = this.getStateBackgroundAlpha({ winning, loseing, undef, phantom });
-        const [orphanBackground, orphanBackgroundState] = this.get('orphanBackground', () => this.createBackground(this.orphanBackgroundStyle[position], context));
+        const [orphanBackground, orphanBackgroundState] = this.get('orphanBackground', () => this.createBackground(this.orphanBackgroundStyle[position]));
         if (orphanBackgroundState.new)
             group.addChild(orphanBackground);
         orphanBackground.alpha = orphan ? this.orphanBackgroundStyle[position].alpha : 0;
+        const [shadow, shadowState] = this.get('shadow', () => this.createShadow(this.groupStyle[position].background.shadow, context));
+        if (shadowState.new)
+            group.addChild(shadow);
         const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position));
         if (contentContainerState.new)
             group.addChild(contentContainer);
@@ -864,16 +876,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         container.mask = mask;
         return container;
     }
-    createBackground(style, context) {
-        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, shadow: { points, colorStops } } } = style;
-        let background = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { color, lineStyle });
-        const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, {
-            width: width + lineStyle.width * 2,
-            height: height + lineStyle.width * 2,
-            points,
-            colorStops
-        });
-        background = _rendering_1.GraphicUtils.createRoundedRect([ofx - lineStyle.width, ofy - lineStyle.width / 2], [width + lineStyle.width + lineStyle.width / 2, height + lineStyle.width], radiuses, { texture }, background);
+    createBackground(style) {
+        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, } } = style;
+        const background = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { color, lineStyle });
         background.alpha = 0;
         return background;
     }
@@ -893,6 +898,26 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             propagatingBackground.alpha = 0;
         }
         return propagatingBackground;
+    }
+    createShadow(style, context) {
+        const { width, height, offset: [ofx, ofy], points, colorStops } = style;
+        const shadow = new pixi_1.Graphics();
+        // We need mask to hide weird line at the and of shadow graphic.
+        const mask = new pixi_1.Graphics()
+            .beginFill(0x000000)
+            .drawRect(ofx, ofy, width - 1, height)
+            .endFill();
+        shadow.addChild(mask);
+        shadow.mask = mask;
+        const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, { width, height, points, colorStops });
+        const matrix = new pixi_1.Matrix();
+        matrix.tx = ofx;
+        matrix.ty = ofy;
+        shadow
+            .beginTextureFill({ texture, matrix })
+            .drawRect(ofx, ofy, width, height)
+            .endFill();
+        return shadow;
     }
     getStateBackgroundAlpha({ winning, loseing, undef, phantom }) {
         if (winning)
