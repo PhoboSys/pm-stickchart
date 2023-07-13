@@ -90,11 +90,19 @@ export default class MorphController {
                 // 8. Have to revert changes in order to make amination finish
                 next.timestamps = previous.timestamps
                 next.prices = previous.prices
+
+            } else {
+
+                // 9. Clear and reperform default update/render
+                if (this.isActive) this.#timeline.progress(1)
+                this.#timeline.clear()
+                this._onUpdate()
+
             }
 
         } else {
 
-            // 8. Clear and reperform default update/render
+            // 10. Clear and reperform default update/render
             if (this.isActive) this.#timeline.progress(1)
             this.#timeline.clear()
             this._onUpdate()

@@ -88,9 +88,16 @@ _MorphController_timeline = new WeakMap(), _MorphController_active = new WeakMap
             next.timestamps = previous.timestamps;
             next.prices = previous.prices;
         }
+        else {
+            // 9. Clear and reperform default update/render
+            if (this.isActive)
+                __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
+            __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
+            this._onUpdate();
+        }
     }
     else {
-        // 8. Clear and reperform default update/render
+        // 10. Clear and reperform default update/render
         if (this.isActive)
             __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
         __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
