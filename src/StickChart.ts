@@ -56,6 +56,9 @@ export class StickChart extends EventTarget {
     }
 
     public setScreenSize({ width, height }): void {
+        if (width === 0) return
+        if (height === 0) return
+
         this.application.renderer.resize(width, height)
 
         if (!this._context) return
@@ -78,6 +81,8 @@ export class StickChart extends EventTarget {
 
     private applyTimeframe(): void {
         if (!this._context) return
+        if (this._context.screen?.width === 0) return
+        if (this._context.screen?.height === 0) return
 
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,
@@ -89,6 +94,8 @@ export class StickChart extends EventTarget {
 
     private applyMorph(): void {
         if (!this._context) return
+        if (this._context.screen?.width === 0) return
+        if (this._context.screen?.height === 0) return
 
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,
@@ -101,6 +108,8 @@ export class StickChart extends EventTarget {
     public rerender(reason: string): void {
         window.requestAnimationFrame(() => {
             if (!this._context) return
+            if (this._context.screen?.width === 0) return
+            if (this._context.screen?.height === 0) return
 
             const pipeline = this.pipelineFactory.get(this._context.charttype)
 
@@ -132,6 +141,9 @@ export class StickChart extends EventTarget {
 
             return
         }
+        if (!this.application.screen) return
+        if (this.application.screen.width === 0) return
+        if (this.application.screen.height === 0) return
 
         const pipeline = this.pipelineFactory.get(context.charttype)
         const chartdata = DataBuilder.chartdata(context.chartdata)
@@ -167,7 +179,6 @@ export class StickChart extends EventTarget {
 
         window.requestAnimationFrame(() => {
             if (!this._context || !config.morph) {
-
                 pipeline.render(
                     ctx,
                     () => Logger.info('render')

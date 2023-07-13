@@ -36,6 +36,10 @@ class StickChart extends EventTarget {
         this.pipelineFactory = new _rendering_1.RenderingPipelineFactory(renderer);
     }
     setScreenSize({ width, height }) {
+        if (width === 0)
+            return;
+        if (height === 0)
+            return;
         this.application.renderer.resize(width, height);
         if (!this._context)
             return;
@@ -49,20 +53,35 @@ class StickChart extends EventTarget {
         return this.application.view;
     }
     applyTimeframe() {
+        var _a, _b;
         if (!this._context)
+            return;
+        if (((_a = this._context.screen) === null || _a === void 0 ? void 0 : _a.width) === 0)
+            return;
+        if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
             return;
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
         this.rerender('timeframe');
     }
     applyMorph() {
+        var _a, _b;
         if (!this._context)
+            return;
+        if (((_a = this._context.screen) === null || _a === void 0 ? void 0 : _a.width) === 0)
+            return;
+        if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
             return;
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
         this.rerender('morph');
     }
     rerender(reason) {
         window.requestAnimationFrame(() => {
+            var _a, _b;
             if (!this._context)
+                return;
+            if (((_a = this._context.screen) === null || _a === void 0 ? void 0 : _a.width) === 0)
+                return;
+            if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
                 return;
             const pipeline = this.pipelineFactory.get(this._context.charttype);
             pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => _infra_1.Logger.info('re-render', reason));
@@ -74,6 +93,12 @@ class StickChart extends EventTarget {
             _infra_1.Logger.error('Cannot initiate chart "metapool" is not provided!');
             return;
         }
+        if (!this.application.screen)
+            return;
+        if (this.application.screen.width === 0)
+            return;
+        if (this.application.screen.height === 0)
+            return;
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
         const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get());
