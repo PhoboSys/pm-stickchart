@@ -19,9 +19,7 @@ export declare class Timeframe {
     private untilmax;
     private get since();
     private readonly zoomevent;
-    private readonly pointerdown;
     private readonly pointermove;
-    private readonly pointerup;
     private shifting;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
     save(timeframe: number): this;
@@ -32,8 +30,6 @@ export declare class Timeframe {
         until: number;
     };
     destroy(): this;
-    private shiftend;
-    private shiftstart;
     private shiftprogress;
     private shift;
     private zoom;

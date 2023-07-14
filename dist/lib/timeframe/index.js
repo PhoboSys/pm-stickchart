@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
 const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
 const _events_1 = require("../../events/index.js");
+const _infra_1 = require("../../infra/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
 exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
@@ -64,18 +65,12 @@ class Timeframe {
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = 0;
         this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerdown = () => this.shiftstart();
-        this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointerup = () => this.shiftend();
+        this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen, e.inner.buttons), _config_1.default.zoom.throttle, { trailing: false });
         this.eventTarget.addEventListener('zoom', this.zoomevent);
-        this.eventTarget.addEventListener('pointerdown', this.pointerdown);
         this.eventTarget.addEventListener('pointermove', this.pointermove);
-        this.eventTarget.addEventListener('pointerup', this.pointerup);
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
-        // eslint-disable-next-line no-console
-        this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'));
-        // eslint-disable-next-line no-console
-        this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'));
+        this.eventTarget.addEventListener('timeframeTonow', () => _infra_1.Logger.info('tf => now'));
+        this.eventTarget.addEventListener('timeframeUnnow', () => _infra_1.Logger.info('tf <= now'));
     }
     save(timeframe) {
         this.timeframe = timeframe;
@@ -102,20 +97,18 @@ class Timeframe {
     }
     destroy() {
         this.eventTarget.removeEventListener('zoom', this.zoomevent);
-        this.eventTarget.removeEventListener('pointerdown', this.pointerdown);
         this.eventTarget.removeEventListener('pointermove', this.pointermove);
-        this.eventTarget.removeEventListener('pointerup', this.pointerup);
         this.eventTarget.removeEventListener('timeframechanged', this.onUpdate);
         return this;
     }
-    shiftend() {
-        this.shifting--;
-    }
-    shiftstart() {
-        this.shifting++;
-    }
-    shiftprogress(shift, screen) {
-        if ((this.shifting === 1) && shift) {
+    // private shiftend(): void {
+    //     this.shifting--
+    // }
+    // private shiftstart(): void {
+    //     this.shifting++
+    // }
+    shiftprogress(shift, screen, buttons) {
+        if ((buttons === 1) && shift) {
             this.shift(shift, screen);
         }
     }

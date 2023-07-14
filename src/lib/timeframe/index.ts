@@ -3,6 +3,8 @@ import throttle from 'lodash.throttle'
 import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
 
+import { Logger } from '@infra'
+
 import config from '@config'
 
 export const UNIX_MINUTE = 60
@@ -76,11 +78,7 @@ export class Timeframe {
 
     private readonly zoomevent: any
 
-    private readonly pointerdown: any
-
     private readonly pointermove: any
-
-    private readonly pointerup: any
 
     private shifting = 0
 
@@ -91,22 +89,16 @@ export class Timeframe {
         this.zoomevent = throttle((e: ZoomEvent) =>
             this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle, { trailing: false }
         )
-        this.pointerdown = (): void => this.shiftstart()
         this.pointermove = throttle((e: PointermoveEvent) =>
-            this.shiftprogress(e.movementX, e.screen), config.zoom.throttle, { trailing: false }
+            this.shiftprogress(e.movementX, e.screen, e.inner.buttons), config.zoom.throttle, { trailing: false }
         )
-        this.pointerup = (): void => this.shiftend()
 
         this.eventTarget.addEventListener('zoom', this.zoomevent)
-        this.eventTarget.addEventListener('pointerdown', this.pointerdown)
         this.eventTarget.addEventListener('pointermove', this.pointermove)
-        this.eventTarget.addEventListener('pointerup', this.pointerup)
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate)
 
-        // eslint-disable-next-line no-console
-        this.eventTarget.addEventListener('timeframeTonow', () => console.log('timeframeTonow'))
-        // eslint-disable-next-line no-console
-        this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'))
+        this.eventTarget.addEventListener('timeframeTonow', () => Logger.info('tf => now'))
+        this.eventTarget.addEventListener('timeframeUnnow', () => Logger.info('tf <= now'))
     }
 
     public save(timeframe: number): this {
@@ -144,24 +136,22 @@ export class Timeframe {
 
     public destroy(): this {
         this.eventTarget.removeEventListener('zoom', this.zoomevent)
-        this.eventTarget.removeEventListener('pointerdown', this.pointerdown)
         this.eventTarget.removeEventListener('pointermove', this.pointermove)
-        this.eventTarget.removeEventListener('pointerup', this.pointerup)
         this.eventTarget.removeEventListener('timeframechanged', this.onUpdate)
 
         return this
     }
 
-    private shiftend(): void {
-        this.shifting--
-    }
+    // private shiftend(): void {
+    //     this.shifting--
+    // }
 
-    private shiftstart(): void {
-        this.shifting++
-    }
+    // private shiftstart(): void {
+    //     this.shifting++
+    // }
 
-    private shiftprogress(shift: number, screen: Rect): void {
-        if ((this.shifting === 1) && shift) {
+    private shiftprogress(shift: number, screen: Rect, buttons: any): void {
+        if ((buttons === 1) && shift) {
             this.shift(shift, screen)
         }
     }
