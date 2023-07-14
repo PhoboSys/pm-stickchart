@@ -175,6 +175,7 @@ export class StickChart extends EventTarget {
         if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {
             // clear context if metapoolid changed
             this._context = null
+            this.timeframe.reset()
         }
 
         window.requestAnimationFrame(() => {

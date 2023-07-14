@@ -47,10 +47,7 @@ class Timeframe {
             }
         }
         else {
-            // null will always return current untilmax
-            if (this._until !== null)
-                this.eventTarget.dispatchEvent(new _events_1.TimeframeStickToNowEvent(this.get()));
-            this._until = null;
+            this.reset();
         }
     }
     untilmax(timeframe) {
@@ -82,6 +79,14 @@ class Timeframe {
     }
     save(timeframe) {
         this.timeframe = timeframe;
+        return this;
+    }
+    reset() {
+        // null will always return current untilmax
+        if (this._until !== null) {
+            this._until = null;
+            this.eventTarget.dispatchEvent(new _events_1.TimeframeStickToNowEvent(this.get()));
+        }
         return this;
     }
     now(now) {

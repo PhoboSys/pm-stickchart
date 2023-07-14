@@ -24,7 +24,8 @@ export declare class Timeframe {
     private readonly pointerup;
     private shifting;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
-    save(timeframe: any): this;
+    save(timeframe: number): this;
+    reset(): this;
     now(now: number): this;
     get(): {
         since: number;

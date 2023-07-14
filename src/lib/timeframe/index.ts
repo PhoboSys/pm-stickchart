@@ -62,9 +62,7 @@ export class Timeframe {
                 this._until = until
             }
         } else {
-            // null will always return current untilmax
-            if (this._until !== null) this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
-            this._until = null
+            this.reset()
         }
     }
 
@@ -111,8 +109,19 @@ export class Timeframe {
         this.eventTarget.addEventListener('timeframeUnnow', () => console.log('timeframeUnnow'))
     }
 
-    public save(timeframe): this {
+    public save(timeframe: number): this {
         this.timeframe = timeframe
+
+        return this
+    }
+
+    public reset(): this {
+
+        // null will always return current untilmax
+        if (this._until !== null) {
+            this._until = null
+            this.eventTarget.dispatchEvent(new TimeframeStickToNowEvent(this.get()))
+        }
 
         return this
     }
