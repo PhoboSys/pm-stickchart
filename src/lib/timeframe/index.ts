@@ -84,7 +84,7 @@ export class Timeframe {
 
     private readonly pointerup: any
 
-    private shifting = false
+    private shifting = 0
 
     constructor(
         private readonly eventTarget: EventTarget,
@@ -144,15 +144,17 @@ export class Timeframe {
     }
 
     private shiftend(): void {
-        if (this.shifting) this.shifting = false
+        this.shifting--
     }
 
     private shiftstart(): void {
-        if (!this.shifting) this.shifting = true
+        this.shifting++
     }
 
     private shiftprogress(shift: number, screen: Rect): void {
-        if (this.shifting && shift) this.shift(shift, screen)
+        if ((this.shifting === 1) && shift) {
+            this.shift(shift, screen)
+        }
     }
 
     private shift(shift: number, screen: Rect): void {

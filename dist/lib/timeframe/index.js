@@ -65,7 +65,7 @@ class Timeframe {
         this._until = null;
         this._now = null;
         this._timeframe = exports.MAX_FRAME_DURATION;
-        this.shifting = false;
+        this.shifting = 0;
         this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
         this.pointerdown = () => this.shiftstart();
         this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen), _config_1.default.zoom.throttle, { trailing: false });
@@ -104,16 +104,15 @@ class Timeframe {
         return this;
     }
     shiftend() {
-        if (this.shifting)
-            this.shifting = false;
+        this.shifting--;
     }
     shiftstart() {
-        if (!this.shifting)
-            this.shifting = true;
+        this.shifting++;
     }
     shiftprogress(shift, screen) {
-        if (this.shifting && shift)
+        if ((this.shifting === 1) && shift) {
             this.shift(shift, screen);
+        }
     }
     shift(shift, screen) {
         const speed = 8;
