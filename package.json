@@ -3,7 +3,7 @@
   "description": "Chart",
   "version": "0.0.5",
   "author": "Phobosys",
-  "private": true,
+  "private": false,
   "license": "UNLICENSED",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
@@ -19,7 +19,8 @@
     "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
-    "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart"
+    "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart",
+    "ca:login": "aws codeartifact login --tool npm --repository Oracly --domain oracly --domain-owner 116856636107 --region us-east-1"
   },
   "dependencies": {
     "@pixi-essentials/gradients": "0.0.5",
