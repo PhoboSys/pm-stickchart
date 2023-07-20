@@ -5,13 +5,11 @@ on:
     branches:
       - master
       - staging
-    tags:
-      - '*'
 
 
 jobs:
   Deploy:
-    name: Deploy Subgraph to non-live cluster
+    name: Deploy stickchart to AWS CodeArtifact
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -24,27 +22,38 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_DEFAULT_REGION }}
-
-    # - name: Install npm
-    #   run: |
-    #     apt update && apt install npm -y
         
     - name: Login to Amazon CodeArtifact
       run: |
         npm run ca:login
-        npm init --scope=@oracly -y
 
     # - name: Test installing pm-stickchart package
     #   run: |
     #     npm install pm-stickchart
 
-    - name: Push package to Amazon CodeArtifact
+    - name: Build & Push package to Amazon CodeArtifact
       run: |
-        echo "${{  github.ref_name }}"
-        VER=$(cat package.json| jq .'version' | tr -d "\"")
-        echo $VER
-#        npm publish
+        export VER=$(aws secretsmanager get-secret-value                 \
+        --secret-id general | jq -r '.SecretString'                      \
+        | jq .STICKCHART_VERSION | tr -d \"  )    
+        
 
+        if [[ "${{  github.ref_name }}" == "master" ]]; then
+          VER=$(echo $VER | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          NEW_SECRET=$(aws secretsmanager get-secret-value                                      \
+          --secret-id general | jq -r '.SecretString'                              \
+          | jq ". += {\"STICKCHART_VERSION\":\"$VER\"}")
+          aws secretsmanager update-secret --secret-id general --secret-string "$NEW_SECRET"   
+
+        elif [[ "${{  github.ref_name }}" == "staging" ]]; then
+          VER="$VER@${GITHUB_SHA:0:9}"
+        fi
+
+        jq ". += {\"version\":\"$VER\"}" package.json > new_pj
+        mv new_pj package.json
+        npm build
+        npm init --scope=@oracly -y
+        npm publish
 
         
 
