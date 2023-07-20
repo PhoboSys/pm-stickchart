@@ -51,7 +51,7 @@ jobs:
 
         jq ". += {\"version\":\"$VER\"}" package.json > new_pj
         mv new_pj package.json
-        npm build
+        npm run build
         npm init --scope=@oracly -y
         npm publish
 
