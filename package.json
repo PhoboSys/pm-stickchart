@@ -14,9 +14,8 @@
     "lde-link-stickchart": "./bin/stickchart-link.sh"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
     "build:lde": "./bin/dev.sh",
-    "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "build": "tsc && tsc-alias",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart",

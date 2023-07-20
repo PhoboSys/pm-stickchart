@@ -2,7 +2,7 @@
 version: "3.0"
 services:
   parimarket:
-    image: node:17.6.0
+    image: node:16.17.1
     user: "${UID:-node}:${GID:-node}"
     tty: "${TTY:-true}"
     working_dir: /build
