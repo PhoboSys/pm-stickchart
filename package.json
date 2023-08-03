@@ -19,6 +19,7 @@
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
     "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart",
+
     "ca:login": "aws codeartifact login --tool npm --repository Oracly --domain oracly --domain-owner 116856636107 --region us-east-1"
   },
   "dependencies": {

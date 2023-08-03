@@ -118,7 +118,7 @@ export class StickChart extends EventTarget {
                     ...this._context,
                     rerender: true
                 },
-                () => Logger.info('re-render', reason)
+                () => Logger.info('re-render', reason, this._context?.plotdata?.latest?.timestamp)
             )
         })
     }
@@ -137,9 +137,7 @@ export class StickChart extends EventTarget {
         transactionsEntities: any,
     }): void {
         if (!context.metapool) {
-            Logger.error('Cannot initiate chart "metapool" is not provided!')
-
-            return
+            return Logger.error('Cannot initiate chart "metapool" is not provided!')
         }
         if (!this.application.screen) return
         if (this.application.screen.width === 0) return
@@ -182,7 +180,7 @@ export class StickChart extends EventTarget {
             if (!this._context || !config.morph) {
                 pipeline.render(
                     ctx,
-                    () => Logger.info('render')
+                    () => Logger.info('render', ctx.plotdata.latest.timestamp)
                 )
 
             } else {

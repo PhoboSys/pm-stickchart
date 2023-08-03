@@ -86,7 +86,8 @@ export default class MorphController {
                 // 7. Speedup animation to make all timeline finish in config.morph.duration
                 this.#timeline.timeScale(animations.length)
 
-            } else if (this.isActive) {
+            } else if (this.isActive && animations.length === 0) {
+
                 // 8. Have to revert changes in order to make amination finish
                 next.timestamps = previous.timestamps
                 next.prices = previous.prices
