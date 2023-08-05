@@ -49,6 +49,10 @@ class StickChart extends EventTarget {
     setTimeframe(timeframe) {
         this.timeframe.save(timeframe);
     }
+    resetTimeframe() {
+        this.timeframe.reset();
+        this.applyTimeframe();
+    }
     get canvas() {
         return this.application.view;
     }

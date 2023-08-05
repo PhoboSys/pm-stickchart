@@ -15,6 +15,7 @@ export declare class StickChart extends EventTarget {
         height: any;
     }): void;
     setTimeframe(timeframe: number): void;
+    resetTimeframe(): void;
     get canvas(): HTMLCanvasElement;
     private applyTimeframe;
     private applyMorph;
