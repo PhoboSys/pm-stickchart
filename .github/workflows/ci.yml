@@ -28,6 +28,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_DEFAULT_REGION }}
 
+    - name: Configure NPM credentials
+      run: |
+        npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+
     - name: Install packages
       run: |
         npm install
@@ -61,7 +65,8 @@ jobs:
     - name: Push package to Public npmjs
       run: |
         set -x
-        npm init --scope=@Phobosys -y
+        npm init --scope=@phobosys -y
+        
         npm publish --access public
 
 
