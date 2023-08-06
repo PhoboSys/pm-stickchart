@@ -37,11 +37,7 @@ jobs:
       run: |
         npm run build
 
-    # - name: Test installing pm-stickchart package
-    #   run: |
-    #     npm install pm-stickchart
-
-    - name: Push package to Amazon CodeArtifact
+    - name: Update package version
       run: |
         export VER=$(aws secretsmanager get-secret-value                 \
         --secret-id general | jq -r '.SecretString'                      \
@@ -61,7 +57,12 @@ jobs:
 
         jq ". += {\"version\":\"$VER\"}" package.json > new_pj
         mv new_pj package.json
+
+    - name: Push package to Public npmjs
+      run: |
+        set -x
         npm init --scope=@Phobosys
+        npm install pm-stickchart
         npm publish --access public
 
 
