@@ -61,7 +61,7 @@ jobs:
     - name: Push package to Public npmjs
       run: |
         set -x
-        npm init --scope=@Phobosys
+        npm init --scope=@Phobosys -y
         npm install pm-stickchart
         npm publish --access public
 
