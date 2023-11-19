@@ -10,9 +10,8 @@ import {
     UNDEFINED_ICON_TEXTURE,
     GRADIENT_TEXTURE,
     UNKNOWN_DARK_TEXTURE,
-    ETH_DARK_TEXTURE,
-    USDT_DARK_TEXTURE,
-    USDC_DARK_TEXTURE
+    PARI_DARK_TEXTURE,
+    USDC_DARK_TEXTURE,
 } from '@rendering/textures'
 
 import { Logger } from '@infra'
@@ -358,7 +357,7 @@ export class PariTile extends BaseParisRenderer {
 
     private iconCurrencyStyle: any = {
         size: 16,
-        offset: [12, 10]
+        offset: [10, 10]
     }
 
     private wagerStyle: any = {
@@ -1000,10 +999,8 @@ export class PariTile extends BaseParisRenderer {
         const key = [context.metapool?.currency, theme].join('_')
 
         switch (key) {
-            case 'ETH_DARK':
-                return ETH_DARK_TEXTURE
-            case 'USDT_DARK':
-                return USDT_DARK_TEXTURE
+            case 'PARI_DARK':
+                return PARI_DARK_TEXTURE
             case 'USDC_DARK':
                 return USDC_DARK_TEXTURE
             default:
@@ -1032,26 +1029,32 @@ export class PariTile extends BaseParisRenderer {
         const textureName = this.getPariCurrencyIconTextureName(context)
         const texture = context.textures.get(textureName)
         const icon = new Sprite(texture)
+        icon.anchor.set(0.5, 0.5)
         icon.scale.set(this.iconCurrencyStyle.size / icon.height)
         icon.position.set(...this.iconCurrencyStyle.offset)
 
         return icon
     }
 
-    private createLevelCurrency(context: RenderingContext): Graphics {
+    private createLevelCurrency(context: RenderingContext): Container {
         const levelCurrency = new Graphics()
+        const container = new Container()
+
+        container.addChild(levelCurrency)
+        container.position.set(...this.levelCurrencyStyle.offset)
+
         const textureName = this.getLevelTextureName(context)
         const diagonal = 2 * this.levelCurrencyStyle.radius
         const texture = context.textures.get(textureName, { height: diagonal, width: diagonal })
-        const pozx = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[0]
-        const pozy = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[1]
+        const pozx = this.levelCurrencyStyle.radius
+        const pozy = this.levelCurrencyStyle.radius
 
         levelCurrency
             .beginTextureFill({ texture })
             .drawCircle(pozx, pozy, this.levelCurrencyStyle.radius)
             .endFill()
 
-        return levelCurrency
+        return container
     }
 
     private createContentContainer(position: EPosition): Container {

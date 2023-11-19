@@ -308,7 +308,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         };
         this.iconCurrencyStyle = {
             size: 16,
-            offset: [12, 10]
+            offset: [10, 10]
         };
         this.wagerStyle = {
             text: {
@@ -828,10 +828,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         var _a;
         const key = [(_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency, theme].join('_');
         switch (key) {
-            case 'ETH_DARK':
-                return textures_1.ETH_DARK_TEXTURE;
-            case 'USDT_DARK':
-                return textures_1.USDT_DARK_TEXTURE;
+            case 'PARI_DARK':
+                return textures_1.PARI_DARK_TEXTURE;
             case 'USDC_DARK':
                 return textures_1.USDC_DARK_TEXTURE;
             default:
@@ -851,22 +849,26 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const textureName = this.getPariCurrencyIconTextureName(context);
         const texture = context.textures.get(textureName);
         const icon = new pixi_1.Sprite(texture);
+        icon.anchor.set(0.5, 0.5);
         icon.scale.set(this.iconCurrencyStyle.size / icon.height);
         icon.position.set(...this.iconCurrencyStyle.offset);
         return icon;
     }
     createLevelCurrency(context) {
         const levelCurrency = new pixi_1.Graphics();
+        const container = new pixi_1.Container();
+        container.addChild(levelCurrency);
+        container.position.set(...this.levelCurrencyStyle.offset);
         const textureName = this.getLevelTextureName(context);
         const diagonal = 2 * this.levelCurrencyStyle.radius;
         const texture = context.textures.get(textureName, { height: diagonal, width: diagonal });
-        const pozx = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[0];
-        const pozy = this.levelCurrencyStyle.radius + this.levelCurrencyStyle.offset[1];
+        const pozx = this.levelCurrencyStyle.radius;
+        const pozy = this.levelCurrencyStyle.radius;
         levelCurrency
             .beginTextureFill({ texture })
             .drawCircle(pozx, pozy, this.levelCurrencyStyle.radius)
             .endFill();
-        return levelCurrency;
+        return container;
     }
     createContentContainer(position) {
         const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, } } = this.groupStyle[position];
