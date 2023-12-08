@@ -4,11 +4,11 @@
 SCRIPTS_DIR="`dirname "$(realpath "$0")"`"
 
 START_SCRIPT='
-  concurrently                   \
-      -p "[{name}]"              \
-      -n "Lint,Node"             \
-      -c "cyan.bold,green.bold"  \
-      "npm run lint"             \
+  concurrently                                  \
+      -p "[{name}]"                             \
+      -n "Pkg:Chart:Lint,Pkg:Chart"             \
+      -c "cyan.bold,green.bold"                 \
+      "npm run lint"                            \
       "npm run build"
   '
 

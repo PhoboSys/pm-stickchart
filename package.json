@@ -10,9 +10,6 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "bin": {
-    "lde-link-stickchart": "./bin/stickchart-link.sh"
-  },
   "scripts": {
     "build:lde": "./bin/dev.sh",
     "build": "tsc && tsc-alias",
