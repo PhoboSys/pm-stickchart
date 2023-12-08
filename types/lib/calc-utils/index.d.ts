@@ -6,3 +6,7 @@ export declare function gte(number1: any, number2: any): boolean;
 export declare function eq(number1: any, number2: any): boolean;
 export declare function lt(number1: any, number2: any): boolean;
 export declare function lte(number1: any, number2: any): boolean;
+export declare function add(number1: any, number2: any): string;
+export declare function mul(number1: any, number2: any): string;
+export declare function sub(number1: any, number2: any): string;
+export declare function div(number1: any, number2: any): string;

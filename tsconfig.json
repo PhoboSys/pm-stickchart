@@ -45,6 +45,12 @@
       "@constants": [
         "src/constants/index.ts"
       ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@features": [
+        "src/features/index.ts"
+      ],
     },
     "jsx": "react"
   },

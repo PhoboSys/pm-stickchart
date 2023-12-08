@@ -5,6 +5,9 @@ import { EChartType } from '@enums'
 import { Logger } from '@infra'
 import { EventsProducer } from '@events'
 
+import { createFeatures } from '@features'
+import { Features } from '@features'
+
 import MorphController from '@lib/morph'
 import { Application, EventSystem } from '@lib/pixi'
 import { Timeframe } from '@lib/timeframe'
@@ -140,6 +143,7 @@ export class StickChart extends EventTarget {
         transactions: any,
         blocksEntities: any,
         transactionsEntities: any,
+        features: Features,
     }): void {
         if (!context.metapool) {
             return Logger.error('Cannot initiate chart "metapool" is not provided!')
@@ -155,6 +159,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
         )
+        const features = createFeatures(context.features)
 
         const ctx: RenderingContext = {
             metapool: context.metapool,
@@ -173,6 +178,7 @@ export class StickChart extends EventTarget {
             eventTarget: this,
             chartdata,
             plotdata,
+            features,
         }
 
         if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {

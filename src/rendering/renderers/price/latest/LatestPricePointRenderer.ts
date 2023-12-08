@@ -16,27 +16,53 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
     private readonly pulspointAnimation: any
 
+    private readonly innerPointAnimation: any
+
+    private readonly outerPointAnimation: any
+
     constructor(renderer: IGraphicStorage) {
         super(renderer)
 
         this.innerPointStyle = {
-            color: 0xFFFFFF,
+            color: 0x0527F2,
             radius: 4,
         }
 
         this.outerPointStyle = {
             color: config.style.linecolor,
-            radius: 9,
+            radius: 12,
         }
 
         this.pulspointStyle = {
             color: config.style.linecolor,
-            radius: 10,
+            radius: 13,
+        }
+
+        this.innerPointAnimation = {
+            pixi: {
+                scale: 1.5,
+            },
+            ease: 'power1.inOut',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            yoyoEase: 'power2.inOut',
+        }
+
+        this.outerPointAnimation = {
+            pixi: {
+                scale: 0.667,
+            },
+            ease: 'power1.inOut',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            yoyoEase: 'power2.inOut',
         }
 
         this.pulspointAnimation = {
             pixi: {
-                scale: 4,
+                scale: 3,
                 alpha: -0.1,
             },
             ease: 'power3.out',
@@ -62,20 +88,26 @@ export class LatestPricePointRenderer extends BaseRenderer {
         const x = latestX
         const y = latestY
 
-        const [point, pointState] = this.get('point', () => GraphicUtils.createCircle(
+        const [outerPoint, outerPointState] = this.get('outerPoint', () => GraphicUtils.createCircle(
             [x, y],
             this.outerPointStyle.radius,
             this.outerPointStyle,
         ))
-        if (pointState.new) container.addChild(point)
-        point.position.set(x, y)
+        if (outerPointState.new) container.addChild(outerPoint)
+        outerPoint.position.set(x, y)
+
+        if (outerPointState.amination !== 'breath') {
+            outerPointState.amination = 'breath'
+
+            outerPointState.timeline = gsap.to(outerPoint, this.outerPointAnimation)
+        }
 
         const [pulspoint, pulspointState] = this.get('pulspoint', () => GraphicUtils.createCircle(
             [0, 0],
             this.pulspointStyle.radius,
             this.pulspointStyle,
         ))
-        if (pulspointState.new) point.addChild(pulspoint)
+        if (pulspointState.new) outerPoint.addChild(pulspoint)
 
         if (pulspointState.amination !== 'puls') {
             pulspointState.amination = 'puls'
@@ -90,6 +122,12 @@ export class LatestPricePointRenderer extends BaseRenderer {
         ))
         if (innerpointState.new) container.addChild(innerpoint)
         innerpoint.position.set(x, y)
+
+        if (innerpointState.amination !== 'breath') {
+            innerpointState.amination = 'breath'
+
+            innerpointState.timeline = gsap.to(innerpoint, this.innerPointAnimation)
+        }
 
         return container
     }

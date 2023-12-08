@@ -16,33 +16,33 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.torusStyle = {
             [_enums_1.EPosition.Undefined]: {
                 innerr: 3,
-                outerr: 6,
-                innerColor: 0x303550,
+                outerr: 8,
+                innerColor: 0xFFFFFF,
                 outerColor: 0xFFFFFF,
             },
             [_enums_1.EPosition.Up]: {
                 innerr: 3,
-                outerr: 6,
-                innerColor: 0x303550,
-                outerColor: _config_1.default.style.resolution.upcolor,
+                outerr: 8,
+                innerColor: _config_1.default.style.linearresolution.upcolor,
+                outerColor: 0xFFFFFF,
             },
             [_enums_1.EPosition.Down]: {
                 innerr: 3,
-                outerr: 6,
-                innerColor: 0x303550,
-                outerColor: _config_1.default.style.resolution.downcolor,
+                outerr: 8,
+                innerColor: _config_1.default.style.linearresolution.downcolor,
+                outerColor: 0xFFFFFF,
             },
             [_enums_1.EPosition.Zero]: {
                 innerr: 3,
-                outerr: 6,
-                innerColor: 0x303550,
-                outerColor: _config_1.default.style.resolution.zerocolor,
+                outerr: 8,
+                innerColor: _config_1.default.style.linearresolution.zerocolor,
+                outerColor: 0xFFFFFF,
             },
             [_enums_1.EPosition.NoContest]: {
                 innerr: 3,
-                outerr: 6,
-                innerColor: 0x303550,
-                outerColor: _config_1.default.style.resolution.nocontest,
+                outerr: 8,
+                innerColor: _config_1.default.style.linearresolution.nocontest,
+                outerColor: 0xFFFFFF,
             }
         };
         this.lineStyle = {
@@ -52,22 +52,22 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
                 alpha: 0.9,
             },
             [_enums_1.EPosition.Up]: {
-                color: _config_1.default.style.resolution.upcolor,
+                color: _config_1.default.style.linearresolution.upcolor,
                 width: 3,
                 alpha: 1,
             },
             [_enums_1.EPosition.Down]: {
-                color: _config_1.default.style.resolution.downcolor,
+                color: _config_1.default.style.linearresolution.downcolor,
                 width: 3,
                 alpha: 1,
             },
             [_enums_1.EPosition.Zero]: {
-                color: _config_1.default.style.resolution.zerocolor,
+                color: _config_1.default.style.linearresolution.zerocolor,
                 width: 3,
                 alpha: 1,
             },
             [_enums_1.EPosition.NoContest]: {
-                color: _config_1.default.style.resolution.nocontest,
+                color: _config_1.default.style.linearresolution.nocontest,
                 width: 3,
                 alpha: 1,
             }
@@ -98,7 +98,7 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolResolutionLine.POOL_RESOLUTION_LINE_ID;
     }
     updatePool(pool, context, container) {
-        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+        if (context.features.curvedResolutionLines || !pool.openPriceTimestamp || !pool.openPriceValue)
             return this.clear();
         const resolution = this.getResolutionPricePoint(pool, context);
         if (!resolution)

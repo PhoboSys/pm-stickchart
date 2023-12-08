@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const big_js_1 = __importDefault(require("big.js"));
+const utils_1 = require("../utils");
+const calc_utils_1 = require("../calc-utils");
 class datamath {
     static min(data) {
         let [minimum] = data;
@@ -155,6 +157,20 @@ class datamath {
             idx++;
         }
         return result;
+    }
+    static interpolate(values1, axis1, axis2) {
+        const values2 = values1.map((value1) => {
+            const start = (0, utils_1.binarySearchNearest)(axis1, value1);
+            if (start !== -1 && value1 === axis1[start])
+                return axis2[start];
+            const end = (0, utils_1.binarySearchNearest)(axis1, value1, true);
+            if (end !== -1 && axis1[end] === value1)
+                return axis2[end];
+            // use linear interpolation to calc value2
+            const value2 = (0, calc_utils_1.add)(axis2[start], (0, calc_utils_1.mul)((0, calc_utils_1.div)((0, calc_utils_1.sub)(value1, axis1[start]), (0, calc_utils_1.sub)(axis1[end], axis1[start])), (0, calc_utils_1.sub)(axis2[end], axis2[start])));
+            return value2;
+        });
+        return values2;
     }
 }
 exports.default = datamath;

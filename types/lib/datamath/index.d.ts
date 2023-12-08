@@ -14,4 +14,5 @@ export default class datamath {
     static fashhash(value: number): number;
     static sampler(data: number[], density: number): number[];
     static pick(data: number[], keys: number[]): number[];
+    static interpolate(values1: number[] | string[], axis1: number[] | string[], axis2: number[] | string[]): (number | string)[];
 }

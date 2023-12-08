@@ -61,7 +61,7 @@ class TextureStorage {
         const y0 = 0;
         const x1 = 0;
         const y1 = height;
-        const top = '#' + _config_1.default.style.resolution.upcolor.toString(16).padStart(6, '0');
+        const top = '#' + _config_1.default.style.linearresolution.upcolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
@@ -82,7 +82,7 @@ class TextureStorage {
         const y0 = 0;
         const x1 = 0;
         const y1 = height;
-        const top = '#' + _config_1.default.style.resolution.downcolor.toString(16).padStart(6, '0');
+        const top = '#' + _config_1.default.style.linearresolution.downcolor.toString(16).padStart(6, '0');
         const bottom = top + '00'; // same color with opacity = 0
         const gradient = pixi_1.GradientFactory.createLinearGradient(this.application.renderer, pixi_1.RenderTexture.create({
             width: this.application.renderer.width,
@@ -102,8 +102,8 @@ class TextureStorage {
         const y0 = 0 + _config_1.default.padding.top;
         const x1 = 0;
         const y1 = this.application.screen.height;
-        const top = '#' + _config_1.default.style.linecolor.toString(16).padStart(6, '0');
-        const bottom = top + '00'; // same color with opacity = 0
+        const top = '#' + _config_1.default.style.gradient.color.toString(16).padStart(6, '0');
+        const bottom = top.slice(0, 7) + '00'; // same color with opacity = 0
         const { renderer } = this.application;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
             width: renderer.width,

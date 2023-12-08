@@ -8,6 +8,7 @@ const PoolOpen_1 = require("./PoolOpen");
 const PoolCountdown_1 = require("./PoolCountdown");
 const PoolResolution_1 = require("./PoolResolution");
 const PoolResolutionLine_1 = require("./PoolResolutionLine");
+const PoolResolutionChartLine_1 = require("./PoolResolutionChartLine");
 const PoolOpenPriceTag_1 = require("./PoolOpenPriceTag");
 const PoolResolutionPriceTag_1 = require("./PoolResolutionPriceTag");
 const PoolLayerEventProducer_1 = require("./PoolLayerEventProducer");
@@ -21,6 +22,7 @@ class Pool {
             new PoolOpen_1.PoolOpen(renderer),
             new PoolResolution_1.PoolResolution(renderer),
             new PoolResolutionLine_1.PoolResolutionLine(renderer),
+            new PoolResolutionChartLine_1.PoolResolutionChartLine(renderer),
             new PoolResolutionPriceTag_1.PoolResolutionPriceTag(renderer),
             new PoolOpenPriceTag_1.PoolOpenPriceTag(renderer),
             new PoolCountdown_1.PoolCountdown(renderer),

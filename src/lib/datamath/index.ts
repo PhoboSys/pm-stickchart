@@ -1,5 +1,8 @@
 import Big from 'big.js'
 
+import { binarySearchNearest } from '@lib/utils'
+import { sub, add, div, mul } from '@lib/calc-utils'
+
 export default class datamath {
 
     static min(data: number[]): number {
@@ -217,5 +220,38 @@ export default class datamath {
         }
 
         return result
+    }
+
+    static interpolate(
+        values1: number[] | string[],
+        axis1: number[] | string[],
+        axis2: number[] | string[],
+    ): (number | string)[] {
+
+        const values2 = values1.map((value1) => {
+
+            const start = binarySearchNearest(axis1, value1)
+            if (start !== -1 && value1 === axis1[start]) return axis2[start]
+
+            const end = binarySearchNearest(axis1, value1, true)
+            if (end !== -1 && axis1[end] === value1) return axis2[end]
+
+            // use linear interpolation to calc value2
+            const value2 = add(
+                axis2[<number>start],
+                mul(
+                    div(
+                        sub(value1, axis1[<number>start]),
+                        sub(axis1[<number>end], axis1[<number>start])
+                    ),
+                    sub(axis2[<number>end], axis2[<number>start])
+                )
+            )
+
+            return value2
+        })
+
+        return values2
+
     }
 }

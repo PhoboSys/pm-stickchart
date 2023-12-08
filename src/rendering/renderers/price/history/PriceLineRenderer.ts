@@ -25,17 +25,27 @@ export class PriceLineRenderer extends BaseRenderer {
         container: Container,
     ): Container {
 
-        const { height } = context.screen
-        const { xs, ys } = context.plotdata
-
-        if (xs.length === 0) return container
-
-        const shape: number[] = []
-        let prevY: any = null
-        let prevX: any = null
+        if (context.plotdata.xs.length === 0) return container
 
         const [line, lineState] = this.get('line', () => new Graphics())
         if (lineState.new) container.addChild(line)
+        this.drawLine(context)
+
+        if (config.style.gradient.enabled) {
+            const [gradient, gradientState] = this.get('gradient', () => new Graphics())
+            if (gradientState.new) container.addChild(gradient)
+            this.drawGradient(context)
+        }
+
+        return container
+    }
+
+    private drawLine(context: RenderingContext): void {
+        const { xs, ys } = context.plotdata
+
+        let prevY: any = null
+
+        const [line] = this.read('line')
 
         for (const idx in xs) {
             const x = xs[idx]
@@ -48,31 +58,52 @@ export class PriceLineRenderer extends BaseRenderer {
                     .lineStyle(this.lineStyle)
                     .moveTo(x, y)
 
-                prevY = y
+            } else if (+idx + 1 === xs.length) {
+
+                if (context.features.rectungedPriceLine) line.lineTo(x, prevY)
+
+                line.lineTo(x, y)
+
+            } else {
+
+                if (context.features.rectungedPriceLine) line.lineTo(x, prevY)
+
+                line.lineTo(x, y)
+
+            }
+
+            prevY = y
+        }
+    }
+
+    private drawGradient(context: RenderingContext): void {
+        const { height } = context.screen
+        const { xs, ys } = context.plotdata
+
+        const shape: number[] = []
+        let prevY: any = null
+        let prevX: any = null
+
+        for (const idx in xs) {
+            const x = xs[idx]
+            const y = ys[idx]
+
+            if (+idx === 0) {
+
                 shape.push(x, height)
                 shape.push(x, y)
 
             } else if (+idx + 1 === xs.length) {
 
-                if (config.style.rectunged) {
-                    line.lineTo(x, prevY)
-                    shape.push(x, prevY)
-                }
+                if (context.features.rectungedPriceLine) shape.push(x, prevY)
 
-                line.lineTo(x, y)
                 shape.push(x, y)
-                prevY = y
 
             } else {
 
-                if (config.style.rectunged) {
-                    line.lineTo(x, prevY)
-                    shape.push(x, prevY)
-                }
+                if (context.features.rectungedPriceLine) shape.push(x, prevY)
 
-                line.lineTo(x, y)
                 shape.push(x, y)
-                prevY = y
 
             }
 
@@ -82,9 +113,7 @@ export class PriceLineRenderer extends BaseRenderer {
 
         shape.push(prevX, height)
 
-        const [gradient, gradientState] = this.get('gradient', () => new Graphics())
-        if (gradientState.new) container.addChild(gradient)
-
+        const [gradient] = this.read('gradient')
         gradient
             .clear()
             .beginTextureFill({
@@ -95,7 +124,6 @@ export class PriceLineRenderer extends BaseRenderer {
             .closePath()
             .endFill()
 
-        return container
     }
 
 }

@@ -8,6 +8,7 @@ const _chartdata_1 = require("./chartdata/index.js");
 const _config_1 = __importDefault(require("./config.js"));
 const _infra_1 = require("./infra/index.js");
 const _events_1 = require("./events/index.js");
+const _features_1 = require("./features/index.js");
 const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
@@ -105,6 +106,7 @@ class StickChart extends EventTarget {
         const pipeline = this.pipelineFactory.get(context.charttype);
         const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
         const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get());
+        const features = (0, _features_1.createFeatures)(context.features);
         const ctx = {
             metapool: context.metapool,
             pools: context.pools,
@@ -121,6 +123,7 @@ class StickChart extends EventTarget {
             eventTarget: this,
             chartdata,
             plotdata,
+            features,
         };
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
             // clear context if metapoolid changed

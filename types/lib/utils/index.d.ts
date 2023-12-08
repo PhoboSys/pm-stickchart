@@ -7,3 +7,4 @@ export declare function unixTStoDate(timestamp: number): Date;
 export declare function nowUnixTS(): number;
 export declare function toUnixTS(timestamp: number): number;
 export declare function orderBy(collection: any, visitor: (value?: any, key?: any, idx?: number) => any, order?: 'asc' | 'desc'): any;
+export declare function binarySearchNearest<T = number | string>(data: Array<T>, value: T, larger?: boolean): number;
