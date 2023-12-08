@@ -2,11 +2,32 @@ import { IGraphicStorage, RenderingContext } from '@rendering'
 import { BaseRenderer, GraphicUtils } from '@rendering'
 import config from '@config'
 
-import { Container, gsap } from '@lib/pixi'
+import { Container } from '@lib/pixi'
 
 export class LatestPricePointRenderer extends BaseRenderer {
 
     static readonly LATEST_PRICE_POINT_ID: symbol = Symbol('LATEST_PRICE_POINT_ID')
+
+    private configAnimations: any = {
+        pulse: {
+            pixi: {
+                scale: 3,
+                alpha: -0.1,
+            },
+            ease: 'power3.out',
+            duration: 3.819,
+            repeat: -1,
+        },
+        pulse_inner: {
+            pixi: {
+                scale: 1.2,
+                alpha: .9,
+            },
+            ease: 'power3.out',
+            duration: 3.819,
+            repeat: -1,
+        }
+    }
 
     private readonly outerPointStyle: any
 
@@ -25,50 +46,23 @@ export class LatestPricePointRenderer extends BaseRenderer {
 
         this.innerPointStyle = {
             color: 0x0527F2,
-            radius: 4,
+            radius: 5,
         }
 
         this.outerPointStyle = {
             color: config.style.linecolor,
-            radius: 12,
+            radius: 8,
         }
 
         this.pulspointStyle = {
             color: config.style.linecolor,
-            radius: 13,
+            radius: 10,
         }
 
-        this.innerPointAnimation = {
-            pixi: {
-                scale: 1.5,
-            },
-            ease: 'power1.inOut',
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            yoyoEase: 'power2.inOut',
-        }
+    }
 
-        this.outerPointAnimation = {
-            pixi: {
-                scale: 0.667,
-            },
-            ease: 'power1.inOut',
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            yoyoEase: 'power2.inOut',
-        }
-
-        this.pulspointAnimation = {
-            pixi: {
-                scale: 3,
-                alpha: -0.1,
-            },
-            ease: 'power3.out',
-            duration: 3.819,
-            repeat: -1,
-        }
+    protected get animations(): any {
+        return this.configAnimations
     }
 
     public get rendererId(): symbol {
@@ -88,32 +82,20 @@ export class LatestPricePointRenderer extends BaseRenderer {
         const x = latestX
         const y = latestY
 
-        const [outerPoint, outerPointState] = this.get('outerPoint', () => GraphicUtils.createCircle(
+        const [outerpoint, outerpointState] = this.get('outerpoint', () => GraphicUtils.createCircle(
             [x, y],
             this.outerPointStyle.radius,
             this.outerPointStyle,
         ))
-        if (outerPointState.new) container.addChild(outerPoint)
-        outerPoint.position.set(x, y)
-
-        if (outerPointState.amination !== 'breath') {
-            outerPointState.amination = 'breath'
-
-            outerPointState.timeline = gsap.to(outerPoint, this.outerPointAnimation)
-        }
+        if (outerpointState.new) container.addChild(outerpoint)
+        outerpoint.position.set(x, y)
 
         const [pulspoint, pulspointState] = this.get('pulspoint', () => GraphicUtils.createCircle(
             [0, 0],
             this.pulspointStyle.radius,
             this.pulspointStyle,
         ))
-        if (pulspointState.new) outerPoint.addChild(pulspoint)
-
-        if (pulspointState.amination !== 'puls') {
-            pulspointState.amination = 'puls'
-
-            pulspointState.timeline = gsap.to(pulspoint, this.pulspointAnimation)
-        }
+        if (pulspointState.new) outerpoint.addChild(pulspoint)
 
         const [innerpoint, innerpointState] = this.get('innerpoint', () => GraphicUtils.createCircle(
             [x, y],
@@ -123,11 +105,8 @@ export class LatestPricePointRenderer extends BaseRenderer {
         if (innerpointState.new) container.addChild(innerpoint)
         innerpoint.position.set(x, y)
 
-        if (innerpointState.amination !== 'breath') {
-            innerpointState.amination = 'breath'
-
-            innerpointState.timeline = gsap.to(innerpoint, this.innerPointAnimation)
-        }
+        this.animate('pulspoint', 'pulse')
+        this.animate('innerpoint', 'pulse_inner')
 
         return container
     }

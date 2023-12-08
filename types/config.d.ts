@@ -1,4 +1,7 @@
 declare const _default: {
+    positioning: {
+        alert: number;
+    };
     pari: {
         historical: boolean;
     };

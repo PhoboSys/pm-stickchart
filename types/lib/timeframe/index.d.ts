@@ -21,6 +21,7 @@ export declare class Timeframe {
     private readonly zoomevent;
     private readonly pointermove;
     private shifting;
+    private throttle;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
     save(timeframe: number): this;
     reset(): this;

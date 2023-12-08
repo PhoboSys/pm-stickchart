@@ -10,15 +10,11 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "bin": {
-    "lde-link-stickchart": "./bin/stickchart-link.sh"
-  },
   "scripts": {
     "build:lde": "./bin/dev.sh",
     "build": "tsc && tsc-alias",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
-    "autolink": "npm link && cd ../pm-webtrader && npm link pm-stickchart",
 
     "ca:login": "aws codeartifact login --tool npm --repository Oracly --domain oracly --domain-owner 116856636107 --region us-east-1"
   },
@@ -46,8 +42,7 @@
     "buffer": "6.0.3",
     "core-js": "3.22.5",
     "debug": "4.3.2",
-    "gsap": "3.10.4",
-    "lodash.throttle": "4.1.1"
+    "gsap": "3.10.4"
   },
   "files": [
     "dist",

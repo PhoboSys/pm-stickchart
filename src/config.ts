@@ -1,5 +1,9 @@
 export default {
 
+    positioning: {
+        alert: 30_000, // 30 sec
+    },
+
     pari: {
         historical: true,
     },

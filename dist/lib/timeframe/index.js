@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
-const lodash_throttle_1 = __importDefault(require("lodash.throttle"));
 const _events_1 = require("../../events/index.js");
 const _infra_1 = require("../../infra/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
@@ -57,6 +56,23 @@ class Timeframe {
     get since() {
         return this.until - this.timeframe;
     }
+    throttle(func, timeout) {
+        let tid = 0;
+        let thred = false;
+        return (...args) => {
+            if (!timeout)
+                timeout = 0;
+            if (typeof func !== 'function')
+                return;
+            if (thred)
+                return;
+            thred = true;
+            func(...args);
+            if (tid)
+                clearTimeout(tid);
+            tid = Number(setTimeout(() => { thred = false; }, timeout));
+        };
+    }
     constructor(eventTarget, onUpdate) {
         this.eventTarget = eventTarget;
         this.onUpdate = onUpdate;
@@ -64,8 +80,8 @@ class Timeframe {
         this._now = null;
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = 0;
-        this.zoomevent = (0, lodash_throttle_1.default)((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle, { trailing: false });
-        this.pointermove = (0, lodash_throttle_1.default)((e) => this.shiftprogress(e.movementX, e.screen, e.inner.buttons), _config_1.default.zoom.throttle, { trailing: false });
+        this.zoomevent = this.throttle((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle);
+        this.pointermove = this.throttle((e) => this.shiftprogress(e.movementX, e.screen, e.inner.buttons), _config_1.default.zoom.throttle);
         this.eventTarget.addEventListener('zoom', this.zoomevent);
         this.eventTarget.addEventListener('pointermove', this.pointermove);
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate);

@@ -1,5 +1,3 @@
-import throttle from 'lodash.throttle'
-
 import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
 
@@ -82,15 +80,32 @@ export class Timeframe {
 
     private shifting = 0
 
+    private throttle(func, timeout): (...any) => void {
+        let tid = 0
+        let thred = false
+
+        return (...args) => {
+            if (!timeout) timeout = 0
+            if (typeof func !== 'function') return
+            if (thred) return
+
+            thred = true
+            func(...args)
+
+            if (tid) clearTimeout(tid)
+            tid = Number(setTimeout(() => { thred = false }, timeout))
+        }
+    }
+
     constructor(
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
     ) {
-        this.zoomevent = throttle((e: ZoomEvent) =>
-            this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle, { trailing: false }
+        this.zoomevent = this.throttle((e: ZoomEvent) =>
+            this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle
         )
-        this.pointermove = throttle((e: PointermoveEvent) =>
-            this.shiftprogress(e.movementX, e.screen, e.inner.buttons), config.zoom.throttle, { trailing: false }
+        this.pointermove = this.throttle((e: PointermoveEvent) =>
+            this.shiftprogress(e.movementX, e.screen, e.inner.buttons), config.zoom.throttle
         )
 
         this.eventTarget.addEventListener('zoom', this.zoomevent)
@@ -220,5 +235,5 @@ export class Timeframe {
             }
         }
     }
-
 }
+

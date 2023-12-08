@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
+    positioning: {
+        alert: 30000, // 30 sec
+    },
     pari: {
         historical: true,
     },
