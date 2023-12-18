@@ -31,7 +31,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             anchor: [1.1, 0.5],
             radius: 30,
             textstyle: {
-                fill: 0xFFFFFF,
+                fill: 0x009797,
                 fontWeight: 600,
                 fontFamily: 'Gilroy',
                 fontSize: 13,

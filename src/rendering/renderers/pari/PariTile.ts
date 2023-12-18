@@ -40,8 +40,8 @@ export class PariTile extends BaseParisRenderer {
     private nocontestLineStyle: any = {
 
         [EPosition.Up]: {
-            offsetTOP: [0, -6],
-            offsetBOTTOM: [0, 6],
+            offsetTOP: [0, -8],
+            offsetBOTTOM: [0, 8],
             lineStyle: {
                 color: 0xB7BDD7,
                 width: 2,
@@ -49,8 +49,8 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Down]: {
-            offsetTOP: [0, -6],
-            offsetBOTTOM: [0, 6],
+            offsetTOP: [0, -8],
+            offsetBOTTOM: [0, 8],
             lineStyle: {
                 color: 0xB7BDD7,
                 width: 2,
@@ -58,8 +58,8 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Zero]: {
-            offsetTOP: [300, -6],
-            offsetBOTTOM: [300, 6],
+            offsetTOP: [300, -8],
+            offsetBOTTOM: [300, 8],
             lineStyle: {
                 color: 0xB7BDD7,
                 width: 2,
@@ -70,8 +70,8 @@ export class PariTile extends BaseParisRenderer {
     private winlineStyle: any = {
 
         [EPosition.Up]: {
-            offsetTOP: [0, -6],
-            offsetBOTTOM: [0, 6],
+            offsetTOP: [0, -8],
+            offsetBOTTOM: [0, 8],
             lineStyle: {
                 color: 0xFFA000,
                 width: 2,
@@ -79,8 +79,8 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Down]: {
-            offsetTOP: [0, -6],
-            offsetBOTTOM: [0, 6],
+            offsetTOP: [0, -8],
+            offsetBOTTOM: [0, 8],
             lineStyle: {
                 color: 0xFFA000,
                 width: 2,
@@ -88,8 +88,8 @@ export class PariTile extends BaseParisRenderer {
         },
 
         [EPosition.Zero]: {
-            offsetTOP: [300, -6],
-            offsetBOTTOM: [300, 6],
+            offsetTOP: [300, -8],
+            offsetBOTTOM: [300, 8],
             lineStyle: {
                 color: 0xFFA000,
                 width: 2,

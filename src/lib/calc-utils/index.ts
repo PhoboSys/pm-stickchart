@@ -7,6 +7,18 @@ const ZERO = Big(0)
 
 const VIGORISH = Big(0.01)
 
+function __inNumbers(...args): boolean {
+    for (const num of args) {
+        if (
+            num === '' ||
+            isNaN(Number(num)) ||
+            typeof Number(num) !== 'number'
+        ) return false
+    }
+
+    return true
+}
+
 function __inNotZeroNumbers(...args): boolean {
     for (const num of args) {
         if (!Number(num)) return false
@@ -110,4 +122,48 @@ export function lte(number1, number2): boolean {
     number2 = Big(number2)
 
     return number1.lte(number2)
+}
+
+export function add(number1, number2): string {
+    if (!__inNumbers(number1, number2)) return '0'
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1
+        .plus(number2)
+        .toString() || 0
+}
+
+export function mul(number1, number2): string {
+    if (!__inNumbers(number1, number2)) return '0'
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1
+        .times(number2)
+        .toString() || '0'
+}
+
+export function sub(number1, number2): string {
+    if (!__inNumbers(number1, number2)) return '0'
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1
+        .minus(number2)
+        .toString() || '0'
+}
+
+export function div(number1, number2): string {
+    if (!__inNumbers(number1, number2)) return '0'
+
+    number1 = Big(number1)
+    number2 = Big(number2)
+
+    return number1
+        .div(number2)
+        .toString() || '0'
 }

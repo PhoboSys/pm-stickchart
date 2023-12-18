@@ -56,13 +56,29 @@ export default {
         background: 0x000000,
         backgroundAlpha: 0,
         linesize: 3,
-        linecolor: 0x009797,
-        rectunged: false,
-        resolution: {
+        linecolor: 0xffffff,
+        gradient: {
+            enabled: true,
+            color: 0x1F4EEF54,
+        },
+        linearresolution: {
             upcolor: 0x00A573,
             downcolor: 0xF05750,
             zerocolor: 0x007397,
             nocontest: 0x474C67,
+        },
+        curvedresolution: {
+            linesize: 16,
+            linealpha: 0.1,
+            linecolor: 0xffffff,
+            upcolor: 0x00FF29,
+            upalpha: 0.3,
+            downcolor: 0xF05750,
+            downalpha: 0.4,
+            zerocolor: 0xFFFFFF,
+            zeroalpha: 0.3,
+            nocontest: 0x474C67,
+            nocontestalpha: 0.6,
         },
         poolRoundColors: [
             { color: '#00A57300', offset: 0.0 },
@@ -119,5 +135,10 @@ export default {
         right: -30, // px
         top: 113, // px
         bottom: 210, // px
+    },
+
+    features: {
+        rectungedPriceLine: false,
+        curvedResolutionLines: false,
     },
 }

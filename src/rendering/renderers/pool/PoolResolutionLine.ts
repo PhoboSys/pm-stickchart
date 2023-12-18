@@ -16,37 +16,37 @@ export class PoolResolutionLine extends BasePoolsRenderer {
 
         [EPosition.Undefined]: {
             innerr: 3,
-            outerr: 6,
-            innerColor: 0x303550,
+            outerr: 8,
+            innerColor: 0xFFFFFF,
             outerColor: 0xFFFFFF,
         },
 
         [EPosition.Up]: {
             innerr: 3,
-            outerr: 6,
-            innerColor: 0x303550,
-            outerColor: config.style.resolution.upcolor,
+            outerr: 8,
+            innerColor: config.style.linearresolution.upcolor,
+            outerColor: 0xFFFFFF,
         },
 
         [EPosition.Down]: {
             innerr: 3,
-            outerr: 6,
-            innerColor: 0x303550,
-            outerColor: config.style.resolution.downcolor,
+            outerr: 8,
+            innerColor: config.style.linearresolution.downcolor,
+            outerColor: 0xFFFFFF,
         },
 
         [EPosition.Zero]: {
             innerr: 3,
-            outerr: 6,
-            innerColor: 0x303550,
-            outerColor: config.style.resolution.zerocolor,
+            outerr: 8,
+            innerColor: config.style.linearresolution.zerocolor,
+            outerColor: 0xFFFFFF,
         },
 
         [EPosition.NoContest]: {
             innerr: 3,
-            outerr: 6,
-            innerColor: 0x303550,
-            outerColor: config.style.resolution.nocontest,
+            outerr: 8,
+            innerColor: config.style.linearresolution.nocontest,
+            outerColor: 0xFFFFFF,
         }
 
     }
@@ -60,25 +60,25 @@ export class PoolResolutionLine extends BasePoolsRenderer {
         },
 
         [EPosition.Up]: {
-            color: config.style.resolution.upcolor,
+            color: config.style.linearresolution.upcolor,
             width: 3,
             alpha: 1,
         },
 
         [EPosition.Down]: {
-            color: config.style.resolution.downcolor,
+            color: config.style.linearresolution.downcolor,
             width: 3,
             alpha: 1,
         },
 
         [EPosition.Zero]: {
-            color: config.style.resolution.zerocolor,
+            color: config.style.linearresolution.zerocolor,
             width: 3,
             alpha: 1,
         },
 
         [EPosition.NoContest]: {
-            color: config.style.resolution.nocontest,
+            color: config.style.linearresolution.nocontest,
             width: 3,
             alpha: 1,
         }
@@ -118,7 +118,7 @@ export class PoolResolutionLine extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
+        if (context.features.curvedResolutionLines || !pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
         const resolution = this.getResolutionPricePoint(pool, context)
         if (!resolution) return this.clear()

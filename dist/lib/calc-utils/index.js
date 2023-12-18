@@ -3,13 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lte = exports.lt = exports.eq = exports.gte = exports.gt = exports.profitPercent = exports.actualReturn = exports.futureReturn = void 0;
+exports.div = exports.sub = exports.mul = exports.add = exports.lte = exports.lt = exports.eq = exports.gte = exports.gt = exports.profitPercent = exports.actualReturn = exports.futureReturn = void 0;
 const big_js_1 = __importDefault(require("big.js"));
 const _constants_1 = require("../../constants/index.js");
 const utils_1 = require("../utils");
 const ONE = (0, big_js_1.default)(1);
 const ZERO = (0, big_js_1.default)(0);
 const VIGORISH = (0, big_js_1.default)(0.01);
+function __inNumbers(...args) {
+    for (const num of args) {
+        if (num === '' ||
+            isNaN(Number(num)) ||
+            typeof Number(num) !== 'number')
+            return false;
+    }
+    return true;
+}
 function __inNotZeroNumbers(...args) {
     for (const num of args) {
         if (!Number(num))
@@ -85,4 +94,44 @@ function lte(number1, number2) {
     return number1.lte(number2);
 }
 exports.lte = lte;
+function add(number1, number2) {
+    if (!__inNumbers(number1, number2))
+        return '0';
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1
+        .plus(number2)
+        .toString() || 0;
+}
+exports.add = add;
+function mul(number1, number2) {
+    if (!__inNumbers(number1, number2))
+        return '0';
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1
+        .times(number2)
+        .toString() || '0';
+}
+exports.mul = mul;
+function sub(number1, number2) {
+    if (!__inNumbers(number1, number2))
+        return '0';
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1
+        .minus(number2)
+        .toString() || '0';
+}
+exports.sub = sub;
+function div(number1, number2) {
+    if (!__inNumbers(number1, number2))
+        return '0';
+    number1 = (0, big_js_1.default)(number1);
+    number2 = (0, big_js_1.default)(number2);
+    return number1
+        .div(number2)
+        .toString() || '0';
+}
+exports.div = div;
 //# sourceMappingURL=index.js.map

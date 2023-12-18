@@ -23,16 +23,24 @@ class PriceLineRenderer extends _rendering_1.BaseRenderer {
         return PriceLineRenderer.PRICE_LINE_ID;
     }
     update(context, container) {
-        const { height } = context.screen;
-        const { xs, ys } = context.plotdata;
-        if (xs.length === 0)
+        if (context.plotdata.xs.length === 0)
             return container;
-        const shape = [];
-        let prevY = null;
-        let prevX = null;
         const [line, lineState] = this.get('line', () => new pixi_1.Graphics());
         if (lineState.new)
             container.addChild(line);
+        this.drawLine(context);
+        if (_config_1.default.style.gradient.enabled) {
+            const [gradient, gradientState] = this.get('gradient', () => new pixi_1.Graphics());
+            if (gradientState.new)
+                container.addChild(gradient);
+            this.drawGradient(context);
+        }
+        return container;
+    }
+    drawLine(context) {
+        const { xs, ys } = context.plotdata;
+        let prevY = null;
+        const [line] = this.read('line');
         for (const idx in xs) {
             const x = xs[idx];
             const y = ys[idx];
@@ -41,35 +49,48 @@ class PriceLineRenderer extends _rendering_1.BaseRenderer {
                     .clear()
                     .lineStyle(this.lineStyle)
                     .moveTo(x, y);
-                prevY = y;
+            }
+            else if (+idx + 1 === xs.length) {
+                if (context.features.rectungedPriceLine)
+                    line.lineTo(x, prevY);
+                line.lineTo(x, y);
+            }
+            else {
+                if (context.features.rectungedPriceLine)
+                    line.lineTo(x, prevY);
+                line.lineTo(x, y);
+            }
+            prevY = y;
+        }
+    }
+    drawGradient(context) {
+        const { height } = context.screen;
+        const { xs, ys } = context.plotdata;
+        const shape = [];
+        let prevY = null;
+        let prevX = null;
+        for (const idx in xs) {
+            const x = xs[idx];
+            const y = ys[idx];
+            if (+idx === 0) {
                 shape.push(x, height);
                 shape.push(x, y);
             }
             else if (+idx + 1 === xs.length) {
-                if (_config_1.default.style.rectunged) {
-                    line.lineTo(x, prevY);
+                if (context.features.rectungedPriceLine)
                     shape.push(x, prevY);
-                }
-                line.lineTo(x, y);
                 shape.push(x, y);
-                prevY = y;
             }
             else {
-                if (_config_1.default.style.rectunged) {
-                    line.lineTo(x, prevY);
+                if (context.features.rectungedPriceLine)
                     shape.push(x, prevY);
-                }
-                line.lineTo(x, y);
                 shape.push(x, y);
-                prevY = y;
             }
             prevY = y;
             prevX = x;
         }
         shape.push(prevX, height);
-        const [gradient, gradientState] = this.get('gradient', () => new pixi_1.Graphics());
-        if (gradientState.new)
-            container.addChild(gradient);
+        const [gradient] = this.read('gradient');
         gradient
             .clear()
             .beginTextureFill({
@@ -79,7 +100,6 @@ class PriceLineRenderer extends _rendering_1.BaseRenderer {
             .drawPolygon(shape)
             .closePath()
             .endFill();
-        return container;
     }
 }
 exports.PriceLineRenderer = PriceLineRenderer;

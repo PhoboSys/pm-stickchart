@@ -82,7 +82,7 @@ export class TextureStorage implements ITextureStorage {
         const x1 = 0
         const y1 = height
 
-        const top = '#' + config.style.resolution.upcolor.toString(16).padStart(6, '0')
+        const top = '#' + config.style.linearresolution.upcolor.toString(16).padStart(6, '0')
         const bottom = top + '00' // same color with opacity = 0
 
         const gradient = GradientFactory.createLinearGradient(
@@ -113,7 +113,7 @@ export class TextureStorage implements ITextureStorage {
         const x1 = 0
         const y1 = height
 
-        const top = '#' + config.style.resolution.downcolor.toString(16).padStart(6, '0')
+        const top = '#' + config.style.linearresolution.downcolor.toString(16).padStart(6, '0')
         const bottom = top + '00' // same color with opacity = 0
 
         const gradient = GradientFactory.createLinearGradient(
@@ -141,8 +141,8 @@ export class TextureStorage implements ITextureStorage {
         const x1 = 0
         const y1 = this.application.screen.height
 
-        const top = '#' + config.style.linecolor.toString(16).padStart(6, '0')
-        const bottom = top + '00' // same color with opacity = 0
+        const top = '#' + config.style.gradient.color.toString(16).padStart(6, '0')
+        const bottom = top.slice(0, 7) + '00' // same color with opacity = 0
 
         const { renderer } = this.application
         const gradient = GradientFactory.createLinearGradient(

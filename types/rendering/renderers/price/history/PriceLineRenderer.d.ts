@@ -6,4 +6,6 @@ export declare class PriceLineRenderer extends BaseRenderer {
     private readonly lineStyle;
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;
+    private drawLine;
+    private drawGradient;
 }

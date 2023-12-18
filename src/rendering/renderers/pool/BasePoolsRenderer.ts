@@ -4,7 +4,7 @@ import { RenderingContext, BaseRenderer } from '@rendering'
 import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@rendering/textures/symbols'
 
 import { Container } from '@lib/pixi'
-import { isEmpty, forEach, nowUnixTS } from '@lib/utils'
+import { isEmpty, forEach, nowUnixTS, binarySearchNearest } from '@lib/utils'
 import { eq, gt, lt } from '@lib/calc-utils'
 import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
@@ -191,32 +191,9 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): PricePoint | null {
         const { timestamps, prices } = chartdata
 
-        let midIndex = Math.floor(timestamps.length / 2)
-        let start = 0
-        let end = timestamps.length - 1
-        let index: number | null = null
+        const index = binarySearchNearest(timestamps, endDate)
 
-        while (true) {
-            if (timestamps[midIndex] === endDate) {
-                index = midIndex
-                break
-            } else if (end - start === 1) {
-                if (timestamps[end] <= endDate) {
-                    index = end
-                } else if (timestamps[start] <= endDate) {
-                    index = start
-                }
-                break
-            } else if (timestamps[midIndex] < endDate) {
-                start = midIndex
-                midIndex = Math.floor((end + start) / 2)
-            } else if (timestamps[midIndex] > endDate) {
-                end = midIndex
-                midIndex = Math.floor((end + start) / 2)
-            }
-        }
-
-        if (index === null) return null
+        if (index === -1) return null
 
         return {
             timestamp: timestamps[index],

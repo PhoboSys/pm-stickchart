@@ -11,20 +11,40 @@ class LatestPricePointRenderer extends _rendering_1.BaseRenderer {
     constructor(renderer) {
         super(renderer);
         this.innerPointStyle = {
-            color: 0xFFFFFF,
+            color: 0x0527F2,
             radius: 4,
         };
         this.outerPointStyle = {
             color: _config_1.default.style.linecolor,
-            radius: 9,
+            radius: 12,
         };
         this.pulspointStyle = {
             color: _config_1.default.style.linecolor,
-            radius: 10,
+            radius: 13,
+        };
+        this.innerPointAnimation = {
+            pixi: {
+                scale: 1.5,
+            },
+            ease: 'power1.inOut',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            yoyoEase: 'power2.inOut',
+        };
+        this.outerPointAnimation = {
+            pixi: {
+                scale: 0.667,
+            },
+            ease: 'power1.inOut',
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            yoyoEase: 'power2.inOut',
         };
         this.pulspointAnimation = {
             pixi: {
-                scale: 4,
+                scale: 3,
                 alpha: -0.1,
             },
             ease: 'power3.out',
@@ -39,13 +59,17 @@ class LatestPricePointRenderer extends _rendering_1.BaseRenderer {
         const { latestX, latestY, } = context.plotdata;
         const x = latestX;
         const y = latestY;
-        const [point, pointState] = this.get('point', () => _rendering_1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
-        if (pointState.new)
-            container.addChild(point);
-        point.position.set(x, y);
+        const [outerPoint, outerPointState] = this.get('outerPoint', () => _rendering_1.GraphicUtils.createCircle([x, y], this.outerPointStyle.radius, this.outerPointStyle));
+        if (outerPointState.new)
+            container.addChild(outerPoint);
+        outerPoint.position.set(x, y);
+        if (outerPointState.amination !== 'breath') {
+            outerPointState.amination = 'breath';
+            outerPointState.timeline = pixi_1.gsap.to(outerPoint, this.outerPointAnimation);
+        }
         const [pulspoint, pulspointState] = this.get('pulspoint', () => _rendering_1.GraphicUtils.createCircle([0, 0], this.pulspointStyle.radius, this.pulspointStyle));
         if (pulspointState.new)
-            point.addChild(pulspoint);
+            outerPoint.addChild(pulspoint);
         if (pulspointState.amination !== 'puls') {
             pulspointState.amination = 'puls';
             pulspointState.timeline = pixi_1.gsap.to(pulspoint, this.pulspointAnimation);
@@ -54,6 +78,10 @@ class LatestPricePointRenderer extends _rendering_1.BaseRenderer {
         if (innerpointState.new)
             container.addChild(innerpoint);
         innerpoint.position.set(x, y);
+        if (innerpointState.amination !== 'breath') {
+            innerpointState.amination = 'breath';
+            innerpointState.timeline = pixi_1.gsap.to(innerpoint, this.innerPointAnimation);
+        }
         return container;
     }
 }

@@ -23,24 +23,24 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         super(...arguments);
         this.nocontestLineStyle = {
             [_enums_1.EPosition.Up]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+                offsetTOP: [0, -8],
+                offsetBOTTOM: [0, 8],
                 lineStyle: {
                     color: 0xB7BDD7,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Down]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+                offsetTOP: [0, -8],
+                offsetBOTTOM: [0, 8],
                 lineStyle: {
                     color: 0xB7BDD7,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Zero]: {
-                offsetTOP: [300, -6],
-                offsetBOTTOM: [300, 6],
+                offsetTOP: [300, -8],
+                offsetBOTTOM: [300, 8],
                 lineStyle: {
                     color: 0xB7BDD7,
                     width: 2,
@@ -49,24 +49,24 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         };
         this.winlineStyle = {
             [_enums_1.EPosition.Up]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+                offsetTOP: [0, -8],
+                offsetBOTTOM: [0, 8],
                 lineStyle: {
                     color: 0xFFA000,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Down]: {
-                offsetTOP: [0, -6],
-                offsetBOTTOM: [0, 6],
+                offsetTOP: [0, -8],
+                offsetBOTTOM: [0, 8],
                 lineStyle: {
                     color: 0xFFA000,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Zero]: {
-                offsetTOP: [300, -6],
-                offsetBOTTOM: [300, 6],
+                offsetTOP: [300, -8],
+                offsetBOTTOM: [300, 8],
                 lineStyle: {
                     color: 0xFFA000,
                     width: 2,

@@ -7,6 +7,7 @@ import { PoolOpen } from './PoolOpen'
 import { PoolCountdown } from './PoolCountdown'
 import { PoolResolution } from './PoolResolution'
 import { PoolResolutionLine } from './PoolResolutionLine'
+import { PoolResolutionChartLine } from './PoolResolutionChartLine'
 import { PoolOpenPriceTag } from './PoolOpenPriceTag'
 import { PoolResolutionPriceTag } from './PoolResolutionPriceTag'
 import { PoolLayerEventProducer } from './PoolLayerEventProducer'
@@ -25,6 +26,7 @@ export class Pool implements IRenderer {
             new PoolOpen(renderer),
             new PoolResolution(renderer),
             new PoolResolutionLine(renderer),
+            new PoolResolutionChartLine(renderer),
             new PoolResolutionPriceTag(renderer),
             new PoolOpenPriceTag(renderer),
             new PoolCountdown(renderer),

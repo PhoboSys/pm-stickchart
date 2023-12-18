@@ -48,12 +48,28 @@ declare const _default: {
         backgroundAlpha: number;
         linesize: number;
         linecolor: number;
-        rectunged: boolean;
-        resolution: {
+        gradient: {
+            enabled: boolean;
+            color: number;
+        };
+        linearresolution: {
             upcolor: number;
             downcolor: number;
             zerocolor: number;
             nocontest: number;
+        };
+        curvedresolution: {
+            linesize: number;
+            linealpha: number;
+            linecolor: number;
+            upcolor: number;
+            upalpha: number;
+            downcolor: number;
+            downalpha: number;
+            zerocolor: number;
+            zeroalpha: number;
+            nocontest: number;
+            nocontestalpha: number;
         };
         poolRoundColors: {
             color: string;
@@ -94,6 +110,10 @@ declare const _default: {
         right: number;
         top: number;
         bottom: number;
+    };
+    features: {
+        rectungedPriceLine: boolean;
+        curvedResolutionLines: boolean;
     };
 };
 export default _default;

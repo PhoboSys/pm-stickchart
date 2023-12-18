@@ -7,6 +7,8 @@ export declare class LatestPricePointRenderer extends BaseRenderer {
     private readonly innerPointStyle;
     private readonly pulspointStyle;
     private readonly pulspointAnimation;
+    private readonly innerPointAnimation;
+    private readonly outerPointAnimation;
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;
     protected update(context: RenderingContext, container: Container): Container;

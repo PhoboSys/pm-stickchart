@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
+exports.binarySearchNearest = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
@@ -89,4 +89,51 @@ function orderBy(collection, visitor, order = 'asc') {
     return result;
 }
 exports.orderBy = orderBy;
+function binarySearchNearest(data, value, larger) {
+    if (data.length === 1) {
+        if (data[0] === value)
+            return 0;
+        else
+            return -1;
+    }
+    let midIndex = Math.floor(data.length / 2);
+    let start = 0;
+    let end = data.length - 1;
+    let index = -1;
+    while (true) {
+        if (data[midIndex] === value) {
+            index = midIndex;
+            break;
+        }
+        else if (end - start === 1) {
+            if (larger) {
+                if (data[start] >= value) {
+                    index = start;
+                }
+                else if (data[end] >= value) {
+                    index = end;
+                }
+            }
+            else {
+                if (data[end] <= value) {
+                    index = end;
+                }
+                else if (data[start] <= value) {
+                    index = start;
+                }
+            }
+            break;
+        }
+        else if (data[midIndex] < value) {
+            start = midIndex;
+            midIndex = Math.floor((end + start) / 2);
+        }
+        else if (data[midIndex] > value) {
+            end = midIndex;
+            midIndex = Math.floor((end + start) / 2);
+        }
+    }
+    return index;
+}
+exports.binarySearchNearest = binarySearchNearest;
 //# sourceMappingURL=index.js.map
