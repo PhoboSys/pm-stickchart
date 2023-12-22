@@ -39,8 +39,8 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         [EPosition.Zero]: {
             innerr: 3,
             outerr: 8,
-            innerColor: config.style.curvedresolution.zerocolor,
-            outerColor: 0xFFFFFF,
+            innerColor: 0x071226,
+            outerColor: config.style.curvedresolution.zerocolor,
         },
 
         [EPosition.NoContest]: {
@@ -52,43 +52,66 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
 
     }
 
-    private readonly baseLineStyle: any = {
-        width: config.style.curvedresolution.linesize,
-        color: config.style.curvedresolution.linecolor,
-        alpha: config.style.curvedresolution.linealpha,
+    private readonly baseInnerLineStyle: any = {
+        width: config.style.linesize,
+        color: config.style.linecolor,
+        alpha: 1,
         join: 'round',
         cap: 'round',
     }
 
-    private lineStyle: any = {
+    private innerLineStyle: any = {
+
+        [EPosition.Undefined]: this.baseInnerLineStyle,
+        [EPosition.Up]: this.baseInnerLineStyle,
+        [EPosition.Down]: this.baseInnerLineStyle,
+        [EPosition.Zero]: {
+            ...this.baseInnerLineStyle,
+            color: 0x071226,
+        },
+        [EPosition.NoContest]: this.baseInnerLineStyle,
+
+    }
+
+    private readonly baseLineStyle: any = {
+        width: config.style.curvedresolution.linesize,
+        color: config.style.curvedresolution.linecolor,
+        alpha: 1,
+        join: 'round',
+        cap: 'round',
+    }
+
+    private readonly actualLineStyle: any = {
+        ...this.baseLineStyle,
+        alpha: 0.1,
+    }
+
+    private resolutionLineStyle: any = {
 
         [EPosition.Undefined]: {
             ...this.baseLineStyle,
             color: 0xFFFFFF,
+            alpha: 0.1,
         },
 
         [EPosition.Up]: {
             ...this.baseLineStyle,
             color: config.style.curvedresolution.upcolor,
-            alpha: config.style.curvedresolution.upalpha ?? this.baseLineStyle.alpha,
         },
 
         [EPosition.Down]: {
             ...this.baseLineStyle,
             color: config.style.curvedresolution.downcolor,
-            alpha: config.style.curvedresolution.downalpha ?? this.baseLineStyle.alpha,
         },
 
         [EPosition.Zero]: {
             ...this.baseLineStyle,
             color: config.style.curvedresolution.zerocolor,
-            alpha: config.style.curvedresolution.zeroalpha ?? this.baseLineStyle.alpha,
         },
 
         [EPosition.NoContest]: {
             ...this.baseLineStyle,
             color: config.style.curvedresolution.nocontest,
-            alpha: config.style.curvedresolution.nocontestalpha ?? this.baseLineStyle.alpha,
         }
 
     }
@@ -141,6 +164,9 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
             const [resolutionLine, resolutionLineState] = this.get('resolutionLine', () => new Graphics())
             if (resolutionLineState.new) resolutiongroup.addChild(resolutionLine)
 
+            const [innerLine, innerLineState] = this.get('innerLine', () => new Graphics())
+            if (innerLineState.new) resolutiongroup.addChild(innerLine)
+
             const [openpoint, openpointstate] = this.get(
                 'openpoint',
                 () => this.createPricePoint(pool, context, this.torusStyle[position]),
@@ -160,6 +186,7 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         } else if (this.isActualPool(pool)) {
             this.clear('resolutiongroup')
             this.clear('resolutionLine')
+            this.clear('innerLine')
             this.clear('openpoint')
             this.clear('respoint')
 
@@ -200,35 +227,7 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
 
         const [actualLine] = this.read('actualLine')
 
-        let prevY: any = null
-
-        for (const idx in poolxs) {
-            const x = poolxs[idx]
-            const y = poolys[idx]
-
-            if (+idx === 0) {
-
-                actualLine
-                    .clear()
-                    .lineStyle(this.baseLineStyle)
-                    .moveTo(x, y)
-
-            } else if (+idx + 1 === poolxs.length) {
-
-                if (context.features.rectungedPriceLine) actualLine.lineTo(x, prevY)
-
-                actualLine.lineTo(x, y)
-
-            } else {
-
-                if (context.features.rectungedPriceLine) actualLine.lineTo(x, prevY)
-
-                actualLine.lineTo(x, y)
-
-            }
-
-            prevY = y
-        }
+        this.drawLine(context, actualLine, [poolxs, poolys], this.actualLineStyle)
     }
 
     private drawResolutionLine(
@@ -262,36 +261,10 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         poolys.push(endy)
 
         const [resolutionLine] = this.read('resolutionLine')
+        const [innerLine] = this.read('innerLine')
 
-        let prevY: any = null
-
-        for (const idx in poolxs) {
-            const x = poolxs[idx]
-            const y = poolys[idx]
-
-            if (+idx === 0) {
-
-                resolutionLine
-                    .clear()
-                    .lineStyle(this.lineStyle[position])
-                    .moveTo(x, y)
-
-            } else if (+idx + 1 === poolxs.length) {
-
-                if (context.features.rectungedPriceLine) resolutionLine.lineTo(x, prevY)
-
-                resolutionLine.lineTo(x, y)
-
-            } else {
-
-                if (context.features.rectungedPriceLine) resolutionLine.lineTo(x, prevY)
-
-                resolutionLine.lineTo(x, y)
-
-            }
-
-            prevY = y
-        }
+        this.drawLine(context, resolutionLine, [poolxs, poolys], this.resolutionLineStyle[position])
+        this.drawLine(context, innerLine, [poolxs, poolys], this.innerLineStyle[position])
 
         const [resolutiongroup, resolutiongroupstate] = this.read('resolutiongroup')
 
@@ -324,6 +297,39 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
             } else if (resolutiongroupstate.animation !== 'fadein') {
                 this.animate('resolutiongroup', 'fadeout')
             }
+        }
+    }
+
+    private drawLine(context, line, [xs, ys], style): void {
+
+        let prevY: any = null
+
+        for (const idx in xs) {
+            const x = xs[idx]
+            const y = ys[idx]
+
+            if (+idx === 0) {
+
+                line
+                    .clear()
+                    .lineStyle(style)
+                    .moveTo(x, y)
+
+            } else if (+idx + 1 === xs.length) {
+
+                if (context.features.rectungedPriceLine) line.lineTo(x, prevY)
+
+                line.lineTo(x, y)
+
+            } else {
+
+                if (context.features.rectungedPriceLine) line.lineTo(x, prevY)
+
+                line.lineTo(x, y)
+
+            }
+
+            prevY = y
         }
     }
 

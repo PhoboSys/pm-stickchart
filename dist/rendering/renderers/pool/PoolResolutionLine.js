@@ -48,27 +48,27 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.lineStyle = {
             [_enums_1.EPosition.Undefined]: {
                 color: 0xFFFFFF,
-                width: 3,
+                width: 5,
                 alpha: 0.9,
             },
             [_enums_1.EPosition.Up]: {
                 color: _config_1.default.style.linearresolution.upcolor,
-                width: 3,
+                width: 5,
                 alpha: 1,
             },
             [_enums_1.EPosition.Down]: {
                 color: _config_1.default.style.linearresolution.downcolor,
-                width: 3,
+                width: 5,
                 alpha: 1,
             },
             [_enums_1.EPosition.Zero]: {
                 color: _config_1.default.style.linearresolution.zerocolor,
-                width: 3,
+                width: 5,
                 alpha: 1,
             },
             [_enums_1.EPosition.NoContest]: {
                 color: _config_1.default.style.linearresolution.nocontest,
-                width: 3,
+                width: 5,
                 alpha: 1,
             }
         };

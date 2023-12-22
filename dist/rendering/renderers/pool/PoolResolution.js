@@ -21,19 +21,6 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
             gap: 10,
             dash: 10,
         };
-        this.textStyle = {
-            fontWeight: 600,
-            fontFamily: 'Gilroy',
-            fontSize: 12,
-            fill: 0x22273F
-        };
-        this.coverStyle = {
-            paddingx: 10,
-            paddingy: 5,
-            paddingTop: 10,
-            paddingLeft: 10,
-            radiuses: [8, 8, 8, 2],
-        };
     }
     get rendererId() {
         return PoolResolution.POOL_RESOLUTION_ID;
@@ -47,29 +34,11 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([pool.endDate], timerange, width);
-        const [title, titlestate] = this.get('title', () => this.createTitle(context));
-        title.position.set(x + this.coverStyle.paddingLeft, this.coverStyle.paddingTop);
-        if (titlestate.new)
-            container.addChild(title);
         const [line, linestate] = this.get('line', () => this.createLine(context));
         line.position.x = x;
         line.height = height;
         if (linestate.new)
             container.addChild(line);
-    }
-    createTitle(context) {
-        const { paddingx, paddingy } = this.coverStyle;
-        const text = new pixi_1.Text('Resolution', this.textStyle);
-        text.position.set(paddingx, paddingy);
-        const width = text.width + paddingx * 2;
-        const height = text.height + paddingy * 2;
-        const textureName = this.getLevelTextureName(context);
-        const gradient = context.textures.get(textureName, { width, height });
-        const { radiuses } = this.coverStyle;
-        const cover = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { texture: gradient });
-        const title = new pixi_1.Container();
-        title.addChild(cover, text);
-        return title;
     }
     createLine(context) {
         const { height } = context.screen;

@@ -13,7 +13,6 @@ const calc_utils_1 = require("../../../lib/calc-utils");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
-        var _a, _b, _c, _d;
         super(...arguments);
         this.torusStyle = {
             [_enums_1.EPosition.Undefined]: {
@@ -37,8 +36,8 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             [_enums_1.EPosition.Zero]: {
                 innerr: 3,
                 outerr: 8,
-                innerColor: _config_1.default.style.curvedresolution.zerocolor,
-                outerColor: 0xFFFFFF,
+                innerColor: 0x071226,
+                outerColor: _config_1.default.style.curvedresolution.zerocolor,
             },
             [_enums_1.EPosition.NoContest]: {
                 innerr: 3,
@@ -47,19 +46,34 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
                 outerColor: 0xFFFFFF,
             }
         };
-        this.baseLineStyle = {
-            width: _config_1.default.style.curvedresolution.linesize,
-            color: _config_1.default.style.curvedresolution.linecolor,
-            alpha: _config_1.default.style.curvedresolution.linealpha,
+        this.baseInnerLineStyle = {
+            width: _config_1.default.style.linesize,
+            color: _config_1.default.style.linecolor,
+            alpha: 1,
             join: 'round',
             cap: 'round',
         };
-        this.lineStyle = {
-            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseLineStyle), { color: 0xFFFFFF }),
-            [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.upcolor, alpha: (_a = _config_1.default.style.curvedresolution.upalpha) !== null && _a !== void 0 ? _a : this.baseLineStyle.alpha }),
-            [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.downcolor, alpha: (_b = _config_1.default.style.curvedresolution.downalpha) !== null && _b !== void 0 ? _b : this.baseLineStyle.alpha }),
-            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.zerocolor, alpha: (_c = _config_1.default.style.curvedresolution.zeroalpha) !== null && _c !== void 0 ? _c : this.baseLineStyle.alpha }),
-            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.nocontest, alpha: (_d = _config_1.default.style.curvedresolution.nocontestalpha) !== null && _d !== void 0 ? _d : this.baseLineStyle.alpha })
+        this.innerLineStyle = {
+            [_enums_1.EPosition.Undefined]: this.baseInnerLineStyle,
+            [_enums_1.EPosition.Up]: this.baseInnerLineStyle,
+            [_enums_1.EPosition.Down]: this.baseInnerLineStyle,
+            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseInnerLineStyle), { color: 0x071226 }),
+            [_enums_1.EPosition.NoContest]: this.baseInnerLineStyle,
+        };
+        this.baseLineStyle = {
+            width: _config_1.default.style.curvedresolution.linesize,
+            color: _config_1.default.style.curvedresolution.linecolor,
+            alpha: 1,
+            join: 'round',
+            cap: 'round',
+        };
+        this.actualLineStyle = Object.assign(Object.assign({}, this.baseLineStyle), { alpha: 0.1 });
+        this.resolutionLineStyle = {
+            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseLineStyle), { color: 0xFFFFFF, alpha: 0.1 }),
+            [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.upcolor }),
+            [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.downcolor }),
+            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.zerocolor }),
+            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.curvedresolution.nocontest })
         };
         this.configAnimations = {
             fadein: {
@@ -101,6 +115,9 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             const [resolutionLine, resolutionLineState] = this.get('resolutionLine', () => new pixi_1.Graphics());
             if (resolutionLineState.new)
                 resolutiongroup.addChild(resolutionLine);
+            const [innerLine, innerLineState] = this.get('innerLine', () => new pixi_1.Graphics());
+            if (innerLineState.new)
+                resolutiongroup.addChild(innerLine);
             const [openpoint, openpointstate] = this.get('openpoint', () => this.createPricePoint(pool, context, this.torusStyle[position]), [position]);
             if (openpointstate.new)
                 resolutiongroup.addChild(openpoint);
@@ -112,6 +129,7 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         else if (this.isActualPool(pool)) {
             this.clear('resolutiongroup');
             this.clear('resolutionLine');
+            this.clear('innerLine');
             this.clear('openpoint');
             this.clear('respoint');
             const [actualLine, actualLineState] = this.get('actualLine', () => new pixi_1.Graphics());
@@ -144,28 +162,7 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         poolxs.push(endx);
         poolys.push(endy);
         const [actualLine] = this.read('actualLine');
-        let prevY = null;
-        for (const idx in poolxs) {
-            const x = poolxs[idx];
-            const y = poolys[idx];
-            if (+idx === 0) {
-                actualLine
-                    .clear()
-                    .lineStyle(this.baseLineStyle)
-                    .moveTo(x, y);
-            }
-            else if (+idx + 1 === poolxs.length) {
-                if (context.features.rectungedPriceLine)
-                    actualLine.lineTo(x, prevY);
-                actualLine.lineTo(x, y);
-            }
-            else {
-                if (context.features.rectungedPriceLine)
-                    actualLine.lineTo(x, prevY);
-                actualLine.lineTo(x, y);
-            }
-            prevY = y;
-        }
+        this.drawLine(context, actualLine, [poolxs, poolys], this.actualLineStyle);
     }
     drawResolutionLine(pool, context, position, resolution) {
         const { xs, ys } = context.plotdata;
@@ -188,28 +185,9 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         poolxs.push(endx);
         poolys.push(endy);
         const [resolutionLine] = this.read('resolutionLine');
-        let prevY = null;
-        for (const idx in poolxs) {
-            const x = poolxs[idx];
-            const y = poolys[idx];
-            if (+idx === 0) {
-                resolutionLine
-                    .clear()
-                    .lineStyle(this.lineStyle[position])
-                    .moveTo(x, y);
-            }
-            else if (+idx + 1 === poolxs.length) {
-                if (context.features.rectungedPriceLine)
-                    resolutionLine.lineTo(x, prevY);
-                resolutionLine.lineTo(x, y);
-            }
-            else {
-                if (context.features.rectungedPriceLine)
-                    resolutionLine.lineTo(x, prevY);
-                resolutionLine.lineTo(x, y);
-            }
-            prevY = y;
-        }
+        const [innerLine] = this.read('innerLine');
+        this.drawLine(context, resolutionLine, [poolxs, poolys], this.resolutionLineStyle[position]);
+        this.drawLine(context, innerLine, [poolxs, poolys], this.innerLineStyle[position]);
         const [resolutiongroup, resolutiongroupstate] = this.read('resolutiongroup');
         const [openpoint] = this.read('openpoint');
         openpoint.position.set(startx, starty);
@@ -238,6 +216,30 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             else if (resolutiongroupstate.animation !== 'fadein') {
                 this.animate('resolutiongroup', 'fadeout');
             }
+        }
+    }
+    drawLine(context, line, [xs, ys], style) {
+        let prevY = null;
+        for (const idx in xs) {
+            const x = xs[idx];
+            const y = ys[idx];
+            if (+idx === 0) {
+                line
+                    .clear()
+                    .lineStyle(style)
+                    .moveTo(x, y);
+            }
+            else if (+idx + 1 === xs.length) {
+                if (context.features.rectungedPriceLine)
+                    line.lineTo(x, prevY);
+                line.lineTo(x, y);
+            }
+            else {
+                if (context.features.rectungedPriceLine)
+                    line.lineTo(x, prevY);
+                line.lineTo(x, y);
+            }
+            prevY = y;
         }
     }
     createPricePoint(pool, context, style) {

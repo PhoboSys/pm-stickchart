@@ -3,7 +3,7 @@ import { Logger } from '@infra'
 import { RenderingContext, GraphicUtils } from '@rendering'
 
 import datamath from '@lib/datamath'
-import { Container, Text } from '@lib/pixi'
+import { Container } from '@lib/pixi'
 
 import { SILVER, GOLD, ROYAL } from '@constants'
 
@@ -19,23 +19,6 @@ export class PoolResolution extends BasePoolsRenderer {
         cap: 'round',
         gap: 10,
         dash: 10,
-    }
-
-    private textStyle: any = {
-        fontWeight: 600,
-        fontFamily: 'Gilroy',
-        fontSize: 12,
-        fill: 0x22273F
-    }
-
-    private coverStyle: any = {
-        paddingx: 10,
-        paddingy: 5,
-
-        paddingTop: 10,
-        paddingLeft: 10,
-
-        radiuses: [8, 8, 8, 2],
     }
 
     public get rendererId(): symbol {
@@ -68,14 +51,6 @@ export class PoolResolution extends BasePoolsRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([pool.endDate], timerange, width)
 
-        const [title, titlestate] = this.get('title', () => this.createTitle(context))
-
-        title.position.set(
-            x + this.coverStyle.paddingLeft,
-            this.coverStyle.paddingTop
-        )
-        if (titlestate.new) container.addChild(title)
-
         const [line, linestate] = this.get('line', () => this.createLine(context))
 
         line.position.x = x
@@ -83,32 +58,6 @@ export class PoolResolution extends BasePoolsRenderer {
 
         if (linestate.new) container.addChild(line)
 
-    }
-
-    private createTitle(context: RenderingContext): Container {
-        const { paddingx, paddingy } = this.coverStyle
-
-        const text = new Text('Resolution', this.textStyle)
-        text.position.set(paddingx, paddingy)
-
-        const width = text.width + paddingx * 2
-        const height = text.height + paddingy * 2
-
-        const textureName = this.getLevelTextureName(context)
-        const gradient = context.textures.get(textureName, { width, height })
-
-        const { radiuses } = this.coverStyle
-        const cover = GraphicUtils.createRoundedRect(
-            [0, 0],
-            [width, height],
-            radiuses,
-            { texture: gradient }
-        )
-
-        const title = new Container()
-        title.addChild(cover, text)
-
-        return title
     }
 
     private createLine(context: RenderingContext): Container {

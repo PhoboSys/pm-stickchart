@@ -21,7 +21,6 @@ class TextureStorage {
         this.application = application;
         this.textures = {};
         this.precreate = [
-            symbols_5.LOCK_ICON_TEXTURE,
             symbols_5.UP_ICON_TEXTURE,
             symbols_5.DOWN_ICON_TEXTURE,
             symbols_6.ZERO_ICON_TEXTURE,
@@ -134,34 +133,8 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_2.POOL_ROUND_TEXTURE]() {
-        const x0 = 0;
-        const y0 = 0 + _config_1.default.padding.top;
-        const x1 = 0;
-        const y1 = this.application.screen.height;
-        const { renderer } = this.application;
-        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({
-            width: renderer.width,
-            height: renderer.height,
-        }), {
-            x0, y0,
-            x1, y1,
-            colorStops: _config_1.default.style.poolRoundColors
-        });
-        return gradient;
-    }
     // SVGS
     //
-    [symbols_5.LOCK_ICON_TEXTURE]() {
-        const svg = `
-        <svg width="113" height="148" viewBox="0 0 113 148" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M98.875 49.3333H91.8125V35.2381C91.8125 15.7867 75.9925 0 56.5 0C37.0075 0 21.1875 15.7867 21.1875 35.2381V49.3333H14.125C6.35625 49.3333 0 55.6762 0 63.4286V133.905C0 141.657 6.35625 148 14.125 148H98.875C106.644 148 113 141.657 113 133.905V63.4286C113 55.6762 106.644 49.3333 98.875 49.3333ZM56.5 112.762C48.7312 112.762 42.375 106.419 42.375 98.6667C42.375 90.9143 48.7312 84.5714 56.5 84.5714C64.2688 84.5714 70.625 90.9143 70.625 98.6667C70.625 106.419 64.2688 112.762 56.5 112.762ZM35.3125 49.3333V35.2381C35.3125 23.539 44.7763 14.0952 56.5 14.0952C68.2237 14.0952 77.6875 23.539 77.6875 35.2381V49.3333H35.3125Z" fill="#303550"/>
-        </svg>
-        `;
-        const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        return pixi_1.RenderTexture.from(url);
-    }
     [symbols_5.UP_ICON_TEXTURE]() {
         const svg = `
 		<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,31 +242,31 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_3.RESOLUTION_COUNTDOWN_TEXTURE]() {
-        const { width, height } = this.application.screen;
+    [symbols_3.RESOLUTION_COUNTDOWN_TEXTURE]({ width }) {
+        const { height } = this.application.screen;
         const x0 = 0;
         const y0 = 0;
-        const x1 = 0;
-        const y1 = height;
+        const x1 = width;
+        const y1 = 0;
         const renderer = this.application.renderer;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: _config_1.default.style.resolutionCountdownColors,
+            colorStops: _config_1.default.style.resolutionCountdown.colors,
         });
         return gradient;
     }
-    [symbols_3.LOCK_COUNTDOWN_TEXTURE]() {
-        const { width, height } = this.application.screen;
+    [symbols_3.LOCK_COUNTDOWN_TEXTURE]({ width }) {
+        const { height } = this.application.screen;
         const x0 = 0;
         const y0 = 0;
-        const x1 = 0;
-        const y1 = height;
+        const x1 = width;
+        const y1 = 0;
         const renderer = this.application.renderer;
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: _config_1.default.style.lockCountdownColors,
+            colorStops: _config_1.default.style.lockCountdown.colors,
         });
         return gradient;
     }

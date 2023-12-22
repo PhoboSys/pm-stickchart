@@ -2,9 +2,7 @@ import { IGraphicStorage, RenderingCompositor } from '@rendering'
 import { RenderingContext, DoneFunction, IRenderer } from '@rendering'
 
 import { PoolBackground } from './PoolBackground'
-import { PoolLock } from './PoolLock'
 import { PoolOpen } from './PoolOpen'
-import { PoolCountdown } from './PoolCountdown'
 import { PoolResolution } from './PoolResolution'
 import { PoolResolutionLine } from './PoolResolutionLine'
 import { PoolResolutionChartLine } from './PoolResolutionChartLine'
@@ -22,14 +20,12 @@ export class Pool implements IRenderer {
         this.compositor = new RenderingCompositor([
             new PoolLayerEventProducer(renderer),
             new PoolBackground(renderer),
-            new PoolLock(renderer),
             new PoolOpen(renderer),
             new PoolResolution(renderer),
             new PoolResolutionLine(renderer),
             new PoolResolutionChartLine(renderer),
             new PoolResolutionPriceTag(renderer),
             new PoolOpenPriceTag(renderer),
-            new PoolCountdown(renderer),
         ])
     }
 

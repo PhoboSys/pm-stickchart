@@ -3,6 +3,7 @@ import { Container } from '../../../lib/pixi';
 import { BasePoolsRenderer } from './BasePoolsRenderer';
 export declare class PoolResolutionPriceTag extends BasePoolsRenderer {
     static readonly POOL_RESOLUTION_PRICE_TAG_ID: symbol;
+    private baseCoverStyle;
     private coverStyle;
     private configAnimations;
     protected get animations(): any;

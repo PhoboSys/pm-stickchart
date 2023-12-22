@@ -1,6 +1,6 @@
 import { RenderingContext } from '@rendering'
-import { POOL_ROUND_TEXTURE } from '@rendering/textures/symbols'
 
+import config from '@config'
 import datamath from '@lib/datamath'
 import { Graphics, Container } from '@lib/pixi'
 
@@ -19,7 +19,7 @@ export class PoolBackground extends BasePoolsRenderer {
     private configAnimations: any = {
         hover_group: {
             pixi: {
-                alpha: 0.1,
+                alpha: 1,
             },
             duration: 0.5,
             ease: 'back.out(4)',
@@ -33,13 +33,6 @@ export class PoolBackground extends BasePoolsRenderer {
             ease: 'power2.out',
             delay: 0.5,
         },
-        actual_group: {
-            pixi: {
-                alpha: 0.15,
-            },
-            duration: 0.5,
-            ease: 'back.out(4)',
-        }
     }
 
     protected get animations(): any {
@@ -98,9 +91,7 @@ export class PoolBackground extends BasePoolsRenderer {
 
         gradient
             .clear()
-            .beginTextureFill({
-                texture: context.textures.get(POOL_ROUND_TEXTURE),
-            })
+            .beginFill(config.style.poolRoundColor, 0.1)
             .drawPolygon(shape)
             .closePath()
             .endFill()
@@ -127,7 +118,7 @@ export class PoolBackground extends BasePoolsRenderer {
 
         }
 
-        if (this.isActualPool(pool)) this.animate('group', 'actual_group')
+        if (this.isActualPool(pool)) this.animate('group', 'hover_group')
 
     }
 
