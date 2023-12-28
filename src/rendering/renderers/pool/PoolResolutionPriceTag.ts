@@ -1,5 +1,7 @@
 import { RenderingContext, GraphicUtils } from '@rendering'
 
+import { EPosition } from '@enums'
+import config from '@config'
 import { PricePoint } from '@chartdata'
 import datamath from '@lib/datamath'
 import { Container } from '@lib/pixi'
@@ -12,15 +14,51 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
 
     static readonly POOL_RESOLUTION_PRICE_TAG_ID: symbol = Symbol('POOL_RESOLUTION_PRICE_TAG_ID')
 
-    private coverStyle: any = {
-        offset: [8, -8],
+    private baseCoverStyle: any = {
+        color: 0xFFFFFF,
+        offset: [14, -14],
         anchor: [0, 0],
-        textStyle: {
+        padding: [6, 8],
+        radius: 16,
+        textstyle: {
             fill: 0xFFFFFF,
-            fontWeight: 700,
-            fontFamily: 'Gilroy',
-            fontSize: 13,
+            fontWeight: 600,
+            fontFamily: 'Roboto',
+            fontSize: 12,
         }
+    }
+
+    private coverStyle: any = {
+
+        [EPosition.Undefined]: {
+            ...this.baseCoverStyle,
+            color: 0x000000,
+        },
+
+        [EPosition.Up]: {
+            ...this.baseCoverStyle,
+            color: config.style.linearresolution.upcolor
+        },
+
+        [EPosition.Down]: {
+            ...this.baseCoverStyle,
+            color: config.style.linearresolution.downcolor
+        },
+
+        [EPosition.Zero]: {
+            ...this.baseCoverStyle,
+            color: config.style.linearresolution.zerocolor,
+            textstyle: {
+                ...this.baseCoverStyle.textstyle,
+                fill: 0x071226,
+            }
+        },
+
+        [EPosition.NoContest]: {
+            ...this.baseCoverStyle,
+            color: config.style.linearresolution.nocontest
+        }
+
     }
 
     private configAnimations: any = {
@@ -83,20 +121,23 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
         const [x] = datamath.scale([resolution.timestamp], timerange, width)
         const [y] = datamath.scaleReverse([Number(resolution.value)], pricerange, height)
         const priceValue = ui.currency(resolution.value, context.metapool.quote)
+        const position = this.getPoolResolution(pool, context)
+        const coverStyle = this.coverStyle[position]
 
-        const [cover, coverState] = this.get('cover', () => GraphicUtils.createText(
+        const [cover, coverState] = this.get('cover', () => GraphicUtils.createCoveredText(
             priceValue,
-            [0, 0],
-            this.coverStyle.textStyle,
-            this.coverStyle.anchor,
-        )
-        )
+            coverStyle.offset,
+            { ...coverStyle, color: 0xFFFFFF },
+        ))
+
+        const [ofx, ofy] = coverStyle.offset
+
         if (coverState.new) container.addChild(cover)
-
-        cover.text = priceValue
-
-        const [ofx, ofy] = this.coverStyle.offset
-        cover.position.set(x+ofx, y+ofy)
+        else cover.update((textGraphic, coverGraphic) => {
+            textGraphic.text = priceValue
+            textGraphic.style.fill = coverStyle.textstyle.fill
+            coverGraphic.tint = coverStyle.color
+        }, [x+ofx, y+ofy], coverStyle)
 
         if (this.isHistoricalPool(pool, context)) {
             const poolid = pool.poolid

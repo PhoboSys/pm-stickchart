@@ -55,31 +55,31 @@ export class PoolResolutionLine extends BasePoolsRenderer {
 
         [EPosition.Undefined]: {
             color: 0xFFFFFF,
-            width: 3,
+            width: 5,
             alpha: 0.9,
         },
 
         [EPosition.Up]: {
             color: config.style.linearresolution.upcolor,
-            width: 3,
+            width: 5,
             alpha: 1,
         },
 
         [EPosition.Down]: {
             color: config.style.linearresolution.downcolor,
-            width: 3,
+            width: 5,
             alpha: 1,
         },
 
         [EPosition.Zero]: {
             color: config.style.linearresolution.zerocolor,
-            width: 3,
+            width: 5,
             alpha: 1,
         },
 
         [EPosition.NoContest]: {
             color: config.style.linearresolution.nocontest,
-            width: 3,
+            width: 5,
             alpha: 1,
         }
 

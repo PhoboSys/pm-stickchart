@@ -5,6 +5,9 @@ import { GridRenderer, LatestPriceRenderer } from '@rendering'
 import { Pool, Pari, CrosshairRenderer } from '@rendering'
 import { PricefeedInfoRenderer } from '@rendering'
 
+import { PoolBackground } from './pool/PoolBackground'
+import { PoolCountdown } from './pool/PoolCountdown'
+
 export class LineChartRenderer implements IRenderer {
 
     private readonly compositor: RenderingCompositor
@@ -13,11 +16,13 @@ export class LineChartRenderer implements IRenderer {
         private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
+            new PoolBackground(renderer),
+            new PoolCountdown(renderer),
             new GridRenderer(renderer),
             new PricefeedInfoRenderer(renderer),
             new PriceLineRenderer(renderer),
-            new Pool(renderer),
             new LatestPriceRenderer(renderer),
+            new Pool(renderer),
             new CrosshairRenderer(renderer),
             new Pari(renderer),
         ])

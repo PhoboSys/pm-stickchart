@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolCountdown = void 0;
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
+const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const utils_1 = require("../../../lib/utils");
@@ -17,8 +18,15 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     constructor(renderer) {
         super(renderer);
-        this.gradientStyle = {
-            alpha: .3,
+        this.lockGradientStyle = {
+            alpha: 0.33,
+            offset: [0, _config_1.default.style.lockCountdown.padding],
+            radiuses: [24, 0, 0, 24]
+        };
+        this.resolutionGradientStyle = {
+            alpha: 1,
+            offset: [0, _config_1.default.style.resolutionCountdown.padding],
+            radiuses: [24, 0, 0, 24]
         };
         this.phaseStyle = {
             anchor: [0, 1],
@@ -43,7 +51,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.configAnimations = {
             positioning: {
                 pixi: {
-                    tint: 0xFFA000,
+                    tint: 0xA7E0FF,
                 },
                 duration: 0.5,
                 ease: 'power2.out',
@@ -51,7 +59,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             },
             resolution: {
                 pixi: {
-                    tint: 0x009797,
+                    tint: 0xA7E0FF,
                 },
                 duration: 0.5,
                 ease: 'power2.out',
@@ -94,6 +102,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     updatePool(pool, context, container) {
         if (!this.isActualPool(pool))
             return this.clear();
+        container.sortableChildren = true;
         this.updateBackground(pool, context, container);
         this.updateText(pool, context, container);
     }
@@ -104,54 +113,42 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, (0, utils_1.nowUnixTS)()], timerange, width);
         const tolockx = Math.max(nowx, openx);
         if (lockx >= nowx) {
-            const [gradientlock, gradientlockState] = this.get('gradientlock', () => new pixi_1.Graphics()
-                .beginTextureFill({
-                texture: context.textures.get(textures_1.LOCK_COUNTDOWN_TEXTURE),
-            })
-                .drawPolygon([
-                0, 0,
-                lockx - tolockx, 0,
-                lockx - tolockx, height,
-                0, height,
-            ])
-                .closePath()
-                .endFill());
-            if (gradientlockState.new) {
-                gradientlock.alpha = this.gradientStyle.alpha;
+            const lockheight = height - 2 * this.lockGradientStyle.offset[1];
+            const lockwidth = lockx - tolockx;
+            const [gradientlock, gradientlockState] = this.get('gradientlock', () => this.createGradient(this.lockGradientStyle, [lockx, lockheight], context.textures.get(textures_1.LOCK_COUNTDOWN_TEXTURE, { width: lockx })), [lockheight]);
+            if (gradientlockState.new)
                 container.addChild(gradientlock);
-            }
-            gradientlock.position.x = tolockx;
-            gradientlock.height = height;
-            gradientlock.width = lockx - tolockx;
+            gradientlock.position.x = lockx;
+            gradientlock.mask.pivot.x = lockwidth;
         }
         else {
             this.clear('gradientlock');
         }
         if (rx >= nowx) {
+            const rheight = height - 2 * this.resolutionGradientStyle.offset[1];
             const torx = Math.max(nowx, lockx);
-            const [gradientres, gradientresState] = this.get('gradientres', () => new pixi_1.Graphics()
-                .beginTextureFill({
-                texture: context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE),
-            })
-                .drawPolygon([
-                0, 0,
-                rx - torx, 0,
-                rx - torx, height,
-                0, height,
-            ])
-                .closePath()
-                .endFill());
-            if (gradientresState.new) {
-                gradientres.alpha = this.gradientStyle.alpha;
+            const rwidth = rx - torx;
+            const [gradientres, gradientresState] = this.get('gradientres', () => this.createGradient(this.resolutionGradientStyle, [rx, rheight], context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE, { width: rx })), [rheight]);
+            if (gradientresState.new)
                 container.addChild(gradientres);
-            }
-            gradientres.position.x = torx;
-            gradientres.height = height;
-            gradientres.width = rx - torx;
+            gradientres.position.x = rx;
+            gradientres.mask.pivot.x = rwidth;
         }
         else {
             this.clear('gradientres');
         }
+    }
+    createGradient(style, [width, height], texture) {
+        const group = new pixi_1.Container();
+        const gradient = _rendering_1.GraphicUtils.createRoundedRect(style.offset, [width, height], style.radiuses, { texture });
+        group.addChild(gradient);
+        const mask = gradient.clone();
+        group.addChild(mask);
+        group.pivot.x = width;
+        mask.position.x = width;
+        gradient.alpha = style.alpha;
+        group.mask = mask;
+        return group;
     }
     updateText(pool, context, container) {
         const { lockDate, endDate, poolid } = pool;
@@ -166,6 +163,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [textgroup, textgroupstate] = this.get('textgroup', () => new pixi_1.Container());
         if (textgroupstate.new) {
             textgroup.alpha = 0;
+            textgroup.zIndex = 3;
             container.addChild(textgroup);
         }
         const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));

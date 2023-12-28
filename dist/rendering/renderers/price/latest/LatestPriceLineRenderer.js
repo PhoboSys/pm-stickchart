@@ -17,17 +17,17 @@ class LatestPriceLineRenderer extends _rendering_1.BaseRenderer {
             alpha: 1,
             join: 'round',
             cap: 'round',
-            paddingx: 12,
+            paddingx: 16,
         };
         this.textCoverStyle = {
-            color: _config_1.default.style.linecolor,
+            color: 0x071226,
             padding: [6, 8],
             anchor: [1.1, 0.5],
             radius: 30,
             textstyle: {
-                fill: 0x009797,
-                fontWeight: 600,
-                fontFamily: 'Gilroy',
+                fill: 0xFFFFFF,
+                fontWeight: 500,
+                fontFamily: 'Roboto',
                 fontSize: 13,
             },
             linestyle: {

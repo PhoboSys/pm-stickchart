@@ -8,19 +8,24 @@ import { Sprite, Texture, Matrix, Container, gsap } from '@lib/pixi'
 
 export class CoveredText extends Graphics {
 
-    public update(updater: (textGraphic: Text) => void, position: [number, number], style: { padding, anchor }): void {
+    public update(
+        updater: (textGraphic: Text, coverGraphic: Graphics ) => void,
+        position: [number, number],
+        style: { padding, anchor },
+    ): void {
         this.updateText(updater, style)
         this.updatePosition(position, style)
     }
 
-    private updateText(updater: (textGraphic: Text) => void, style: { padding }): void {
+    private updateText(updater: (textGraphic: Text, coverGraphic: Graphics) => void, style: { padding }): void {
+        const coverGraphic = <Graphics> this.getChildAt(0)
         const textGraphic = <Text> this.getChildAt(1)
-        updater(textGraphic)
+
+        updater(textGraphic, coverGraphic)
 
         const { padding = [0, 0] } = style
         const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding
 
-        const coverGraphic = <Graphics> this.getChildAt(0)
         coverGraphic.width = textGraphic.width + leftPadding + rightPadding
         coverGraphic.height = textGraphic.height + topPadding + bottomPadding
     }
@@ -150,7 +155,7 @@ export class GraphicUtils {
     static createCoveredText(
         value: any,
         [x, y]: [number, number],
-        style: { textstyle, padding, color, radius, anchor, linestyle },
+        style: { textstyle, padding, color, alpha, radius, anchor, linestyle },
     ): CoveredText {
         const { padding = [0, 0] } = style
 
@@ -167,7 +172,7 @@ export class GraphicUtils {
         const coverheight = text.height + topPadding + bottomPadding
 
         const cover = new Graphics()
-            .beginFill(style.color)
+            .beginFill(style.color, style.alpha)
             .lineStyle(style.linestyle)
             .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
             .endFill()

@@ -1,8 +1,9 @@
 import { IGraphicStorage, RenderingContext, GraphicUtils } from '@rendering'
 import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from '@rendering/textures'
 
+import config from '@config'
 import datamath from '@lib/datamath'
-import { Graphics, Container } from '@lib/pixi'
+import { Container, Graphics } from '@lib/pixi'
 import { nowUnixTS } from '@lib/utils'
 import ui from '@lib/ui'
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
@@ -13,8 +14,16 @@ export class PoolCountdown extends BasePoolsRenderer {
 
     static readonly POOL_LOCK_COUNTDOWN_ID: symbol = Symbol('POOL_LOCK_COUNTDOWN_ID')
 
-    private readonly gradientStyle: any = {
-        alpha: .3,
+    private readonly lockGradientStyle: any = {
+        alpha: 0.33,
+        offset: [0, config.style.lockCountdown.padding],
+        radiuses: [24, 0, 0, 24]
+    }
+
+    private readonly resolutionGradientStyle: any = {
+        alpha: 1,
+        offset: [0, config.style.resolutionCountdown.padding],
+        radiuses: [24, 0, 0, 24]
     }
 
     private readonly phaseStyle: any = {
@@ -42,7 +51,7 @@ export class PoolCountdown extends BasePoolsRenderer {
     private configAnimations: any = {
         positioning: {
             pixi: {
-                tint: 0xFFA000,
+                tint: 0xA7E0FF,
             },
             duration: 0.5,
             ease: 'power2.out',
@@ -50,7 +59,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         },
         resolution: {
             pixi: {
-                tint: 0x009797,
+                tint: 0xA7E0FF,
             },
             duration: 0.5,
             ease: 'power2.out',
@@ -117,6 +126,8 @@ export class PoolCountdown extends BasePoolsRenderer {
 
         if (!this.isActualPool(pool)) return this.clear()
 
+        container.sortableChildren = true
+
         this.updateBackground(pool, context, container)
         this.updateText(pool, context, container)
 
@@ -140,61 +151,71 @@ export class PoolCountdown extends BasePoolsRenderer {
         const tolockx = Math.max(nowx, openx)
 
         if (lockx >= nowx) {
+            const lockheight = height - 2 * this.lockGradientStyle.offset[1]
+            const lockwidth = lockx - tolockx
+
             const [gradientlock, gradientlockState] = this.get(
                 'gradientlock',
-                () => new Graphics()
-                    .beginTextureFill({
-                        texture: context.textures.get(LOCK_COUNTDOWN_TEXTURE),
-                    })
-                    .drawPolygon([
-                        0, 0,
-                        lockx - tolockx, 0,
-                        lockx - tolockx, height,
-                        0, height,
-                    ])
-                    .closePath()
-                    .endFill()
+                () => this.createGradient(
+                    this.lockGradientStyle,
+                    [lockx, lockheight],
+                    context.textures.get(LOCK_COUNTDOWN_TEXTURE, { width: lockx })
+                ),
+                [lockheight]
             )
-            if (gradientlockState.new) {
-                gradientlock.alpha = this.gradientStyle.alpha
-                container.addChild(gradientlock)
-            }
 
-            gradientlock.position.x = tolockx
-            gradientlock.height = height
-            gradientlock.width = lockx - tolockx
+            if (gradientlockState.new) container.addChild(gradientlock)
+
+            gradientlock.position.x = lockx
+            gradientlock.mask.pivot.x = lockwidth
         } else {
             this.clear('gradientlock')
         }
 
         if (rx >= nowx) {
+            const rheight = height - 2 * this.resolutionGradientStyle.offset[1]
             const torx = Math.max(nowx, lockx)
+            const rwidth = rx - torx
+
             const [gradientres, gradientresState] = this.get(
                 'gradientres',
-                () => new Graphics()
-                    .beginTextureFill({
-                        texture: context.textures.get(RESOLUTION_COUNTDOWN_TEXTURE),
-                    })
-                    .drawPolygon([
-                        0, 0,
-                        rx - torx, 0,
-                        rx - torx, height,
-                        0, height,
-                    ])
-                    .closePath()
-                    .endFill()
+                () => this.createGradient(
+                    this.resolutionGradientStyle,
+                    [rx, rheight],
+                    context.textures.get(RESOLUTION_COUNTDOWN_TEXTURE, { width: rx })
+                ),
+                [rheight]
             )
-            if (gradientresState.new) {
-                gradientres.alpha = this.gradientStyle.alpha
-                container.addChild(gradientres)
-            }
 
-            gradientres.position.x = torx
-            gradientres.height = height
-            gradientres.width = rx - torx
+            if (gradientresState.new) container.addChild(gradientres)
+
+            gradientres.position.x = rx
+            gradientres.mask.pivot.x = rwidth
         } else {
             this.clear('gradientres')
         }
+    }
+
+    protected createGradient(style, [width, height], texture): { mask: Graphics } & Container {
+        const group = new Container()
+
+        const gradient = GraphicUtils.createRoundedRect(
+            style.offset,
+            [width, height],
+            style.radiuses,
+            { texture }
+        )
+        group.addChild(gradient)
+
+        const mask = gradient.clone()
+        group.addChild(mask)
+
+        group.pivot.x = width
+        mask.position.x = width
+        gradient.alpha = style.alpha
+        group.mask = mask
+
+        return <{ mask: Graphics } & Container>group
     }
 
     protected updateText(
@@ -222,6 +243,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         const [textgroup, textgroupstate] = this.get('textgroup', () => new Container())
         if (textgroupstate.new) {
             textgroup.alpha = 0
+            textgroup.zIndex = 3
             container.addChild(textgroup)
         }
 

@@ -14,13 +14,13 @@ class HorizontalGridRenderer extends _rendering_1.BaseRenderer {
         super(...arguments);
         this.lineStyle = {
             width: 1,
-            color: 0x303550,
-            alpha: 1,
+            color: 0xFFFFFF,
+            alpha: 0.05,
         };
         this.textStyle = {
             fill: 0xB7BDD7,
-            fontWeight: 500,
-            fontFamily: 'Gilroy',
+            fontWeight: 400,
+            fontFamily: 'Roboto',
             fontSize: _config_1.default.grid.price.fontsize,
         };
     }

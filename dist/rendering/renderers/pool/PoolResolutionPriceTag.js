@@ -5,21 +5,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolResolutionPriceTag = void 0;
 const _rendering_1 = require("../../index.js");
+const _enums_1 = require("../../../enums/index.js");
+const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const index_1 = __importDefault(require("../../../lib/ui/index"));
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
-        this.coverStyle = {
-            offset: [8, -8],
+        this.baseCoverStyle = {
+            color: 0xFFFFFF,
+            offset: [14, -14],
             anchor: [0, 0],
-            textStyle: {
+            padding: [6, 8],
+            radius: 16,
+            textstyle: {
                 fill: 0xFFFFFF,
-                fontWeight: 700,
-                fontFamily: 'Gilroy',
-                fontSize: 13,
+                fontWeight: 600,
+                fontFamily: 'Roboto',
+                fontSize: 12,
             }
+        };
+        this.coverStyle = {
+            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: 0x000000 }),
+            [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.upcolor }),
+            [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.downcolor }),
+            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.zerocolor, textstyle: Object.assign(Object.assign({}, this.baseCoverStyle.textstyle), { fill: 0x071226 }) }),
+            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.nocontest })
         };
         this.configAnimations = {
             fadein: {
@@ -60,12 +72,18 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [x] = datamath_1.default.scale([resolution.timestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([Number(resolution.value)], pricerange, height);
         const priceValue = index_1.default.currency(resolution.value, context.metapool.quote);
-        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createText(priceValue, [0, 0], this.coverStyle.textStyle, this.coverStyle.anchor));
+        const position = this.getPoolResolution(pool, context);
+        const coverStyle = this.coverStyle[position];
+        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(priceValue, coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
+        const [ofx, ofy] = coverStyle.offset;
         if (coverState.new)
             container.addChild(cover);
-        cover.text = priceValue;
-        const [ofx, ofy] = this.coverStyle.offset;
-        cover.position.set(x + ofx, y + ofy);
+        else
+            cover.update((textGraphic, coverGraphic) => {
+                textGraphic.text = priceValue;
+                textGraphic.style.fill = coverStyle.textstyle.fill;
+                coverGraphic.tint = coverStyle.color;
+            }, [x + ofx, y + ofy], coverStyle);
         if (this.isHistoricalPool(pool, context)) {
             const poolid = pool.poolid;
             if (!coverState.subscribed) {

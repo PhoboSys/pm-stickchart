@@ -13,14 +13,14 @@ export class VerticalGridRenderer extends BaseRenderer {
 
     private readonly lineStyle: any = {
         width: 1,
-        color: 0x303550,
-        alpha: 1,
+        color: 0xFFFFFF,
+        alpha: 0.05,
     }
 
     private readonly textStyle: any = {
         fill: 0xB7BDD7,
-        fontWeight: 500,
-        fontFamily: 'Gilroy',
+        fontWeight: 400,
+        fontFamily: 'Roboto',
         fontSize: config.grid.time.fontsize,
     }
 

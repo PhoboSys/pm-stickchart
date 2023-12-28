@@ -47,7 +47,7 @@ export class CrosshairRenderer extends BaseRenderer {
             textstyle: {
                 fill: 0xFFFFFF,
                 fontWeight: 600,
-                fontFamily: 'Gilroy',
+                fontFamily: 'Roboto',
                 fontSize: 13,
             },
         }
@@ -60,7 +60,7 @@ export class CrosshairRenderer extends BaseRenderer {
             textstyle: {
                 fill: 0xFFFFFF,
                 fontWeight: 600,
-                fontFamily: 'Gilroy',
+                fontFamily: 'Roboto',
                 fontSize: 13,
             },
         }

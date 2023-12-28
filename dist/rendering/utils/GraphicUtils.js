@@ -15,11 +15,11 @@ class CoveredText extends pixi_1.Graphics {
         this.updatePosition(position, style);
     }
     updateText(updater, style) {
+        const coverGraphic = this.getChildAt(0);
         const textGraphic = this.getChildAt(1);
-        updater(textGraphic);
+        updater(textGraphic, coverGraphic);
         const { padding = [0, 0] } = style;
         const [topPadding, rightPadding, bottomPadding = topPadding, leftPadding = rightPadding] = padding;
-        const coverGraphic = this.getChildAt(0);
         coverGraphic.width = textGraphic.width + leftPadding + rightPadding;
         coverGraphic.height = textGraphic.height + topPadding + bottomPadding;
     }
@@ -102,7 +102,7 @@ class GraphicUtils {
         const coverwidth = text.width + leftPadding + rightPadding;
         const coverheight = text.height + topPadding + bottomPadding;
         const cover = new pixi_1.Graphics()
-            .beginFill(style.color)
+            .beginFill(style.color, style.alpha)
             .lineStyle(style.linestyle)
             .drawRoundedRect(0, 0, coverwidth, coverheight, style.radius)
             .endFill();

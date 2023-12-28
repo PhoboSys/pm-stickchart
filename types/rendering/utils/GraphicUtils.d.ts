@@ -1,7 +1,7 @@
 import { Graphics, LineStyle, Text } from '../../lib/pixi';
 import { Texture, Container } from '../../lib/pixi';
 export declare class CoveredText extends Graphics {
-    update(updater: (textGraphic: Text) => void, position: [number, number], style: {
+    update(updater: (textGraphic: Text, coverGraphic: Graphics) => void, position: [number, number], style: {
         padding: any;
         anchor: any;
     }): void;
@@ -36,6 +36,7 @@ export declare class GraphicUtils {
         textstyle: any;
         padding: any;
         color: any;
+        alpha: any;
         radius: any;
         anchor: any;
         linestyle: any;

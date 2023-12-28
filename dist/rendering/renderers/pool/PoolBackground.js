@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolBackground = void 0;
-const symbols_1 = require("../../textures/symbols");
+const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
@@ -14,7 +14,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.configAnimations = {
             hover_group: {
                 pixi: {
-                    alpha: 0.1,
+                    alpha: 1,
                 },
                 duration: 0.5,
                 ease: 'back.out(4)',
@@ -28,13 +28,6 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
                 ease: 'power2.out',
                 delay: 0.5,
             },
-            actual_group: {
-                pixi: {
-                    alpha: 0.15,
-                },
-                duration: 0.5,
-                ease: 'back.out(4)',
-            }
         };
     }
     get rendererId() {
@@ -75,9 +68,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
             group.addChild(gradient);
         gradient
             .clear()
-            .beginTextureFill({
-            texture: context.textures.get(symbols_1.POOL_ROUND_TEXTURE),
-        })
+            .beginFill(_config_1.default.style.poolRoundColor, 0.1)
             .drawPolygon(shape)
             .closePath()
             .endFill();
@@ -102,7 +93,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
                 this.animate('group', 'unhover_group');
         }
         if (this.isActualPool(pool))
-            this.animate('group', 'actual_group');
+            this.animate('group', 'hover_group');
     }
 }
 exports.PoolBackground = PoolBackground;

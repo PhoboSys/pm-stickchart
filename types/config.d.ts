@@ -60,33 +60,31 @@ declare const _default: {
         };
         curvedresolution: {
             linesize: number;
-            linealpha: number;
             linecolor: number;
             upcolor: number;
-            upalpha: number;
             downcolor: number;
-            downalpha: number;
             zerocolor: number;
-            zeroalpha: number;
             nocontest: number;
-            nocontestalpha: number;
         };
-        poolRoundColors: {
-            color: string;
-            offset: number;
-        }[];
+        poolRoundColor: number;
         poolClaimaColors: {
             color: string;
             offset: number;
         }[];
-        lockCountdownColors: {
-            color: string;
-            offset: number;
-        }[];
-        resolutionCountdownColors: {
-            color: string;
-            offset: number;
-        }[];
+        lockCountdown: {
+            colors: {
+                color: string;
+                offset: number;
+            }[];
+            padding: number;
+        };
+        resolutionCountdown: {
+            colors: {
+                color: string;
+                offset: number;
+            }[];
+            padding: number;
+        };
         levels: {
             royalLineColors: number[];
             goldLineColors: number[];
