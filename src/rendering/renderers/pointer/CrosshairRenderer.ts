@@ -1,3 +1,5 @@
+import config from '@config'
+
 import { RenderingContext, IGraphicStorage, BaseRenderer, GraphicUtils } from '@rendering'
 
 import { PointermoveEvent } from '@events'
@@ -31,7 +33,7 @@ export class CrosshairRenderer extends BaseRenderer {
 
         this.lineStyle = {
             width: 1,
-            color: 0x009797,
+            color: config.style.linecolor,
             alpha: 0.6,
             join: 'round',
             cap: 'round',
@@ -40,12 +42,12 @@ export class CrosshairRenderer extends BaseRenderer {
         }
 
         this.priceCoverStyle = {
-            color: 0x009797,
+            color: config.style.linecolor,
             padding: [2.5, 5],
             anchor: [1.2, 0.5],
             radius: 30,
             textstyle: {
-                fill: 0xFFFFFF,
+                fill: 0x071226,
                 fontWeight: 600,
                 fontFamily: 'Roboto',
                 fontSize: 13,
@@ -53,12 +55,12 @@ export class CrosshairRenderer extends BaseRenderer {
         }
 
         this.timeCoverStyle = {
-            color: 0x009797,
+            color: config.style.linecolor,
             padding: [2.5, 5],
             anchor: [.5, 1],
             radius: 30,
             textstyle: {
-                fill: 0xFFFFFF,
+                fill: 0x071226,
                 fontWeight: 600,
                 fontFamily: 'Roboto',
                 fontSize: 13,

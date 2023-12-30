@@ -5,9 +5,9 @@ import { Container } from '@lib/pixi'
 import ui from '@lib/ui'
 import { USD } from '@constants'
 
-export class LatestPriceLineRenderer extends BaseRenderer {
+export class LatestPriceTagRenderer extends BaseRenderer {
 
-    static readonly LATEST_PRICE_LINE_ID: symbol = Symbol('LATEST_PRICE_LINE_ID')
+    static readonly LATEST_PRICE_TAG_ID: symbol = Symbol('LATEST_PRICE_TAG_ID')
 
     private readonly lineStyle: any
 
@@ -15,15 +15,6 @@ export class LatestPriceLineRenderer extends BaseRenderer {
 
     constructor(renderer: IGraphicStorage) {
         super(renderer)
-
-        this.lineStyle = {
-            width: 2,
-            color: config.style.linecolor,
-            alpha: 1,
-            join: 'round',
-            cap: 'round',
-            paddingx: 16,
-        }
 
         this.textCoverStyle = {
             color: 0x071226,
@@ -44,7 +35,7 @@ export class LatestPriceLineRenderer extends BaseRenderer {
     }
 
     public get rendererId(): symbol {
-        return LatestPriceLineRenderer.LATEST_PRICE_LINE_ID
+        return LatestPriceTagRenderer.LATEST_PRICE_TAG_ID
     }
 
     protected update(
@@ -70,22 +61,12 @@ export class LatestPriceLineRenderer extends BaseRenderer {
             [x, y],
             this.textCoverStyle,
         ))
-        if (!coveredTextState.new) {
-            coveredText.update((textGraphic) => textGraphic.text = ui.currency(price, USD), [x, y], this.textCoverStyle)
-        }
 
-        const padding = coveredText.width + this.lineStyle.paddingx
-        const [line, lineState] = this.get('line', () => GraphicUtils.createLine(
-            [0, 0],
-            [width, 0],
-            this.lineStyle,
-        ))
-
-        if (lineState.new) container.addChild(line)
-        line.position.set(0, y)
-        line.width = width - padding
+        if (coveredTextState.new) container.addChild(coveredText)
+        else coveredText.update((textGraphic) => textGraphic.text = ui.currency(price, USD), [x, y], this.textCoverStyle)
 
         return container
     }
 
 }
+

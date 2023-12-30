@@ -21,8 +21,8 @@ export class LineChartRenderer implements IRenderer {
             new GridRenderer(renderer),
             new PricefeedInfoRenderer(renderer),
             new PriceLineRenderer(renderer),
-            new LatestPriceRenderer(renderer),
             new Pool(renderer),
+            new LatestPriceRenderer(renderer),
             new CrosshairRenderer(renderer),
             new Pari(renderer),
         ])

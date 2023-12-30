@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CrosshairRenderer = void 0;
+const _config_1 = __importDefault(require("../../../config.js"));
 const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const ui_1 = __importDefault(require("../../../lib/ui"));
@@ -13,7 +14,7 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
         super(storage);
         this.lineStyle = {
             width: 1,
-            color: 0x009797,
+            color: _config_1.default.style.linecolor,
             alpha: 0.6,
             join: 'round',
             cap: 'round',
@@ -21,24 +22,24 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
             paddingBottom: 5,
         };
         this.priceCoverStyle = {
-            color: 0x009797,
+            color: _config_1.default.style.linecolor,
             padding: [2.5, 5],
             anchor: [1.2, 0.5],
             radius: 30,
             textstyle: {
-                fill: 0xFFFFFF,
+                fill: 0x071226,
                 fontWeight: 600,
                 fontFamily: 'Roboto',
                 fontSize: 13,
             },
         };
         this.timeCoverStyle = {
-            color: 0x009797,
+            color: _config_1.default.style.linecolor,
             padding: [2.5, 5],
             anchor: [.5, 1],
             radius: 30,
             textstyle: {
-                fill: 0xFFFFFF,
+                fill: 0x071226,
                 fontWeight: 600,
                 fontFamily: 'Roboto',
                 fontSize: 13,

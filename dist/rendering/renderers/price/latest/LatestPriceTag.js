@@ -1,0 +1,1 @@
+//# sourceMappingURL=LatestPriceTag.js.map
