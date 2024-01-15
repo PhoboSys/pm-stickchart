@@ -22,7 +22,7 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
         radius: 16,
         textstyle: {
             fill: 0xFFFFFF,
-            fontWeight: 600,
+            fontWeight: 500,
             fontFamily: 'Roboto',
             fontSize: 12,
         }

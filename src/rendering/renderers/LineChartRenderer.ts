@@ -1,4 +1,4 @@
-import { IGraphicStorage, IRenderer } from '@rendering'
+import { IGraphicStorage, IRenderer, LatestPriceLineRenderer } from '@rendering'
 import { DoneFunction, RenderingContext } from '@rendering'
 import { RenderingCompositor, PriceLineRenderer } from '@rendering'
 import { GridRenderer, LatestPriceRenderer } from '@rendering'
@@ -21,6 +21,7 @@ export class LineChartRenderer implements IRenderer {
             new GridRenderer(renderer),
             new PricefeedInfoRenderer(renderer),
             new PriceLineRenderer(renderer),
+            new LatestPriceLineRenderer(renderer),
             new Pool(renderer),
             new LatestPriceRenderer(renderer),
             new CrosshairRenderer(renderer),

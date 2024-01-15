@@ -28,7 +28,7 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
             radius: 30,
             textstyle: {
                 fill: 0x071226,
-                fontWeight: 600,
+                fontWeight: 500,
                 fontFamily: 'Roboto',
                 fontSize: 13,
             },
@@ -40,7 +40,7 @@ class CrosshairRenderer extends _rendering_1.BaseRenderer {
             radius: 30,
             textstyle: {
                 fill: 0x071226,
-                fontWeight: 600,
+                fontWeight: 500,
                 fontFamily: 'Roboto',
                 fontSize: 13,
             },

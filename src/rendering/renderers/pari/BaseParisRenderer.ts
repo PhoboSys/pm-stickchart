@@ -1,8 +1,27 @@
-import { RenderingContext } from '@rendering'
+import { EntityUtils, RenderingContext } from '@rendering'
 import { BasePoolsRenderer } from '@rendering/renderers/pool/BasePoolsRenderer'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach } from '@lib/utils'
+
+import { EPosition } from '@enums'
+
+type PariState = {
+    phantom,
+    undef,
+    nocontest,
+    isHistorical,
+    win,
+    lose,
+    winning,
+    loseing,
+    won,
+    reverted,
+    orphan,
+    claimable,
+    emptypool,
+    resolution,
+}
 
 export abstract class BaseParisRenderer extends BasePoolsRenderer {
 
@@ -54,6 +73,45 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
 
         this.prevparis = this.newparis
         this.newparis = {}
+    }
+
+    protected getPariState(
+        pool: any,
+        pari: any,
+        context: RenderingContext,
+    ): PariState {
+
+        const resolution: EPosition = this.getPoolResolution(pool, context)
+        const phantom = pari.phantom
+        const undef = resolution === EPosition.Undefined
+        const nocontest = resolution === EPosition.NoContest
+        const isHistorical = this.isHistoricalPool(pool, context)
+        const win = pari.position === resolution
+        const lose = !win && !phantom
+        const winning = win && !isHistorical && !phantom
+        const loseing = lose && !isHistorical && !phantom
+        const won = win && isHistorical && !nocontest && !phantom
+        const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
+        const orphan = phantom && reverted
+        const emptypool = this.isNoContestEmptyPool(pool)
+        const claimable = !pari.claimed && (won || nocontest) && !orphan
+
+        return {
+            phantom,
+            undef,
+            nocontest,
+            isHistorical,
+            win,
+            lose,
+            winning,
+            loseing,
+            won,
+            reverted,
+            orphan,
+            claimable,
+            emptypool,
+            resolution,
+        }
     }
 
     protected abstract updatePari(pool: any, pari: any, context: RenderingContext, container: Container, index: number): void
