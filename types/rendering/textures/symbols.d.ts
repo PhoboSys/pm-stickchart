@@ -23,3 +23,4 @@ export declare const USDC_LIGHT_TEXTURE: unique symbol;
 export declare const PARI_TEXTURE: unique symbol;
 export declare const PARI_LIGHT_TEXTURE: unique symbol;
 export declare const CHAINLINK_TEXTURE: unique symbol;
+export declare const WIN_ICON_TEXTURE: unique symbol;

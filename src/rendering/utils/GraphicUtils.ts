@@ -297,15 +297,8 @@ export class GraphicUtils {
 
         const container = new Container()
         const lines = new Graphics()
-        const mask = new Graphics()
-        mask
-            .beginFill()
-            .drawRect(0, 0, width, height)
-            .endFill()
 
         container.addChild(lines)
-        container.mask = mask
-        container.addChild(mask)
 
         const colorsSize = colors.length
         const linesSize = Math.ceil(height / lineHeight) + colorsSize

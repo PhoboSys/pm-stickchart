@@ -30,3 +30,5 @@ export const PARI_TEXTURE = Symbol('PARI_TEXTURE')
 export const PARI_LIGHT_TEXTURE = Symbol('PARI_LIGHT_TEXTURE')
 
 export const CHAINLINK_TEXTURE = Symbol('CHAINLINK_TEXTURE')
+
+export const WIN_ICON_TEXTURE = Symbol('WIN_ICON_TEXTURE')

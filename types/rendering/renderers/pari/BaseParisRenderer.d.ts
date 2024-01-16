@@ -16,6 +16,7 @@ type PariState = {
     claimable: any;
     emptypool: any;
     resolution: any;
+    propagating: any;
 };
 export declare abstract class BaseParisRenderer extends BasePoolsRenderer {
     protected prevparis: {
