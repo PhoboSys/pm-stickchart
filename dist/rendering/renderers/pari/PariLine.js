@@ -43,7 +43,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
                 startOffset: [0, -8],
                 endOffset: [0, 40 + (56 - 32) / 2 + 32],
                 lineStyle: {
-                    color: 0xFFA000,
+                    color: 0xD66F35,
                     width: 2,
                 }
             },
@@ -51,7 +51,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
                 startOffset: [0, 8],
                 endOffset: [0, -134 - 62 + (56 - 32) / 2],
                 lineStyle: {
-                    color: 0xFFA000,
+                    color: 0xD66F35,
                     width: 2,
                 }
             },
@@ -59,7 +59,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
                 startOffset: [0, 8],
                 endOffset: [0, 14 + (56 - 32) / 2],
                 lineStyle: {
-                    color: 0xFFA000,
+                    color: 0xD66F35,
                     width: 2,
                 }
             }

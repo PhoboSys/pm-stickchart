@@ -21,6 +21,7 @@ type PariState = {
     claimable,
     emptypool,
     resolution,
+    propagating,
 }
 
 export abstract class BaseParisRenderer extends BasePoolsRenderer {
@@ -95,6 +96,7 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
         const orphan = phantom && reverted
         const emptypool = this.isNoContestEmptyPool(pool)
         const claimable = !pari.claimed && (won || nocontest) && !orphan
+        const propagating = EntityUtils.isEntityPropagating(context, pari.pariid)
 
         return {
             phantom,
@@ -111,6 +113,7 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
             claimable,
             emptypool,
             resolution,
+            propagating,
         }
     }
 

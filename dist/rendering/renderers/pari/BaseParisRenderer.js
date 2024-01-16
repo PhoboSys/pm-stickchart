@@ -54,6 +54,7 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
         const orphan = phantom && reverted;
         const emptypool = this.isNoContestEmptyPool(pool);
         const claimable = !pari.claimed && (won || nocontest) && !orphan;
+        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pari.pariid);
         return {
             phantom,
             undef,
@@ -69,6 +70,7 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
             claimable,
             emptypool,
             resolution,
+            propagating,
         };
     }
 }
