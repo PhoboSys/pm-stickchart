@@ -51,10 +51,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 },
             },
             [_enums_1.EPosition.Zero]: {
-                offset: [-137 - 24, 0],
+                offset: [-24, 0],
                 background: {
                     width: 170,
                     height: 56,
+                    anchor: [-1, 0],
                     radiuses: [27, 27, 27, 27],
                     color: 0xB7BDD7,
                     lineStyle: {
@@ -219,7 +220,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     },
                 },
                 claimable: {
-                    offset: [-137 - 24 - 8, -(108 - 56) / 2],
+                    offset: [-170 - 24 - 8, -(108 - 56) / 2],
                     background: {
                         width: 170,
                         height: 108,
@@ -558,7 +559,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
         if (wagercontentState.new)
             wager.addChild(wagercontent);
-        const [currency, currencyState] = this.get('currency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.iconStyle));
+        const [currency, currencyState] = this.get('currency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), Object.assign(Object.assign({}, this.iconStyle), { tint: position === _enums_1.EPosition.Zero ? 0x071226 : undefined })));
         if (currencyState.new)
             wagercontent.addChild(currency);
         const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Wager', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
