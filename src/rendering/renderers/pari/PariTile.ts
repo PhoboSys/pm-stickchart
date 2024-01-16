@@ -71,10 +71,11 @@ export class PariTile extends BaseParisRenderer {
             },
         },
         [EPosition.Zero]: {
-            offset: [-137-24, 0],
+            offset: [-24, 0],
             background: {
                 width: 170,
                 height: 56,
+                anchor: [-1, 0],
                 radiuses: <[number, number, number, number]>[27, 27, 27, 27],
                 color: 0xB7BDD7,
                 lineStyle: {
@@ -245,7 +246,7 @@ export class PariTile extends BaseParisRenderer {
                 },
             },
             claimable: {
-                offset: [-137-24-8, -(108-56)/2],
+                offset: [-170-24-8, -(108-56)/2],
                 background: {
                     width: 170,
                     height: 108,
@@ -832,7 +833,11 @@ export class PariTile extends BaseParisRenderer {
 
         const [currency, currencyState] = this.get(
             'currency',
-            () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.iconStyle)
+            () => this.createIcon(
+                context,
+                this.getPariCurrencyIconTextureName(context),
+                { ...this.iconStyle, tint: position === EPosition.Zero ? 0x071226 : undefined }
+            )
         )
         if (currencyState.new) wagercontent.addChild(currency)
 
