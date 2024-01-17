@@ -16,7 +16,7 @@ const _events_1 = require("../../../events/index.js");
 const _events_2 = require("../../../events/index.js");
 const _events_3 = require("../../../events/index.js");
 const _enums_1 = require("../../../enums/index.js");
-const GroupElement_1 = require("../../elements/GroupElement");
+const GroupComponent_1 = require("../../components/GroupComponent");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
@@ -365,8 +365,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     renderGroup(pool, pari, context, container, state) {
         const position = pari.position;
         const { isHistorical } = state;
-        const [groupElement] = this.get('groupElement', () => new GroupElement_1.GroupElement(), []);
-        const [group, groupstate] = groupElement.render(context, pool.poolid, state);
+        const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state });
         if (group) {
             if (groupstate.new) {
                 container.sortableChildren = true;

@@ -17,8 +17,6 @@ export abstract class BaseRenderer extends BaseElement implements IRenderer {
         super()
     }
 
-    protected get animations(): any { return { } }
-
     public render(
         context: RenderingContext,
         done: DoneFunction,

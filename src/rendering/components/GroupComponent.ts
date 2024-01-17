@@ -1,9 +1,9 @@
-import { RenderingContext, BaseElement } from '@rendering'
+import { RenderingContext, BaseComponent } from '@rendering'
 import { PoolPinEvent, PoolUnpinEvent } from '@events'
 
 import { Container } from '@lib/pixi'
 
-export class GroupElement extends BaseElement {
+export class GroupComponent extends BaseComponent {
 
     private configAnimations: any = {
         winning_group: {
@@ -85,13 +85,13 @@ export class GroupElement extends BaseElement {
         return this.configAnimations
     }
 
-    public render(
+    public update(
         context: RenderingContext,
-        poolid,
-        state: any,
+        props,
     ): any[] {
 
-        const { win, isHistorical, nocontest, emptypool, claimable } = state
+        const { poolid, pariState } = props
+        const { win, isHistorical, nocontest, emptypool, claimable } = pariState
 
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {

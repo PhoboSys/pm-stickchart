@@ -7,7 +7,7 @@ exports.PariLine = void 0;
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const _enums_1 = require("../../../enums/index.js");
-const GroupElement_1 = require("../../elements/GroupElement");
+const GroupComponent_1 = require("../../components/GroupComponent");
 const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
@@ -79,8 +79,8 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
         const state = this.getPariState(pool, pari, context);
-        const [groupElement] = this.get('groupElement', () => new GroupElement_1.GroupElement(), []);
-        const [group, groupstate] = groupElement.render(context, pool.poolid, state);
+        const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state });
         if (group && groupstate.new)
             container.addChild(group);
         if (!state.win && !state.nocontest && state.isHistorical)

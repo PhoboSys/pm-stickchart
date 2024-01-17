@@ -5,7 +5,6 @@ import { BaseElement } from './BaseElement';
 export declare abstract class BaseRenderer extends BaseElement implements IRenderer {
     protected readonly storage: IGraphicStorage;
     constructor(storage: IGraphicStorage);
-    protected get animations(): any;
     render(context: RenderingContext, done: DoneFunction): void;
     abstract get rendererId(): symbol;
     protected abstract update(context: RenderingContext, container: Container): Container;

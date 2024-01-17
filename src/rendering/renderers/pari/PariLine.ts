@@ -5,7 +5,7 @@ import { Graphics, Container } from '@lib/pixi'
 
 import { EPosition } from '@enums'
 
-import { GroupElement } from '@rendering/elements/GroupElement'
+import { GroupComponent } from '@rendering/components/GroupComponent'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
 export class PariLine extends BaseParisRenderer {
@@ -94,8 +94,8 @@ export class PariLine extends BaseParisRenderer {
 
         const state = this.getPariState(pool, pari, context)
 
-        const [groupElement] = this.get('groupElement', () => new GroupElement(), [])
-        const [group, groupstate] = groupElement.render(context, pool.poolid, state,)
+        const [groupElement] = this.get('groupElement', () => new GroupComponent())
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
         if (group && groupstate.new) container.addChild(group)
 
         if (!state.win && !state.nocontest && state.isHistorical) return

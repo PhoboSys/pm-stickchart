@@ -8,7 +8,7 @@ const _rendering_1 = require("../../index.js");
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const utils_1 = require("../../../lib/utils");
 const _enums_1 = require("../../../enums/index.js");
-const GroupElement_1 = require("../../elements/GroupElement");
+const GroupComponent_1 = require("../../components/GroupComponent");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
@@ -44,9 +44,9 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
             const claimable = !pari.claimed && (won || nocontest) && !orphan;
             return claimable;
         });
-        const [groupElement] = this.get('groupElement', () => new GroupElement_1.GroupElement(), []);
+        const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
         const state = { win: hasWinPari, isHistorical, nocontest, emptypool, claimable: hashClaimablePari };
-        const [group, groupstate] = groupElement.render(context, pool.poolid, state);
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state });
         if (group && groupstate.new)
             container.addChild(group);
         this.updateOpenLine(pool, context, group);

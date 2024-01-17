@@ -12,7 +12,6 @@ class BaseRenderer extends BaseElement_1.BaseElement {
         super();
         this.storage = storage;
     }
-    get animations() { return {}; }
     render(context, done) {
         const start = Date.now();
         const container = this.storage.get(this.rendererId);

@@ -25,7 +25,7 @@ import { ResolveWithdrawNocontestEvent } from '@events'
 
 import { EPosition } from '@enums'
 
-import { GroupElement } from '@rendering/elements/GroupElement'
+import { GroupComponent } from '@rendering/components/GroupComponent'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
 
@@ -420,12 +420,8 @@ export class PariTile extends BaseParisRenderer {
         const position = pari.position
         const { isHistorical } = state
 
-        const [groupElement] = this.get('groupElement', () => new GroupElement(), [])
-        const [group, groupstate] = groupElement.render(
-            context,
-            pool.poolid,
-            state
-        )
+        const [groupElement] = this.get('groupElement', () => new GroupComponent())
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
 
         if (group) {
 

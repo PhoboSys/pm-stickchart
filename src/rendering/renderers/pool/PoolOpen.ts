@@ -6,7 +6,7 @@ import { isEmpty } from '@lib/utils'
 
 import { EPosition } from '@enums'
 
-import { GroupElement } from '@rendering/elements/GroupElement'
+import { GroupComponent } from '@rendering/components/GroupComponent'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -52,9 +52,9 @@ export class PoolOpen extends BasePoolsRenderer {
             return claimable
         })
 
-        const [groupElement] = this.get('groupElement', () => new GroupElement(), [])
+        const [groupElement] = this.get('groupElement', () => new GroupComponent())
         const state = { win: hasWinPari, isHistorical, nocontest, emptypool, claimable: hashClaimablePari }
-        const [group, groupstate] = groupElement.render(context, pool.poolid, state)
+        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
         if (group && groupstate.new) container.addChild(group)
 
         this.updateOpenLine(pool, context, group)

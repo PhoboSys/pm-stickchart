@@ -18,4 +18,5 @@ __exportStar(require("./interfaces"), exports);
 __exportStar(require("./types"), exports);
 __exportStar(require("./BaseElement"), exports);
 __exportStar(require("./BaseRenderer"), exports);
+__exportStar(require("./BaseComponent"), exports);
 //# sourceMappingURL=index.js.map
