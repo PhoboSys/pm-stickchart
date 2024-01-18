@@ -15,6 +15,7 @@ import {
     UNKNOWN_DARK_TEXTURE,
     CHAINLINK_TEXTURE,
     PARI_DARK_TEXTURE,
+    WINNING_COUNTDOWN_TEXTURE,
 } from './symbols'
 
 import { PRICE_LINE_TEXTURE } from './symbols'
@@ -371,6 +372,27 @@ export class TextureStorage implements ITextureStorage {
                 x0, y0,
                 x1, y1,
                 colorStops: config.style.lockCountdown.colors,
+            },
+        )
+
+        return gradient
+    }
+
+    private [WINNING_COUNTDOWN_TEXTURE]({ width, height }): RenderTexture {
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const renderer = <Renderer> this.application.renderer
+        const gradient = GradientFactory.createLinearGradient(
+            renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops: config.style.winningCountdown.colors
             },
         )
 

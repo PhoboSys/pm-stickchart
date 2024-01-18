@@ -81,6 +81,13 @@ declare const _default: {
             }[];
             padding: number;
         };
+        winningCountdown: {
+            colors: {
+                color: string;
+                offset: number;
+            }[];
+            padding: number;
+        };
         resolutionCountdown: {
             colors: {
                 color: string;

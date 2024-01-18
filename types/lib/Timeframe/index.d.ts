@@ -3,6 +3,7 @@ export declare const UNIX_HOUR: number;
 export declare const UNIX_DAY: number;
 export declare const MAX_FRAME_DURATION: number;
 export declare const MIN_FRAME_DURATION: number;
+export declare const PADDING_RIGHT = 0.382;
 export declare class Timeframe {
     private readonly eventTarget;
     private readonly onUpdate;
@@ -18,20 +19,18 @@ export declare class Timeframe {
     private untilmax;
     private get since();
     private readonly zoomevent;
-    private readonly pointerdown;
     private readonly pointermove;
-    private readonly pointerup;
     private shifting;
+    private throttle;
     constructor(eventTarget: EventTarget, onUpdate: () => any);
-    save(timeframe: any): this;
+    save(timeframe: number): this;
+    reset(): this;
     now(now: number): this;
     get(): {
         since: number;
         until: number;
     };
     destroy(): this;
-    private shiftend;
-    private shiftstart;
     private shiftprogress;
     private shift;
     private zoom;

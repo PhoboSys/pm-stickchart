@@ -270,6 +270,19 @@ class TextureStorage {
         });
         return gradient;
     }
+    [symbols_1.WINNING_COUNTDOWN_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = 0;
+        const x1 = 0;
+        const y1 = height;
+        const renderer = this.application.renderer;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0, y0,
+            x1, y1,
+            colorStops: _config_1.default.style.winningCountdown.colors
+        });
+        return gradient;
+    }
     [symbols_1.ETH_DARK_TEXTURE]() {
         const svg = `
             <svg width="100" height="160" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
