@@ -30,5 +30,6 @@ export declare class PariTile extends BaseParisRenderer {
     private createIcon;
     private createContainer;
     private createClaim;
+    private createPropagatingContainer;
     private createPropagatingBackground;
 }

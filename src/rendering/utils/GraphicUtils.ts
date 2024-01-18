@@ -290,7 +290,7 @@ export class GraphicUtils {
         height,
         colors,
         duration
-    }): Container {
+    }): [Container, gsap.core.Timeline] {
         if (colors.length === 1) {
             colors.push({ color: 0xffffff, alpha: 0 })
         }
@@ -309,13 +309,13 @@ export class GraphicUtils {
             lines.endFill()
         }
 
-        gsap.to(lines, {
+        const timeline = gsap.timeline().to(lines, {
             pixi: { y: -1 * colorsSize * lineHeight },
             duration,
             repeat: -1,
             ease: 'power0',
         })
 
-        return container
+        return [container, timeline]
     }
 }
