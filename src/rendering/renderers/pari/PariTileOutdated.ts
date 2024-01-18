@@ -965,17 +965,26 @@ export class PariTileOutdated extends BaseParisRenderer {
 
         }
 
-        const [propagatingBackground, propagatingBackgroundState] = this.get(
+        const [propagatingBackgroundContainer, propagatingBackgroundContainerState] = this.get(
+            'propagatingBackgroundContainer',
+            () => new Container()
+        )
+        if (propagatingBackgroundContainerState.new) contentContainer.addChild(propagatingBackgroundContainer)
+
+        const [[propagatingBackground, propagatingBackgroundTimeline], propagatingBackgroundState] = this.get(
             'propagatingBackground',
             () => this.createPropagatingBackground()
         )
-        if (propagatingBackgroundState.new) contentContainer.addChild(propagatingBackground)
+        if (propagatingBackgroundState.new) {
+            propagatingBackgroundContainer.addChild(propagatingBackground)
+            propagatingBackgroundState.timeline = propagatingBackgroundTimeline
+        }
 
         const propagating = EntityUtils.isEntityPropagating(context, pariid)
         if (propagating) {
-            this.animate('propagatingBackground', 'show_propagating_bg')
+            this.animate('propagatingBackgroundContainer', 'show_propagating_bg')
         } else {
-            this.animate('propagatingBackground', 'hide_propagating_bg')
+            this.animate('propagatingBackgroundContainer', 'hide_propagating_bg')
         }
     }
 
@@ -1109,27 +1118,21 @@ export class PariTileOutdated extends BaseParisRenderer {
         return background
     }
 
-    private createPropagatingBackground(): Container {
-        const [propagatingBackground, propagatingBackgroundState] = this.get(
-            'propagatingBackground',
-            () => GraphicUtils.createPropagationBackground({
-                height: 310,
-                lineHeight: 18,
-                width: 300,
-                colors: [{ color: 0xffffff, alpha: 1 }],
-                duration: 1,
-            })
-        )
+    private createPropagatingBackground(): [Container, gsap.core.Timeline] {
+        const [propagatingBackground, gsaptimeline] = GraphicUtils.createPropagationBackground({
+            height: 310,
+            lineHeight: 18,
+            width: 300,
+            colors: [{ color: 0xffffff, alpha: 1 }],
+            duration: 1,
+        })
 
-        if (propagatingBackgroundState.new) {
-            propagatingBackground.rotation = 3*Math.PI/4
-            propagatingBackground.pivot.x = 150
-            propagatingBackground.pivot.y = 155
-            propagatingBackground.position.set(150, 50)
-            propagatingBackground.alpha = 0
-        }
+        propagatingBackground.rotation = 3*Math.PI/4
+        propagatingBackground.pivot.x = 150
+        propagatingBackground.pivot.y = 155
+        propagatingBackground.position.set(150, 50)
 
-        return propagatingBackground
+        return [propagatingBackground, gsaptimeline]
     }
 
     private createShadow(style, context: RenderingContext): Graphics {

@@ -803,15 +803,20 @@ class PariTileOutdated extends BaseParisRenderer_1.BaseParisRenderer {
                 this.animate('group', 'loseing_group');
             }
         }
-        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => this.createPropagatingBackground());
-        if (propagatingBackgroundState.new)
-            contentContainer.addChild(propagatingBackground);
+        const [propagatingBackgroundContainer, propagatingBackgroundContainerState] = this.get('propagatingBackgroundContainer', () => new pixi_1.Container());
+        if (propagatingBackgroundContainerState.new)
+            contentContainer.addChild(propagatingBackgroundContainer);
+        const [[propagatingBackground, propagatingBackgroundTimeline], propagatingBackgroundState] = this.get('propagatingBackground', () => this.createPropagatingBackground());
+        if (propagatingBackgroundState.new) {
+            propagatingBackgroundContainer.addChild(propagatingBackground);
+            propagatingBackgroundState.timeline = propagatingBackgroundTimeline;
+        }
         const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pariid);
         if (propagating) {
-            this.animate('propagatingBackground', 'show_propagating_bg');
+            this.animate('propagatingBackgroundContainer', 'show_propagating_bg');
         }
         else {
-            this.animate('propagatingBackground', 'hide_propagating_bg');
+            this.animate('propagatingBackgroundContainer', 'hide_propagating_bg');
         }
     }
     getPositionIconTextureName(position) {
@@ -889,21 +894,18 @@ class PariTileOutdated extends BaseParisRenderer_1.BaseParisRenderer {
         return background;
     }
     createPropagatingBackground() {
-        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => _rendering_1.GraphicUtils.createPropagationBackground({
+        const [propagatingBackground, gsaptimeline] = _rendering_1.GraphicUtils.createPropagationBackground({
             height: 310,
             lineHeight: 18,
             width: 300,
             colors: [{ color: 0xffffff, alpha: 1 }],
             duration: 1,
-        }));
-        if (propagatingBackgroundState.new) {
-            propagatingBackground.rotation = 3 * Math.PI / 4;
-            propagatingBackground.pivot.x = 150;
-            propagatingBackground.pivot.y = 155;
-            propagatingBackground.position.set(150, 50);
-            propagatingBackground.alpha = 0;
-        }
-        return propagatingBackground;
+        });
+        propagatingBackground.rotation = 3 * Math.PI / 4;
+        propagatingBackground.pivot.x = 150;
+        propagatingBackground.pivot.y = 155;
+        propagatingBackground.position.set(150, 50);
+        return [propagatingBackground, gsaptimeline];
     }
     createShadow(style, context) {
         const { width, height, offset: [ofx, ofy], points, colorStops } = style;

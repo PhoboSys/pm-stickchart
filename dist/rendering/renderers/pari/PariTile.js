@@ -586,19 +586,22 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [profitpropagating, profitpropagatingState] = this.get('profitpropagating', () => {
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => {
             const styles = this.profitContainerStyle[pari.position];
             const style = claimable ? styles.claimable : styles.default;
-            return this.createPropagatingBackground(style);
+            return this.createPropagatingContainer(style);
         }, [claimable]);
-        if (profitpropagatingState.new || profitState.new)
-            profit.addChild(profitpropagating);
-        if (propagating) {
-            this.animate('profitpropagating', 'show_propagating_bg');
+        if (profitpropagatingContainerState.new || profitState.new)
+            profit.addChild(profitpropagatingContainer);
+        const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
+        if (profitpropagatingState.new || profitpropagatingContainerState.new) {
+            profitpropagatingContainerState.timeline = profitpropagatingtimeline;
+            profitpropagatingContainer.addChild(profitpropagating);
         }
-        else {
-            this.animate('profitpropagating', 'hide_propagating_bg');
-        }
+        if (propagating)
+            this.animate('profitpropagatingContainer', 'show_propagating_bg');
+        else
+            this.animate('profitpropagatingContainer', 'hide_propagating_bg');
     }
     updateClaim(pool, pari, context, state) {
         var _a;
@@ -692,15 +695,18 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (wagerAmountState.new)
             wagercontent.addChild(wagerAmount);
         wagerAmount.text = ui_1.default.erc20(pari.wager);
-        const [wagerpropagating, wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground(this.wagerContainerStyles[position]));
-        if (wagerpropagatingState.new)
-            wager.addChild(wagerpropagating);
-        if (propagating) {
-            this.animate('wagerpropagating', 'show_propagating_bg');
+        const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
+        if (wagerpropagatingContainerState.new)
+            wager.addChild(wagerpropagatingContainer);
+        const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground());
+        if (wagerpropagatingState.new) {
+            wagerpropagatingState.timeline = wagerpropagatingtimeline;
+            wagerpropagatingContainer.addChild(wagerpropagating);
         }
-        else {
-            this.animate('wagerpropagating', 'hide_propagating_bg');
-        }
+        if (propagating)
+            this.animate('wagerpropagatingContainer', 'show_propagating_bg');
+        else
+            this.animate('wagerpropagatingContainer', 'hide_propagating_bg');
     }
     getPositionIconTextureName(position) {
         switch (position) {
@@ -764,26 +770,28 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
         return container;
     }
-    createPropagatingBackground(style) {
+    createPropagatingContainer(style) {
         const container = new pixi_1.Container();
-        const propagatingBackground = _rendering_1.GraphicUtils.createPropagationBackground({
+        const mask = this.createContainer(style);
+        mask.position.set(0, 0);
+        container.mask = mask;
+        container.addChild(mask);
+        container.alpha = 0;
+        return container;
+    }
+    createPropagatingBackground() {
+        const [propagatingBackground, gsaptimeline] = _rendering_1.GraphicUtils.createPropagationBackground({
             height: 310,
             lineHeight: 18,
             width: 300,
             colors: [{ color: 0xffffff, alpha: 1 }],
             duration: 1,
         });
-        const mask = this.createContainer(style);
-        mask.position.set(0, 0);
-        container.addChild(propagatingBackground);
-        container.mask = mask;
-        container.addChild(mask);
         propagatingBackground.rotation = 3 * Math.PI / 4;
         propagatingBackground.pivot.x = 150;
         propagatingBackground.pivot.y = 155;
         propagatingBackground.position.set(150, 50);
-        container.alpha = 0;
-        return container;
+        return [propagatingBackground, gsaptimeline];
     }
 }
 exports.PariTile = PariTile;
