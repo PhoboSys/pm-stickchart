@@ -197,7 +197,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         return gradient;
     }
     createWinningGradientTimeline(gradient, height) {
-        return pixi_1.gsap.timeline({ repeat: -1, yoyo: true, yooyEase: 'power1.inOut' })
+        return pixi_1.gsap.timeline({ repeat: -1, yoyo: true, yoyoEase: 'power1.inOut' })
             .to(gradient, {
             pixi: { y: -height * 0.1 },
             duration: 2,
