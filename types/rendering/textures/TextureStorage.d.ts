@@ -1,5 +1,6 @@
 import { Application, RenderTexture } from '../../lib/pixi';
 import { ITextureStorage } from '../abstraction';
+
 import { DOWN_WAGET_TEXTURE, UP_WAGET_TEXTURE, ETH_DARK_TEXTURE, USDT_DARK_TEXTURE, USDC_DARK_TEXTURE, UNKNOWN_DARK_TEXTURE, CHAINLINK_TEXTURE, PARI_DARK_TEXTURE, WINNING_COUNTDOWN_TEXTURE } from './symbols';
 import { PRICE_LINE_TEXTURE } from './symbols';
 import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from './symbols';
@@ -8,6 +9,7 @@ import { UP_ICON_TEXTURE, DOWN_ICON_TEXTURE } from './symbols';
 import { ZERO_ICON_TEXTURE, UNDEFINED_ICON_TEXTURE } from './symbols';
 import { GRADIENT_TEXTURE } from './symbols';
 import { POOL_CLAIM_TEXTURE } from './symbols';
+
 export declare class TextureStorage implements ITextureStorage {
     private readonly application;
     private readonly textures;
@@ -22,6 +24,9 @@ export declare class TextureStorage implements ITextureStorage {
     private [UP_ICON_TEXTURE];
     private [DOWN_ICON_TEXTURE];
     private [ZERO_ICON_TEXTURE];
+    private [UP_ICON_TEXTURE_OUTDATED];
+    private [DOWN_ICON_TEXTURE_OUTDATED];
+    private [ZERO_ICON_TEXTURE_OUTDATED];
     private [UNDEFINED_ICON_TEXTURE];
     private [GRADIENT_TEXTURE];
     private [SILVER_LEVEL_TEXTURE];
@@ -32,8 +37,9 @@ export declare class TextureStorage implements ITextureStorage {
     private [WINNING_COUNTDOWN_TEXTURE];
     private [ETH_DARK_TEXTURE];
     private [USDT_DARK_TEXTURE];
-    private [USDC_DARK_TEXTURE];
-    private [PARI_DARK_TEXTURE];
+    private [USDC_TEXTURE];
+    private [PARI_TEXTURE];
     private [UNKNOWN_DARK_TEXTURE];
     private [CHAINLINK_TEXTURE];
+    private [WIN_ICON_TEXTURE];
 }

@@ -167,14 +167,7 @@ class GraphicUtils {
         }
         const container = new pixi_2.Container();
         const lines = new pixi_1.Graphics();
-        const mask = new pixi_1.Graphics();
-        mask
-            .beginFill()
-            .drawRect(0, 0, width, height)
-            .endFill();
         container.addChild(lines);
-        container.mask = mask;
-        container.addChild(mask);
         const colorsSize = colors.length;
         const linesSize = Math.ceil(height / lineHeight) + colorsSize;
         for (let i = 0; i < linesSize; i++) {
@@ -183,13 +176,13 @@ class GraphicUtils {
             lines.drawRect(0, i * lineHeight, width, lineHeight);
             lines.endFill();
         }
-        pixi_2.gsap.to(lines, {
+        const timeline = pixi_2.gsap.timeline().to(lines, {
             pixi: { y: -1 * colorsSize * lineHeight },
             duration,
             repeat: -1,
             ease: 'power0',
         });
-        return container;
+        return [container, timeline];
     }
 }
 exports.GraphicUtils = GraphicUtils;

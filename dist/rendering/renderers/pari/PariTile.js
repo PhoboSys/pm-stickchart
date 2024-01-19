@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariTile = void 0;
-const lodash_1 = require("lodash");
 const _constants_1 = require("../../../constants/index.js");
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
@@ -21,303 +20,274 @@ const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
-        this.nocontestLineStyle = {
-            [_enums_1.EPosition.Up]: {
-                offsetTOP: [0, -8],
-                offsetBOTTOM: [0, 8],
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                }
-            },
-            [_enums_1.EPosition.Down]: {
-                offsetTOP: [0, -8],
-                offsetBOTTOM: [0, 8],
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                }
-            },
-            [_enums_1.EPosition.Zero]: {
-                offsetTOP: [300, -8],
-                offsetBOTTOM: [300, 8],
-                lineStyle: {
-                    color: 0xB7BDD7,
-                    width: 2,
-                }
-            }
-        };
-        this.winlineStyle = {
-            [_enums_1.EPosition.Up]: {
-                offsetTOP: [0, -8],
-                offsetBOTTOM: [0, 8],
-                lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
-                }
-            },
-            [_enums_1.EPosition.Down]: {
-                offsetTOP: [0, -8],
-                offsetBOTTOM: [0, 8],
-                lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
-                }
-            },
-            [_enums_1.EPosition.Zero]: {
-                offsetTOP: [300, -8],
-                offsetBOTTOM: [300, 8],
-                lineStyle: {
-                    color: 0xFFA000,
-                    width: 2,
-                }
-            }
-        };
-        this.buttonStyle = {
-            [_enums_1.EPosition.Up]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
-            },
-            [_enums_1.EPosition.Down]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [-30, 0],
-                outside: [0, 0.5]
-            },
-            [_enums_1.EPosition.Zero]: {
-                size: 50,
-                color: 0xFFA000,
-                offset: [30, 0],
-                outside: [1, 0.5]
-            }
-        };
         this.groupStyle = {
             [_enums_1.EPosition.Up]: {
-                anchor: [0, 0],
                 offset: [0, 40],
-                width: 300,
-                height: 62,
-                background: {
-                    offset: [3, 0],
-                    radiuses: [1, 20, 20, 1],
-                    color: 0x22273F,
-                    lineStyle: {
-                        color: 0xB7BDD7,
-                        width: 2,
-                        alpha: 1,
-                    },
-                    shadow: {
-                        width: 300,
-                        height: 64,
-                        offset: [1.5, -1],
-                        points: [0, 0, 300, 0],
-                        colorStops: [
-                            { color: '#22273FFF', offset: 0 },
-                            { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.05 },
-                            { color: '#22273F00', offset: 1 },
-                        ]
-                    },
-                },
             },
             [_enums_1.EPosition.Down]: {
-                anchor: [0, -1],
-                offset: [0, -134],
-                width: 300,
-                height: 62,
-                background: {
-                    offset: [3, 0],
-                    radiuses: [1, 20, 20, 1],
-                    color: 0x22273F,
-                    lineStyle: {
-                        color: 0xB7BDD7,
-                        width: 2,
-                        alpha: 1,
-                    },
-                    shadow: {
-                        width: 300,
-                        height: 64,
-                        offset: [1.5, -1],
-                        points: [0, 0, 300, 0],
-                        colorStops: [
-                            { color: '#22273FFF', offset: 0 },
-                            { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.05 },
-                            { color: '#22273F00', offset: 1 },
-                        ]
-                    },
-                }
+                offset: [0, -134 - 62],
             },
             [_enums_1.EPosition.Zero]: {
-                anchor: [-1, 0],
-                offset: [0, 8],
-                width: 300,
-                height: 62,
-                background: {
-                    offset: [-2, 0],
-                    radiuses: [20, 1, 1, 20],
-                    color: 0x22273F,
-                    lineStyle: {
-                        color: 0xB7BDD7,
-                        width: 2,
-                        alpha: 1,
-                    },
-                    shadow: {
-                        width: 300,
-                        height: 64,
-                        offset: [-0.5, -1],
-                        points: [300, 0, 0, 0],
-                        colorStops: [
-                            { color: '#22273FFF', offset: 0 },
-                            { color: '#22273FFF', offset: 0.01 },
-                            { color: '#22273F00', offset: 0.05 },
-                            { color: '#22273F00', offset: 1 },
-                        ]
-                    },
-                }
+                offset: [0, 14],
             }
         };
-        this.stateBackgroundStyle = (0, lodash_1.merge)({}, this.groupStyle, {
+        this.contentStyle = {
+            offset: [14, 13],
+        };
+        this.wagerContainerStyles = {
             [_enums_1.EPosition.Up]: {
+                offset: [24, 0],
                 background: {
-                    color: 0x343755,
-                    shadow: {
-                        colorStops: [
-                            { color: '#343755FF', offset: 0 },
-                            { color: '#343755FF', offset: 0.01 },
-                            { color: '#34375500', offset: 0.05 },
-                            { color: '#34375500', offset: 1 },
-                        ]
+                    width: 170,
+                    height: 56,
+                    radiuses: [27, 27, 27, 27],
+                    color: 0x01A37A,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                    },
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                offset: [-24, 0],
+                background: {
+                    width: 170,
+                    height: 56,
+                    anchor: [-1, 0],
+                    radiuses: [27, 27, 27, 27],
+                    color: 0xB7BDD7,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
                     },
                 },
             },
             [_enums_1.EPosition.Down]: {
+                offset: [24, 0],
                 background: {
-                    color: 0x343755,
-                    shadow: {
-                        colorStops: [
-                            { color: '#343755FF', offset: 0 },
-                            { color: '#343755FF', offset: 0.01 },
-                            { color: '#34375500', offset: 0.05 },
-                            { color: '#34375500', offset: 1 },
-                        ]
+                    width: 170,
+                    height: 56,
+                    radiuses: [27, 27, 27, 27],
+                    color: 0xD7335B,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
                     },
-                }
+                },
             },
-            [_enums_1.EPosition.Zero]: {
-                background: {
-                    color: 0x343755,
-                    shadow: {
-                        colorStops: [
-                            { color: '#343755FF', offset: 0 },
-                            { color: '#343755FF', offset: 0.01 },
-                            { color: '#34375500', offset: 0.05 },
-                            { color: '#34375500', offset: 1 },
-                        ]
-                    },
-                }
-            }
-        });
-        this.stateBackgroundAlphaStyle = {
-            winning: 1,
-            undef: 0.6,
-            phantom: 0.6,
-            loseing: 0.8,
         };
-        this.orphanBackgroundStyle = (0, lodash_1.merge)({}, this.groupStyle, {
+        this.wagerTextStyle = {
             [_enums_1.EPosition.Up]: {
-                background: {
-                    color: 0xFF0000,
-                    shadow: {
-                        colorStops: [
-                            { color: '#FF0000FF', offset: 0 },
-                            { color: '#FF0000FF', offset: 0.01 },
-                            { color: '#FF000000', offset: 0.05 },
-                            { color: '#FF000000', offset: 1 },
-                        ]
-                    },
+                text: {
+                    fill: 0xFFFFFFB3,
+                    fontWeight: 600,
+                    fontFamily: 'Proxima Nova',
+                    fontSize: 13,
                 },
-                alpha: 0.06
-            },
-            [_enums_1.EPosition.Down]: {
-                background: {
-                    color: 0xFF0000,
-                    shadow: {
-                        colorStops: [
-                            { color: '#FF0000FF', offset: 0 },
-                            { color: '#FF0000FF', offset: 0.01 },
-                            { color: '#FF000000', offset: 0.05 },
-                            { color: '#FF000000', offset: 1 },
-                        ]
-                    },
-                },
-                alpha: 0.06
+                offset: [48, 0]
             },
             [_enums_1.EPosition.Zero]: {
-                background: {
-                    color: 0xFF0000,
-                    shadow: {
-                        colorStops: [
-                            { color: '#FF0000FF', offset: 0 },
-                            { color: '#FF0000FF', offset: 0.01 },
-                            { color: '#FF000000', offset: 0.05 },
-                            { color: '#FF000000', offset: 1 },
-                        ]
-                    },
+                text: {
+                    fill: 0x071226B3,
+                    fontWeight: 600,
+                    fontFamily: 'Proxima Nova',
+                    fontSize: 13,
                 },
-                alpha: 0.06
-            }
-        });
-        this.payoutStyle = {
-            color: 0x212233,
-            offset: [18, 13],
-            padding: [8, 8, 8, 36],
-            anchor: [1, 0],
-            radius: 0,
-            textstyle: {
-                fill: 0xf07750,
-                fontWeight: 600,
-                fontFamily: 'Gilroy',
-                fontSize: 18,
+                offset: [48, 0]
             },
-            winFill: 0x00A573,
-            loseFill: 0xf07750
-        };
-        this.profitStyle = {
-            color: 0x00a573,
-            offset: [12, 4],
-            padding: [2, 4],
-            anchor: [1, 0],
-            radius: 0,
-            textstyle: {
-                fill: 0x212233,
-                fontWeight: 700,
-                fontFamily: 'Gilroy',
-                fontSize: 13,
+            [_enums_1.EPosition.Down]: {
+                text: {
+                    fill: 0xFFFFFFB3,
+                    fontWeight: 600,
+                    fontFamily: 'Proxima Nova',
+                    fontSize: 13,
+                },
+                offset: [48, 0]
             },
-        };
-        this.iconPositionStyle = {
-            size: 30,
-            offset: [16, 16]
-        };
-        this.levelCurrencyStyle = {
-            radius: 10,
-            offset: [7, 8]
-        };
-        this.iconCurrencyStyle = {
-            size: 16,
-            offset: [10, 10]
         };
         this.wagerStyle = {
+            [_enums_1.EPosition.Up]: {
+                text: {
+                    fill: 0xFFFFFF,
+                    fontWeight: 500,
+                    fontFamily: 'Roboto',
+                    fontSize: 15,
+                },
+                offset: [48, 16]
+            },
+            [_enums_1.EPosition.Zero]: {
+                text: {
+                    fill: 0x071226,
+                    fontWeight: 500,
+                    fontFamily: 'Roboto',
+                    fontSize: 15,
+                },
+                offset: [48, 16]
+            },
+            [_enums_1.EPosition.Down]: {
+                text: {
+                    fill: 0xFFFFFF,
+                    fontWeight: 500,
+                    fontFamily: 'Roboto',
+                    fontSize: 15,
+                },
+                offset: [48, 16]
+            },
+        };
+        this.profitContainerStyle = {
+            [_enums_1.EPosition.Up]: {
+                default: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 170,
+                        height: 56,
+                        anchor: [-1, 0],
+                        radiuses: [27, 27, 27, 27],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                },
+                claimable: {
+                    offset: [-24, -(108 - 56) / 2],
+                    background: {
+                        width: 170,
+                        height: 108,
+                        anchor: [-1, 0],
+                        radiuses: [22, 22, 22, 22],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                }
+            },
+            [_enums_1.EPosition.Down]: {
+                default: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 170,
+                        height: 56,
+                        anchor: [-1, 0],
+                        radiuses: [27, 27, 27, 27],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                },
+                claimable: {
+                    offset: [-24, -(108 - 56)],
+                    background: {
+                        width: 170,
+                        height: 108,
+                        anchor: [-1, 0],
+                        radiuses: [22, 22, 22, 22],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                }
+            },
+            [_enums_1.EPosition.Zero]: {
+                default: {
+                    offset: [-137 - 24 - 8, 0],
+                    background: {
+                        width: 170,
+                        height: 56,
+                        anchor: [-1, 0],
+                        radiuses: [27, 27, 27, 27],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                },
+                claimable: {
+                    offset: [-170 - 24 - 8, -(108 - 56) / 2],
+                    background: {
+                        width: 170,
+                        height: 108,
+                        anchor: [-1, 0],
+                        radiuses: [22, 22, 22, 22],
+                        color: 0xD66F35,
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                        },
+                    },
+                }
+            },
+        };
+        this.profitTextStyle = {
             text: {
                 fill: 0xFFFFFF,
                 fontWeight: 600,
-                fontFamily: 'Gilroy',
-                fontSize: 16,
+                fontFamily: 'Proxima Nova',
+                fontSize: 12,
             },
-            offset: [60, 22]
+            offset: [44 + 0, 0]
+        };
+        this.percentStyle = {
+            text: {
+                fill: 0xFFFFFFBF,
+                fontWeight: 400,
+                fontFamily: 'Roboto',
+                fontSize: 11,
+            },
+            offset: [44 + 35, 0],
+        };
+        this.payoutStyle = {
+            text: {
+                fill: 0xFFFFFF,
+                fontWeight: 500,
+                fontFamily: 'Roboto',
+                fontSize: 15,
+            },
+            offset: [44 + 0, 15]
+        };
+        this.claimStyle = {
+            offset: [14, 60],
+            background: {
+                width: 142,
+                height: 32,
+                radiuses: [16, 16, 16, 16],
+                color: 0xFFFFFF,
+            },
+        };
+        this.claimTextStyle = {
+            text: {
+                fill: 0xD66F35,
+                fontWeight: 700,
+                fontFamily: 'Proxima Nova',
+                fontSize: 15,
+            },
+            offset: [0, 0]
+        };
+        this.positionIconStyle = {
+            size: 32,
+            offset: [-16, (56 - 32) / 2],
+        };
+        this.iconStyle = {
+            size: 32,
+            offset: [0, 0],
+            alpha: 0.75,
         };
         this.validPariPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
@@ -325,70 +295,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
         this.configAnimations = {
-            show_propagating_bg: {
-                pixi: {
-                    alpha: 0.03,
-                },
-                duration: 0.3,
-                ease: 'power2.out',
-            },
-            hide_propagating_bg: {
-                pixi: {
-                    alpha: 0,
-                },
-                duration: 0.3,
-                ease: 'power2.out',
-            },
-            winning_bg: {
-                pixi: {
-                    alpha: 1,
-                    lineColor: 0xFFA000,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-            },
-            loseing_bg: {
-                pixi: {
-                    alpha: 1,
-                    lineColor: 0xB7BDD7,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-            },
-            won_bg: {
-                pixi: {
-                    alpha: 1.1,
-                    lineColor: 0xFFA000,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
-            },
-            lost_bg: {
-                pixi: {
-                    alpha: 1,
-                    lineColor: 0xB7BDD7,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
-            },
-            unclaimable_contnet: {
-                pixi: {
-                    alpha: 0.7,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
-            },
-            lost_contnet: {
-                pixi: {
-                    alpha: 0.6,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set'
-            },
             winning_group: {
                 pixi: {
                     alpha: 1,
@@ -489,6 +395,21 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 yoyo: true,
                 yoyoEase: 'power2.out',
             },
+            show_propagating_bg: {
+                pixi: {
+                    alpha: 0.15,
+                    zIndex: 10,
+                },
+                duration: 0.3,
+                ease: 'power2.out',
+            },
+            hide_propagating_bg: {
+                pixi: {
+                    alpha: 0,
+                },
+                duration: 0.3,
+                ease: 'power2.out',
+            },
         };
     }
     get rendererId() {
@@ -498,53 +419,27 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
+        if (!context.features.pariTileNewDesign)
+            return this.clear();
         if (!(pari.position in this.validPariPositions))
             return this.clear();
-        const resolution = this.getPoolResolution(pool, context);
-        this.updateTile(pool, pari, context, container, resolution);
-        this.updateLine(pool, pari, context, container, resolution);
-    }
-    updateLine(pool, pari, context, container, resolution) {
-        const win = pari.position === resolution;
-        const nocontest = resolution === _enums_1.EPosition.NoContest;
+        const state = this.getPariState(pool, pari, context);
+        this.updateGroup(pool, pari, context, container, state);
+        if (!state.win && !state.nocontest && state.isHistorical)
+            return;
         const [group] = this.read('group');
-        if (!(win || nocontest) || !group || !this.isHistoricalPool(pool, context))
-            return this.clear('line');
-        const { height } = context.screen;
-        const { pricerange } = context.plotdata;
-        const { openPriceValue } = pool;
-        const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
-        const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
-        if (linestate.new)
-            group.addChild(line);
-        const style = nocontest ? this.nocontestLineStyle : this.winlineStyle;
-        const [topx, topy] = style[pari.position].offsetTOP;
-        const [botx, boty] = style[pari.position].offsetBOTTOM;
-        line
-            .clear()
-            .lineStyle(style[pari.position].lineStyle)
-            .moveTo(0 + topx, 0)
-            .lineTo(0 + topx, oy + topy)
-            .moveTo(0 + botx, oy + boty)
-            .lineTo(0 + botx, height);
-        line.position.y = -group.position.y;
+        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle), []);
+        if (positionIconState.new)
+            group.addChild(positionIcon);
+        this.updateWager(pool, pari, context, group, state);
+        this.updateProfit(pool, pari, context, group, state);
+        this.updateClaim(pool, pari, context, state);
     }
-    updateTile(pool, pari, context, container, resolution) {
-        var _a;
+    updateGroup(pool, pari, context, container, state) {
         const poolid = pool.poolid;
         const pariid = pari.pariid;
-        const phantom = pari.phantom;
-        const undef = resolution === _enums_1.EPosition.Undefined;
-        const [nocontest] = this.get('nocontest', () => resolution === _enums_1.EPosition.NoContest, [resolution]);
-        const isHistorical = this.isHistoricalPool(pool, context);
-        const win = pari.position === resolution;
-        const lose = !win && !phantom;
-        const winning = win && !isHistorical && !phantom;
-        const loseing = lose && !isHistorical && !phantom;
-        const won = win && isHistorical && !nocontest && !phantom;
-        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pariid);
-        const orphan = phantom && reverted;
-        const { width, height } = context.screen;
+        const position = pari.position;
+        const { isHistorical, win, claimable, emptypool, nocontest } = state;
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
@@ -554,80 +449,95 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             });
             return;
         }
-        const erc20 = pari.erc20;
-        const position = pari.position;
-        const { timerange, pricerange } = context.plotdata;
-        const { openPriceTimestamp, openPriceValue } = pool;
-        const [ox] = datamath_1.default.scale([openPriceTimestamp], timerange, width);
-        const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
-        const bgStyle = this.groupStyle[position];
-        const [ax, ay] = bgStyle.anchor;
-        const [ofx, ofy] = bgStyle.offset;
-        const bgwidth = bgStyle.width;
-        const bgx = ox + bgwidth * ax + ofx;
+        const [ox] = datamath_1.default.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
+        const [oy] = datamath_1.default.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height);
         let vertical = null;
         if (position === _enums_1.EPosition.Up)
             vertical = 0;
         if (position === _enums_1.EPosition.Zero)
             vertical = oy;
         if (position === _enums_1.EPosition.Down)
-            vertical = height;
-        if (vertical === null)
-            return this.clear();
-        const bgheight = bgStyle.height;
-        const bgy = vertical + bgheight * ay + ofy;
-        const [group, groupstate] = this.get('group', () => new pixi_1.Container());
+            vertical = context.screen.height;
+        const bgStyle = this.groupStyle[position];
+        const [ofx, ofy] = bgStyle.offset;
+        const bgx = ox + ofx;
+        const bgy = vertical + ofy;
+        const [group, groupstate] = this.get('group', () => new pixi_1.Container(), []);
         if (groupstate.new) {
-            group.alpha = 0;
-            group.width = bgwidth;
-            group.height = bgheight;
             container.sortableChildren = true;
             container.addChild(group);
+            group.alpha = 0;
         }
         group.position.set(bgx, bgy);
         if (!isHistorical)
             group.zIndex = 10;
-        const [background, backgroundState] = this.get('background', () => this.createBackground(this.groupStyle[position]));
-        if (backgroundState.new)
-            group.addChild(background);
-        const [stateBackground, stateBackgroundState] = this.get('stateBackgroundState', () => this.createBackground(this.stateBackgroundStyle[position]));
-        if (stateBackgroundState.new)
-            group.addChild(stateBackground);
-        stateBackground.alpha = this.getStateBackgroundAlpha({ winning, loseing, undef, phantom });
-        const [orphanBackground, orphanBackgroundState] = this.get('orphanBackground', () => this.createBackground(this.orphanBackgroundStyle[position]));
-        if (orphanBackgroundState.new)
-            group.addChild(orphanBackground);
-        orphanBackground.alpha = orphan ? this.orphanBackgroundStyle[position].alpha : 0;
-        const [shadow, shadowState] = this.get('shadow', () => this.createShadow(this.groupStyle[position].background.shadow, context));
-        if (shadowState.new)
-            group.addChild(shadow);
-        const [contentContainer, contentContainerState] = this.get('contentContainer', () => this.createContentContainer(position));
-        if (contentContainerState.new)
-            group.addChild(contentContainer);
-        const [content, contentState] = this.get('content', () => new pixi_1.Container());
-        if (contentState.new)
-            contentContainer.addChild(content);
-        content.alpha = this.getContentAlpha({ loseing, undef, phantom });
-        const [iconPosition, iconPositionState] = this.get('iconPosition', () => this.createPositionIcon(context, position));
-        if (iconPositionState.new)
-            content.addChild(iconPosition);
-        const [wager, wagerState] = this.get('wager', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle.offset, this.wagerStyle.text));
-        if (wagerState.new)
-            content.addChild(wager);
-        wager.text = ui_1.default.erc20(pari.wager);
-        const emptypool = this.isNoContestEmptyPool(pool);
-        if (!undef) {
-            const payoutPosition = [bgwidth - this.payoutStyle.offset[0], this.payoutStyle.offset[1]];
-            const [payout, payoutState] = this.get('payout', () => _rendering_1.GraphicUtils.createCoveredText(0, payoutPosition, this.payoutStyle));
-            if (payoutState.new)
-                content.addChild(payout);
-            const [levelCurrency, levelCurrencyState] = this.get('levelCurrency', () => this.createLevelCurrency(context));
-            if (levelCurrencyState.new)
-                payout.addChild(levelCurrency);
-            const [currency, currencyState] = this.get('currency', () => this.createPariCurrencyIcon(context));
-            if (currencyState.new)
-                levelCurrency.addChild(currency);
+        if (isHistorical) {
+            if (claimable) {
+                if (groupstate.animation !== 'pin_group_claimable')
+                    this.animate('group', 'hide_group_claimable');
+            }
+            else {
+                if (groupstate.animation !== 'pin_group_unclaimable')
+                    this.animate('group', 'unpin_group_unclaimable');
+            }
+            if (!groupstate.subscribed) {
+                groupstate.subscribed = true;
+                this.get('claimable', () => state.claimable, [state.claimable]);
+                context.eventTarget.addEventListener('poolpin', (e) => {
+                    if (e.poolid !== poolid)
+                        return;
+                    this.rebind(poolid, pariid);
+                    const [claimable] = this.read('claimable');
+                    if (claimable)
+                        this.animate('group', 'pin_group_claimable');
+                    else
+                        this.animate('group', 'pin_group_unclaimable');
+                });
+                context.eventTarget.addEventListener('poolunpin', (e) => {
+                    if (e.poolid !== poolid)
+                        return;
+                    this.rebind(poolid, pariid);
+                    const [claimable] = this.read('claimable');
+                    if (claimable)
+                        this.animate('group', 'unpin_group_claimable');
+                    else
+                        this.animate('group', 'unpin_group_unclaimable');
+                });
+            }
+        }
+        else {
             if (win && !emptypool) {
+                this.animate('group', 'winning_group');
+            }
+            else {
+                this.animate('group', 'loseing_group');
+            }
+        }
+    }
+    updateProfit(pool, pari, context, container, state) {
+        const { claimable, emptypool, nocontest, undef, win, phantom, propagating } = state;
+        const [profit, profitState] = this.get('profit', () => {
+            const styles = this.profitContainerStyle[pari.position];
+            const style = claimable ? styles.claimable : styles.default;
+            return this.createContainer(style);
+        }, [claimable]);
+        if (profitState.new) {
+            container.addChild(profit);
+            profit.sortableChildren = true;
+        }
+        profit.alpha = 0;
+        const [profitcontent, profitcontentState] = this.get('profitcontent', () => this.createContainer(this.contentStyle));
+        if (profitcontentState.new || profitState.new)
+            profit.addChild(profitcontent);
+        const [winIcon, winIconState] = this.get('winIcon', () => this.createIcon(context, textures_1.WIN_ICON_TEXTURE, this.iconStyle));
+        if (winIconState.new)
+            profitcontent.addChild(winIcon);
+        if (!undef) {
+            const [payout, payoutState] = this.get('payout', () => _rendering_1.GraphicUtils.createText(0, this.payoutStyle.offset, this.payoutStyle.text), []);
+            if (payoutState.new)
+                profitcontent.addChild(payout);
+            if (win && !emptypool) {
+                profit.alpha = 1;
                 const [prizeAmount] = this.get('prizeAmount', () => {
                     if (pari.claimed) {
                         return ui_1.default.erc20(pari.payout);
@@ -639,67 +549,90 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         return ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position));
                     }
                 }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptypool]);
-                payout.update((textGraphic) => {
-                    textGraphic.text = prizeAmount;
-                    textGraphic.style.fill = this.payoutStyle.winFill;
-                }, payoutPosition, this.payoutStyle);
-                const [percent] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
-                const profitPosition = [bgwidth - this.profitStyle.offset[0], this.profitStyle.offset[1]];
-                const [profit, profitState] = this.get('profit', () => _rendering_1.GraphicUtils.createCoveredText(percent, profitPosition, this.profitStyle));
-                if (profitState.new)
-                    content.addChild(profit);
-                else
-                    profit.update((textGraphic) => textGraphic.text = percent, profitPosition, this.profitStyle);
+                payout.text = prizeAmount;
+                payout.position.set(...this.payoutStyle.offset);
+                const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.offset, this.profitTextStyle.text), []);
+                if (profitTextState.new)
+                    profitcontent.addChild(profitText);
+                profitText.alpha = 1;
+                const [percentAmount] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
+                const [percentText, percentTextState] = this.get('percentText', () => _rendering_1.GraphicUtils.createText(percentAmount, this.percentStyle.offset, this.percentStyle.text), []);
+                if (percentTextState.new)
+                    profitcontent.addChild(percentText);
+                percentText.alpha = 1;
+                percentText.text = percentAmount;
             }
             else {
-                this.clear('profit');
-                let fill;
+                const [profitText] = this.read('profitText');
+                if (profitText)
+                    profitText.alpha = 0;
+                const [percentText] = this.read('percentText');
+                if (percentText)
+                    percentText.alpha = 0;
                 let payoutAmount = 0;
                 if (pari.claimed) {
-                    fill = this.payoutStyle.winFill;
+                    profit.alpha = 1;
                     payoutAmount = ui_1.default.erc20(pari.payout);
                 }
-                else if (nocontest || emptypool) {
-                    fill = this.payoutStyle.winFill;
+                else if ((nocontest || emptypool) && !phantom) {
+                    profit.alpha = 1;
                     payoutAmount = ui_1.default.erc20(pari.wager);
                 }
                 else {
-                    fill = this.payoutStyle.loseFill;
+                    profit.alpha = 0;
                 }
-                payout.update((textGraphic) => {
-                    textGraphic.text = payoutAmount;
-                    textGraphic.style.fill = fill;
-                }, payoutPosition, this.payoutStyle);
+                const [ofx] = this.payoutStyle.offset;
+                payout.text = payoutAmount;
+                payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [claimable] = this.get('claimable', () => !pari.claimed && (won || nocontest) && !orphan, [nocontest, won, pari.claimed, orphan]);
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => {
+            const styles = this.profitContainerStyle[pari.position];
+            const style = claimable ? styles.claimable : styles.default;
+            return this.createPropagatingContainer(style);
+        }, [claimable]);
+        if (profitpropagatingContainerState.new || profitState.new)
+            profit.addChild(profitpropagatingContainer);
+        const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
+        if (profitpropagatingState.new || profitpropagatingContainerState.new) {
+            profitpropagatingContainerState.timeline = profitpropagatingtimeline;
+            profitpropagatingContainer.addChild(profitpropagating);
+        }
+        if (propagating)
+            this.animate('profitpropagatingContainer', 'show_propagating_bg');
+        else
+            this.animate('profitpropagatingContainer', 'hide_propagating_bg');
+    }
+    updateClaim(pool, pari, context, state) {
+        var _a;
+        const { claimable, emptypool, isHistorical } = state;
         if (claimable) {
-            const [resolved] = this.get('resolved', () => pool.resolved, [pool.resolved]);
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const [settlement] = this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
-            const btnStyle = this.buttonStyle[position];
-            const [btnx, btny] = btnStyle.offset;
-            const [horizontal, vertical] = btnStyle.outside;
-            const [claim, claimState] = this.get('claim', () => new pixi_1.Container(), [pari.claimed]);
+            const poolid = pool.poolid;
+            const pariid = pari.pariid;
+            const erc20 = pari.erc20;
+            const [profit, profitState] = this.read('profit');
+            const [claim, claimState] = this.get('claim', () => this.createClaim(), []);
+            if (claimState.new || profitState.new)
+                profit.addChild(claim);
             if (claimState.new) {
-                group.addChild(claim);
-                claim.width = btnStyle.size;
-                claim.height = btnStyle.size;
+                this.get('resolved', () => pool.resolved, [pool.resolved]);
+                this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
+                this.get('nocontest', () => state.nocontest, [state.nocontest]);
                 claim.interactive = true;
                 claim.cursor = 'pointer';
                 claim.addEventListener('pointerover', (e) => {
                     this.rebind(poolid, pariid);
-                    this.animate('claim', 'hover_claim');
+                    // this.animate('claim', 'hover_claim')
                     context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
                 });
                 claim.addEventListener('pointerout', (e) => {
                     this.rebind(poolid, pariid);
-                    this.animate('claim', 'unhover_claim');
+                    // this.animate('claim', 'unhover_claim')
                     context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
                 });
                 claim.addEventListener('pointertap', (e) => {
                     this.rebind(poolid, pariid);
-                    this.animate('claim', 'tab_claim');
+                    // this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved');
                     const [sttlmnt] = this.read('settlement');
                     const [nocontest] = this.read('nocontest');
@@ -716,52 +649,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     }
                 });
             }
-            claim.position.set(btnx + bgwidth * horizontal, btny + bgheight * vertical);
-            const [claimimg, claimimgState] = this.get('claim_img', () => new pixi_1.Graphics(), [resolved]);
-            if (claimimgState.new) {
-                claimimg
-                    .beginFill(0xFFA000)
-                    .drawCircle(0, 0, btnStyle.size / 2)
-                    .endFill()
-                    .beginFill(0xFFA000)
-                    .drawCircle(0, 0, btnStyle.size / 3)
-                    .endFill();
-                if (!resolved) {
-                    claimimg
-                        .beginFill(0xFFF000)
-                        .drawCircle(0, 0, btnStyle.size / 3)
-                        .endFill();
-                }
-                claim.addChild(claimimg);
-            }
-        }
-        else {
-            this.clear('claim');
-            this.clear('claim_img');
-            this.clear('resolved');
-            this.clear('settlement');
-        }
-        if (isHistorical) {
-            if (win) {
-                this.animate('background', 'won_bg');
-                if (!claimable)
-                    this.animate('content', 'unclaimable_contnet');
-            }
-            else {
-                this.animate('background', 'lost_bg');
-                if (!claimable)
-                    this.animate('content', 'lost_contnet');
-            }
-            if (claimable) {
-                if (groupstate.animation !== 'pin_group_claimable')
-                    this.animate('group', 'hide_group_claimable');
-            }
-            else {
-                if (groupstate.animation !== 'pin_group_unclaimable')
-                    this.animate('group', 'unpin_group_unclaimable');
-            }
-            if (!groupstate.subscribed) {
-                groupstate.subscribed = true;
+            if (isHistorical && !claimState.subscribed) {
+                claimState.subscribed = true;
                 context.eventTarget.addEventListener('poolpin', (e) => {
                     if (e.poolid !== poolid)
                         return;
@@ -769,11 +658,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = true;
-                    const [clble] = this.read('claimable');
-                    if (clble)
-                        this.animate('group', 'pin_group_claimable');
-                    else
-                        this.animate('group', 'pin_group_unclaimable');
                 });
                 context.eventTarget.addEventListener('poolunpin', (e) => {
                     if (e.poolid !== poolid)
@@ -782,34 +666,47 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = false;
-                    const [clble] = this.read('claimable');
-                    if (clble)
-                        this.animate('group', 'unpin_group_claimable');
-                    else
-                        this.animate('group', 'unpin_group_unclaimable');
                 });
             }
         }
         else {
-            if (win && !emptypool) {
-                this.animate('background', 'winning_bg');
-                this.animate('group', 'winning_group');
-            }
-            else {
-                this.animate('background', 'loseing_bg');
-                this.animate('group', 'loseing_group');
-            }
+            this.clear('claim');
+            this.clear('resolved');
+            this.clear('settlement');
+            this.clear('nocontest');
         }
-        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => this.createPropagatingBackground());
-        if (propagatingBackgroundState.new)
-            contentContainer.addChild(propagatingBackground);
-        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pariid);
-        if (propagating) {
-            this.animate('propagatingBackground', 'show_propagating_bg');
+    }
+    updateWager(pool, pari, context, container, state) {
+        const { propagating } = state;
+        const position = pari.position;
+        const [wager, wagerState] = this.get('wager', () => this.createContainer(this.wagerContainerStyles[position]));
+        if (wagerState.new)
+            container.addChild(wager);
+        const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
+        if (wagercontentState.new)
+            wager.addChild(wagercontent);
+        const [currency, currencyState] = this.get('currency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), Object.assign(Object.assign({}, this.iconStyle), { tint: position === _enums_1.EPosition.Zero ? 0x071226 : undefined })));
+        if (currencyState.new)
+            wagercontent.addChild(currency);
+        const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Wager', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
+        if (wagerTextState.new)
+            wagercontent.addChild(wagerText);
+        const [wagerAmount, wagerAmountState] = this.get('wagerAmount', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle[position].offset, this.wagerStyle[position].text));
+        if (wagerAmountState.new)
+            wagercontent.addChild(wagerAmount);
+        wagerAmount.text = ui_1.default.erc20(pari.wager);
+        const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
+        if (wagerpropagatingContainerState.new)
+            wager.addChild(wagerpropagatingContainer);
+        const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground());
+        if (wagerpropagatingState.new) {
+            wagerpropagatingState.timeline = wagerpropagatingtimeline;
+            wagerpropagatingContainer.addChild(wagerpropagating);
         }
-        else {
-            this.animate('propagatingBackground', 'hide_propagating_bg');
-        }
+        if (propagating)
+            this.animate('wagerpropagatingContainer', 'show_propagating_bg');
+        else
+            this.animate('wagerpropagatingContainer', 'hide_propagating_bg');
     }
     getPositionIconTextureName(position) {
         switch (position) {
@@ -824,122 +721,77 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 return textures_1.UNDEFINED_ICON_TEXTURE;
         }
     }
-    getPariCurrencyIconTextureName(context, theme = 'DARK') {
+    getPariCurrencyIconTextureName(context) {
         var _a;
-        const key = [(_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency, theme].join('_');
+        const key = (_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency;
         switch (key) {
-            case 'PARI_DARK':
-                return textures_1.PARI_DARK_TEXTURE;
-            case 'USDC_DARK':
-                return textures_1.USDC_DARK_TEXTURE;
+            case 'PARI':
+                return textures_1.PARI_TEXTURE;
+            case 'USDC':
+                return textures_1.USDC_TEXTURE;
             default:
                 _infra_1.Logger.error(`currency "${key}" is not supported, fallback to Undeliden`);
                 return textures_1.UNKNOWN_DARK_TEXTURE;
         }
     }
-    createPositionIcon(context, position) {
-        const textureName = this.getPositionIconTextureName(position);
+    createIcon(context, textureName, style) {
+        const { size, offset, tint, alpha } = style;
         const texture = context.textures.get(textureName);
         const icon = new pixi_1.Sprite(texture);
-        icon.scale.set(this.iconPositionStyle.size / icon.height);
-        icon.position.set(...this.iconPositionStyle.offset);
+        icon.scale.set(size / icon.height);
+        icon.position.set(...offset);
+        if (tint)
+            icon.tint = tint;
+        if (alpha)
+            icon.alpha = alpha;
         return icon;
     }
-    createPariCurrencyIcon(context) {
-        const textureName = this.getPariCurrencyIconTextureName(context);
-        const texture = context.textures.get(textureName);
-        const icon = new pixi_1.Sprite(texture);
-        icon.anchor.set(0.5, 0.5);
-        icon.scale.set(this.iconCurrencyStyle.size / icon.height);
-        icon.position.set(...this.iconCurrencyStyle.offset);
-        return icon;
-    }
-    createLevelCurrency(context) {
-        const levelCurrency = new pixi_1.Graphics();
+    createContainer(style) {
+        let { offset: [ofx, ofy] } = style;
+        const { background: backgroundStyle } = style;
         const container = new pixi_1.Container();
-        container.addChild(levelCurrency);
-        container.position.set(...this.levelCurrencyStyle.offset);
-        const textureName = this.getLevelTextureName(context);
-        const diagonal = 2 * this.levelCurrencyStyle.radius;
-        const texture = context.textures.get(textureName, { height: diagonal, width: diagonal });
-        const pozx = this.levelCurrencyStyle.radius;
-        const pozy = this.levelCurrencyStyle.radius;
-        levelCurrency
-            .beginTextureFill({ texture })
-            .drawCircle(pozx, pozy, this.levelCurrencyStyle.radius)
-            .endFill();
+        if (backgroundStyle) {
+            const { width, height, anchor, lineStyle, radiuses, color, } = backgroundStyle;
+            const background = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle });
+            container.addChild(background);
+            if (anchor) {
+                const [ax, ay] = anchor;
+                ofx = ax * width + ofx;
+                ofy = ay * height + ofy;
+            }
+        }
+        container.position.set(ofx, ofy);
         return container;
     }
-    createContentContainer(position) {
-        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, } } = this.groupStyle[position];
+    createClaim() {
+        const container = this.createContainer(this.claimStyle);
+        const text = _rendering_1.GraphicUtils.createText('Withdraw', this.claimTextStyle.offset, this.claimTextStyle.text);
+        container.addChild(text);
+        text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
+        return container;
+    }
+    createPropagatingContainer(style) {
         const container = new pixi_1.Container();
-        const mask = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { lineStyle });
-        container.addChild(mask);
+        const mask = this.createContainer(style);
+        mask.position.set(0, 0);
         container.mask = mask;
+        container.addChild(mask);
+        container.alpha = 0;
         return container;
-    }
-    createBackground(style) {
-        const { width, height, background: { offset: [ofx, ofy], lineStyle, radiuses, color, } } = style;
-        const background = _rendering_1.GraphicUtils.createRoundedRect([ofx, ofy], [width, height], radiuses, { color, lineStyle });
-        background.alpha = 0;
-        return background;
     }
     createPropagatingBackground() {
-        const [propagatingBackground, propagatingBackgroundState] = this.get('propagatingBackground', () => _rendering_1.GraphicUtils.createPropagationBackground({
+        const [propagatingBackground, gsaptimeline] = _rendering_1.GraphicUtils.createPropagationBackground({
             height: 310,
             lineHeight: 18,
             width: 300,
             colors: [{ color: 0xffffff, alpha: 1 }],
             duration: 1,
-        }));
-        if (propagatingBackgroundState.new) {
-            propagatingBackground.rotation = 3 * Math.PI / 4;
-            propagatingBackground.pivot.x = 150;
-            propagatingBackground.pivot.y = 155;
-            propagatingBackground.position.set(150, 50);
-            propagatingBackground.alpha = 0;
-        }
-        return propagatingBackground;
-    }
-    createShadow(style, context) {
-        const { width, height, offset: [ofx, ofy], points, colorStops } = style;
-        const shadow = new pixi_1.Graphics();
-        // We need mask to hide weird line at the and of shadow graphic.
-        const mask = new pixi_1.Graphics()
-            .beginFill(0x000000)
-            .drawRect(ofx, ofy, width - 1, height)
-            .endFill();
-        shadow.addChild(mask);
-        shadow.mask = mask;
-        const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, { width, height, points, colorStops });
-        const matrix = new pixi_1.Matrix();
-        matrix.tx = ofx;
-        matrix.ty = ofy;
-        shadow
-            .beginTextureFill({ texture, matrix })
-            .drawRect(ofx, ofy, width, height)
-            .endFill();
-        return shadow;
-    }
-    getStateBackgroundAlpha({ winning, loseing, undef, phantom }) {
-        if (winning)
-            return this.stateBackgroundAlphaStyle.winning;
-        if (loseing)
-            return this.stateBackgroundAlphaStyle.loseing;
-        if (phantom)
-            return this.stateBackgroundAlphaStyle.phantom;
-        if (undef)
-            return this.stateBackgroundAlphaStyle.undef;
-        return 0;
-    }
-    getContentAlpha({ loseing, undef, phantom }) {
-        if (loseing)
-            return this.stateBackgroundAlphaStyle.loseing;
-        if (phantom)
-            return this.stateBackgroundAlphaStyle.phantom;
-        if (undef)
-            return this.stateBackgroundAlphaStyle.undef;
-        return 1;
+        });
+        propagatingBackground.rotation = 3 * Math.PI / 4;
+        propagatingBackground.pivot.x = 150;
+        propagatingBackground.pivot.y = 155;
+        propagatingBackground.position.set(150, 50);
+        return [propagatingBackground, gsaptimeline];
     }
 }
 exports.PariTile = PariTile;

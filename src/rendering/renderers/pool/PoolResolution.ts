@@ -17,8 +17,9 @@ export class PoolResolution extends BasePoolsRenderer {
         width: 1,
         join: 'round',
         cap: 'round',
-        gap: 10,
-        dash: 10,
+        gap: 8,
+        dash: 6,
+        alpha: 0.5,
     }
 
     public get rendererId(): symbol {
@@ -51,7 +52,11 @@ export class PoolResolution extends BasePoolsRenderer {
         const { timerange } = context.plotdata
         const [x] = datamath.scale([pool.endDate], timerange, width)
 
-        const [line, linestate] = this.get('line', () => this.createLine(context))
+        const [line, linestate] = this.get('line', () => GraphicUtils.createVerticalDashLine(
+            0,
+            [0, height],
+            { ...this.lineStyle, color: this.getLevelLineColor(context) },
+        ))
 
         line.position.x = x
         line.height = height
@@ -60,44 +65,20 @@ export class PoolResolution extends BasePoolsRenderer {
 
     }
 
-    private createLine(context: RenderingContext): Container {
-        const { height } = context.screen
-        const { width } = this.lineStyle
-
-        const [color1, color2] = this.getLevelLineColors(context)
-
-        const dash1 = GraphicUtils.createVerticalDashLine(
-            -width/2,
-            [0, height],
-            { ...this.lineStyle, color: color1 }
-        )
-
-        const dash2 = GraphicUtils.createVerticalDashLine(
-            width/2,
-            [0, height],
-            { ...this.lineStyle, color: color2 }
-        )
-
-        const dash = new Container()
-        dash.addChild(dash1, dash2)
-
-        return dash
-    }
-
-    private getLevelLineColors(context: RenderingContext): number[] {
+    private getLevelLineColor(context: RenderingContext): number {
 
         switch (context.metapool?.level) {
             case SILVER:
-                return config.style.levels.silverLineColors
+                return config.style.levels.silverLineColor
             case GOLD:
-                return config.style.levels.goldLineColors
+                return config.style.levels.goldLineColor
             case ROYAL:
-                return config.style.levels.royalLineColors
+                return config.style.levels.royalLineColor
 
             default:
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
 
-                return config.style.levels.silverLineColors
+                return config.style.levels.silverLineColor
         }
 
     }

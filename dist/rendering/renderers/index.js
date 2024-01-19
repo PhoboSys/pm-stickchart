@@ -17,6 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./price/history/PriceLineRenderer"), exports);
 __exportStar(require("./price/info/PricefeedInfoRenderer"), exports);
 __exportStar(require("./price/latest/LatestPriceRenderer"), exports);
+__exportStar(require("./price/latest/LatestPriceLineRenderer"), exports);
 __exportStar(require("./grid/GridRenderer"), exports);
 __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);

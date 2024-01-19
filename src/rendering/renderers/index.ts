@@ -1,6 +1,7 @@
 export * from './price/history/PriceLineRenderer'
 export * from './price/info/PricefeedInfoRenderer'
 export * from './price/latest/LatestPriceRenderer'
+export * from './price/latest/LatestPriceLineRenderer'
 export * from './grid/GridRenderer'
 export * from './LineChartRenderer'
 export * from './NotSupportedChartTypeRenderer'
