@@ -1,12 +1,14 @@
 import { IGraphicStorage, RenderingContext, GraphicUtils } from '@rendering'
 import { LOCK_COUNTDOWN_TEXTURE, RESOLUTION_COUNTDOWN_TEXTURE } from '@rendering/textures'
+import { WINNING_COUNTDOWN_TEXTURE } from '@rendering/textures'
 
 import config from '@config'
 import datamath from '@lib/datamath'
-import { Container, Graphics } from '@lib/pixi'
+import { Container, Graphics, gsap } from '@lib/pixi'
 import { nowUnixTS } from '@lib/utils'
 import ui from '@lib/ui'
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
+import { EPosition } from '@enums'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -24,6 +26,11 @@ export class PoolCountdown extends BasePoolsRenderer {
         alpha: 1,
         offset: [0, config.style.resolutionCountdown.padding],
         radiuses: [24, 0, 0, 24]
+    }
+
+    private readonly winningGradientContainerStyle: any = {
+        alpha: 0,
+        offset: [0, config.style.winningCountdown.padding],
     }
 
     private readonly phaseStyle: any = {
@@ -46,6 +53,13 @@ export class PoolCountdown extends BasePoolsRenderer {
             fontFamily: 'Gilroy',
             fontSize: 72,
         }
+    }
+
+    private winning_gradient_animation = {
+        duration: 1.5,
+        ease: 'power1.out',
+        new: 'set',
+        clear: true,
     }
 
     private configAnimations: any = {
@@ -81,10 +95,19 @@ export class PoolCountdown extends BasePoolsRenderer {
             ease: 'power2.out',
             delay: 0.1,
         },
+        winning_gradient_to_up: this.winning_gradient_animation,
+        winning_gradient_to_zero: this.winning_gradient_animation,
+        winning_gradient_to_down: this.winning_gradient_animation,
     }
 
     protected get animations(): any {
         return this.configAnimations
+    }
+
+    private validPariPositions = {
+        [EPosition.Up]: EPosition.Up,
+        [EPosition.Down]: EPosition.Down,
+        [EPosition.Zero]: EPosition.Zero,
     }
 
     private _countdownTick: (() => Container) | null
@@ -186,14 +209,90 @@ export class PoolCountdown extends BasePoolsRenderer {
                 ),
                 [rheight]
             )
-
             if (gradientresState.new) container.addChild(gradientres)
+
+            const resolution = this.getPoolResolution(pool, context)
+            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions)) {
+
+                const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer())
+                if (winningcontainerState.new || gradientresState.new) gradientres.addChild(winningcontainer)
+
+                const [winninggradient, winninggradientState] = this.get(
+                    'winninggradient',
+                    () => this.createWinningGradient(context, [gradientres.width, 2*rheight]),
+                    [rheight]
+                )
+                if (winninggradientState.new) {
+                    winningcontainer.addChild(winninggradient)
+                    winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight)
+                }
+
+                const ofy = this.winningGradientContainerStyle.offset[1]
+                if (resolution === EPosition.Up) {
+                    this.animate(
+                        'winningcontainer',
+                        'winning_gradient_to_up',
+                        { pixi: { y: ofy-rheight, alpha: 1 } }
+                    )
+                }
+                if (resolution === EPosition.Zero) {
+                    this.animate(
+                        'winningcontainer',
+                        'winning_gradient_to_zero',
+                        { pixi: { y: ofy-rheight/2, alpha: 1 } }
+                    )
+                }
+                if (resolution === EPosition.Down) {
+                    this.animate(
+                        'winningcontainer',
+                        'winning_gradient_to_down',
+                        { pixi: { y: ofy, alpha: 1 } }
+                    )
+                }
+            }
 
             gradientres.position.x = rx
             gradientres.mask.pivot.x = rwidth
         } else {
+            this.clear('winningcontainer')
+            this.clear('winninggradient')
             this.clear('gradientres')
         }
+    }
+
+    protected createWinningContainer(): Container {
+        const { alpha, offset } = this.winningGradientContainerStyle
+
+        const container = new Container()
+        container.alpha = alpha
+        container.position.set(...offset)
+
+        return container
+    }
+
+    protected createWinningGradient(context, [width, height]): Container {
+        const gradient = new Graphics()
+
+        gradient
+            .beginTextureFill({ texture: context.textures.get(WINNING_COUNTDOWN_TEXTURE, { width, height }) })
+            .drawRect(0, 0, width, height)
+            .endFill()
+
+        return gradient
+    }
+
+    protected createWinningGradientTimeline(gradient, height): gsap.core.Timeline {
+        return gsap.timeline({ repeat: -1, yoyo: true, yoyoEase: 'power1.inOut' })
+            .to(gradient, {
+                pixi: { y: -height*0.1 },
+                duration: 2,
+                ease: 'power1.inOut',
+            })
+            .to(gradient, {
+                pixi: { y: height*0.1 },
+                duration: 2,
+                ease: 'power1.inOut',
+            })
     }
 
     protected createGradient(style, [width, height], texture): { mask: Graphics } & Container {

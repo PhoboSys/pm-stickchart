@@ -93,6 +93,17 @@ export default {
             ],
             padding: 50,
         },
+        winningCountdown: {
+            colors: [
+                { color: '#D75A3300', offset: 0 },
+                { color: '#D75A3300', offset: 0.1 },
+                { color: '#D75A33FF', offset: 0.49 },
+                { color: '#D75A33FF', offset: 0.51 },
+                { color: '#D75A3300', offset: 0.9 },
+                { color: '#D75A3300', offset: 1 },
+            ],
+            padding: 25,
+        },
         resolutionCountdown: {
             colors: [
                 { color: '#1F50F7FF', offset: 0 },

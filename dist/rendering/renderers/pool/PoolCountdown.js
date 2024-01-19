@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PoolCountdown = void 0;
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
+const textures_2 = require("../../textures");
 const _config_1 = __importDefault(require("../../../config.js"));
 const datamath_1 = __importDefault(require("../../../lib/datamath"));
 const pixi_1 = require("../../../lib/pixi");
 const utils_1 = require("../../../lib/utils");
 const ui_1 = __importDefault(require("../../../lib/ui"));
+const _enums_1 = require("../../../enums/index.js");
 const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     get animations() {
@@ -27,6 +29,10 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             alpha: 1,
             offset: [0, _config_1.default.style.resolutionCountdown.padding],
             radiuses: [24, 0, 0, 24]
+        };
+        this.winningGradientContainerStyle = {
+            alpha: 0,
+            offset: [0, _config_1.default.style.winningCountdown.padding],
         };
         this.phaseStyle = {
             anchor: [0, 1],
@@ -47,6 +53,12 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 fontFamily: 'Gilroy',
                 fontSize: 72,
             }
+        };
+        this.winning_gradient_animation = {
+            duration: 1.5,
+            ease: 'power1.out',
+            new: 'set',
+            clear: true,
         };
         this.configAnimations = {
             positioning: {
@@ -81,6 +93,14 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 ease: 'power2.out',
                 delay: 0.1,
             },
+            winning_gradient_to_up: this.winning_gradient_animation,
+            winning_gradient_to_zero: this.winning_gradient_animation,
+            winning_gradient_to_down: this.winning_gradient_animation,
+        };
+        this.validPariPositions = {
+            [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
+            [_enums_1.EPosition.Down]: _enums_1.EPosition.Down,
+            [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
         this.countdown();
     }
@@ -131,12 +151,63 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             const [gradientres, gradientresState] = this.get('gradientres', () => this.createGradient(this.resolutionGradientStyle, [rx, rheight], context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE, { width: rx })), [rheight]);
             if (gradientresState.new)
                 container.addChild(gradientres);
+            const resolution = this.getPoolResolution(pool, context);
+            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions)) {
+                const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer());
+                if (winningcontainerState.new || gradientresState.new)
+                    gradientres.addChild(winningcontainer);
+                const [winninggradient, winninggradientState] = this.get('winninggradient', () => this.createWinningGradient(context, [gradientres.width, 2 * rheight]), [rheight]);
+                if (winninggradientState.new) {
+                    winningcontainer.addChild(winninggradient);
+                    winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight);
+                }
+                const ofy = this.winningGradientContainerStyle.offset[1];
+                if (resolution === _enums_1.EPosition.Up) {
+                    this.animate('winningcontainer', 'winning_gradient_to_up', { pixi: { y: ofy - rheight, alpha: 1 } });
+                }
+                if (resolution === _enums_1.EPosition.Zero) {
+                    this.animate('winningcontainer', 'winning_gradient_to_zero', { pixi: { y: ofy - rheight / 2, alpha: 1 } });
+                }
+                if (resolution === _enums_1.EPosition.Down) {
+                    this.animate('winningcontainer', 'winning_gradient_to_down', { pixi: { y: ofy, alpha: 1 } });
+                }
+            }
             gradientres.position.x = rx;
             gradientres.mask.pivot.x = rwidth;
         }
         else {
+            this.clear('winningcontainer');
+            this.clear('winninggradient');
             this.clear('gradientres');
         }
+    }
+    createWinningContainer() {
+        const { alpha, offset } = this.winningGradientContainerStyle;
+        const container = new pixi_1.Container();
+        container.alpha = alpha;
+        container.position.set(...offset);
+        return container;
+    }
+    createWinningGradient(context, [width, height]) {
+        const gradient = new pixi_1.Graphics();
+        gradient
+            .beginTextureFill({ texture: context.textures.get(textures_2.WINNING_COUNTDOWN_TEXTURE, { width, height }) })
+            .drawRect(0, 0, width, height)
+            .endFill();
+        return gradient;
+    }
+    createWinningGradientTimeline(gradient, height) {
+        return pixi_1.gsap.timeline({ repeat: -1, yoyo: true, yoyoEase: 'power1.inOut' })
+            .to(gradient, {
+            pixi: { y: -height * 0.1 },
+            duration: 2,
+            ease: 'power1.inOut',
+        })
+            .to(gradient, {
+            pixi: { y: height * 0.1 },
+            duration: 2,
+            ease: 'power1.inOut',
+        });
     }
     createGradient(style, [width, height], texture) {
         const group = new pixi_1.Container();
