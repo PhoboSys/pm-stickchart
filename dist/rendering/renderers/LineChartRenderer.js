@@ -5,21 +5,23 @@ const _rendering_1 = require("../index.js");
 const _rendering_2 = require("../index.js");
 const _rendering_3 = require("../index.js");
 const _rendering_4 = require("../index.js");
+const _rendering_5 = require("../index.js");
 const PoolBackground_1 = require("./pool/PoolBackground");
 const PoolCountdown_1 = require("./pool/PoolCountdown");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
-        this.compositor = new _rendering_1.RenderingCompositor([
+        this.compositor = new _rendering_2.RenderingCompositor([
             new PoolBackground_1.PoolBackground(renderer),
             new PoolCountdown_1.PoolCountdown(renderer),
-            new _rendering_2.GridRenderer(renderer),
-            new _rendering_4.PricefeedInfoRenderer(renderer),
-            new _rendering_1.PriceLineRenderer(renderer),
-            new _rendering_3.Pool(renderer),
-            new _rendering_2.LatestPriceRenderer(renderer),
-            new _rendering_3.CrosshairRenderer(renderer),
-            new _rendering_3.Pari(renderer),
+            new _rendering_3.GridRenderer(renderer),
+            new _rendering_5.PricefeedInfoRenderer(renderer),
+            new _rendering_2.PriceLineRenderer(renderer),
+            new _rendering_1.LatestPriceLineRenderer(renderer),
+            new _rendering_4.Pool(renderer),
+            new _rendering_3.LatestPriceRenderer(renderer),
+            new _rendering_4.CrosshairRenderer(renderer),
+            new _rendering_4.Pari(renderer),
         ]);
     }
     render(context, done) {

@@ -89,9 +89,9 @@ declare const _default: {
             padding: number;
         };
         levels: {
-            royalLineColors: number[];
-            goldLineColors: number[];
-            silverLineColors: number[];
+            royalLineColor: number;
+            goldLineColor: number;
+            silverLineColor: number;
             royalColors: {
                 color: string;
                 offset: number;
@@ -115,6 +115,7 @@ declare const _default: {
     features: {
         rectungedPriceLine: boolean;
         curvedResolutionLines: boolean;
+        pariTileNewDesign: boolean;
     };
 };
 export default _default;

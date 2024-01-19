@@ -58,5 +58,5 @@ export declare class GraphicUtils {
         height: any;
         colors: any;
         duration: any;
-    }): Container;
+    }): [Container, gsap.core.Timeline];
 }

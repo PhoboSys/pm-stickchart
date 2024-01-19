@@ -46,6 +46,7 @@ export class StickChart extends EventTarget {
             backgroundColor: config.style.background,
             backgroundAlpha: config.style.backgroundAlpha,
         })
+        globalThis.__PIXI_APP__ = this.application
         this.application.renderer.addSystem(EventSystem, 'events')
 
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)

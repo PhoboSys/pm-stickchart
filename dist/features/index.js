@@ -21,10 +21,11 @@ exports.createFeatures = void 0;
 __exportStar(require("./types"), exports);
 const _config_1 = __importDefault(require("../config.js"));
 function createFeatures(features) {
-    var _a, _b;
+    var _a, _b, _c;
     return {
         rectungedPriceLine: (_a = features === null || features === void 0 ? void 0 : features.rectungedPriceLine) !== null && _a !== void 0 ? _a : _config_1.default.features.rectungedPriceLine,
         curvedResolutionLines: (_b = features === null || features === void 0 ? void 0 : features.curvedResolutionLines) !== null && _b !== void 0 ? _b : _config_1.default.features.curvedResolutionLines,
+        pariTileNewDesign: (_c = features === null || features === void 0 ? void 0 : features.pariTileNewDesign) !== null && _c !== void 0 ? _c : _config_1.default.features.pariTileNewDesign,
     };
 }
 exports.createFeatures = createFeatures;

@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseParisRenderer = void 0;
+const _rendering_1 = require("../../index.js");
 const BasePoolsRenderer_1 = require("../../renderers/pool/BasePoolsRenderer");
 const utils_1 = require("../../../lib/utils");
+const _enums_1 = require("../../../enums/index.js");
 class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
@@ -36,6 +38,40 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
         });
         this.prevparis = this.newparis;
         this.newparis = {};
+    }
+    getPariState(pool, pari, context) {
+        const resolution = this.getPoolResolution(pool, context);
+        const phantom = pari.phantom;
+        const undef = resolution === _enums_1.EPosition.Undefined;
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
+        const isHistorical = this.isHistoricalPool(pool, context);
+        const win = pari.position === resolution;
+        const lose = !win && !phantom;
+        const winning = win && !isHistorical && !phantom;
+        const loseing = lose && !isHistorical && !phantom;
+        const won = win && isHistorical && !nocontest && !phantom;
+        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pari.pariid);
+        const orphan = phantom && reverted;
+        const emptypool = this.isNoContestEmptyPool(pool);
+        const claimable = !pari.claimed && (won || nocontest) && !orphan;
+        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pari.pariid);
+        return {
+            phantom,
+            undef,
+            nocontest,
+            isHistorical,
+            win,
+            lose,
+            winning,
+            loseing,
+            won,
+            reverted,
+            orphan,
+            claimable,
+            emptypool,
+            resolution,
+            propagating,
+        };
     }
 }
 exports.BaseParisRenderer = BaseParisRenderer;

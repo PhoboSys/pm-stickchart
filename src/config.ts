@@ -102,9 +102,9 @@ export default {
             padding: 25,
         },
         levels: {
-            royalLineColors: [0xDDDFDE, 0xB3B7B8],
-            goldLineColors: [0xD19F37, 0xFDD77E],
-            silverLineColors: [0xC4CAC3, 0xE4E5E9],
+            royalLineColor: 0xFFFFFF,
+            goldLineColor: 0xFFFFFF,
+            silverLineColor: 0xFFFFFF,
             royalColors: [
                 { color: '#9CA2A2', offset: 0.17 },
                 { color: '#EBCEAE', offset: 0.3743 },
@@ -134,5 +134,6 @@ export default {
     features: {
         rectungedPriceLine: false,
         curvedResolutionLines: false,
+        pariTileNewDesign: true,
     },
 }

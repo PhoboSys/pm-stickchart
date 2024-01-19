@@ -7,6 +7,5 @@ export declare class PoolResolution extends BasePoolsRenderer {
     get rendererId(): symbol;
     protected updatePool(pool: any, context: RenderingContext, container: Container): void;
     private updateActualPool;
-    private createLine;
-    private getLevelLineColors;
+    private getLevelLineColor;
 }

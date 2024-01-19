@@ -2,14 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LatestPriceRenderer = void 0;
 const _rendering_1 = require("../../../index.js");
-const LatestPriceLineRenderer_1 = require("./LatestPriceLineRenderer");
 const LatestPricePointRenderer_1 = require("./LatestPricePointRenderer");
 const LatestPriceTagRenderer_1 = require("./LatestPriceTagRenderer");
 class LatestPriceRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new _rendering_1.RenderingCompositor([
-            new LatestPriceLineRenderer_1.LatestPriceLineRenderer(renderer),
             new LatestPricePointRenderer_1.LatestPricePointRenderer(renderer),
             new LatestPriceTagRenderer_1.LatestPriceTagRenderer(renderer),
         ]);

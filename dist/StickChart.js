@@ -28,6 +28,7 @@ class StickChart extends EventTarget {
             backgroundColor: _config_1.default.style.background,
             backgroundAlpha: _config_1.default.style.backgroundAlpha,
         });
+        globalThis.__PIXI_APP__ = this.application;
         this.application.renderer.addSystem(pixi_1.EventSystem, 'events');
         this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new _rendering_2.TextureStorage(this.application);
