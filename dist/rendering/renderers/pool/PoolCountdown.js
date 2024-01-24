@@ -172,6 +172,10 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                     this.animate('winningcontainer', 'winning_gradient_to_down', { pixi: { y: ofy, alpha: 1 } });
                 }
             }
+            else {
+                this.clear('winningcontainer');
+                this.clear('winninggradient');
+            }
             gradientres.position.x = rx;
             gradientres.mask.pivot.x = rwidth;
         }

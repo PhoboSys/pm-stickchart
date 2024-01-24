@@ -249,6 +249,9 @@ export class PoolCountdown extends BasePoolsRenderer {
                         { pixi: { y: ofy, alpha: 1 } }
                     )
                 }
+            } else {
+                this.clear('winningcontainer')
+                this.clear('winninggradient')
             }
 
             gradientres.position.x = rx
