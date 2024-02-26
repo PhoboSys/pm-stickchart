@@ -150,12 +150,12 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     getLevelTextureName(context) {
         var _a, _b;
         switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
+            case _constants_2.BRONZE:
+                return symbols_1.BRONZE_LEVEL_TEXTURE;
             case _constants_2.SILVER:
                 return symbols_1.SILVER_LEVEL_TEXTURE;
             case _constants_2.GOLD:
                 return symbols_1.GOLD_LEVEL_TEXTURE;
-            case _constants_2.ROYAL:
-                return symbols_1.ROYAL_LEVEL_TEXTURE;
             default:
                 _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
                 return symbols_1.SILVER_LEVEL_TEXTURE;

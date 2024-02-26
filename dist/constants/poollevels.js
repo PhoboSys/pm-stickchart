@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ROYAL = exports.GOLD = exports.SILVER = void 0;
+exports.GOLD = exports.SILVER = exports.BRONZE = void 0;
+exports.BRONZE = 'BRONZE';
 exports.SILVER = 'SILVER';
 exports.GOLD = 'GOLD';
-exports.ROYAL = 'ROYAL';
 //# sourceMappingURL=poollevels.js.map

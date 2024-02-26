@@ -9,13 +9,14 @@ import {
     UNKNOWN_DARK_TEXTURE,
     PARI_TEXTURE,
     USDC_TEXTURE,
-    WIN_ICON_TEXTURE,
+    GRADIENT_TEXTURE,
+    CLAIM_FRAGMENT_TEXTURE,
 } from '@rendering/textures'
 
 import { Logger } from '@infra'
 
 import datamath from '@lib/datamath'
-import { Graphics, Container, Sprite } from '@lib/pixi'
+import { Graphics, Container, Sprite, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
@@ -54,7 +55,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private contentStyle = {
-        offset: [14, 13],
+        offset: [14, (58-32)/2],
     }
 
     private wagerContainerStyles: any = {
@@ -62,13 +63,14 @@ export class PariTile extends BaseParisRenderer {
             offset: [24, 0],
             background: {
                 width: 170,
-                height: 56,
-                radiuses: <[number, number, number, number]>[27, 27, 27, 27],
+                height: 58,
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                 color: 0x01A37A,
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 1,
                     alpha: 1,
+                    alignment: 0,
                 },
             },
         },
@@ -76,14 +78,15 @@ export class PariTile extends BaseParisRenderer {
             offset: [-24, 0],
             background: {
                 width: 170,
-                height: 56,
+                height: 58,
                 anchor: [-1, 0],
-                radiuses: <[number, number, number, number]>[27, 27, 27, 27],
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                 color: 0xB7BDD7,
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 1,
                     alpha: 1,
+                    alignment: 0,
                 },
             },
         },
@@ -91,13 +94,14 @@ export class PariTile extends BaseParisRenderer {
             offset: [24, 0],
             background: {
                 width: 170,
-                height: 56,
-                radiuses: <[number, number, number, number]>[27, 27, 27, 27],
+                height: 58,
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                 color: 0xD7335B,
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 1,
                     alpha: 1,
+                    alignment: 0,
                 },
             },
         },
@@ -106,30 +110,33 @@ export class PariTile extends BaseParisRenderer {
     private wagerTextStyle: any = {
         [EPosition.Up]: {
             text: {
-                fill: 0xFFFFFFB3,
+                fill: 0xFFFFFFBF,
                 fontWeight: 600,
                 fontFamily: 'Proxima Nova',
                 fontSize: 13,
+                trim: true,
             },
-            offset: [48, 0]
+            offset: [32+16, 0]
         },
         [EPosition.Zero]: {
             text: {
-                fill: 0x071226B3,
+                fill: 0x071226BF,
                 fontWeight: 600,
                 fontFamily: 'Proxima Nova',
                 fontSize: 13,
+                trim: true,
             },
-            offset: [48, 0]
+            offset: [32+16, 0]
         },
         [EPosition.Down]: {
             text: {
-                fill: 0xFFFFFFB3,
+                fill: 0xFFFFFFBF,
                 fontWeight: 600,
                 fontFamily: 'Proxima Nova',
                 fontSize: 13,
+                trim: true,
             },
-            offset: [48, 0]
+            offset: [32+16, 0]
         },
     }
 
@@ -139,27 +146,30 @@ export class PariTile extends BaseParisRenderer {
                 fill: 0xFFFFFF,
                 fontWeight: 500,
                 fontFamily: 'Roboto',
-                fontSize: 15,
+                fontSize: 16,
+                trim: true,
             },
-            offset: [48, 16]
+            offset: [32+16, 20]
         },
         [EPosition.Zero]: {
             text: {
                 fill: 0x071226,
                 fontWeight: 500,
                 fontFamily: 'Roboto',
-                fontSize: 15,
+                fontSize: 16,
+                trim: true,
             },
-            offset: [48, 16]
+            offset: [32+16, 20]
         },
         [EPosition.Down]: {
             text: {
                 fill: 0xFFFFFF,
                 fontWeight: 500,
                 fontFamily: 'Roboto',
-                fontSize: 15,
+                fontSize: 16,
+                trim: true,
             },
-            offset: [48, 16]
+            offset: [32+16, 20]
         },
     }
 
@@ -170,32 +180,36 @@ export class PariTile extends BaseParisRenderer {
                 offset: [-24, 0],
                 background: {
                     width: 170,
-                    height: 56,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[27, 27, 27, 27],
-                    color: 0xD66F35,
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
+                    gradient: {
+                        width: 170,
+                        height: 58,
+                        points: [0, 58, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
                 },
             },
             claimable: {
-                offset: [-24, -(108-56)/2],
+                offset: [-24, 0],
                 background: {
                     width: 170,
-                    height: 108,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[22, 22, 22, 22],
-                    color: 0xD66F35,
-                    lineStyle: {
-                        color: 0xFFFFFF,
-                        width: 1,
-                        alpha: 1,
-                    },
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
                 },
-            }
+            },
         },
 
         [EPosition.Down]: {
@@ -203,127 +217,286 @@ export class PariTile extends BaseParisRenderer {
                 offset: [-24, 0],
                 background: {
                     width: 170,
-                    height: 56,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[27, 27, 27, 27],
-                    color: 0xD66F35,
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
+                    gradient: {
+                        width: 170,
+                        height: 58,
+                        points: [0, 58, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
                 },
             },
             claimable: {
-                offset: [-24, -(108-56)],
+                offset: [-24, 0],
                 background: {
                     width: 170,
-                    height: 108,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[22, 22, 22, 22],
-                    color: 0xD66F35,
-                    lineStyle: {
-                        color: 0xFFFFFF,
-                        width: 1,
-                        alpha: 1,
-                    },
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
                 },
-            }
+            },
         },
 
         [EPosition.Zero]: {
             default: {
-                offset: [-137-24-8, 0],
+                offset: [-170-24-8, 0],
                 background: {
                     width: 170,
-                    height: 56,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[27, 27, 27, 27],
-                    color: 0xD66F35,
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
+                    gradient: {
+                        width: 170,
+                        height: 58,
+                        points: [0, 58, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
                 },
             },
             claimable: {
-                offset: [-170-24-8, -(108-56)/2],
+                offset: [-170-24-8, 0],
                 background: {
                     width: 170,
-                    height: 108,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: <[number, number, number, number]>[22, 22, 22, 22],
-                    color: 0xD66F35,
-                    lineStyle: {
-                        color: 0xFFFFFF,
-                        width: 1,
-                        alpha: 1,
-                    },
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
                 },
+            },
+        },
+    }
+
+    private profitBorderBottomStyle = {
+        offset: [0, -1],
+        background: {
+            width: 170,
+            height: 58,
+            radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+            lineStyle: {
+                color: 0xFFFFFF,
+                width: 1,
+                alpha: 0.2,
+                alignment: 0,
             }
         },
     }
 
     private profitTextStyle: any = {
-        text: {
-            fill: 0xFFFFFF,
-            fontWeight: 600,
-            fontFamily: 'Proxima Nova',
-            fontSize: 12,
+        default: {
+            text: {
+                fill: 0x0F1F43,
+                fontWeight: 600,
+                fontFamily: 'Proxima Nova',
+                fontSize: 13,
+                trim: true,
+                alpha: 0.8
+            },
+            offset: [44+0, 0]
         },
-        offset: [44+0, 0]
+        claimable: {
+            text: {
+                fill: 0xF7C15B,
+                fontWeight: 600,
+                fontFamily: 'Proxima Nova',
+                fontSize: 13,
+                trim: true,
+                alpha: 0.8
+            },
+            offset: [44+0, 0]
+        }
     }
 
     private percentStyle: any = {
-        text: {
-            fill: 0xFFFFFFBF,
-            fontWeight: 400,
-            fontFamily: 'Roboto',
-            fontSize: 11,
+        default: {
+            text: {
+                fill: 0x0F1F43,
+                fontWeight: 400,
+                fontFamily: 'Roboto',
+                fontSize: 12,
+                trim: true,
+                alpha: 0.8,
+            },
+            offset: [32+12+31+8, 0],
         },
-        offset: [44+35, 0],
+        claimable: {
+            text: {
+                fill: 0xF7C15B,
+                fontWeight: 400,
+                fontFamily: 'Roboto',
+                fontSize: 12,
+                trim: true,
+                alpha: 0.8,
+            },
+            offset: [32+12+31+8, 0],
+        },
     }
 
     private payoutStyle: any = {
-        text: {
-            fill: 0xFFFFFF,
-            fontWeight: 500,
-            fontFamily: 'Roboto',
-            fontSize: 15,
+        default: {
+            text: {
+                fill: 0x0F1F43,
+                fontWeight: 500,
+                fontFamily: 'Roboto',
+                fontSize: 16,
+                trim: true,
+            },
+            offset: [44+0, 19.5]
         },
-        offset: [44+0, 15]
+        claimable: {
+            text: {
+                fill: 0xFFFFFF,
+                fontWeight: 500,
+                fontFamily: 'Roboto',
+                fontSize: 16,
+                trim: true,
+            },
+            offset: [44+0, 19.5]
+        }
     }
 
     private claimStyle = {
-        offset: [14, 60],
+        [EPosition.Up]: {
+            offset: [-24, 58+10],
+            background: {
+                width: 170,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 170,
+                    height: 48,
+                    points: [0, 48, 170, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+        [EPosition.Down]: {
+            offset: [-24, -10-48],
+            background: {
+                width: 170,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 170,
+                    height: 48,
+                    points: [0, 48, 170, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+        [EPosition.Zero]: {
+            offset: [-24-170-8, 58+10],
+            background: {
+                width: 170,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 170,
+                    height: 48,
+                    points: [0, 48, 170, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+    }
+
+    private claimBorderBottomStyle = {
+        offset: [0, -1],
         background: {
-            width: 142,
-            height: 32,
-            radiuses: <[number, number, number, number]>[16, 16, 16, 16],
-            color: 0xFFFFFF,
+            width: 170,
+            height: 48,
+            radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+            lineStyle: {
+                color: 0xFFE7BA,
+                width: 1,
+                alpha: 1,
+                alignment: 0,
+            }
         },
     }
 
     private claimTextStyle = {
         text: {
-            fill: 0xD66F35,
+            fill: 0x0F1F43,
             fontWeight: 700,
             fontFamily: 'Proxima Nova',
-            fontSize: 15,
+            fontSize: 16,
         },
         offset: <[number, number]>[0, 0]
     }
 
     private positionIconStyle: any = {
         size: 32,
-        offset: [-16, (56-32)/2],
+        offset: [-16, (58-32)/2],
     }
 
-    private iconStyle: any = {
+    private profitCurrencyIconStyle: any = {
+        default: {
+            size: 32,
+            tint: 0x0F1F43
+        },
+        claimable: {
+            size: 32,
+            tint: 0xF7C15B
+        },
+    }
+
+    private userIconStyle: any = {
         size: 32,
-        offset: [0, 0],
-        alpha: 0.75,
+    }
+
+    private wagerCurrencyIconStyle: any = {
+        [EPosition.Up]: {
+            size: 16,
+            offset: [32+16+7, 19],
+            alpha: 0.8,
+        },
+        [EPosition.Down]: {
+            size: 16,
+            offset: [32+16+7, 19],
+            alpha: 0.8,
+        },
+        [EPosition.Zero]: {
+            size: 16,
+            offset: [32+16+7, 19],
+            alpha: 0.8,
+            tint: 0x071226,
+        }
     }
 
     private validPariPositions = {
@@ -361,16 +534,12 @@ export class PariTile extends BaseParisRenderer {
             yoyoEase: 'power2.out',
         },
         show_propagating_bg: {
-            pixi: {
-                alpha: 0.15,
-                zIndex: 10,
-            },
             duration: 0.3,
             ease: 'power2.out',
         },
         hide_propagating_bg: {
             pixi: {
-                alpha: 0,
+                alpha: 0
             },
             duration: 0.3,
             ease: 'power2.out',
@@ -399,14 +568,13 @@ export class PariTile extends BaseParisRenderer {
 
         const [positionIcon, positionIconState] = this.get(
             'positionIcon',
-            () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle),
-            []
+            () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle)
         )
         if (positionIconState.new) group.addChild(positionIcon)
 
         this.updateWager(pool, pari, context, group, state)
         this.updateProfit(pool, pari, context, group, state)
-        this.updateClaim(pool, pari, context, state)
+        this.updateClaim(pool, pari, context, group, state)
 
     }
 
@@ -460,22 +628,14 @@ export class PariTile extends BaseParisRenderer {
         state: any,
     ): void {
 
-        const { claimable, emptypool, nocontest, undef, win, phantom, propagating } = state
+        const { emptypool, nocontest, undef, win, phantom, propagating, claimable } = state
 
         const [profit, profitState] = this.get(
             'profit',
-            () => {
-                const styles = this.profitContainerStyle[pari.position]
-                const style = claimable ? styles.claimable : styles.default
-
-                return this.createContainer(style)
-            },
+            () => this.createProfitContainer(context, pari.position, claimable),
             [claimable]
         )
-        if (profitState.new) {
-            container.addChild(profit)
-            profit.sortableChildren = true
-        }
+        if (profitState.new) container.addChild(profit)
         profit.alpha = 0
 
         const [profitcontent, profitcontentState] = this.get(
@@ -484,19 +644,27 @@ export class PariTile extends BaseParisRenderer {
         )
         if (profitcontentState.new || profitState.new) profit.addChild(profitcontent)
 
-        const [winIcon, winIconState] = this.get(
-            'winIcon',
-            () => this.createIcon(context, WIN_ICON_TEXTURE, this.iconStyle)
+        const [profitCurrency, profitCurrencyState] = this.get(
+            'profitCurrency',
+            () => this.createIcon(
+                context,
+                this.getPariCurrencyIconTextureName(context),
+                this.profitCurrencyIconStyle.default
+            )
         )
-        if (winIconState.new) profitcontent.addChild(winIcon)
+        if (profitCurrencyState.new) profitcontent.addChild(profitCurrency)
+        profitCurrency.tint = claimable ?
+            this.profitCurrencyIconStyle.claimable.tint :
+            this.profitCurrencyIconStyle.default.tint
 
         if (!undef) {
             const [payout, payoutState] = this.get('payout', () => GraphicUtils.createText(
                 0,
-                this.payoutStyle.offset,
-                this.payoutStyle.text,
-            ), [])
+                this.payoutStyle.default.offset,
+                this.payoutStyle.default.text,
+            ))
             if (payoutState.new) profitcontent.addChild(payout)
+            payout.style.fill = claimable ? this.payoutStyle.claimable.text.fill : this.payoutStyle.default.text.fill
 
             if (win && !emptypool) {
                 profit.alpha = 1
@@ -515,15 +683,16 @@ export class PariTile extends BaseParisRenderer {
                     [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
                 )
                 payout.text = prizeAmount
-                payout.position.set(...this.payoutStyle.offset)
+                payout.position.set(...this.payoutStyle.default.offset)
 
                 const [profitText, profitTextState] = this.get('profitText', () => GraphicUtils.createText(
                     'Profit',
-                    this.profitTextStyle.offset,
-                    this.profitTextStyle.text,
-                ), [])
+                    this.profitTextStyle.default.offset,
+                    this.profitTextStyle.default.text,
+                ))
                 if (profitTextState.new) profitcontent.addChild(profitText)
-                profitText.alpha = 1
+                profitText.alpha = this.profitTextStyle.default.text.alpha
+                profitText.style.fill = claimable ? this.profitTextStyle.claimable.text.fill : this.profitTextStyle.default.text.fill
 
                 const [percentAmount] = this.get(
                     'percent',
@@ -532,12 +701,13 @@ export class PariTile extends BaseParisRenderer {
                 )
                 const [percentText, percentTextState] = this.get('percentText', () => GraphicUtils.createText(
                     percentAmount,
-                    this.percentStyle.offset,
-                    this.percentStyle.text,
-                ), [])
+                    this.percentStyle.default.offset,
+                    this.percentStyle.default.text,
+                ))
                 if (percentTextState.new) profitcontent.addChild(percentText)
-                percentText.alpha = 1
+                percentText.alpha = this.percentStyle.default.text.alpha
                 percentText.text = percentAmount
+                percentText.style.fill = claimable ? this.percentStyle.claimable.text.fill : this.percentStyle.default.text.fill
             } else {
                 const [profitText] = this.read('profitText')
                 if (profitText) profitText.alpha = 0
@@ -556,7 +726,7 @@ export class PariTile extends BaseParisRenderer {
                     profit.alpha = 0
                 }
 
-                const [ofx] = this.payoutStyle.offset
+                const [ofx] = this.payoutStyle.default.offset
                 payout.text = payoutAmount
                 payout.position.set(ofx, (profitcontent.height-payout.height)/2)
             }
@@ -564,13 +734,7 @@ export class PariTile extends BaseParisRenderer {
 
         const [profitpropagatingContainer, profitpropagatingContainerState] = this.get(
             'profitpropagatingContainer',
-            () => {
-                const styles = this.profitContainerStyle[pari.position]
-                const style = claimable ? styles.claimable : styles.default
-
-                return this.createPropagatingContainer(style)
-            },
-            [claimable]
+            () => this.createPropagatingContainer(this.profitContainerStyle[pari.position].default)
         )
         if (profitpropagatingContainerState.new || profitState.new) profit.addChild(profitpropagatingContainer)
 
@@ -578,12 +742,12 @@ export class PariTile extends BaseParisRenderer {
             'profitpropagating',
             () => this.createPropagatingBackground()
         )
-        if (profitpropagatingState.new || profitpropagatingContainerState.new) {
+        if (profitpropagatingState.new) {
             profitpropagatingContainerState.timeline = profitpropagatingtimeline
             profitpropagatingContainer.addChild(profitpropagating)
         }
 
-        if (propagating) this.animate('profitpropagatingContainer', 'show_propagating_bg')
+        if (propagating) this.animate('profitpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.07 } })
         else this.animate('profitpropagatingContainer', 'hide_propagating_bg')
     }
 
@@ -591,19 +755,20 @@ export class PariTile extends BaseParisRenderer {
         pool: any,
         pari: any,
         context: RenderingContext,
+        container: Graphics | Container,
         state: any,
     ): void {
-        const { claimable, emptypool, isHistorical } = state
+        const { claimable, emptypool, isHistorical, propagating } = state
 
         if (claimable) {
             const poolid = pool.poolid
             const pariid = pari.pariid
             const erc20 = pari.erc20
 
-            const [profit, profitState] = this.read('profit')
-            const [claim, claimState] = this.get('claim', () => this.createClaim(), [])
-            if (claimState.new || profitState.new) profit.addChild(claim)
+            const [claim, claimState] = this.get('claim', () => this.createClaim(context, pari.position))
             if (claimState.new) {
+                container.addChild(claim)
+
                 this.get('resolved', () => pool.resolved, [pool.resolved])
                 this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
                 this.get('nocontest', () => state.nocontest, [state.nocontest])
@@ -686,6 +851,34 @@ export class PariTile extends BaseParisRenderer {
                 })
 
             }
+
+            const [[claimFragment, claimFragmentTimeline], claimFragmentState] = this.get(
+                'claimFragment',
+                () => this.createClaimFragment(context, claim.width)
+            )
+            if (claimFragmentState.new) {
+                claimFragmentState.timeline = claimFragmentTimeline
+                claim.addChild(claimFragment)
+            }
+
+            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get(
+                'claimpropagatingContainer',
+                () => this.createPropagatingContainer(this.claimStyle[pari.position])
+            )
+            if (claimpropagatingContainerState.new) claim.addChild(claimpropagatingContainer)
+
+            const [[claimpropagating, claimpropagatingtimeline], claimpropagatingState] = this.get(
+                'claimpropagating',
+                () => this.createPropagatingBackground()
+            )
+            if (claimpropagatingState.new) {
+                claimpropagatingState.timeline = claimpropagatingtimeline
+                claimpropagatingContainer.addChild(claimpropagating)
+            }
+
+            if (propagating) this.animate('claimpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.3 } })
+            else this.animate('claimpropagatingContainer', 'hide_propagating_bg')
+
         } else {
             this.clear('claim')
             this.clear('resolved')
@@ -715,15 +908,15 @@ export class PariTile extends BaseParisRenderer {
         )
         if (wagercontentState.new) wager.addChild(wagercontent)
 
-        const [currency, currencyState] = this.get(
-            'currency',
+        const [userIcon, userIconState] = this.get(
+            'userIcon',
             () => this.createIcon(
                 context,
                 this.getPariCurrencyIconTextureName(context),
-                { ...this.iconStyle, tint: position === EPosition.Zero ? 0x071226 : undefined }
+                this.userIconStyle,
             )
         )
-        if (currencyState.new) wagercontent.addChild(currency)
+        if (userIconState.new) wagercontent.addChild(userIcon)
 
         const [wagerText, wagerTextState] = this.get('wagerText', () => GraphicUtils.createText(
             'Wager',
@@ -740,6 +933,17 @@ export class PariTile extends BaseParisRenderer {
         if (wagerAmountState.new) wagercontent.addChild(wagerAmount)
         wagerAmount.text = ui.erc20(pari.wager)
 
+        const [wagerCurrency, wagerCurrencyState] = this.get(
+            'wagerCurrency',
+            () => this.createIcon(
+                context,
+                this.getPariCurrencyIconTextureName(context),
+                this.wagerCurrencyIconStyle[position],
+            )
+        )
+        if (wagerCurrencyState.new) wagercontent.addChild(wagerCurrency)
+        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].offset[0]
+
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get(
             'wagerpropagatingContainer',
             () => this.createPropagatingContainer(this.wagerContainerStyles[position])
@@ -755,7 +959,7 @@ export class PariTile extends BaseParisRenderer {
             wagerpropagatingContainer.addChild(wagerpropagating)
         }
 
-        if (propagating) this.animate('wagerpropagatingContainer', 'show_propagating_bg')
+        if (propagating) this.animate('wagerpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.15 } })
         else this.animate('wagerpropagatingContainer', 'hide_propagating_bg')
     }
 
@@ -796,15 +1000,14 @@ export class PariTile extends BaseParisRenderer {
         context: RenderingContext,
         textureName: symbol,
         style,
-    ): Container {
+    ): Sprite {
         const { size, offset, tint, alpha } = style
 
         const texture = context.textures.get(textureName)
         const icon = new Sprite(texture)
 
         icon.scale.set(size / icon.height)
-        icon.position.set(...offset)
-
+        if (offset) icon.position.set(...offset)
         if (tint) icon.tint = tint
         if (alpha) icon.alpha = alpha
 
@@ -826,13 +1029,14 @@ export class PariTile extends BaseParisRenderer {
                 lineStyle,
                 radiuses,
                 color,
+                texture,
             } = backgroundStyle
 
             const background = GraphicUtils.createRoundedRect(
                 [0, 0],
                 [width, height],
                 radiuses,
-                { color, lineStyle }
+                { color, lineStyle, texture }
             )
             container.addChild(background)
 
@@ -848,8 +1052,32 @@ export class PariTile extends BaseParisRenderer {
         return container
     }
 
-    private createClaim(): Container {
-        const container = this.createContainer(this.claimStyle)
+    private createProfitContainer(context, position, claimable): Container {
+        if (claimable) {
+            const profit = this.createContainer(this.profitContainerStyle[position].claimable)
+            const mask = (<Graphics> profit.getChildAt(0)).clone()
+            profit.addChild(mask)
+            profit.mask = mask
+            const borderBottom = this.createContainerBorderBottom(this.profitBorderBottomStyle)
+            profit.addChild(borderBottom)
+
+            return profit
+        } else {
+            const style = this.profitContainerStyle[position].default
+            const texture = context.textures.get(GRADIENT_TEXTURE, style.background.gradient)
+
+            return this.createContainer({ ...style, background: { ...style.background, texture } })
+        }
+    }
+
+    private createClaim(context, position): Container {
+        const style = this.claimStyle[position]
+        const containerTexture = context.textures.get(GRADIENT_TEXTURE, style.background.gradient)
+
+        const container = this.createContainer({ ...style, background: { ...style.background, texture: containerTexture } })
+        const mask = (<Graphics> container.getChildAt(0)).clone()
+        container.addChild(mask)
+        container.mask = mask
         const text = GraphicUtils.createText(
             'Withdraw',
             this.claimTextStyle.offset,
@@ -858,7 +1086,28 @@ export class PariTile extends BaseParisRenderer {
         container.addChild(text)
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2)
 
+        const borderBottom = this.createContainerBorderBottom(this.claimBorderBottomStyle)
+        container.addChild(borderBottom)
+
         return container
+    }
+
+    private createClaimFragment(context, claimwidth): [Sprite, gsap.core.Timeline] {
+        const fragmentTexture = context.textures.get(CLAIM_FRAGMENT_TEXTURE)
+        const fragment = new Sprite(fragmentTexture)
+        fragment.anchor.set(1, 0)
+        fragment.position.y = 1
+
+        const timeline = gsap.timeline().to(fragment, {
+            pixi: { x: claimwidth + fragment.width },
+            delay: 5,
+            repeatDelay: 5,
+            duration: 1,
+            ease: 'none',
+            repeat: -1
+        })
+
+        return [fragment, timeline]
     }
 
     private createPropagatingContainer(style): Container {
@@ -887,6 +1136,29 @@ export class PariTile extends BaseParisRenderer {
         propagatingBackground.position.set(150, 50)
 
         return [propagatingBackground, gsaptimeline]
+    }
+
+    private createContainerBorderBottom(style): Graphics {
+        const {
+            offset: [x, y],
+            background: {
+                height,
+                width,
+                radiuses: [, , r3, r4],
+                lineStyle,
+            }
+        } = style
+
+        const rect = new Graphics()
+        rect.lineStyle(lineStyle)
+        rect
+            .moveTo(x-0.25, y+(height/2))
+            .arcTo(x-0.25, y+height, x+r4, y+height, r4)
+
+            .lineTo(x+width - r3, y+height)
+            .arcTo(x+width+0.25, y+height, x+width+0.25, y+(height/2), r3)
+
+        return rect
     }
 
 }

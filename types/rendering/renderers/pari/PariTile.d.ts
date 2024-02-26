@@ -10,13 +10,17 @@ export declare class PariTile extends BaseParisRenderer {
     private wagerTextStyle;
     private wagerStyle;
     private profitContainerStyle;
+    private profitBorderBottomStyle;
     private profitTextStyle;
     private percentStyle;
     private payoutStyle;
     private claimStyle;
+    private claimBorderBottomStyle;
     private claimTextStyle;
     private positionIconStyle;
-    private iconStyle;
+    private profitCurrencyIconStyle;
+    private userIconStyle;
+    private wagerCurrencyIconStyle;
     private validPariPositions;
     private configAnimations;
     protected get animations(): any;
@@ -29,7 +33,10 @@ export declare class PariTile extends BaseParisRenderer {
     private getPariCurrencyIconTextureName;
     private createIcon;
     private createContainer;
+    private createProfitContainer;
     private createClaim;
+    private createClaimFragment;
     private createPropagatingContainer;
     private createPropagatingBackground;
+    private createContainerBorderBottom;
 }

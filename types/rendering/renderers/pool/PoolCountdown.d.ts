@@ -8,7 +8,6 @@ export declare class PoolCountdown extends BasePoolsRenderer {
     private readonly winningGradientContainerStyle;
     private readonly phaseStyle;
     private readonly countdownStyle;
-    private winning_gradient_animation;
     private configAnimations;
     protected get animations(): any;
     private validPariPositions;

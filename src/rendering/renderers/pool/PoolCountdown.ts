@@ -55,13 +55,6 @@ export class PoolCountdown extends BasePoolsRenderer {
         }
     }
 
-    private winning_gradient_animation = {
-        duration: 1.5,
-        ease: 'power1.out',
-        new: 'set',
-        clear: true,
-    }
-
     private configAnimations: any = {
         positioning: {
             pixi: {
@@ -95,9 +88,22 @@ export class PoolCountdown extends BasePoolsRenderer {
             ease: 'power2.out',
             delay: 0.1,
         },
-        winning_gradient_to_up: this.winning_gradient_animation,
-        winning_gradient_to_zero: this.winning_gradient_animation,
-        winning_gradient_to_down: this.winning_gradient_animation,
+        winning_gradient_show: {
+            pixi: {
+                alpha: 1,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            new: 'set',
+            clear: true,
+        },
+        winning_gradient_hide: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+        }
     }
 
     protected get animations(): any {
@@ -181,10 +187,10 @@ export class PoolCountdown extends BasePoolsRenderer {
                 'gradientlock',
                 () => this.createGradient(
                     this.lockGradientStyle,
-                    [lockx, lockheight],
-                    context.textures.get(LOCK_COUNTDOWN_TEXTURE, { width: lockx })
+                    [width, lockheight],
+                    context.textures.get(LOCK_COUNTDOWN_TEXTURE, { width })
                 ),
-                [lockheight]
+                [lockheight, width]
             )
 
             if (gradientlockState.new) container.addChild(gradientlock)
@@ -204,10 +210,10 @@ export class PoolCountdown extends BasePoolsRenderer {
                 'gradientres',
                 () => this.createGradient(
                     this.resolutionGradientStyle,
-                    [rx, rheight],
-                    context.textures.get(RESOLUTION_COUNTDOWN_TEXTURE, { width: rx })
+                    [width, rheight],
+                    context.textures.get(RESOLUTION_COUNTDOWN_TEXTURE, { width })
                 ),
-                [rheight]
+                [rheight, width]
             )
             if (gradientresState.new) container.addChild(gradientres)
 
@@ -220,34 +226,24 @@ export class PoolCountdown extends BasePoolsRenderer {
                 const [winninggradient, winninggradientState] = this.get(
                     'winninggradient',
                     () => this.createWinningGradient(context, [gradientres.width, 2*rheight]),
-                    [rheight]
+                    [rheight, gradientres.width]
                 )
                 if (winninggradientState.new) {
                     winningcontainer.addChild(winninggradient)
                     winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight)
                 }
 
+                const paris = context.paris?.[pool.poolid]
+                const hasWinPari = paris && paris.some(pari => pari.position === resolution)
                 const ofy = this.winningGradientContainerStyle.offset[1]
-                if (resolution === EPosition.Up) {
-                    this.animate(
-                        'winningcontainer',
-                        'winning_gradient_to_up',
-                        { pixi: { y: ofy-rheight, alpha: 1 } }
-                    )
-                }
-                if (resolution === EPosition.Zero) {
-                    this.animate(
-                        'winningcontainer',
-                        'winning_gradient_to_zero',
-                        { pixi: { y: ofy-rheight/2, alpha: 1 } }
-                    )
-                }
-                if (resolution === EPosition.Down) {
-                    this.animate(
-                        'winningcontainer',
-                        'winning_gradient_to_down',
-                        { pixi: { y: ofy, alpha: 1 } }
-                    )
+
+                if (hasWinPari) {
+                    if (resolution === EPosition.Up) winningcontainer.position.y = ofy-rheight
+                    if (resolution === EPosition.Zero) winningcontainer.position.y = ofy-rheight/2
+                    if (resolution === EPosition.Down) winningcontainer.position.y = ofy
+                    this.animate('winningcontainer', 'winning_gradient_show')
+                } else {
+                    this.animate('winningcontainer', 'winning_gradient_hide')
                 }
             } else {
                 this.clear('winningcontainer')
