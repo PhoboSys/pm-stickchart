@@ -33,20 +33,21 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             }
         };
         this.contentStyle = {
-            offset: [14, 13],
+            offset: [14, (58 - 32) / 2],
         };
         this.wagerContainerStyles = {
             [_enums_1.EPosition.Up]: {
                 offset: [24, 0],
                 background: {
                     width: 170,
-                    height: 56,
-                    radiuses: [27, 27, 27, 27],
+                    height: 58,
+                    radiuses: [28, 28, 28, 28],
                     color: 0x01A37A,
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
                 },
             },
@@ -54,14 +55,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 offset: [-24, 0],
                 background: {
                     width: 170,
-                    height: 56,
+                    height: 58,
                     anchor: [-1, 0],
-                    radiuses: [27, 27, 27, 27],
+                    radiuses: [28, 28, 28, 28],
                     color: 0xB7BDD7,
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
                 },
             },
@@ -69,13 +71,14 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 offset: [24, 0],
                 background: {
                     width: 170,
-                    height: 56,
-                    radiuses: [27, 27, 27, 27],
+                    height: 58,
+                    radiuses: [28, 28, 28, 28],
                     color: 0xD7335B,
                     lineStyle: {
                         color: 0xFFFFFF,
                         width: 1,
                         alpha: 1,
+                        alignment: 0,
                     },
                 },
             },
@@ -83,30 +86,33 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         this.wagerTextStyle = {
             [_enums_1.EPosition.Up]: {
                 text: {
-                    fill: 0xFFFFFFB3,
+                    fill: 0xFFFFFFBF,
                     fontWeight: 600,
                     fontFamily: 'Proxima Nova',
                     fontSize: 13,
+                    trim: true,
                 },
-                offset: [48, 0]
+                offset: [32 + 16, 0]
             },
             [_enums_1.EPosition.Zero]: {
                 text: {
-                    fill: 0x071226B3,
+                    fill: 0x071226BF,
                     fontWeight: 600,
                     fontFamily: 'Proxima Nova',
                     fontSize: 13,
+                    trim: true,
                 },
-                offset: [48, 0]
+                offset: [32 + 16, 0]
             },
             [_enums_1.EPosition.Down]: {
                 text: {
-                    fill: 0xFFFFFFB3,
+                    fill: 0xFFFFFFBF,
                     fontWeight: 600,
                     fontFamily: 'Proxima Nova',
                     fontSize: 13,
+                    trim: true,
                 },
-                offset: [48, 0]
+                offset: [32 + 16, 0]
             },
         };
         this.wagerStyle = {
@@ -115,27 +121,30 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     fill: 0xFFFFFF,
                     fontWeight: 500,
                     fontFamily: 'Roboto',
-                    fontSize: 15,
+                    fontSize: 16,
+                    trim: true,
                 },
-                offset: [48, 16]
+                offset: [32 + 16, 20]
             },
             [_enums_1.EPosition.Zero]: {
                 text: {
                     fill: 0x071226,
                     fontWeight: 500,
                     fontFamily: 'Roboto',
-                    fontSize: 15,
+                    fontSize: 16,
+                    trim: true,
                 },
-                offset: [48, 16]
+                offset: [32 + 16, 20]
             },
             [_enums_1.EPosition.Down]: {
                 text: {
                     fill: 0xFFFFFF,
                     fontWeight: 500,
                     fontFamily: 'Roboto',
-                    fontSize: 15,
+                    fontSize: 16,
+                    trim: true,
                 },
-                offset: [48, 16]
+                offset: [32 + 16, 20]
             },
         };
         this.profitContainerStyle = {
@@ -144,151 +153,310 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     offset: [-24, 0],
                     background: {
                         width: 170,
-                        height: 56,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [27, 27, 27, 27],
-                        color: 0xD66F35,
+                        radiuses: [28, 28, 28, 28],
                         lineStyle: {
                             color: 0xFFFFFF,
                             width: 1,
                             alpha: 1,
+                            alignment: 0,
                         },
+                        gradient: {
+                            width: 170,
+                            height: 58,
+                            points: [0, 58, 170, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
                     },
                 },
                 claimable: {
-                    offset: [-24, -(108 - 56) / 2],
+                    offset: [-24, 0],
                     background: {
                         width: 170,
-                        height: 108,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [22, 22, 22, 22],
-                        color: 0xD66F35,
-                        lineStyle: {
-                            color: 0xFFFFFF,
-                            width: 1,
-                            alpha: 1,
-                        },
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
                     },
-                }
+                },
             },
             [_enums_1.EPosition.Down]: {
                 default: {
                     offset: [-24, 0],
                     background: {
                         width: 170,
-                        height: 56,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [27, 27, 27, 27],
-                        color: 0xD66F35,
+                        radiuses: [28, 28, 28, 28],
                         lineStyle: {
                             color: 0xFFFFFF,
                             width: 1,
                             alpha: 1,
+                            alignment: 0,
                         },
+                        gradient: {
+                            width: 170,
+                            height: 58,
+                            points: [0, 58, 170, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
                     },
                 },
                 claimable: {
-                    offset: [-24, -(108 - 56)],
+                    offset: [-24, 0],
                     background: {
                         width: 170,
-                        height: 108,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [22, 22, 22, 22],
-                        color: 0xD66F35,
-                        lineStyle: {
-                            color: 0xFFFFFF,
-                            width: 1,
-                            alpha: 1,
-                        },
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
                     },
-                }
+                },
             },
             [_enums_1.EPosition.Zero]: {
                 default: {
-                    offset: [-137 - 24 - 8, 0],
+                    offset: [-170 - 24 - 8, 0],
                     background: {
                         width: 170,
-                        height: 56,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [27, 27, 27, 27],
-                        color: 0xD66F35,
+                        radiuses: [28, 28, 28, 28],
                         lineStyle: {
                             color: 0xFFFFFF,
                             width: 1,
                             alpha: 1,
+                            alignment: 0,
                         },
+                        gradient: {
+                            width: 170,
+                            height: 58,
+                            points: [0, 58, 170, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
                     },
                 },
                 claimable: {
-                    offset: [-170 - 24 - 8, -(108 - 56) / 2],
+                    offset: [-170 - 24 - 8, 0],
                     background: {
                         width: 170,
-                        height: 108,
+                        height: 58,
                         anchor: [-1, 0],
-                        radiuses: [22, 22, 22, 22],
-                        color: 0xD66F35,
-                        lineStyle: {
-                            color: 0xFFFFFF,
-                            width: 1,
-                            alpha: 1,
-                        },
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
                     },
+                },
+            },
+        };
+        this.profitBorderBottomStyle = {
+            offset: [0, -1],
+            background: {
+                width: 170,
+                height: 58,
+                radiuses: [28, 28, 28, 28],
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 1,
+                    alpha: 0.2,
+                    alignment: 0,
                 }
             },
         };
         this.profitTextStyle = {
-            text: {
-                fill: 0xFFFFFF,
-                fontWeight: 600,
-                fontFamily: 'Proxima Nova',
-                fontSize: 12,
+            default: {
+                text: {
+                    fill: 0x0F1F43,
+                    fontWeight: 600,
+                    fontFamily: 'Proxima Nova',
+                    fontSize: 13,
+                    trim: true,
+                    alpha: 0.8
+                },
+                offset: [44 + 0, 0]
             },
-            offset: [44 + 0, 0]
+            claimable: {
+                text: {
+                    fill: 0xF7C15B,
+                    fontWeight: 600,
+                    fontFamily: 'Proxima Nova',
+                    fontSize: 13,
+                    trim: true,
+                    alpha: 0.8
+                },
+                offset: [44 + 0, 0]
+            }
         };
         this.percentStyle = {
-            text: {
-                fill: 0xFFFFFFBF,
-                fontWeight: 400,
-                fontFamily: 'Roboto',
-                fontSize: 11,
+            default: {
+                text: {
+                    fill: 0x0F1F43,
+                    fontWeight: 400,
+                    fontFamily: 'Roboto',
+                    fontSize: 12,
+                    trim: true,
+                    alpha: 0.8,
+                },
+                offset: [32 + 12 + 31 + 8, 0],
             },
-            offset: [44 + 35, 0],
+            claimable: {
+                text: {
+                    fill: 0xF7C15B,
+                    fontWeight: 400,
+                    fontFamily: 'Roboto',
+                    fontSize: 12,
+                    trim: true,
+                    alpha: 0.8,
+                },
+                offset: [32 + 12 + 31 + 8, 0],
+            },
         };
         this.payoutStyle = {
-            text: {
-                fill: 0xFFFFFF,
-                fontWeight: 500,
-                fontFamily: 'Roboto',
-                fontSize: 15,
+            default: {
+                text: {
+                    fill: 0x0F1F43,
+                    fontWeight: 500,
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    trim: true,
+                },
+                offset: [44 + 0, 19.5]
             },
-            offset: [44 + 0, 15]
+            claimable: {
+                text: {
+                    fill: 0xFFFFFF,
+                    fontWeight: 500,
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    trim: true,
+                },
+                offset: [44 + 0, 19.5]
+            }
         };
         this.claimStyle = {
-            offset: [14, 60],
+            [_enums_1.EPosition.Up]: {
+                offset: [-24, 58 + 10],
+                background: {
+                    width: 170,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 170,
+                        height: 48,
+                        points: [0, 48, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                offset: [-24, -10 - 48],
+                background: {
+                    width: 170,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 170,
+                        height: 48,
+                        points: [0, 48, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                offset: [-24 - 170 - 8, 58 + 10],
+                background: {
+                    width: 170,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 170,
+                        height: 48,
+                        points: [0, 48, 170, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+        };
+        this.claimBorderBottomStyle = {
+            offset: [0, -1],
             background: {
-                width: 142,
-                height: 32,
-                radiuses: [16, 16, 16, 16],
-                color: 0xFFFFFF,
+                width: 170,
+                height: 48,
+                radiuses: [23, 23, 23, 23],
+                lineStyle: {
+                    color: 0xFFE7BA,
+                    width: 1,
+                    alpha: 1,
+                    alignment: 0,
+                }
             },
         };
         this.claimTextStyle = {
             text: {
-                fill: 0xD66F35,
+                fill: 0x0F1F43,
                 fontWeight: 700,
                 fontFamily: 'Proxima Nova',
-                fontSize: 15,
+                fontSize: 16,
             },
             offset: [0, 0]
         };
         this.positionIconStyle = {
             size: 32,
-            offset: [-16, (56 - 32) / 2],
+            offset: [-16, (58 - 32) / 2],
         };
-        this.iconStyle = {
+        this.profitCurrencyIconStyle = {
+            default: {
+                size: 32,
+                tint: 0x0F1F43
+            },
+            claimable: {
+                size: 32,
+                tint: 0xF7C15B
+            },
+        };
+        this.userIconStyle = {
             size: 32,
-            offset: [0, 0],
-            alpha: 0.75,
+        };
+        this.wagerCurrencyIconStyle = {
+            [_enums_1.EPosition.Up]: {
+                size: 16,
+                offset: [32 + 16 + 7, 19],
+                alpha: 0.8,
+            },
+            [_enums_1.EPosition.Down]: {
+                size: 16,
+                offset: [32 + 16 + 7, 19],
+                alpha: 0.8,
+            },
+            [_enums_1.EPosition.Zero]: {
+                size: 16,
+                offset: [32 + 16 + 7, 19],
+                alpha: 0.8,
+                tint: 0x071226,
+            }
         };
         this.validPariPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
@@ -324,16 +492,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 yoyoEase: 'power2.out',
             },
             show_propagating_bg: {
-                pixi: {
-                    alpha: 0.15,
-                    zIndex: 10,
-                },
                 duration: 0.3,
                 ease: 'power2.out',
             },
             hide_propagating_bg: {
                 pixi: {
-                    alpha: 0,
+                    alpha: 0
                 },
                 duration: 0.3,
                 ease: 'power2.out',
@@ -355,12 +519,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [group] = this.renderGroup(pool, pari, context, container, state);
         if (!state.win && !state.nocontest && state.isHistorical)
             return;
-        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle), []);
+        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle));
         if (positionIconState.new)
             group.addChild(positionIcon);
         this.updateWager(pool, pari, context, group, state);
         this.updateProfit(pool, pari, context, group, state);
-        this.updateClaim(pool, pari, context, state);
+        this.updateClaim(pool, pari, context, group, state);
     }
     renderGroup(pool, pari, context, container, state) {
         const position = pari.position;
@@ -392,27 +556,25 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return [group, groupstate];
     }
     updateProfit(pool, pari, context, container, state) {
-        const { claimable, emptypool, nocontest, undef, win, phantom, propagating } = state;
-        const [profit, profitState] = this.get('profit', () => {
-            const styles = this.profitContainerStyle[pari.position];
-            const style = claimable ? styles.claimable : styles.default;
-            return this.createContainer(style);
-        }, [claimable]);
-        if (profitState.new) {
+        const { emptypool, nocontest, undef, win, phantom, propagating, claimable } = state;
+        const [profit, profitState] = this.get('profit', () => this.createProfitContainer(context, pari.position, claimable), [claimable]);
+        if (profitState.new)
             container.addChild(profit);
-            profit.sortableChildren = true;
-        }
         profit.alpha = 0;
         const [profitcontent, profitcontentState] = this.get('profitcontent', () => this.createContainer(this.contentStyle));
         if (profitcontentState.new || profitState.new)
             profit.addChild(profitcontent);
-        const [winIcon, winIconState] = this.get('winIcon', () => this.createIcon(context, textures_1.WIN_ICON_TEXTURE, this.iconStyle));
-        if (winIconState.new)
-            profitcontent.addChild(winIcon);
+        const [profitCurrency, profitCurrencyState] = this.get('profitCurrency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.profitCurrencyIconStyle.default));
+        if (profitCurrencyState.new)
+            profitcontent.addChild(profitCurrency);
+        profitCurrency.tint = claimable ?
+            this.profitCurrencyIconStyle.claimable.tint :
+            this.profitCurrencyIconStyle.default.tint;
         if (!undef) {
-            const [payout, payoutState] = this.get('payout', () => _rendering_1.GraphicUtils.createText(0, this.payoutStyle.offset, this.payoutStyle.text), []);
+            const [payout, payoutState] = this.get('payout', () => _rendering_1.GraphicUtils.createText(0, this.payoutStyle.default.offset, this.payoutStyle.default.text));
             if (payoutState.new)
                 profitcontent.addChild(payout);
+            payout.style.fill = claimable ? this.payoutStyle.claimable.text.fill : this.payoutStyle.default.text.fill;
             if (win && !emptypool) {
                 profit.alpha = 1;
                 const [prizeAmount] = this.get('prizeAmount', () => {
@@ -427,17 +589,19 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     }
                 }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptypool]);
                 payout.text = prizeAmount;
-                payout.position.set(...this.payoutStyle.offset);
-                const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.offset, this.profitTextStyle.text), []);
+                payout.position.set(...this.payoutStyle.default.offset);
+                const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.default.offset, this.profitTextStyle.default.text));
                 if (profitTextState.new)
                     profitcontent.addChild(profitText);
-                profitText.alpha = 1;
+                profitText.alpha = this.profitTextStyle.default.text.alpha;
+                profitText.style.fill = claimable ? this.profitTextStyle.claimable.text.fill : this.profitTextStyle.default.text.fill;
                 const [percentAmount] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
-                const [percentText, percentTextState] = this.get('percentText', () => _rendering_1.GraphicUtils.createText(percentAmount, this.percentStyle.offset, this.percentStyle.text), []);
+                const [percentText, percentTextState] = this.get('percentText', () => _rendering_1.GraphicUtils.createText(percentAmount, this.percentStyle.default.offset, this.percentStyle.default.text));
                 if (percentTextState.new)
                     profitcontent.addChild(percentText);
-                percentText.alpha = 1;
+                percentText.alpha = this.percentStyle.default.text.alpha;
                 percentText.text = percentAmount;
+                percentText.style.fill = claimable ? this.percentStyle.claimable.text.fill : this.percentStyle.default.text.fill;
             }
             else {
                 const [profitText] = this.read('profitText');
@@ -458,40 +622,34 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 else {
                     profit.alpha = 0;
                 }
-                const [ofx] = this.payoutStyle.offset;
+                const [ofx] = this.payoutStyle.default.offset;
                 payout.text = payoutAmount;
                 payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => {
-            const styles = this.profitContainerStyle[pari.position];
-            const style = claimable ? styles.claimable : styles.default;
-            return this.createPropagatingContainer(style);
-        }, [claimable]);
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer(this.profitContainerStyle[pari.position].default));
         if (profitpropagatingContainerState.new || profitState.new)
             profit.addChild(profitpropagatingContainer);
         const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
-        if (profitpropagatingState.new || profitpropagatingContainerState.new) {
+        if (profitpropagatingState.new) {
             profitpropagatingContainerState.timeline = profitpropagatingtimeline;
             profitpropagatingContainer.addChild(profitpropagating);
         }
         if (propagating)
-            this.animate('profitpropagatingContainer', 'show_propagating_bg');
+            this.animate('profitpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.07 } });
         else
             this.animate('profitpropagatingContainer', 'hide_propagating_bg');
     }
-    updateClaim(pool, pari, context, state) {
+    updateClaim(pool, pari, context, container, state) {
         var _a;
-        const { claimable, emptypool, isHistorical } = state;
+        const { claimable, emptypool, isHistorical, propagating } = state;
         if (claimable) {
             const poolid = pool.poolid;
             const pariid = pari.pariid;
             const erc20 = pari.erc20;
-            const [profit, profitState] = this.read('profit');
-            const [claim, claimState] = this.get('claim', () => this.createClaim(), []);
-            if (claimState.new || profitState.new)
-                profit.addChild(claim);
+            const [claim, claimState] = this.get('claim', () => this.createClaim(context, pari.position));
             if (claimState.new) {
+                container.addChild(claim);
                 this.get('resolved', () => pool.resolved, [pool.resolved]);
                 this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
                 this.get('nocontest', () => state.nocontest, [state.nocontest]);
@@ -545,6 +703,23 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         claim.interactive = false;
                 });
             }
+            const [[claimFragment, claimFragmentTimeline], claimFragmentState] = this.get('claimFragment', () => this.createClaimFragment(context, claim.width));
+            if (claimFragmentState.new) {
+                claimFragmentState.timeline = claimFragmentTimeline;
+                claim.addChild(claimFragment);
+            }
+            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => this.createPropagatingContainer(this.claimStyle[pari.position]));
+            if (claimpropagatingContainerState.new)
+                claim.addChild(claimpropagatingContainer);
+            const [[claimpropagating, claimpropagatingtimeline], claimpropagatingState] = this.get('claimpropagating', () => this.createPropagatingBackground());
+            if (claimpropagatingState.new) {
+                claimpropagatingState.timeline = claimpropagatingtimeline;
+                claimpropagatingContainer.addChild(claimpropagating);
+            }
+            if (propagating)
+                this.animate('claimpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.3 } });
+            else
+                this.animate('claimpropagatingContainer', 'hide_propagating_bg');
         }
         else {
             this.clear('claim');
@@ -562,9 +737,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
         if (wagercontentState.new)
             wager.addChild(wagercontent);
-        const [currency, currencyState] = this.get('currency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), Object.assign(Object.assign({}, this.iconStyle), { tint: position === _enums_1.EPosition.Zero ? 0x071226 : undefined })));
-        if (currencyState.new)
-            wagercontent.addChild(currency);
+        const [userIcon, userIconState] = this.get('userIcon', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.userIconStyle));
+        if (userIconState.new)
+            wagercontent.addChild(userIcon);
         const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Wager', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
         if (wagerTextState.new)
             wagercontent.addChild(wagerText);
@@ -572,6 +747,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (wagerAmountState.new)
             wagercontent.addChild(wagerAmount);
         wagerAmount.text = ui_1.default.erc20(pari.wager);
+        const [wagerCurrency, wagerCurrencyState] = this.get('wagerCurrency', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.wagerCurrencyIconStyle[position]));
+        if (wagerCurrencyState.new)
+            wagercontent.addChild(wagerCurrency);
+        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].offset[0];
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
         if (wagerpropagatingContainerState.new)
             wager.addChild(wagerpropagatingContainer);
@@ -581,7 +760,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             wagerpropagatingContainer.addChild(wagerpropagating);
         }
         if (propagating)
-            this.animate('wagerpropagatingContainer', 'show_propagating_bg');
+            this.animate('wagerpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.15 } });
         else
             this.animate('wagerpropagatingContainer', 'hide_propagating_bg');
     }
@@ -616,7 +795,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const texture = context.textures.get(textureName);
         const icon = new pixi_1.Sprite(texture);
         icon.scale.set(size / icon.height);
-        icon.position.set(...offset);
+        if (offset)
+            icon.position.set(...offset);
         if (tint)
             icon.tint = tint;
         if (alpha)
@@ -628,8 +808,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const { background: backgroundStyle } = style;
         const container = new pixi_1.Container();
         if (backgroundStyle) {
-            const { width, height, anchor, lineStyle, radiuses, color, } = backgroundStyle;
-            const background = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle });
+            const { width, height, anchor, lineStyle, radiuses, color, texture, } = backgroundStyle;
+            const background = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle, texture });
             container.addChild(background);
             if (anchor) {
                 const [ax, ay] = anchor;
@@ -640,12 +820,50 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         container.position.set(ofx, ofy);
         return container;
     }
-    createClaim() {
-        const container = this.createContainer(this.claimStyle);
+    createProfitContainer(context, position, claimable) {
+        if (claimable) {
+            const profit = this.createContainer(this.profitContainerStyle[position].claimable);
+            const mask = profit.getChildAt(0).clone();
+            profit.addChild(mask);
+            profit.mask = mask;
+            const borderBottom = this.createContainerBorderBottom(this.profitBorderBottomStyle);
+            profit.addChild(borderBottom);
+            return profit;
+        }
+        else {
+            const style = this.profitContainerStyle[position].default;
+            const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, style.background.gradient);
+            return this.createContainer(Object.assign(Object.assign({}, style), { background: Object.assign(Object.assign({}, style.background), { texture }) }));
+        }
+    }
+    createClaim(context, position) {
+        const style = this.claimStyle[position];
+        const containerTexture = context.textures.get(textures_1.GRADIENT_TEXTURE, style.background.gradient);
+        const container = this.createContainer(Object.assign(Object.assign({}, style), { background: Object.assign(Object.assign({}, style.background), { texture: containerTexture }) }));
+        const mask = container.getChildAt(0).clone();
+        container.addChild(mask);
+        container.mask = mask;
         const text = _rendering_1.GraphicUtils.createText('Withdraw', this.claimTextStyle.offset, this.claimTextStyle.text);
         container.addChild(text);
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
+        const borderBottom = this.createContainerBorderBottom(this.claimBorderBottomStyle);
+        container.addChild(borderBottom);
         return container;
+    }
+    createClaimFragment(context, claimwidth) {
+        const fragmentTexture = context.textures.get(textures_1.CLAIM_FRAGMENT_TEXTURE);
+        const fragment = new pixi_1.Sprite(fragmentTexture);
+        fragment.anchor.set(1, 0);
+        fragment.position.y = 1;
+        const timeline = pixi_1.gsap.timeline().to(fragment, {
+            pixi: { x: claimwidth + fragment.width },
+            delay: 5,
+            repeatDelay: 5,
+            duration: 1,
+            ease: 'none',
+            repeat: -1
+        });
+        return [fragment, timeline];
     }
     createPropagatingContainer(style) {
         const container = new pixi_1.Container();
@@ -669,6 +887,17 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         propagatingBackground.pivot.y = 155;
         propagatingBackground.position.set(150, 50);
         return [propagatingBackground, gsaptimeline];
+    }
+    createContainerBorderBottom(style) {
+        const { offset: [x, y], background: { height, width, radiuses: [, , r3, r4], lineStyle, } } = style;
+        const rect = new pixi_1.Graphics();
+        rect.lineStyle(lineStyle);
+        rect
+            .moveTo(x - 0.25, y + (height / 2))
+            .arcTo(x - 0.25, y + height, x + r4, y + height, r4)
+            .lineTo(x + width - r3, y + height)
+            .arcTo(x + width + 0.25, y + height, x + width + 0.25, y + (height / 2), r3);
+        return rect;
     }
 }
 exports.PariTile = PariTile;

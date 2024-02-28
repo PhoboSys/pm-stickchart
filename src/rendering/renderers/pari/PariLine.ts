@@ -20,7 +20,7 @@ export class PariLine extends BaseParisRenderer {
 
         [EPosition.Up]: {
             startOffset: [0, -8],
-            endOffset: [0, 40+(56-32)/2+32],
+            endOffset: [0, 40+(58-32)/2+32],
             lineStyle: {
                 color: 0xFFFFFF,
                 width: 2,
@@ -29,7 +29,7 @@ export class PariLine extends BaseParisRenderer {
 
         [EPosition.Down]: {
             startOffset: [0, 8],
-            endOffset: [0, -134-62+(56-32)/2],
+            endOffset: [0, -134-62+(58-32)/2],
             lineStyle: {
                 color: 0xFFFFFF,
                 width: 2,
@@ -38,7 +38,7 @@ export class PariLine extends BaseParisRenderer {
 
         [EPosition.Zero]: {
             startOffset: [0, 8],
-            endOffset: [0, 14+(56-32)/2],
+            endOffset: [0, 14+(58-32)/2],
             lineStyle: {
                 color: 0xFFFFFF,
                 width: 2,
@@ -50,27 +50,27 @@ export class PariLine extends BaseParisRenderer {
 
         [EPosition.Up]: {
             startOffset: [0, -8],
-            endOffset: [0, 40+(56-32)/2+32],
+            endOffset: [0, 40+(58-32)/2+32],
             lineStyle: {
-                color: 0xD66F35,
+                color: 0xF7C15B,
                 width: 2,
             }
         },
 
         [EPosition.Down]: {
             startOffset: [0, 8],
-            endOffset: [0, -134-62+(56-32)/2],
+            endOffset: [0, -134-62+(58-32)/2],
             lineStyle: {
-                color: 0xD66F35,
+                color: 0xF7C15B,
                 width: 2,
             }
         },
 
         [EPosition.Zero]: {
             startOffset: [0, 8],
-            endOffset: [0, 14+(56-32)/2],
+            endOffset: [0, 14+(58-32)/2],
             lineStyle: {
-                color: 0xD66F35,
+                color: 0xF7C15B,
                 width: 2,
             }
         }

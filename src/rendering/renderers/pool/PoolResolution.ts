@@ -5,7 +5,7 @@ import { RenderingContext, GraphicUtils } from '@rendering'
 import datamath from '@lib/datamath'
 import { Container } from '@lib/pixi'
 
-import { SILVER, GOLD, ROYAL } from '@constants'
+import { SILVER, GOLD, BRONZE } from '@constants'
 
 import { BasePoolsRenderer } from './BasePoolsRenderer'
 
@@ -68,12 +68,12 @@ export class PoolResolution extends BasePoolsRenderer {
     private getLevelLineColor(context: RenderingContext): number {
 
         switch (context.metapool?.level) {
+            case BRONZE:
+                return config.style.levels.bronzeLineColor
             case SILVER:
                 return config.style.levels.silverLineColor
             case GOLD:
                 return config.style.levels.goldLineColor
-            case ROYAL:
-                return config.style.levels.royalLineColor
 
             default:
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)

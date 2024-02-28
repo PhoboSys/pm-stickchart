@@ -95,12 +95,12 @@ export default {
         },
         winningCountdown: {
             colors: [
-                { color: '#D75A3300', offset: 0 },
-                { color: '#D75A3300', offset: 0.1 },
-                { color: '#D75A33FF', offset: 0.49 },
-                { color: '#D75A33FF', offset: 0.51 },
-                { color: '#D75A3300', offset: 0.9 },
-                { color: '#D75A3300', offset: 1 },
+                { color: '#F7C15B00', offset: 0 },
+                { color: '#F7C15B00', offset: 0.1 },
+                { color: '#F7C15BFF', offset: 0.49 },
+                { color: '#F7C15BFF', offset: 0.51 },
+                { color: '#F7C15B00', offset: 0.9 },
+                { color: '#F7C15B00', offset: 1 },
             ],
             padding: 25,
         },
@@ -113,10 +113,10 @@ export default {
             padding: 25,
         },
         levels: {
-            royalLineColor: 0xFFFFFF,
-            goldLineColor: 0xFFFFFF,
+            bronzeLineColor: 0xFFFFFF,
             silverLineColor: 0xFFFFFF,
-            royalColors: [
+            goldLineColor: 0xFFFFFF,
+            bronzeColors: [
                 { color: '#9CA2A2', offset: 0.17 },
                 { color: '#EBCEAE', offset: 0.3743 },
                 { color: '#E4E5E9', offset: 0.5467 },

@@ -96,10 +96,10 @@ declare const _default: {
             padding: number;
         };
         levels: {
-            royalLineColor: number;
-            goldLineColor: number;
+            bronzeLineColor: number;
             silverLineColor: number;
-            royalColors: {
+            goldLineColor: number;
+            bronzeColors: {
                 color: string;
                 offset: number;
             }[];

@@ -96,6 +96,7 @@ class GroupComponent extends _rendering_1.BaseComponent {
             });
             return [];
         }
+        this.get('claimable', () => claimable, [claimable]);
         const [group, groupstate] = this.get('group', () => new pixi_1.Container(), []);
         if (groupstate.new)
             group.alpha = 0;
@@ -110,7 +111,6 @@ class GroupComponent extends _rendering_1.BaseComponent {
             }
             if (!groupstate.subscribed) {
                 groupstate.subscribed = true;
-                this.get('claimable', () => claimable, [claimable]);
                 context.eventTarget.addEventListener('poolpin', (e) => {
                     if (e.poolid !== poolid)
                         return;

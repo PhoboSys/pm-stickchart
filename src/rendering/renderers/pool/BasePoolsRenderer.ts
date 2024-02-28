@@ -1,7 +1,7 @@
 import { Logger } from '@infra'
 
 import { RenderingContext, BaseRenderer } from '@rendering'
-import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, ROYAL_LEVEL_TEXTURE } from '@rendering/textures/symbols'
+import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, BRONZE_LEVEL_TEXTURE } from '@rendering/textures/symbols'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS, binarySearchNearest } from '@lib/utils'
@@ -10,7 +10,7 @@ import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
 
 import { PRIZEFUNDS } from '@constants'
-import { SILVER, GOLD, ROYAL } from '@constants'
+import { SILVER, GOLD, BRONZE } from '@constants'
 
 export abstract class BasePoolsRenderer extends BaseRenderer {
 
@@ -211,12 +211,12 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     protected getLevelTextureName(context: RenderingContext): symbol {
 
         switch (context.metapool?.level) {
+            case BRONZE:
+                return BRONZE_LEVEL_TEXTURE
             case SILVER:
                 return SILVER_LEVEL_TEXTURE
             case GOLD:
                 return GOLD_LEVEL_TEXTURE
-            case ROYAL:
-                return ROYAL_LEVEL_TEXTURE
 
             default:
                 Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)

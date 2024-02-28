@@ -15,7 +15,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
         this.nocontestLineStyle = {
             [_enums_1.EPosition.Up]: {
                 startOffset: [0, -8],
-                endOffset: [0, 40 + (56 - 32) / 2 + 32],
+                endOffset: [0, 40 + (58 - 32) / 2 + 32],
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 2,
@@ -23,7 +23,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             },
             [_enums_1.EPosition.Down]: {
                 startOffset: [0, 8],
-                endOffset: [0, -134 - 62 + (56 - 32) / 2],
+                endOffset: [0, -134 - 62 + (58 - 32) / 2],
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 2,
@@ -31,7 +31,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             },
             [_enums_1.EPosition.Zero]: {
                 startOffset: [0, 8],
-                endOffset: [0, 14 + (56 - 32) / 2],
+                endOffset: [0, 14 + (58 - 32) / 2],
                 lineStyle: {
                     color: 0xFFFFFF,
                     width: 2,
@@ -41,25 +41,25 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
         this.winlineStyle = {
             [_enums_1.EPosition.Up]: {
                 startOffset: [0, -8],
-                endOffset: [0, 40 + (56 - 32) / 2 + 32],
+                endOffset: [0, 40 + (58 - 32) / 2 + 32],
                 lineStyle: {
-                    color: 0xD66F35,
+                    color: 0xF7C15B,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Down]: {
                 startOffset: [0, 8],
-                endOffset: [0, -134 - 62 + (56 - 32) / 2],
+                endOffset: [0, -134 - 62 + (58 - 32) / 2],
                 lineStyle: {
-                    color: 0xD66F35,
+                    color: 0xF7C15B,
                     width: 2,
                 }
             },
             [_enums_1.EPosition.Zero]: {
                 startOffset: [0, 8],
-                endOffset: [0, 14 + (56 - 32) / 2],
+                endOffset: [0, 14 + (58 - 32) / 2],
                 lineStyle: {
-                    color: 0xD66F35,
+                    color: 0xF7C15B,
                     width: 2,
                 }
             }
