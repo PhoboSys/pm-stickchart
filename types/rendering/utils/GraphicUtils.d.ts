@@ -9,8 +9,9 @@ export declare class CoveredText extends Graphics {
     private updatePosition;
 }
 export declare class GraphicUtils {
-    static createCircle([x, y]: [number, number], radius: number, style: {
+    static createCircle([x, y]: [number, number], radius: number, { color, alpha }: {
         color: any;
+        alpha?: any;
     }): Graphics;
     static createTorus([x, y]: [number, number], [innerr, outerr]: [number, number], style: {
         color: any;

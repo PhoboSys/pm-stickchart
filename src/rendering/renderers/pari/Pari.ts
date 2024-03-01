@@ -1,7 +1,6 @@
 import { IGraphicStorage, RenderingCompositor } from '@rendering'
 import { RenderingContext, DoneFunction, IRenderer } from '@rendering'
 
-import { PariTileOutdated } from './PariTileOutdated'
 import { PariTile } from './PariTile'
 import { PariLine } from './PariLine'
 import { PariClaimBackground } from './PariClaimBackground'
@@ -17,7 +16,6 @@ export class Pari implements IRenderer {
             new PariClaimBackground(renderer),
             new PariLine(renderer),
             new PariTile(renderer),
-            new PariTileOutdated(renderer),
         ])
     }
 

@@ -30,9 +30,9 @@ class CoveredText extends pixi_1.Graphics {
 }
 exports.CoveredText = CoveredText;
 class GraphicUtils {
-    static createCircle([x, y], radius, style) {
+    static createCircle([x, y], radius, { color, alpha }) {
         const cirl = new pixi_1.Graphics()
-            .beginFill(style.color)
+            .beginFill(color, alpha)
             .drawCircle(0, 0, radius)
             .endFill();
         cirl.position.set(x, y);

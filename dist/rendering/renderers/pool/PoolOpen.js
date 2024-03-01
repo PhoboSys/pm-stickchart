@@ -28,7 +28,7 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
     updatePool(pool, context, container) {
         var _a;
         const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[pool.poolid];
-        if (!this.isActualPool(pool) && (0, utils_1.isEmpty)(paris))
+        if (!pool.openPriceTimestamp || !this.isActualPool(pool) && (0, utils_1.isEmpty)(paris))
             return this.clear();
         const resolution = this.getPoolResolution(pool, context);
         const hasWinPari = paris && paris.some(pari => pari.position === resolution);
@@ -57,11 +57,10 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
         const [x] = datamath_1.default.scale([pool.openPriceTimestamp], timerange, width);
-        const [line, linestate] = this.get('line', () => _rendering_1.GraphicUtils.createVerticalDashLine(0, [0, context.screen.height], this.dashLineStyle));
+        const [line, linestate] = this.get('line', () => _rendering_1.GraphicUtils.createVerticalDashLine(0, [0, context.screen.height], this.dashLineStyle), [height]);
         if (linestate.new)
             container.addChild(line);
         line.position.x = x;
-        line.height = height;
     }
 }
 exports.PoolOpen = PoolOpen;

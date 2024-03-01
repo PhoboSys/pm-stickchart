@@ -74,8 +74,6 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
         return PariLine.PARI_LINE_ID;
     }
     updatePari(pool, pari, context, container) {
-        if (!context.features.pariTileNewDesign)
-            return this.clear();
         if (!(pari.position in this.validPariPositions))
             return this.clear();
         const state = this.getPariState(pool, pari, context);

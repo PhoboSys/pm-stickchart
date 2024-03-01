@@ -67,8 +67,8 @@ export class PoolBackground extends BasePoolsRenderer {
 
         let rdate = endDate
         if (this.isHistoricalPool(pool, context)) {
-            const resolution = this.getResolutionPricePoint(pool, context)
-            if (resolution?.timestamp) rdate = resolution?.timestamp
+            const rprice = this.getResolutionPricePoint(pool, context)
+            if (rprice?.timestamp) rdate = rprice?.timestamp
         }
 
         const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)

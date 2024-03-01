@@ -15,38 +15,44 @@ export class PoolResolutionLine extends BasePoolsRenderer {
     private torusStyle: any = {
 
         [EPosition.Undefined]: {
-            innerr: 3,
-            outerr: 8,
+            inner: 3,
+            outer: 8,
             innerColor: 0xFFFFFF,
             outerColor: 0xFFFFFF,
+            innerAlpha: 0,
+            zIndex: 2,
         },
 
         [EPosition.Up]: {
-            innerr: 3,
-            outerr: 8,
+            inner: 3,
+            outer: 8,
             innerColor: config.style.linearresolution.upcolor,
             outerColor: 0xFFFFFF,
+            zIndex: 2,
         },
 
         [EPosition.Down]: {
-            innerr: 3,
-            outerr: 8,
+            inner: 3,
+            outer: 8,
             innerColor: config.style.linearresolution.downcolor,
             outerColor: 0xFFFFFF,
+            zIndex: 2,
         },
 
         [EPosition.Zero]: {
-            innerr: 3,
-            outerr: 8,
+            inner: 3,
+            outer: 8,
             innerColor: config.style.linearresolution.zerocolor,
             outerColor: 0xFFFFFF,
+            zIndex: 2,
         },
 
         [EPosition.NoContest]: {
-            innerr: 3,
-            outerr: 8,
+            inner: 3,
+            outer: 8,
             innerColor: config.style.linearresolution.nocontest,
             outerColor: 0xFFFFFF,
+            zIndex: 2,
         }
 
     }
@@ -57,30 +63,35 @@ export class PoolResolutionLine extends BasePoolsRenderer {
             color: 0xFFFFFF,
             width: 5,
             alpha: 0.9,
+            zIndex: 1,
         },
 
         [EPosition.Up]: {
             color: config.style.linearresolution.upcolor,
             width: 5,
             alpha: 1,
+            zIndex: 1,
         },
 
         [EPosition.Down]: {
             color: config.style.linearresolution.downcolor,
             width: 5,
             alpha: 1,
+            zIndex: 1,
         },
 
         [EPosition.Zero]: {
             color: config.style.linearresolution.zerocolor,
             width: 5,
             alpha: 1,
+            zIndex: 1,
         },
 
         [EPosition.NoContest]: {
             color: config.style.linearresolution.nocontest,
             width: 5,
             alpha: 1,
+            zIndex: 1,
         }
 
     }
@@ -120,60 +131,26 @@ export class PoolResolutionLine extends BasePoolsRenderer {
 
         if (context.features.curvedResolutionLines || !pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
-        const resolution = this.getResolutionPricePoint(pool, context)
-        if (!resolution) return this.clear()
+        const [group] = this.updateGroup(context, container, pool)
 
-        this.updateResolutionLine(pool, context, container, resolution)
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const resolution = this.getPoolResolution(pool, context)
+
+        this.updateOpenPoint(context, group, resolution, pool)
+        this.updateResPoint(context, group, resolution, rprice)
+        this.updateResolutionLine(pool, context, group, resolution, rprice)
     }
 
-    private updateResolutionLine(
-        pool: any,
+    private updateGroup(
         context: RenderingContext,
         container: Container,
-        resolution: PricePoint,
-    ): void {
-
-        const {
-            timerange,
-            pricerange,
-        } = context.plotdata
-
-        const {
-            width,
-            height,
-        } = context.screen
-
-        const [x1, x2] = datamath.scale([pool.openPriceTimestamp, resolution.timestamp], timerange, width)
-        const [y1, y2] = datamath.scaleReverse([pool.openPriceValue, Number(resolution.value)], pricerange, height)
-
+        pool: any,
+    ): [Graphics, any] {
         const [group, groupstate] = this.get('group', () => new Graphics())
-        if (groupstate.new) container.addChild(group)
-
-        const [line, linestate] = this.get('line', () => new Graphics())
-        if (linestate.new) group.addChild(line)
-
-        const position = this.getPoolResolution(pool, context)
-        line
-            .clear()
-            .lineStyle(this.lineStyle[position])
-            .moveTo(x1, y1)
-            .lineTo(x2, y2)
-
-        const [openpoint, openpointstate] = this.get(
-            'openpoint',
-            () => this.createPricePoint(pool, context, this.torusStyle[position]),
-            [position]
-        )
-        if (openpointstate.new) group.addChild(openpoint)
-        openpoint.position.set(x1, y1)
-
-        const [respoint, respointstate] = this.get(
-            'respoint',
-            () => this.createPricePoint(pool, context, this.torusStyle[position]),
-            [position]
-        )
-        if (respointstate.new) group.addChild(respoint)
-        respoint.position.set(x2, y2)
+        if (groupstate.new) {
+            group.sortableChildren = true
+            container.addChild(group)
+        }
 
         if (this.isHistoricalPool(pool, context)) {
             const poolid = pool.poolid
@@ -199,27 +176,103 @@ export class PoolResolutionLine extends BasePoolsRenderer {
                 this.animate('group', 'fadeout')
             }
         }
+
+        return [group, groupstate]
     }
 
-    private createPricePoint(
+    private updateOpenPoint(
+        context: RenderingContext,
+        container: Container,
+        resolution: EPosition,
+        pool: any,
+    ): void {
+
+        const { timerange, pricerange } = context.plotdata
+        const { width, height } = context.screen
+
+        const [x] = datamath.scale([pool.openPriceTimestamp], timerange, width)
+        const [y] = datamath.scaleReverse([pool.openPriceValue], pricerange, height)
+
+        const [openpoint, openpointstate] = this.get(
+            'openpoint',
+            () => this.createPricePoint(this.torusStyle[resolution]),
+            [resolution]
+        )
+        if (openpointstate.new) container.addChild(openpoint)
+        openpoint.position.set(x, y)
+    }
+
+    private updateResPoint(
+        context: RenderingContext,
+        container: Container,
+        resolution: EPosition,
+        rprice: PricePoint | null,
+    ): void {
+
+        if (!rprice) return this.clear('respoint')
+
+        const { timerange, pricerange } = context.plotdata
+        const { width, height } = context.screen
+
+        const [x] = datamath.scale([rprice.timestamp], timerange, width)
+        const [y] = datamath.scaleReverse([Number(rprice.value)], pricerange, height)
+
+        const [respoint, respointstate] = this.get(
+            'respoint',
+            () => this.createPricePoint(this.torusStyle[resolution]),
+            [resolution]
+        )
+        if (respointstate.new) container.addChild(respoint)
+        respoint.position.set(x, y)
+    }
+
+    private updateResolutionLine(
         pool: any,
         context: RenderingContext,
-        style: any
-    ): Container {
+        container: Container,
+        resolution: EPosition,
+        rprice: PricePoint | null,
+    ): void {
+
+        if (!rprice) return this.clear('line')
+
+        const { timerange, pricerange } = context.plotdata
+        const { width, height } = context.screen
+
+        const [x1, x2] = datamath.scale([pool.openPriceTimestamp, rprice.timestamp], timerange, width)
+        const [y1, y2] = datamath.scaleReverse([pool.openPriceValue, Number(rprice.value)], pricerange, height)
+
+        const style = this.lineStyle[resolution]
+
+        const [line, linestate] = this.get('line', () => new Graphics())
+        if (linestate.new) {
+            container.addChild(line)
+            line.zIndex = style.zIndex
+        }
+
+        line
+            .clear()
+            .lineStyle(style)
+            .moveTo(x1, y1)
+            .lineTo(x2, y2)
+    }
+
+    private createPricePoint(style: any): Container {
 
         const inner = GraphicUtils.createCircle(
             [0, 0],
-            style.innerr,
-            { color: style.innerColor }
+            style.inner,
+            { color: style.innerColor, alpha: style.innerAlpha }
         )
 
-        const outer = GraphicUtils.createCircle(
+        const outer = GraphicUtils.createTorus(
             [0, 0],
-            style.outerr,
+            [style.inner, style.outer],
             { color: style.outerColor }
         )
 
         const pointer = new Container()
+        pointer.zIndex = style.zIndex
         pointer.addChild(outer, inner)
 
         return pointer

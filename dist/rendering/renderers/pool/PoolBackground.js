@@ -47,9 +47,9 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { openPriceTimestamp, endDate } = pool;
         let rdate = endDate;
         if (this.isHistoricalPool(pool, context)) {
-            const resolution = this.getResolutionPricePoint(pool, context);
-            if (resolution === null || resolution === void 0 ? void 0 : resolution.timestamp)
-                rdate = resolution === null || resolution === void 0 ? void 0 : resolution.timestamp;
+            const rprice = this.getResolutionPricePoint(pool, context);
+            if (rprice === null || rprice === void 0 ? void 0 : rprice.timestamp)
+                rdate = rprice === null || rprice === void 0 ? void 0 : rprice.timestamp;
         }
         const [ox, rx] = datamath_1.default.scale([openPriceTimestamp, rdate], timerange, width);
         const shape = [

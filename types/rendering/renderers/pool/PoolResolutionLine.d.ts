@@ -9,6 +9,9 @@ export declare class PoolResolutionLine extends BasePoolsRenderer {
     protected get animations(): any;
     get rendererId(): symbol;
     protected updatePool(pool: any, context: RenderingContext, container: Container): void;
+    private updateGroup;
+    private updateOpenPoint;
+    private updateResPoint;
     private updateResolutionLine;
     private createPricePoint;
 }

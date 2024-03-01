@@ -149,7 +149,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): PricePoint | null {
 
         if (this.isActualPool(pool)) {
-            return DataBuilder.getLatest(context.chartdata)
+            const latest = DataBuilder.getLatest(context.chartdata)
+            if (latest.timestamp > pool.openPriceTimestamp) return latest
+
+            return null
         }
 
         const isResolveReady = !pool.resolved && context.settlements?.[pool.endDate]
@@ -177,9 +180,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         }
 
         const latest = DataBuilder.getLatest(context.chartdata)
-        if (pool.endDate > latest.timestamp) {
-            return latest
-        }
+
+        if (latest.timestamp <= pool.openPriceTimestamp) return null
+
+        if (pool.endDate > latest.timestamp) return latest
 
         return this.getPoolResolutionPriceFormPricefeed(pool.endDate, context.chartdata)
 

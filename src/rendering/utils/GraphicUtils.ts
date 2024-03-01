@@ -40,11 +40,11 @@ export class GraphicUtils {
     static createCircle(
         [x, y]: [number, number],
         radius: number,
-        style: { color },
+        { color, alpha }: { color, alpha? },
     ): Graphics {
 
         const cirl = new Graphics()
-            .beginFill(style.color)
+            .beginFill(color, alpha)
             .drawCircle(0, 0, radius)
             .endFill()
 

@@ -95,9 +95,6 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
     ): void {
         if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
-        const resolution = this.getResolutionPricePoint(pool, context)
-        if (!resolution) return this.clear()
-
         this.updateOpenPriceTag(pool, context, container)
     }
 
@@ -119,12 +116,11 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
 
         const [x] = datamath.scale([pool.openPriceTimestamp], timerange, width)
         const [y] = datamath.scaleReverse([pool.openPriceValue], pricerange, height)
-        const priceValue = ui.currency(pool.openPriceValue, context.metapool.quote)
         const position = this.getPoolResolution(pool, context)
         const coverStyle = this.coverStyle[position]
 
         const [cover, coverState] = this.get('cover', () => GraphicUtils.createCoveredText(
-            priceValue,
+            ui.currency(pool.openPriceValue, context.metapool.quote),
             coverStyle.offset,
             { ...coverStyle, color: 0xFFFFFF },
         ))
@@ -133,7 +129,6 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
 
         if (coverState.new) container.addChild(cover)
         else cover.update((textGraphic, coverGraphic) => {
-            textGraphic.text = priceValue
             textGraphic.style.fill = coverStyle.textstyle.fill
             coverGraphic.tint = coverStyle.color
         }, [x+ofx, y+ofy], coverStyle)

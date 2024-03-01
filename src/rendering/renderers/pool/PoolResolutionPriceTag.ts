@@ -96,16 +96,16 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
 
         if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool)) return this.clear()
 
-        const resolution = this.getResolutionPricePoint(pool, context)
-        if (!resolution) return this.clear()
-        this.updateResolutionPriceTag(pool, context, container, resolution)
+        const rprice = this.getResolutionPricePoint(pool, context)
+        if (!rprice) return this.clear()
+        this.updateResolutionPriceTag(pool, context, container, rprice)
     }
 
     private updateResolutionPriceTag(
         pool: any,
         context: RenderingContext,
         container: Container,
-        resolution: PricePoint,
+        rprice: PricePoint,
     ): void {
 
         const {
@@ -118,9 +118,9 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
             height,
         } = context.screen
 
-        const [x] = datamath.scale([resolution.timestamp], timerange, width)
-        const [y] = datamath.scaleReverse([Number(resolution.value)], pricerange, height)
-        const priceValue = ui.currency(resolution.value, context.metapool.quote)
+        const [x] = datamath.scale([rprice.timestamp], timerange, width)
+        const [y] = datamath.scaleReverse([Number(rprice.value)], pricerange, height)
+        const priceValue = ui.currency(rprice.value, context.metapool.quote)
         const position = this.getPoolResolution(pool, context)
         const coverStyle = this.coverStyle[position]
 

@@ -443,17 +443,17 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         this.wagerCurrencyIconStyle = {
             [_enums_1.EPosition.Up]: {
                 size: 16,
-                offset: [32 + 16 + 7, 19],
+                offset: [32 + 16 + 7, 18],
                 alpha: 0.8,
             },
             [_enums_1.EPosition.Down]: {
                 size: 16,
-                offset: [32 + 16 + 7, 19],
+                offset: [32 + 16 + 7, 18],
                 alpha: 0.8,
             },
             [_enums_1.EPosition.Zero]: {
                 size: 16,
-                offset: [32 + 16 + 7, 19],
+                offset: [32 + 16 + 7, 18],
                 alpha: 0.8,
                 tint: 0x071226,
             }
@@ -511,8 +511,6 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return this.configAnimations;
     }
     updatePari(pool, pari, context, container) {
-        if (!context.features.pariTileNewDesign)
-            return this.clear();
         if (!(pari.position in this.validPariPositions))
             return this.clear();
         const state = this.getPariState(pool, pari, context);
@@ -740,7 +738,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [userIcon, userIconState] = this.get('userIcon', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.userIconStyle));
         if (userIconState.new)
             wagercontent.addChild(userIcon);
-        const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Wager', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
+        const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Deposit', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
         if (wagerTextState.new)
             wagercontent.addChild(wagerText);
         const [wagerAmount, wagerAmountState] = this.get('wagerAmount', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle[position].offset, this.wagerStyle[position].text));
