@@ -53,8 +53,11 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
             return this.clear();
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolution(pool, context);
+        const undef = resolution === _enums_1.EPosition.Undefined;
         const win = pari.position === resolution;
         const nocontest = resolution === _enums_1.EPosition.NoContest;
+        if (undef)
+            return this.clear();
         const poolid = pool.poolid;
         const pariid = pari.pariid;
         const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pariid);

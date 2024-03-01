@@ -61,9 +61,6 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
     updatePool(pool, context, container) {
         if (!pool.openPriceTimestamp || !pool.openPriceValue)
             return this.clear();
-        const resolution = this.getResolutionPricePoint(pool, context);
-        if (!resolution)
-            return this.clear();
         this.updateOpenPriceTag(pool, context, container);
     }
     updateOpenPriceTag(pool, context, container) {
@@ -71,16 +68,14 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([pool.openPriceTimestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([pool.openPriceValue], pricerange, height);
-        const priceValue = index_1.default.currency(pool.openPriceValue, context.metapool.quote);
         const position = this.getPoolResolution(pool, context);
         const coverStyle = this.coverStyle[position];
-        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(priceValue, coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
+        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(index_1.default.currency(pool.openPriceValue, context.metapool.quote), coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
         const [ofx, ofy] = coverStyle.offset;
         if (coverState.new)
             container.addChild(cover);
         else
             cover.update((textGraphic, coverGraphic) => {
-                textGraphic.text = priceValue;
                 textGraphic.style.fill = coverStyle.textstyle.fill;
                 coverGraphic.tint = coverStyle.color;
             }, [x + ofx, y + ofy], coverStyle);

@@ -133,7 +133,6 @@ exports.default = {
     features: {
         rectungedPriceLine: false,
         curvedResolutionLines: false,
-        pariTileNewDesign: true,
     },
 };
 //# sourceMappingURL=config.js.map

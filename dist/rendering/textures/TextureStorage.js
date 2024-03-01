@@ -17,9 +17,6 @@ class TextureStorage {
             symbols_1.UP_ICON_TEXTURE,
             symbols_1.DOWN_ICON_TEXTURE,
             symbols_1.ZERO_ICON_TEXTURE,
-            symbols_1.UP_ICON_TEXTURE_OUTDATED,
-            symbols_1.DOWN_ICON_TEXTURE_OUTDATED,
-            symbols_1.ZERO_ICON_TEXTURE_OUTDATED,
             symbols_1.ETH_DARK_TEXTURE,
             symbols_1.USDC_TEXTURE,
             symbols_1.USDT_DARK_TEXTURE,
@@ -173,57 +170,6 @@ class TextureStorage {
         return pixi_1.RenderTexture.from(url);
     }
     [symbols_1.ZERO_ICON_TEXTURE]() {
-        const svg = `
-            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" rx="50" fill="url(#paint0_linear_4046_11916)"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M25.405 47.3919C23.9642 47.3919 22.7962 48.5599 22.7962 50.0007C22.7963 51.4413 23.9643 52.6092 25.4049 52.6094L31.0472 52.6093C31.5939 56.6032 33.4024 60.4576 36.4727 63.5279C43.9436 70.9988 56.0564 70.9988 63.5273 63.5279C66.5976 60.4576 68.4061 56.6032 68.9528 52.6093L74.5951 52.6094C76.0357 52.6092 77.2037 51.4413 77.2038 50.0007C77.2038 48.5599 76.0358 47.3919 74.595 47.3919L68.9528 47.3919C68.4061 43.3979 66.5976 39.5437 63.5273 36.4733C56.0564 29.0024 43.9436 29.0024 36.4727 36.4733C33.4024 39.5437 31.5939 43.3979 31.0472 47.3919L25.405 47.3919ZM36.3324 52.6092C36.8354 55.2579 38.1119 57.7886 40.162 59.8386C45.5954 65.272 54.4046 65.272 59.838 59.8386C61.8881 57.7886 63.1646 55.2579 63.6677 52.6094L36.3324 52.6092ZM63.6677 47.3919L36.3324 47.3919C36.8354 44.7433 38.1119 42.2127 40.162 40.1626C45.5954 34.7292 54.4046 34.7292 59.838 40.1626C61.8881 42.2127 63.1646 44.7433 63.6677 47.3919Z" fill="#303550"/>
-                <defs>
-                <linearGradient id="paint0_linear_4046_11916" x1="1.27458e-06" y1="100" x2="90.6146" y2="89.3081" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#B7BDD7"/>
-                <stop offset="1" stop-color="#E9EDFF"/>
-                </linearGradient>
-                </defs>
-            </svg>
-        `;
-        const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        return pixi_1.RenderTexture.from(url);
-    }
-    [symbols_1.UP_ICON_TEXTURE_OUTDATED]() {
-        const svg = `
-		<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<rect width="100" height="100" rx="50" fill="url(#paint0_linear_3734_10563)"/>
-			<path d="M37.5125 57.3459L50.6062 44.2522L63.6999 57.3459C65.0161 58.662 67.1421 58.662 68.4582 57.3459C69.7743 56.0298 69.7743 53.9038 68.4582 52.5876L52.9685 37.0979C51.6524 35.7818 49.5263 35.7818 48.2102 37.0979L32.7204 52.5876C31.4043 53.9037 31.4043 56.0298 32.7204 57.3459C34.0366 58.6283 36.1963 58.662 37.5125 57.3459V57.3459Z" fill="white"/>
-			<defs>
-				<linearGradient id="paint0_linear_3734_10563" x1="1.49012e-06" y1="100" x2="116.569" y2="73.8446" gradientUnits="userSpaceOnUse">
-					<stop stop-color="#009797"/>
-					<stop offset="1" stop-color="#00A573"/>
-				</linearGradient>
-			</defs>
-		</svg>
-        `;
-        const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        return pixi_1.RenderTexture.from(url);
-    }
-    [symbols_1.DOWN_ICON_TEXTURE_OUTDATED]() {
-        const svg = `
-		<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<rect x="100" y="100" width="100" height="100" rx="50" transform="rotate(-180 100 100)" fill="url(#paint0_linear_3734_10566)"/>
-			<path d="M62.4895 42.6531L49.3957 55.7468L36.302 42.6531C34.9859 41.337 32.8599 41.337 31.5437 42.6531C30.2276 43.9692 30.2276 46.0953 31.5437 47.4114L47.0335 62.9011C48.3496 64.2173 50.4756 64.2173 51.7918 62.9011L67.2815 47.4114C68.5976 46.0953 68.5976 43.9692 67.2815 42.6531C65.9654 41.3707 63.8056 41.337 62.4895 42.6531V42.6531Z" fill="white"/>
-			<defs>
-				<linearGradient id="paint0_linear_3734_10566" x1="100" y1="200" x2="216.569" y2="173.845" gradientUnits="userSpaceOnUse">
-					<stop stop-color="#F05750"/>
-					<stop offset="1" stop-color="#F07750"/>
-				</linearGradient>
-			</defs>
-		</svg>
-        `;
-        const blob = new Blob([svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        return pixi_1.RenderTexture.from(url);
-    }
-    [symbols_1.ZERO_ICON_TEXTURE_OUTDATED]() {
         const svg = `
             <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="100" height="100" rx="50" fill="url(#paint0_linear_4046_11916)"/>

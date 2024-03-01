@@ -63,8 +63,11 @@ export class PariClaimBackground extends BaseParisRenderer {
         const rprice = this.getResolutionPricePoint(pool, context)
         const resolution = this.getPoolResolution(pool, context)
 
+        const undef = resolution === EPosition.Undefined
         const win = pari.position === resolution
         const nocontest = resolution === EPosition.NoContest
+
+        if (undef) return this.clear()
 
         const poolid = pool.poolid
         const pariid = pari.pariid

@@ -61,17 +61,17 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
     updatePool(pool, context, container) {
         if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool))
             return this.clear();
-        const resolution = this.getResolutionPricePoint(pool, context);
-        if (!resolution)
+        const rprice = this.getResolutionPricePoint(pool, context);
+        if (!rprice)
             return this.clear();
-        this.updateResolutionPriceTag(pool, context, container, resolution);
+        this.updateResolutionPriceTag(pool, context, container, rprice);
     }
-    updateResolutionPriceTag(pool, context, container, resolution) {
+    updateResolutionPriceTag(pool, context, container, rprice) {
         const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
-        const [x] = datamath_1.default.scale([resolution.timestamp], timerange, width);
-        const [y] = datamath_1.default.scaleReverse([Number(resolution.value)], pricerange, height);
-        const priceValue = index_1.default.currency(resolution.value, context.metapool.quote);
+        const [x] = datamath_1.default.scale([rprice.timestamp], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([Number(rprice.value)], pricerange, height);
+        const priceValue = index_1.default.currency(rprice.value, context.metapool.quote);
         const position = this.getPoolResolution(pool, context);
         const coverStyle = this.coverStyle[position];
         const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(priceValue, coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));

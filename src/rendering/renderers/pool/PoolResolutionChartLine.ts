@@ -13,41 +13,40 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
 
     static readonly POOL_RESOLUTION_CHART_LINE_ID: symbol = Symbol('POOL_RESOLUTION_CHART_LINE_ID')
 
+    private baseTorusStyle: any = {
+        inner: 3,
+        outer: 8,
+        innerColor: 0xFFFFFF,
+        outerColor: 0xFFFFFF,
+        zIndex: 3,
+    }
+
     private torusStyle: any = {
 
         [EPosition.Undefined]: {
-            innerr: 3,
-            outerr: 8,
-            innerColor: 0xFFFFFF,
-            outerColor: 0xFFFFFF,
+            ...this.baseTorusStyle,
+            innerAlpha: 0,
         },
 
         [EPosition.Up]: {
-            innerr: 3,
-            outerr: 8,
+            ...this.baseTorusStyle,
             innerColor: config.style.curvedresolution.upcolor,
-            outerColor: 0xFFFFFF,
         },
 
         [EPosition.Down]: {
-            innerr: 3,
-            outerr: 8,
+            ...this.baseTorusStyle,
             innerColor: config.style.curvedresolution.downcolor,
-            outerColor: 0xFFFFFF,
         },
 
         [EPosition.Zero]: {
-            innerr: 3,
-            outerr: 8,
+            ...this.baseTorusStyle,
             innerColor: 0x071226,
             outerColor: config.style.curvedresolution.zerocolor,
         },
 
         [EPosition.NoContest]: {
-            innerr: 3,
-            outerr: 8,
+            ...this.baseTorusStyle,
             innerColor: config.style.curvedresolution.nocontest,
-            outerColor: 0xFFFFFF,
         }
 
     }
@@ -58,6 +57,7 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         alpha: 1,
         join: 'round',
         cap: 'round',
+        zIndex: 2,
     }
 
     private innerLineStyle: any = {
@@ -79,6 +79,7 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         alpha: 1,
         join: 'round',
         cap: 'round',
+        zIndex: 1,
     }
 
     private readonly actualLineStyle: any = {
@@ -150,63 +151,135 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
     ): void {
 
         if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
-        const resolution = this.getResolutionPricePoint(pool, context)
-        if (!resolution) return this.clear()
+        const rprice = this.getResolutionPricePoint(pool, context)
 
         if (context.features.curvedResolutionLines) {
             this.clear('actualLine')
 
-            const position = this.getPoolResolution(pool, context)
+            const resolution = this.getPoolResolution(pool, context)
 
-            const [resolutiongroup, resolutiongroupstate] = this.get('resolutiongroup', () => new Graphics())
-            if (resolutiongroupstate.new) container.addChild(resolutiongroup)
+            const [group] = this.updateGroup(context, container, pool)
 
-            const [resolutionLine, resolutionLineState] = this.get('resolutionLine', () => new Graphics())
-            if (resolutionLineState.new) resolutiongroup.addChild(resolutionLine)
-
-            const [innerLine, innerLineState] = this.get('innerLine', () => new Graphics())
-            if (innerLineState.new) resolutiongroup.addChild(innerLine)
-
-            const [openpoint, openpointstate] = this.get(
-                'openpoint',
-                () => this.createPricePoint(pool, context, this.torusStyle[position]),
-                [position]
-            )
-            if (openpointstate.new) resolutiongroup.addChild(openpoint)
-
-            const [respoint, respointstate] = this.get(
-                'respoint',
-                () => this.createPricePoint(pool, context, this.torusStyle[position]),
-                [position]
-            )
-            if (respointstate.new) resolutiongroup.addChild(respoint)
-
-            this.drawResolutionLine(pool, context, position, resolution)
+            this.updateOpenPoint(context, group, resolution, pool)
+            this.updateResPoint(context, group, resolution, rprice)
+            this.drawResolutionLine(pool, context, group, resolution, rprice)
 
         } else if (this.isActualPool(pool)) {
-            this.clear('resolutiongroup')
+            this.clear('group')
             this.clear('resolutionLine')
             this.clear('innerLine')
             this.clear('openpoint')
             this.clear('respoint')
 
-            const [actualLine, actualLineState] = this.get('actualLine', () => new Graphics())
-            if (actualLineState.new) container.addChild(actualLine)
-
-            this.drawActualLine(pool, context, resolution)
+            this.drawActualLine(context, container, pool, rprice)
 
         } else {
             this.clear()
         }
     }
 
-    private drawActualLine(pool: any, context: RenderingContext, resolution: PricePoint): void {
+    private updateGroup(
+        context: RenderingContext,
+        container: Container,
+        pool: any,
+    ): [Graphics, any] {
+        const [group, groupstate] = this.get('group', () => new Graphics())
+        if (groupstate.new) {
+            group.sortableChildren = true
+            container.addChild(group)
+        }
+
+        if (this.isHistoricalPool(pool, context)) {
+            const poolid = pool.poolid
+            if (!groupstate.subscribed) {
+                groupstate.subscribed = true
+                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                    if (e.poolid !== poolid) return
+
+                    this.rebind(poolid)
+                    this.animate('group', 'fadein')
+                })
+                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                    if (e.poolid !== poolid) return
+
+                    this.rebind(poolid)
+                    this.animate('group', 'fadeout')
+                })
+            }
+
+            if (groupstate.new) {
+                group.alpha = 0.7
+            } else if (groupstate.animation !== 'fadein') {
+                this.animate('group', 'fadeout')
+            }
+        }
+
+        return [group, groupstate]
+    }
+
+    private updateOpenPoint(
+        context: RenderingContext,
+        container: Container,
+        resolution: EPosition,
+        pool: any,
+    ): void {
+
+        const { timerange, pricerange } = context.plotdata
+        const { width, height } = context.screen
+
+        const [x] = datamath.scale([pool.openPriceTimestamp], timerange, width)
+        const [y] = datamath.scaleReverse([pool.openPriceValue], pricerange, height)
+
+        const [openpoint, openpointstate] = this.get(
+            'openpoint',
+            () => this.createPricePoint(this.torusStyle[resolution]),
+            [resolution]
+        )
+        if (openpointstate.new) container.addChild(openpoint)
+        openpoint.position.set(x, y)
+    }
+
+    private updateResPoint(
+        context: RenderingContext,
+        container: Container,
+        resolution: EPosition,
+        rprice: PricePoint | null,
+    ): void {
+
+        if (!rprice) return this.clear('respoint')
+
+        const { timerange, pricerange } = context.plotdata
+        const { width, height } = context.screen
+
+        const [x] = datamath.scale([rprice.timestamp], timerange, width)
+        const [y] = datamath.scaleReverse([Number(rprice.value)], pricerange, height)
+
+        const [respoint, respointstate] = this.get(
+            'respoint',
+            () => this.createPricePoint(this.torusStyle[resolution]),
+            [resolution]
+        )
+        if (respointstate.new) container.addChild(respoint)
+        respoint.position.set(x, y)
+    }
+
+    private drawActualLine(
+        context: RenderingContext,
+        container: Container,
+        pool: any,
+        rprice: PricePoint | null,
+    ): void {
+        if (!rprice) return this.clear('actualLine')
+
+        const [actualLine, actualLineState] = this.get('actualLine', () => new Graphics())
+        if (actualLineState.new) container.addChild(actualLine)
+
         const { xs, ys } = context.plotdata
         const { width, height } = context.screen
         const { timerange, pricerange } = context.plotdata
 
-        const [startx, endx] = datamath.scale([pool.openPriceTimestamp, resolution.timestamp], timerange, width)
-        const [starty, endy] = datamath.scaleReverse([Number(pool.openPriceValue), Number(resolution.value)], pricerange, height)
+        const [startx, endx] = datamath.scale([pool.openPriceTimestamp, rprice.timestamp], timerange, width)
+        const [starty, endy] = datamath.scaleReverse([Number(pool.openPriceValue), Number(rprice.value)], pricerange, height)
 
         const poolxs: number[] = []
         const poolys: number[] = []
@@ -224,8 +297,6 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
 
         poolxs.push(endx)
         poolys.push(endy)
-
-        const [actualLine] = this.read('actualLine')
 
         this.drawLine(context, actualLine, [poolxs, poolys], this.actualLineStyle)
     }
@@ -233,15 +304,23 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
     private drawResolutionLine(
         pool: any,
         context: RenderingContext,
-        position: EPosition,
-        resolution: PricePoint,
+        container: Graphics,
+        resolution: EPosition,
+        rprice: PricePoint | null,
     ): void {
+        if (!rprice) {
+            this.clear('resolutionLine')
+            this.clear('innerLine')
+
+            return
+        }
+
         const { xs, ys } = context.plotdata
         const { width, height } = context.screen
         const { timerange, pricerange } = context.plotdata
 
-        const [startx, endx] = datamath.scale([pool.openPriceTimestamp, resolution.timestamp], timerange, width)
-        const [starty, endy] = datamath.scaleReverse([Number(pool.openPriceValue), Number(resolution.value)], pricerange, height)
+        const [startx, endx] = datamath.scale([pool.openPriceTimestamp, rprice.timestamp], timerange, width)
+        const [starty, endy] = datamath.scaleReverse([Number(pool.openPriceValue), Number(rprice.value)], pricerange, height)
 
         const poolxs: number[] = []
         const poolys: number[] = []
@@ -260,44 +339,21 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         poolxs.push(endx)
         poolys.push(endy)
 
-        const [resolutionLine] = this.read('resolutionLine')
-        const [innerLine] = this.read('innerLine')
-
-        this.drawLine(context, resolutionLine, [poolxs, poolys], this.resolutionLineStyle[position])
-        this.drawLine(context, innerLine, [poolxs, poolys], this.innerLineStyle[position])
-
-        const [resolutiongroup, resolutiongroupstate] = this.read('resolutiongroup')
-
-        const [openpoint] = this.read('openpoint')
-        openpoint.position.set(startx, starty)
-
-        const [respoint] = this.read('respoint')
-        respoint.position.set(endx, endy)
-
-        if (this.isHistoricalPool(pool, context)) {
-            const poolid = pool.poolid
-            if (!resolutiongroupstate.subscribed) {
-                resolutiongroupstate.subscribed = true
-                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
-                    if (e.poolid !== poolid) return
-
-                    this.rebind(poolid)
-                    this.animate('resolutiongroup', 'fadein')
-                })
-                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
-                    if (e.poolid !== poolid) return
-
-                    this.rebind(poolid)
-                    this.animate('resolutiongroup', 'fadeout')
-                })
-            }
-
-            if (resolutiongroupstate.new) {
-                resolutiongroup.alpha = 0.7
-            } else if (resolutiongroupstate.animation !== 'fadein') {
-                this.animate('resolutiongroup', 'fadeout')
-            }
+        const resolutionLineStyle = this.resolutionLineStyle[resolution]
+        const [resolutionLine, resolutionLineState] = this.get('resolutionLine', () => new Graphics())
+        if (resolutionLineState.new) {
+            resolutionLine.zIndex = resolutionLineStyle.zIndex
+            container.addChild(resolutionLine)
         }
+        this.drawLine(context, resolutionLine, [poolxs, poolys], resolutionLineStyle)
+
+        const innerLineStyle = this.innerLineStyle[resolution]
+        const [innerLine, innerLineState] = this.get('innerLine', () => new Graphics())
+        if (innerLineState.new) {
+            innerLine.zIndex = innerLineStyle.zIndex
+            container.addChild(innerLine)
+        }
+        this.drawLine(context, innerLine, [poolxs, poolys], innerLineStyle)
     }
 
     private drawLine(context, line, [xs, ys], style): void {
@@ -333,25 +389,22 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
         }
     }
 
-    private createPricePoint(
-        pool: any,
-        context: RenderingContext,
-        style: any
-    ): Container {
+    private createPricePoint(style: any): Container {
 
         const inner = GraphicUtils.createCircle(
             [0, 0],
-            style.innerr,
-            { color: style.innerColor }
+            style.inner,
+            { color: style.innerColor, alpha: style.innerAlpha }
         )
 
-        const outer = GraphicUtils.createCircle(
+        const outer = GraphicUtils.createTorus(
             [0, 0],
-            style.outerr,
+            [style.inner, style.outer],
             { color: style.outerColor }
         )
 
         const pointer = new Container()
+        pointer.zIndex = style.zIndex
         pointer.addChild(outer, inner)
 
         return pointer

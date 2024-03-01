@@ -122,7 +122,6 @@ declare const _default: {
     features: {
         rectungedPriceLine: boolean;
         curvedResolutionLines: boolean;
-        pariTileNewDesign: boolean;
     };
 };
 export default _default;

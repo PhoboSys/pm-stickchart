@@ -89,7 +89,6 @@ export class PariLine extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!context.features.pariTileNewDesign) return this.clear()
         if (!(pari.position in this.validPariPositions)) return this.clear()
 
         const state = this.getPariState(pool, pari, context)

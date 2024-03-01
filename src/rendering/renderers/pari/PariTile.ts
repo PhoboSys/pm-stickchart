@@ -483,17 +483,17 @@ export class PariTile extends BaseParisRenderer {
     private wagerCurrencyIconStyle: any = {
         [EPosition.Up]: {
             size: 16,
-            offset: [32+16+7, 19],
+            offset: [32+16+7, 18],
             alpha: 0.8,
         },
         [EPosition.Down]: {
             size: 16,
-            offset: [32+16+7, 19],
+            offset: [32+16+7, 18],
             alpha: 0.8,
         },
         [EPosition.Zero]: {
             size: 16,
-            offset: [32+16+7, 19],
+            offset: [32+16+7, 18],
             alpha: 0.8,
             tint: 0x071226,
         }
@@ -557,7 +557,6 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
     ): void {
 
-        if (!context.features.pariTileNewDesign) return this.clear()
         if (!(pari.position in this.validPariPositions)) return this.clear()
 
         const state = this.getPariState(pool, pari, context)
@@ -919,7 +918,7 @@ export class PariTile extends BaseParisRenderer {
         if (userIconState.new) wagercontent.addChild(userIcon)
 
         const [wagerText, wagerTextState] = this.get('wagerText', () => GraphicUtils.createText(
-            'Wager',
+            'Deposit',
             this.wagerTextStyle[position].offset,
             this.wagerTextStyle[position].text,
         ))

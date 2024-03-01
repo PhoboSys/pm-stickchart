@@ -145,6 +145,5 @@ export default {
     features: {
         rectungedPriceLine: false,
         curvedResolutionLines: false,
-        pariTileNewDesign: true,
     },
 }
