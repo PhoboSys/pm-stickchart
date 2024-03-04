@@ -27,3 +27,6 @@ export type PlotData = {
     xs: number[];
     ys: number[];
 };
+export type Bettor = {
+    avatarUrl: string;
+};

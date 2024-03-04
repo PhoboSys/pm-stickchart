@@ -467,35 +467,52 @@ export class PariTile extends BaseParisRenderer {
 
     private profitCurrencyIconStyle: any = {
         default: {
-            size: 32,
-            tint: 0x0F1F43
+            offset: [6, 6],
+            size: 20,
+            radius: 16,
+            circleTint: 0x0F1F43,
+            iconTint: 0xF9C462,
         },
         claimable: {
-            size: 32,
-            tint: 0xF7C15B
+            offset: [6, 6],
+            size: 20,
+            radius: 16,
+            circleTint: 0xF7C15B,
+            iconTint: 0x092A73,
         },
     }
 
     private userIconStyle: any = {
-        size: 32,
+        radius: 16,
+        lineStyle: {
+            width: 1,
+            color: 0xFFFFFF,
+            alignment: 1,
+            alpha: 1,
+        }
     }
 
     private wagerCurrencyIconStyle: any = {
         [EPosition.Up]: {
-            size: 16,
-            offset: [32+16+7, 18],
-            alpha: 0.8,
+            containerOffset: [32+16+7, 18],
+            offset: [2, 2],
+            tint: 0x01A37A,
+            radius: 8,
+            size: 12,
         },
         [EPosition.Down]: {
-            size: 16,
-            offset: [32+16+7, 18],
-            alpha: 0.8,
+            containerOffset: [32+16+7, 18],
+            offset: [2, 2],
+            tint: 0xD7335B,
+            radius: 8,
+            size: 12,
         },
         [EPosition.Zero]: {
-            size: 16,
-            offset: [32+16+7, 18],
-            alpha: 0.8,
-            tint: 0x071226,
+            containerOffset: [32+16+7, 18],
+            offset: [2, 2],
+            tint: 0xB7BDD7,
+            radius: 8,
+            size: 12,
         }
     }
 
@@ -645,16 +662,17 @@ export class PariTile extends BaseParisRenderer {
 
         const [profitCurrency, profitCurrencyState] = this.get(
             'profitCurrency',
-            () => this.createIcon(
-                context,
-                this.getPariCurrencyIconTextureName(context),
-                this.profitCurrencyIconStyle.default
-            )
+            () => this.createProfitCurrencyIcon(context)
         )
         if (profitCurrencyState.new) profitcontent.addChild(profitCurrency)
+
         profitCurrency.tint = claimable ?
-            this.profitCurrencyIconStyle.claimable.tint :
-            this.profitCurrencyIconStyle.default.tint
+            this.profitCurrencyIconStyle.claimable.circleTint :
+            this.profitCurrencyIconStyle.default.circleTint
+        const icon = (<Sprite> profitCurrency.getChildAt(0))
+        icon.tint = claimable ?
+            this.profitCurrencyIconStyle.claimable.iconTint :
+            this.profitCurrencyIconStyle.default.iconTint
 
         if (!undef) {
             const [payout, payoutState] = this.get('payout', () => GraphicUtils.createText(
@@ -909,11 +927,8 @@ export class PariTile extends BaseParisRenderer {
 
         const [userIcon, userIconState] = this.get(
             'userIcon',
-            () => this.createIcon(
-                context,
-                this.getPariCurrencyIconTextureName(context),
-                this.userIconStyle,
-            )
+            () => this.createUserIcon(context.bettor.avatarUrl),
+            [context.bettor.avatarUrl]
         )
         if (userIconState.new) wagercontent.addChild(userIcon)
 
@@ -934,14 +949,10 @@ export class PariTile extends BaseParisRenderer {
 
         const [wagerCurrency, wagerCurrencyState] = this.get(
             'wagerCurrency',
-            () => this.createIcon(
-                context,
-                this.getPariCurrencyIconTextureName(context),
-                this.wagerCurrencyIconStyle[position],
-            )
+            () => this.createWagerCurrencyIcon(context, position)
         )
         if (wagerCurrencyState.new) wagercontent.addChild(wagerCurrency)
-        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].offset[0]
+        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].containerOffset[0]
 
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get(
             'wagerpropagatingContainer',
@@ -1011,6 +1022,85 @@ export class PariTile extends BaseParisRenderer {
         if (alpha) icon.alpha = alpha
 
         return icon
+    }
+
+    private createWagerCurrencyIcon(
+        context: RenderingContext,
+        position: EPosition,
+    ): Container {
+
+        const {
+            containerOffset,
+            radius,
+        } = this.wagerCurrencyIconStyle[position]
+
+        const container = new Container()
+
+        const circle = (new Graphics())
+            .beginFill(0xFFFFFF, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill()
+
+        const icon = this.createIcon(
+            context,
+            this.getPariCurrencyIconTextureName(context),
+            this.wagerCurrencyIconStyle[position],
+        )
+
+        container.addChild(circle, icon)
+        container.position.set(...containerOffset)
+
+        return container
+    }
+
+    private createProfitCurrencyIcon(
+        context: RenderingContext,
+    ): Graphics {
+
+        const {
+            radius
+        } = this.profitCurrencyIconStyle.default
+
+        const circle = (new Graphics())
+            .beginFill(0xFFFFFF, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill()
+
+        const icon = this.createIcon(
+            context,
+            this.getPariCurrencyIconTextureName(context),
+            this.profitCurrencyIconStyle.default
+        )
+
+        circle.addChild(icon)
+
+        return circle
+    }
+
+    private createUserIcon(url): Container {
+        const { radius, lineStyle } = this.userIconStyle
+
+        const circle = (new Graphics())
+            .lineStyle(lineStyle)
+            .beginFill(0xFFFFFF, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill()
+
+        const container = new Container()
+
+        const icon = Sprite.from(url)
+        icon.scale.set(2*radius / icon.height)
+
+        const mask = (new Graphics())
+            .beginFill(0xFFFFFF, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill()
+        container.mask = mask
+
+        circle.addChild(container)
+        container.addChild(mask, icon)
+
+        return circle
     }
 
     private createContainer(style: any): Container {

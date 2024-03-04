@@ -116,6 +116,7 @@ class StickChart extends EventTarget {
             transactions: context.transactions,
             blocksEntities: context.blocksEntities,
             transactionsEntities: context.transactionsEntities,
+            bettor: context.bettor,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,

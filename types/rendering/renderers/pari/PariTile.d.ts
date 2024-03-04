@@ -32,6 +32,9 @@ export declare class PariTile extends BaseParisRenderer {
     private getPositionIconTextureName;
     private getPariCurrencyIconTextureName;
     private createIcon;
+    private createWagerCurrencyIcon;
+    private createProfitCurrencyIcon;
+    private createUserIcon;
     private createContainer;
     private createProfitContainer;
     private createClaim;
