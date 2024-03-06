@@ -32,7 +32,11 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
 
         [EPosition.Undefined]: {
             ...this.baseCoverStyle,
-            color: config.style.linearresolution.nocontest
+            color: config.style.linearresolution.nocontest,
+            textstyle: {
+                ...this.baseCoverStyle.textstyle,
+                fill: 0x071226,
+            }
         },
 
         [EPosition.Up]: {
@@ -56,7 +60,11 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
 
         [EPosition.NoContest]: {
             ...this.baseCoverStyle,
-            color: config.style.linearresolution.nocontest
+            color: config.style.linearresolution.nocontest,
+            textstyle: {
+                ...this.baseCoverStyle.textstyle,
+                fill: 0x071226,
+            }
         }
 
     }

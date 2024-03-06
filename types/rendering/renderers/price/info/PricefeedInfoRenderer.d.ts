@@ -4,7 +4,8 @@ export declare class PricefeedInfoRenderer extends BaseRenderer {
     static readonly PRICEFEED_INFO_ID: symbol;
     get rendererId(): symbol;
     private groupStyle;
-    private titleStyle;
+    private metapoolBaseStyle;
+    private metapoolQuoteStyle;
     private subtitleContainerStyle;
     private subtitleStyle;
     private logoStyle;

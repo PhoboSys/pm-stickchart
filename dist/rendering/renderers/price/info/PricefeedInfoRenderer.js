@@ -10,30 +10,43 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         this.groupStyle = {
             offset: [70, 55]
         };
-        this.titleStyle = {
+        this.metapoolBaseStyle = {
             text: {
-                fill: 0x474C67,
+                fill: 0x455077,
                 fontWeight: 700,
                 fontFamily: 'Gilroy',
-                fontSize: 42,
+                fontSize: 50,
+                trim: true,
             },
             offset: [0, 0]
         };
+        this.metapoolQuoteStyle = {
+            text: {
+                fill: 0x071226,
+                fontWeight: 700,
+                fontFamily: 'Gilroy',
+                fontSize: 48,
+                stroke: 0x455077,
+                strokeThickness: 2,
+                trim: true,
+            },
+            offset: [6, 0]
+        };
         this.subtitleContainerStyle = {
-            offset: [0, 55]
+            offset: [0, 49]
         };
         this.subtitleStyle = {
             text: {
-                fill: 0x474C67,
+                fill: 0x455077,
                 fontWeight: 500,
-                fontFamily: 'Gilroy',
-                fontSize: 16,
+                fontFamily: 'Proxima Nova',
+                fontSize: 15,
             },
             offset: [0, 0]
         };
         this.logoStyle = {
             size: 24,
-            offset: [100, -2]
+            offset: [7, -3.5]
         };
     }
     get rendererId() {
@@ -45,10 +58,12 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             layer.addChild(group);
             group.position.set(...this.groupStyle.offset);
         }
-        const [title, titleState] = this.get('title', () => _rendering_1.GraphicUtils.createText('', this.titleStyle.offset, this.titleStyle.text));
-        if (titleState.new)
-            group.addChild(title);
-        title.text = context.metapool.name;
+        const [metapoolBase, metapoolBaseState] = this.get('metapoolBase', () => _rendering_1.GraphicUtils.createText(context.metapool.base, this.metapoolBaseStyle.offset, this.metapoolBaseStyle.text));
+        if (metapoolBaseState.new)
+            group.addChild(metapoolBase);
+        const [metapoolQuote, metapoolQuoteState] = this.get('metapoolQuote', () => _rendering_1.GraphicUtils.createText(context.metapool.quote, [metapoolBase.width + this.metapoolQuoteStyle.offset[0], this.metapoolQuoteStyle.offset[1]], this.metapoolQuoteStyle.text));
+        if (metapoolQuoteState.new)
+            group.addChild(metapoolQuote);
         const [subtitle, subtitleState] = this.get('subtitle', () => this.createSubtitle(context));
         if (subtitleState.new)
             group.addChild(subtitle);
@@ -68,7 +83,7 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             window.open(link, '__blank');
         });
         logo.scale.set(this.logoStyle.size / logo.height);
-        logo.position.set(...this.logoStyle.offset);
+        logo.position.set(text.width + this.logoStyle.offset[0], this.logoStyle.offset[1]);
         container.addChild(logo);
         return container;
     }

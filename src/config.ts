@@ -69,7 +69,7 @@ export default {
             upcolor: 0x02A179,
             downcolor: 0xD7335B,
             zerocolor: 0xFFFFFF,
-            nocontest: 0x474C67,
+            nocontest: 0xCBE4EF,
         },
         curvedresolution: {
             linesize: 16,

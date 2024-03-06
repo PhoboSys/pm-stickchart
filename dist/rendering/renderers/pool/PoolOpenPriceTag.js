@@ -27,11 +27,11 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
             }
         };
         this.coverStyle = {
-            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.nocontest }),
+            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.nocontest, textstyle: Object.assign(Object.assign({}, this.baseCoverStyle.textstyle), { fill: 0x071226 }) }),
             [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.upcolor }),
             [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.downcolor }),
             [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.zerocolor, textstyle: Object.assign(Object.assign({}, this.baseCoverStyle.textstyle), { fill: 0x071226 }) }),
-            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.nocontest })
+            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseCoverStyle), { color: _config_1.default.style.linearresolution.nocontest, textstyle: Object.assign(Object.assign({}, this.baseCoverStyle.textstyle), { fill: 0x071226 }) })
         };
         this.configAnimations = {
             fadein: {
