@@ -89,9 +89,8 @@ class DataBuilder {
         };
     }
     static chartdata(chartdata) {
-        const timestamps = Object.keys(chartdata).map(k => Number(k));
-        const prices = Object.values(chartdata);
-        return { timestamps, prices };
+        // Copy data to allow mutate it by Morph
+        return { timestamps: [...chartdata.timestamps], prices: [...chartdata.prices] };
     }
     static plotdata(chartdata, screen, timeframe) {
         const tsframed = [];
