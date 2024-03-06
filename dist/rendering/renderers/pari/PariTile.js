@@ -443,7 +443,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 iconTint: 0x092A73,
             },
         };
-        this.userIconStyle = {
+        this.avatarStyle = {
             radius: 16,
             lineStyle: {
                 width: 1,
@@ -756,9 +756,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
         if (wagercontentState.new)
             wager.addChild(wagercontent);
-        const [userIcon, userIconState] = this.get('userIcon', () => this.createUserIcon(context.bettor.avatarUrl), [context.bettor.avatarUrl]);
-        if (userIconState.new)
-            wagercontent.addChild(userIcon);
+        const [avatar, avatarState] = this.get('avatar', () => this.createAvatar(context.bettor.avatarUrl), [context.bettor.avatarUrl]);
+        if (avatarState.new)
+            wagercontent.addChild(avatar);
         const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Deposit', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
         if (wagerTextState.new)
             wagercontent.addChild(wagerText);
@@ -844,8 +844,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         circle.addChild(icon);
         return circle;
     }
-    createUserIcon(url) {
-        const { radius, lineStyle } = this.userIconStyle;
+    createAvatar(url) {
+        const { radius, lineStyle } = this.avatarStyle;
         const circle = (new pixi_1.Graphics())
             .lineStyle(lineStyle)
             .beginFill(0xFFFFFF, 1)
@@ -853,7 +853,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             .endFill();
         const container = new pixi_1.Container();
         const icon = pixi_1.Sprite.from(url);
-        icon.scale.set(2 * radius / icon.height);
+        icon.width = 2 * radius;
+        icon.height = 2 * radius;
         const mask = (new pixi_1.Graphics())
             .beginFill(0xFFFFFF, 1)
             .drawCircle(radius, radius, radius)

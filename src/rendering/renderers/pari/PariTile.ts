@@ -482,7 +482,7 @@ export class PariTile extends BaseParisRenderer {
         },
     }
 
-    private userIconStyle: any = {
+    private avatarStyle: any = {
         radius: 16,
         lineStyle: {
             width: 1,
@@ -925,12 +925,12 @@ export class PariTile extends BaseParisRenderer {
         )
         if (wagercontentState.new) wager.addChild(wagercontent)
 
-        const [userIcon, userIconState] = this.get(
-            'userIcon',
-            () => this.createUserIcon(context.bettor.avatarUrl),
+        const [avatar, avatarState] = this.get(
+            'avatar',
+            () => this.createAvatar(context.bettor.avatarUrl),
             [context.bettor.avatarUrl]
         )
-        if (userIconState.new) wagercontent.addChild(userIcon)
+        if (avatarState.new) wagercontent.addChild(avatar)
 
         const [wagerText, wagerTextState] = this.get('wagerText', () => GraphicUtils.createText(
             'Deposit',
@@ -1077,8 +1077,8 @@ export class PariTile extends BaseParisRenderer {
         return circle
     }
 
-    private createUserIcon(url): Container {
-        const { radius, lineStyle } = this.userIconStyle
+    private createAvatar(url): Container {
+        const { radius, lineStyle } = this.avatarStyle
 
         const circle = (new Graphics())
             .lineStyle(lineStyle)
@@ -1089,7 +1089,8 @@ export class PariTile extends BaseParisRenderer {
         const container = new Container()
 
         const icon = Sprite.from(url)
-        icon.scale.set(2*radius / icon.height)
+        icon.width = 2*radius
+        icon.height = 2*radius
 
         const mask = (new Graphics())
             .beginFill(0xFFFFFF, 1)
