@@ -1,4 +1,4 @@
-import { DataBuilder, ChartData } from '@chartdata'
+import { DataBuilder, ChartData, Bettor } from '@chartdata'
 import config from '@config'
 
 import { EChartType } from '@enums'
@@ -144,6 +144,7 @@ export class StickChart extends EventTarget {
         transactions: any,
         blocksEntities: any,
         transactionsEntities: any,
+        bettor: Bettor,
         features: Features,
     }): void {
         if (!context.metapool) {
@@ -171,6 +172,7 @@ export class StickChart extends EventTarget {
             transactions: context.transactions,
             blocksEntities: context.blocksEntities,
             transactionsEntities: context.transactionsEntities,
+            bettor: context.bettor,
             resolved: context.resolved,
             charttype: context.charttype,
             screen: this.application.screen,

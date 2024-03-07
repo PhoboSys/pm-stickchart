@@ -1,4 +1,4 @@
-import { PlotData } from '@chartdata';
+import { Bettor, PlotData } from '@chartdata';
 import { Features } from '@features';
 import { Rectangle } from '../../lib/pixi';
 import { ITextureStorage } from './interfaces';
@@ -14,6 +14,7 @@ export type RenderingContext = {
     transactions: any;
     blocksEntities: any;
     transactionsEntities: any;
+    bettor: Bettor;
     screen: Rectangle;
     textures: ITextureStorage;
     charttype: EChartType;
