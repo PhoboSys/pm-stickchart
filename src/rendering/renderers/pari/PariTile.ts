@@ -16,7 +16,7 @@ import {
 import { Logger } from '@infra'
 
 import datamath from '@lib/datamath'
-import { Graphics, Container, Sprite, gsap } from '@lib/pixi'
+import { Graphics, Container, Sprite, Assets, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
@@ -1088,9 +1088,11 @@ export class PariTile extends BaseParisRenderer {
 
         const container = new Container()
 
-        const icon = Sprite.from(url)
-        icon.width = 2*radius
-        icon.height = 2*radius
+        Assets.load(url).then((texture) => {
+            const icon = new Sprite(texture)
+            icon.scale.set(2*radius/texture.height)
+            container.addChild(icon)
+        })
 
         const mask = (new Graphics())
             .beginFill(0xFFFFFF, 1)
@@ -1099,7 +1101,7 @@ export class PariTile extends BaseParisRenderer {
         container.mask = mask
 
         circle.addChild(container)
-        container.addChild(mask, icon)
+        container.addChild(mask)
 
         return circle
     }

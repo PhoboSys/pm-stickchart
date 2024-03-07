@@ -39,6 +39,7 @@ __exportStar(require("@pixi/display"), exports);
 __exportStar(require("@pixi/sprite"), exports);
 __exportStar(require("@pixi/events"), exports);
 __exportStar(require("@pixi/extensions"), exports);
+__exportStar(require("@pixi/assets"), exports);
 var text_1 = require("@pixi/text");
 Object.defineProperty(exports, "Text", { enumerable: true, get: function () { return text_1.Text; } });
 Object.defineProperty(exports, "TextStyle", { enumerable: true, get: function () { return text_1.TextStyle; } });

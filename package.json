@@ -15,12 +15,12 @@
     "build": "tsc && tsc-alias",
     "lint": "eslint --ext .ts .",
     "lint-fix": "eslint --ext .ts . --fix",
-
     "ca:login": "aws codeartifact login --tool npm --repository Oracly --domain oracly --domain-owner 116856636107 --region us-east-1"
   },
   "dependencies": {
     "@pixi-essentials/gradients": "0.0.5",
     "@pixi/app": "6.5.7",
+    "@pixi/assets": "^6.5.7",
     "@pixi/canvas-display": "6.5.7",
     "@pixi/constants": "6.5.7",
     "@pixi/core": "6.5.7",

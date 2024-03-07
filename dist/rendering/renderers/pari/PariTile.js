@@ -852,16 +852,18 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             .drawCircle(radius, radius, radius)
             .endFill();
         const container = new pixi_1.Container();
-        const icon = pixi_1.Sprite.from(url);
-        icon.width = 2 * radius;
-        icon.height = 2 * radius;
+        pixi_1.Assets.load(url).then((texture) => {
+            const icon = new pixi_1.Sprite(texture);
+            icon.scale.set(2 * radius / texture.height);
+            container.addChild(icon);
+        });
         const mask = (new pixi_1.Graphics())
             .beginFill(0xFFFFFF, 1)
             .drawCircle(radius, radius, radius)
             .endFill();
         container.mask = mask;
         circle.addChild(container);
-        container.addChild(mask, icon);
+        container.addChild(mask);
         return circle;
     }
     createContainer(style) {
