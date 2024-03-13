@@ -496,6 +496,7 @@ export class PariTile extends BaseParisRenderer {
         [EPosition.Up]: {
             containerOffset: [32+16+7, 18],
             offset: [2, 2],
+            color: 0xFFFFFF,
             tint: 0x01A37A,
             radius: 8,
             size: 12,
@@ -503,6 +504,7 @@ export class PariTile extends BaseParisRenderer {
         [EPosition.Down]: {
             containerOffset: [32+16+7, 18],
             offset: [2, 2],
+            color: 0xFFFFFF,
             tint: 0xD7335B,
             radius: 8,
             size: 12,
@@ -510,6 +512,7 @@ export class PariTile extends BaseParisRenderer {
         [EPosition.Zero]: {
             containerOffset: [32+16+7, 18],
             offset: [2, 2],
+            color: 0x071226,
             tint: 0xB7BDD7,
             radius: 8,
             size: 12,
@@ -1032,12 +1035,13 @@ export class PariTile extends BaseParisRenderer {
         const {
             containerOffset,
             radius,
+            color,
         } = this.wagerCurrencyIconStyle[position]
 
         const container = new Container()
 
         const circle = (new Graphics())
-            .beginFill(0xFFFFFF, 1)
+            .beginFill(color, 1)
             .drawCircle(radius, radius, radius)
             .endFill()
 

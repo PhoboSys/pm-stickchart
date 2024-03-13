@@ -180,7 +180,12 @@ export class PoolBackground extends BasePoolsRenderer {
         pool: any,
         shouldRender: boolean,
     ): void {
-        if (!shouldRender) return this.clear('backgroundContainer')
+        if (!shouldRender) {
+            this.clear('backgroundContainer')
+            this.clear('background')
+
+            return
+        }
 
         const { height, width } = context.screen
         const poolid = pool.poolid
@@ -290,7 +295,15 @@ export class PoolBackground extends BasePoolsRenderer {
         textureColorStops: any,
         shouldRender: boolean,
     ): void {
-        if (!shouldRender) return this.clear('claimableContainer')
+        if (!shouldRender) {
+            this.clear('claimableContainer')
+            this.clear('topContainer')
+            this.clear('topGradient')
+            this.clear('bottomContainer')
+            this.clear('bottomGradient')
+
+            return
+        }
 
         const [claimableContainer, claimableContainerState] = this.get('claimableContainer', () => new Container())
         if (claimableContainerState.new) container.addChild(claimableContainer)
@@ -388,7 +401,14 @@ export class PoolBackground extends BasePoolsRenderer {
         win: boolean,
         shouldRender: boolean,
     ): void {
-        if (!shouldRender) return this.clear('iconContainer')
+        if (!shouldRender) {
+            this.clear('iconContainer')
+            this.clear('coinShine')
+            this.clear('coin')
+            this.clear('coinCurrency')
+
+            return
+        }
 
         const { height } = context.screen
 

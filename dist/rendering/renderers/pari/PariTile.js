@@ -456,6 +456,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Up]: {
                 containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
+                color: 0xFFFFFF,
                 tint: 0x01A37A,
                 radius: 8,
                 size: 12,
@@ -463,6 +464,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Down]: {
                 containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
+                color: 0xFFFFFF,
                 tint: 0xD7335B,
                 radius: 8,
                 size: 12,
@@ -470,6 +472,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Zero]: {
                 containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
+                color: 0x071226,
                 tint: 0xB7BDD7,
                 radius: 8,
                 size: 12,
@@ -823,10 +826,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return icon;
     }
     createWagerCurrencyIcon(context, position) {
-        const { containerOffset, radius, } = this.wagerCurrencyIconStyle[position];
+        const { containerOffset, radius, color, } = this.wagerCurrencyIconStyle[position];
         const container = new pixi_1.Container();
         const circle = (new pixi_1.Graphics())
-            .beginFill(0xFFFFFF, 1)
+            .beginFill(color, 1)
             .drawCircle(radius, radius, radius)
             .endFill();
         const icon = this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.wagerCurrencyIconStyle[position]);
