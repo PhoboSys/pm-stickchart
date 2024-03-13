@@ -70,6 +70,7 @@ export default {
             downcolor: 0xD7335B,
             zerocolor: 0xFFFFFF,
             nocontest: 0xCBE4EF,
+            won: 0xF7C15B,
         },
         curvedresolution: {
             linesize: 16,
@@ -79,12 +80,42 @@ export default {
             zerocolor: 0xFFFFFF,
             nocontest: 0x474C67,
         },
-        poolRoundColor: 0x1F50F7,
-        poolClaimaColors: [
-            { color: '#F7514D00', offset: 0 },
-            { color: '#FC8E5FFF', offset: 0.2 },
-            { color: '#FBC88BFF', offset: 0.9 },
-            { color: '#FBC88B00', offset: 1 },
+        poolActualRoundColor: 0x1F50F7,
+        goldCoinShineColors: [
+            { color: '#EEBC61B8', offset: 0 },
+            { color: '#EEBC6100', offset: 1 },
+        ],
+        silverCoinShineColors: [
+            { color: '#D4ECF3B8', offset: 0 },
+            { color: '#D4ECF300', offset: 1 },
+        ],
+        poolRoundColors: [
+            { color: '#1F4EEF00', offset: 0 },
+            { color: '#1F4EEF33', offset: 1 },
+        ],
+        poolRoundWinColors: [
+            { color: '#F7C15BFF', offset: 0 },
+            { color: '#F7C15BFF', offset: 0.27 },
+            { color: '#1C48DA00', offset: 0.79 },
+            { color: '#1C48DA00', offset: 1 },
+        ],
+        poolRoundBottomColors: [
+            { color: '#1C48DA00', offset: 0 },
+            { color: '#1C48DA00', offset: 0.27 },
+            { color: '#1C48DA54', offset: 0.79 },
+            { color: '#1C48DA54', offset: 1 },
+        ],
+        poolRoundWinBorderColors: [
+            { color: '#EDBC6200', offset: 0.13 },
+            { color: '#EDBC62FF', offset: 0.38 },
+            { color: '#1D49DBFF', offset: 0.65 },
+            { color: '#1D49DB00', offset: 0.94 },
+        ],
+        poolRoundNoContestColors: [
+            { color: '#7A7A7AFF', offset: 0 },
+            { color: '#7A7A7AFF', offset: 0.27 },
+            { color: '#1C48DA00', offset: 0.79 },
+            { color: '#1C48DA00', offset: 1 },
         ],
         lockCountdown: {
             colors: [

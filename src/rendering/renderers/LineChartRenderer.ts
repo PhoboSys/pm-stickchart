@@ -5,7 +5,7 @@ import { GridRenderer, LatestPriceRenderer } from '@rendering'
 import { Pool, Pari, CrosshairRenderer } from '@rendering'
 import { PricefeedInfoRenderer } from '@rendering'
 
-import { PoolBackground } from './pool/PoolBackground'
+import { PoolActualBackground } from './pool/PoolActualBackground'
 import { PoolCountdown } from './pool/PoolCountdown'
 
 export class LineChartRenderer implements IRenderer {
@@ -16,7 +16,7 @@ export class LineChartRenderer implements IRenderer {
         private readonly renderer: IGraphicStorage,
     ) {
         this.compositor = new RenderingCompositor([
-            new PoolBackground(renderer),
+            new PoolActualBackground(renderer),
             new PoolCountdown(renderer),
             new GridRenderer(renderer),
             new PricefeedInfoRenderer(renderer),

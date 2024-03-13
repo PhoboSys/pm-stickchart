@@ -18,6 +18,12 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
             [_enums_1.EPosition.Down]: _enums_1.EPosition.Down,
             [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
         };
+        this.gradientStyle = {
+            alpha: 0.39,
+            hover: {
+                alpha: 0.20,
+            }
+        };
         this.configAnimations = {
             pulsar: {
                 pixi: {
@@ -37,7 +43,23 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
                 duration: 1,
                 ease: 'power3.out',
                 clear: true,
-            }
+            },
+            hover_group: {
+                pixi: {
+                    alpha: 0.39,
+                },
+                duration: 0.5,
+                ease: 'back.out(4)',
+                clear: true,
+            },
+            unhover_group: {
+                pixi: {
+                    alpha: 0.20,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
+                delay: 0.5,
+            },
         };
     }
     get rendererId() {
@@ -56,7 +78,7 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
         const undef = resolution === _enums_1.EPosition.Undefined;
         const win = pari.position === resolution;
         const nocontest = resolution === _enums_1.EPosition.NoContest;
-        if (undef)
+        if (undef || !(win || nocontest))
             return this.clear();
         const poolid = pool.poolid;
         const pariid = pari.pariid;
@@ -86,22 +108,52 @@ class PariClaimBackground extends BaseParisRenderer_1.BaseParisRenderer {
         ];
         const [group, groupstate] = this.get('group', () => new pixi_1.Graphics());
         if (groupstate.new) {
-            group.position.y = -height / 4;
-            group.alpha = 0;
+            // group.position.y = -height/4
+            // group.alpha = 0
             container.addChild(group);
         }
+        const [gradientTexture] = this.get('gradientTexture', () => context.textures.get(textures_1.GRADIENT_TEXTURE, {
+            width,
+            height,
+            points: [0, 0, 0, height],
+            colorStops: [
+                { color: '#F7C15BFF', offset: 0 },
+                { color: '#F7C15BFF', offset: 0.27 },
+                { color: '#F7C15B00', offset: 0.79 },
+                { color: '#F7C15B00', offset: 1 },
+            ],
+        }), [height, width]);
         const [gradient, gradientState] = this.get('gradient', () => new pixi_1.Graphics());
         if (gradientState.new)
             group.addChild(gradient);
+        if (!gradientState.subscribed) {
+            gradientState.subscribed = true;
+            const poolid = pool.poolid;
+            const pariid = pari.pariid;
+            context.eventTarget.addEventListener('poolhover', (e) => {
+                if (e.poolid !== poolid)
+                    return;
+                // console.log('poolhover')
+                this.rebind(poolid, pariid);
+                this.animate('group', 'hover_group');
+            });
+            context.eventTarget.addEventListener('poolunhover', (e) => {
+                if (e.poolid !== poolid)
+                    return;
+                // console.log('poolunhover')
+                this.rebind(poolid, pariid);
+                this.animate('group', 'unhover_group');
+            });
+        }
+        if (groupstate.animation !== 'hover_group')
+            this.animate('group', 'unhover_group');
         gradient
             .clear()
-            .beginTextureFill({
-            texture: context.textures.get(textures_1.POOL_CLAIM_TEXTURE),
-        })
+            .beginTextureFill({ texture: gradientTexture })
             .drawPolygon(shape)
             .closePath()
             .endFill();
-        this.animate('group', 'pulsar');
+        // this.animate('group', 'pulsar')
     }
 }
 exports.PariClaimBackground = PariClaimBackground;

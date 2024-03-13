@@ -13,75 +13,34 @@ const BasePoolsRenderer_1 = require("./BasePoolsRenderer");
 class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
+        this.baseTorusStyle = {
+            inner: 3,
+            outer: 8,
+            zIndex: 2,
+            innerColor: 0xFFFFFF,
+            outerColor: 0xFFFFFF,
+        };
         this.torusStyle = {
-            [_enums_1.EPosition.Undefined]: {
-                inner: 3,
-                outer: 8,
-                innerColor: 0xFFFFFF,
-                outerColor: 0xFFFFFF,
-                innerAlpha: 0,
-                zIndex: 2,
-            },
-            [_enums_1.EPosition.Up]: {
-                inner: 3,
-                outer: 8,
-                innerColor: _config_1.default.style.linearresolution.upcolor,
-                outerColor: 0xFFFFFF,
-                zIndex: 2,
-            },
-            [_enums_1.EPosition.Down]: {
-                inner: 3,
-                outer: 8,
-                innerColor: _config_1.default.style.linearresolution.downcolor,
-                outerColor: 0xFFFFFF,
-                zIndex: 2,
-            },
-            [_enums_1.EPosition.Zero]: {
-                inner: 3,
-                outer: 8,
-                innerColor: _config_1.default.style.linearresolution.zerocolor,
-                outerColor: 0xFFFFFF,
-                zIndex: 2,
-            },
-            [_enums_1.EPosition.NoContest]: {
-                inner: 3,
-                outer: 8,
-                innerColor: _config_1.default.style.linearresolution.nocontest,
-                outerColor: 0xFFFFFF,
-                zIndex: 2,
-            }
+            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseTorusStyle), { innerAlpha: 0 }),
+            [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseTorusStyle), { innerColor: _config_1.default.style.linearresolution.upcolor }),
+            [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseTorusStyle), { innerColor: _config_1.default.style.linearresolution.downcolor }),
+            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseTorusStyle), { innerColor: _config_1.default.style.linearresolution.zerocolor }),
+            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseTorusStyle), { innerColor: _config_1.default.style.linearresolution.nocontest }),
+            won: Object.assign(Object.assign({}, this.baseTorusStyle), { innerColor: _config_1.default.style.linearresolution.won })
+        };
+        this.baseLineStyle = {
+            color: 0xFFFFFF,
+            width: 5,
+            alpha: 1,
+            zIndex: 1,
         };
         this.lineStyle = {
-            [_enums_1.EPosition.Undefined]: {
-                color: 0xFFFFFF,
-                width: 5,
-                alpha: 0.9,
-                zIndex: 1,
-            },
-            [_enums_1.EPosition.Up]: {
-                color: _config_1.default.style.linearresolution.upcolor,
-                width: 5,
-                alpha: 1,
-                zIndex: 1,
-            },
-            [_enums_1.EPosition.Down]: {
-                color: _config_1.default.style.linearresolution.downcolor,
-                width: 5,
-                alpha: 1,
-                zIndex: 1,
-            },
-            [_enums_1.EPosition.Zero]: {
-                color: _config_1.default.style.linearresolution.zerocolor,
-                width: 5,
-                alpha: 1,
-                zIndex: 1,
-            },
-            [_enums_1.EPosition.NoContest]: {
-                color: _config_1.default.style.linearresolution.nocontest,
-                width: 5,
-                alpha: 1,
-                zIndex: 1,
-            }
+            [_enums_1.EPosition.Undefined]: Object.assign(Object.assign({}, this.baseLineStyle), { alpha: 0.9 }),
+            [_enums_1.EPosition.Up]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.upcolor }),
+            [_enums_1.EPosition.Down]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.downcolor }),
+            [_enums_1.EPosition.Zero]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.zerocolor }),
+            [_enums_1.EPosition.NoContest]: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.nocontest }),
+            won: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.won }),
         };
         this.configAnimations = {
             fadein: {
@@ -109,14 +68,19 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolResolutionLine.POOL_RESOLUTION_LINE_ID;
     }
     updatePool(pool, context, container) {
+        var _a;
         if (context.features.curvedResolutionLines || !pool.openPriceTimestamp || !pool.openPriceValue)
             return this.clear();
         const [group] = this.updateGroup(context, container, pool);
         const rprice = this.getResolutionPricePoint(pool, context);
         const resolution = this.getPoolResolution(pool, context);
-        this.updateOpenPoint(context, group, resolution, pool);
-        this.updateResPoint(context, group, resolution, rprice);
-        this.updateResolutionLine(pool, context, group, resolution, rprice);
+        const isHistorical = this.isHistoricalPool(pool, context);
+        const nocontest = resolution === _enums_1.EPosition.NoContest;
+        const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[pool.poolid];
+        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom);
+        this.updateOpenPoint(context, group, resolution, pool, hasWonPari);
+        this.updateResPoint(context, group, resolution, rprice, hasWonPari);
+        this.updateResolutionLine(context, group, resolution, pool, rprice, hasWonPari);
     }
     updateGroup(context, container, pool) {
         const [group, groupstate] = this.get('group', () => new pixi_1.Graphics());
@@ -150,36 +114,36 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
         return [group, groupstate];
     }
-    updateOpenPoint(context, container, resolution, pool) {
+    updateOpenPoint(context, container, resolution, pool, won) {
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
         const [x] = datamath_1.default.scale([pool.openPriceTimestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([pool.openPriceValue], pricerange, height);
-        const [openpoint, openpointstate] = this.get('openpoint', () => this.createPricePoint(this.torusStyle[resolution]), [resolution]);
+        const [openpoint, openpointstate] = this.get('openpoint', () => this.createPricePoint(won ? this.torusStyle.won : this.torusStyle[resolution]), [resolution, won]);
         if (openpointstate.new)
             container.addChild(openpoint);
         openpoint.position.set(x, y);
     }
-    updateResPoint(context, container, resolution, rprice) {
+    updateResPoint(context, container, resolution, rprice, won) {
         if (!rprice)
             return this.clear('respoint');
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
         const [x] = datamath_1.default.scale([rprice.timestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([Number(rprice.value)], pricerange, height);
-        const [respoint, respointstate] = this.get('respoint', () => this.createPricePoint(this.torusStyle[resolution]), [resolution]);
+        const [respoint, respointstate] = this.get('respoint', () => this.createPricePoint(won ? this.torusStyle.won : this.torusStyle[resolution]), [resolution, won]);
         if (respointstate.new)
             container.addChild(respoint);
         respoint.position.set(x, y);
     }
-    updateResolutionLine(pool, context, container, resolution, rprice) {
+    updateResolutionLine(context, container, resolution, pool, rprice, won) {
         if (!rprice)
             return this.clear('line');
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
         const [x1, x2] = datamath_1.default.scale([pool.openPriceTimestamp, rprice.timestamp], timerange, width);
         const [y1, y2] = datamath_1.default.scaleReverse([pool.openPriceValue, Number(rprice.value)], pricerange, height);
-        const style = this.lineStyle[resolution];
+        const style = won ? this.lineStyle.won : this.lineStyle[resolution];
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
         if (linestate.new) {
             container.addChild(line);

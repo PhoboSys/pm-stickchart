@@ -1,8 +1,23 @@
-import { RenderingContext } from '@rendering'
+import { EntityUtils, RenderingContext } from '@rendering'
 
+import { Logger } from '@infra'
+import {
+    GRADIENT_TEXTURE,
+    GOLD_COIN_TEXTURE,
+    SILVER_COIN_TEXTURE,
+    PARI_GOLD_TEXTURE,
+    PARI_SILVER_TEXTURE,
+    USDC_GOLD_TEXTURE,
+    USDC_SILVER_TEXTURE,
+    UNKNOWN_CURRENCY_TEXTURE,
+    COIN_SHINE,
+} from '@rendering/textures'
 import config from '@config'
 import datamath from '@lib/datamath'
-import { Graphics, Container } from '@lib/pixi'
+import { Graphics, Container, Sprite, BlurFilter } from '@lib/pixi'
+import { isEmpty } from '@lib/utils'
+
+import { EPosition } from '@enums'
 
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 
@@ -16,23 +31,95 @@ export class PoolBackground extends BasePoolsRenderer {
         return PoolBackground.POOL_BACKGROUND_ID
     }
 
+    private bgAnimOffset = 0.19
+
+    private winBorderStyle: any = {
+        left: {
+            colorStops: config.style.poolRoundWinBorderColors,
+            width: 2,
+            offset: [0, 0],
+            alpha: 0.33,
+        },
+        right: {
+            colorStops: config.style.poolRoundWinBorderColors,
+            width: 2,
+            offset: [-2, 0],
+            alpha: 0.33,
+        }
+    }
+
+    private backgroundStyle: any = {
+        alpha: 0.25,
+        hoverAlpha: 0.39,
+    }
+
+    private coinStyle: any = {
+        scale: 0.2,
+        offsetY: 0.075,
+        anchor: [0.5, 0.5],
+    }
+
+    private coinShineStyle: any = {
+        gold: {
+            blur: 20,
+            alpha: 0.5,
+            radius: 75,
+            colorStops: config.style.goldCoinShineColors,
+        },
+        silver: {
+            blur: 20,
+            alpha: 0.3,
+            radius: 75,
+            colorStops: config.style.silverCoinShineColors,
+        },
+    }
+
+    private coinCurrencyStyle: any = {
+        scale: 0.2,
+        anchor: [0.5, 0.5],
+    }
+
     private configAnimations: any = {
-        hover_group: {
-            pixi: {
-                alpha: 1,
-            },
+        hover_bg: {
             duration: 0.5,
-            ease: 'back.out(4)',
+            ease: 'power2.out',
             clear: true,
         },
-        unhover_group: {
+        unhover_bg: {
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: 0.5,
+        },
+        hover_border: {
             pixi: {
-                alpha: 0,
+                alpha: 0.5
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            clear: true,
+        },
+        unhover_border: {
+            pixi: {
+                alpha: 0.33,
             },
             duration: 0.5,
             ease: 'power2.out',
             delay: 0.5,
         },
+        show_coin: {
+            pixi: {
+                alpha: 1,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+        },
+        hide_coin: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+        }
     }
 
     protected get animations(): any {
@@ -45,81 +132,388 @@ export class PoolBackground extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
+        const isHistorical = this.isHistoricalPool(pool, context)
 
-        this.updateBackground(pool, context, container)
+        if (!pool.openPriceTimestamp || !pool.openPriceValue || !isHistorical) return this.clear()
 
-    }
-
-    private updateBackground(
-        pool: any,
-        context: RenderingContext,
-        container: Container,
-    ): void {
-
-        const {
-            width,
-            height,
-        } = context.screen
+        const { width } = context.screen
 
         const { timerange } = context.plotdata
         const { openPriceTimestamp, endDate } = pool
 
-        let rdate = endDate
-        if (this.isHistoricalPool(pool, context)) {
-            const rprice = this.getResolutionPricePoint(pool, context)
-            if (rprice?.timestamp) rdate = rprice?.timestamp
-        }
+        const rprice = this.getResolutionPricePoint(pool, context)
+        const rdate = rprice?.timestamp || endDate
+
+        const paris = context.paris?.[pool.poolid]
+        const resolution = this.getPoolResolution(pool, context)
+        const nocontest = resolution === EPosition.NoContest
+        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom)
+        const hashClaimablePari = paris && paris.some(pari => {
+            const phantom = pari.phantom
+            const win = pari.position === resolution
+            const won = win && isHistorical && !nocontest && !phantom
+            const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
+            const orphan = phantom && reverted
+            const claimable = !pari.claimed && (won || nocontest) && !orphan
+
+            return claimable
+        })
+        const shouldRenderClaimable = !isEmpty(paris) && hashClaimablePari
 
         const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)
 
+        this.udateDefaultBackground(context, container, [ox, rx], pool, !shouldRenderClaimable)
+
+        let bgTextureColorStops
+        if (hasWonPari) bgTextureColorStops = config.style.poolRoundWinColors
+        else if (nocontest) bgTextureColorStops = config.style.poolRoundNoContestColors
+
+        this.udateClaimableBackground(context, container, [ox, rx], pool, bgTextureColorStops, shouldRenderClaimable)
+        this.updateClaimableBorder(context, container, [ox, rx], pool, shouldRenderClaimable && hasWonPari)
+        this.updateCoinIcon(context, container, [ox, rx], pool, hasWonPari, shouldRenderClaimable)
+    }
+
+    private udateDefaultBackground(
+        context: RenderingContext,
+        container: Container,
+        [x1, x2],
+        pool: any,
+        shouldRender: boolean,
+    ): void {
+        if (!shouldRender) return this.clear('backgroundContainer')
+
+        const { height, width } = context.screen
+        const poolid = pool.poolid
+
+        const [backgroundContainer, backgroundContainerState] = this.get('backgroundContainer', () => new Container())
+        if (backgroundContainerState.new) {
+            container.addChild(backgroundContainer)
+            backgroundContainer.alpha = 0
+        }
+        if (!backgroundContainerState.subscribed) {
+            backgroundContainerState.subscribed = true
+            context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('backgroundContainer', 'hover_bg', { pixi: { alpha: 1 } })
+            })
+            context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('backgroundContainer', 'unhover_bg', { pixi: { alpha: 0.5 } })
+            })
+        }
+        if (backgroundContainerState.animation !== 'hover_bg') this.animate('backgroundContainer', 'unhover_bg', { pixi: { alpha: 0.5 } })
+
         const shape = [
-            ox, 0,
-            rx, 0,
-            rx, height,
-            ox, height,
+            x1, 0,
+            x2, 0,
+            x2, height,
+            x1, height,
         ]
 
-        const [group, groupstate] = this.get('group', () => new Graphics())
-        if (groupstate.new) {
-            group.alpha = 0
-            container.addChild(group)
+        const [background, backgroundState] = this.get('background', () => new Graphics())
+        if (backgroundState.new) backgroundContainer.addChild(background)
+
+        background
+            .clear()
+            .beginTextureFill({ texture: context.textures.get(GRADIENT_TEXTURE, {
+                width,
+                height,
+                points: [0, 0, 0, height],
+                colorStops: config.style.poolRoundColors,
+            }) })
+            .drawPolygon(shape)
+            .closePath()
+            .endFill()
+    }
+
+    private updateClaimableBorder(
+        context: RenderingContext,
+        container: Container,
+        [x1, x2],
+        pool: any,
+        shouldRender: boolean,
+    ): void {
+        if (!shouldRender) {
+            this.clear('winBorderLeft')
+            this.clear('winBorderRight')
+
+            return
         }
 
-        const [gradient, gradientState] = this.get('gradient', () => new Graphics())
-        if (gradientState.new) group.addChild(gradient)
+        const { height } = context.screen
+        const poolid = pool.poolid
 
-        gradient
+        const [borderLeft, borderLeftState] = this.get(
+            'winBorderLeft',
+            () => this.createBorder(context, height, this.winBorderStyle.left),
+            [height]
+        )
+        if (borderLeftState.new) container.addChild(borderLeft)
+        borderLeft.position.x = x1
+
+        const [borderRight, borderRightState] = this.get(
+            'winBorderRight',
+            () => this.createBorder(context, height, this.winBorderStyle.right),
+            [height]
+        )
+        if (borderRightState.new) container.addChild(borderRight)
+        borderRight.position.x = x2
+
+        if (!borderLeftState.subscribed) {
+            borderLeftState.subscribed = true
+            context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('winBorderLeft', 'hover_border')
+                this.animate('winBorderRight', 'hover_border')
+            })
+            context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('winBorderLeft', 'unhover_border')
+                this.animate('winBorderRight', 'unhover_border')
+            })
+        }
+    }
+
+    private udateClaimableBackground(
+        context: RenderingContext,
+        container: Container,
+        [x1, x2],
+        pool: any,
+        textureColorStops: any,
+        shouldRender: boolean,
+    ): void {
+        if (!shouldRender) return this.clear('claimableContainer')
+
+        const [claimableContainer, claimableContainerState] = this.get('claimableContainer', () => new Container())
+        if (claimableContainerState.new) container.addChild(claimableContainer)
+
+        const [topContainer, topContainerState] = this.get('topContainer', () => new Container())
+        if (topContainerState.new) {
+            topContainer.alpha = 0
+            claimableContainer.addChild(topContainer)
+        }
+
+        const { height, width } = context.screen
+
+        const bgheight = height*(1+this.bgAnimOffset)
+
+        const shape = [
+            x1, 0,
+            x2, 0,
+            x2, bgheight,
+            x1, bgheight,
+        ]
+
+        const [topGradient, topGradientState] = this.get('topGradient', () => new Graphics())
+        if (topGradientState.new) topContainer.addChild(topGradient)
+
+        topGradient
             .clear()
-            .beginFill(config.style.poolRoundColor, 0.1)
+            .beginTextureFill({ texture: context.textures.get(GRADIENT_TEXTURE, {
+                width,
+                height: bgheight,
+                points: [0, 0, 0, bgheight],
+                colorStops: textureColorStops,
+            }) })
             .drawPolygon(shape)
             .closePath()
             .endFill()
 
-        if (this.isHistoricalPool(pool, context)) {
-            const poolid = pool.poolid
-            if (!groupstate.subscribed) {
-                groupstate.subscribed = true
-                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
-                    if (e.poolid !== poolid) return
-
-                    this.rebind(poolid)
-                    this.animate('group', 'hover_group')
-                })
-                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
-                    if (e.poolid !== poolid) return
-
-                    this.rebind(poolid)
-                    this.animate('group', 'unhover_group')
-                })
-            }
-
-            if (groupstate.animation !== 'hover_group') this.animate('group', 'unhover_group')
-
+        const [bottomContainer, bottomContainerState] = this.get('bottomContainer', () => new Container())
+        if (bottomContainerState.new) {
+            bottomContainer.alpha = 0
+            claimableContainer.addChild(bottomContainer)
         }
 
-        if (this.isActualPool(pool)) this.animate('group', 'hover_group')
+        const [bottomGradient, bottomGradientState] = this.get('bottomGradient', () => new Graphics())
+        if (bottomGradientState.new) bottomContainer.addChild(bottomGradient)
 
+        bottomGradient
+            .clear()
+            .beginTextureFill({ texture: context.textures.get(GRADIENT_TEXTURE, {
+                width,
+                height: bgheight,
+                points: [0, 0, 0, bgheight],
+                colorStops: config.style.poolRoundBottomColors,
+            }) })
+            .drawPolygon(shape)
+            .closePath()
+            .endFill()
+
+        const poolid = pool.poolid
+        if (!claimableContainerState.subscribed) {
+            claimableContainerState.subscribed = true
+            context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('topContainer', 'hover_bg', { pixi: { y: 0, alpha: this.backgroundStyle.hoverAlpha } })
+                this.animate('bottomContainer', 'hover_bg', { pixi: { alpha: this.backgroundStyle.hoverAlpha } })
+            })
+            context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                if (e.poolid !== poolid) return
+
+                this.rebind(poolid)
+                this.animate('topContainer', 'unhover_bg', {
+                    pixi: { y: -height*this.bgAnimOffset, alpha: this.backgroundStyle.alpha }
+                })
+                this.animate('bottomContainer', 'unhover_bg', { pixi: { alpha: this.backgroundStyle.alpha } })
+            })
+        }
+
+        if (topContainerState.animation !== 'hover_bg') {
+            this.animate('topContainer', 'unhover_bg', {
+                pixi: { y: -height*this.bgAnimOffset, alpha: this.backgroundStyle.alpha }
+            })
+        }
+
+        if (bottomContainerState.animation !== 'hover_bg') {
+            this.animate('bottomContainer', 'unhover_bg', { pixi: { alpha: this.backgroundStyle.alpha } })
+        }
+    }
+
+    updateCoinIcon(
+        context: RenderingContext,
+        container: Container,
+        [x1, x2],
+        pool: any,
+        win: boolean,
+        shouldRender: boolean,
+    ): void {
+        if (!shouldRender) return this.clear('iconContainer')
+
+        const { height } = context.screen
+
+        const [iconContainer, iconContainerState] = this.get('iconContainer', () => new Container())
+        if (iconContainerState.new) {
+            iconContainer.alpha = 0
+            container.addChild(iconContainer)
+        }
+
+        const ox = (x1+x2)/2
+        const oy = this.coinStyle.offsetY*height
+
+        const [coinShine, coinShineState] = this.get('coinShine', () => this.createCoinShine(context, win), [win])
+        if (coinShineState.new) iconContainer.addChild(coinShine)
+        coinShine.position.set(ox, oy)
+
+        const [coin, coinState] = this.get('coin', () => this.createCoin(context, win), [win])
+        if (coinState.new) iconContainer.addChild(coin)
+        coin.position.set(ox, oy)
+
+        const [coinCurrency, coinCurrencyState] = this.get('coinCurrency', () => this.createCoinCurrency(context, win), [win])
+        if (coinCurrencyState.new) iconContainer.addChild(coinCurrency)
+        coinCurrency.position.set(ox+(coin.width-coin.height)/2, oy)
+
+        if ((x2-x1) > coin.width+20 && iconContainerState.animation !== 'show_coin') this.animate('iconContainer', 'show_coin')
+        else if ((x2-x1) < coin.width+20 && iconContainerState.animation !== 'hide_coin') this.animate('iconContainer', 'hide_coin')
+
+    }
+
+    private createBorder(
+        context: RenderingContext,
+        height: number,
+        style: any,
+    ): Container {
+
+        const container = new Container()
+
+        const { offset: [ofx, ofy], width, colorStops, alpha } = style
+
+        const texture = context.textures.get(GRADIENT_TEXTURE, {
+            width,
+            height,
+            points: [0, 0, 0, height],
+            colorStops,
+        })
+
+        const border = (new Graphics())
+            .beginTextureFill({ texture })
+            .drawRect(ofx, ofy, width, height)
+            .endFill()
+
+        container.alpha = alpha
+        container.addChild(border)
+
+        return container
+
+    }
+
+    private createCoin(
+        context: RenderingContext,
+        win: boolean,
+    ): Sprite {
+        const { scale, anchor } = this.coinStyle
+
+        const textureName = win ? GOLD_COIN_TEXTURE : SILVER_COIN_TEXTURE
+        const texture = context.textures.get(textureName)
+        const icon = new Sprite(texture)
+
+        icon.scale.set(scale)
+        icon.anchor.set(...anchor)
+
+        return icon
+    }
+
+    private createCoinCurrency(
+        context: RenderingContext,
+        win: boolean,
+    ): Sprite {
+        const { scale, anchor } = this.coinCurrencyStyle
+
+        const textureName = this.getCoinCurrencyTextureName(context, win)
+        const texture = context.textures.get(textureName)
+        const icon = new Sprite(texture)
+
+        icon.scale.set(scale)
+        icon.anchor.set(...anchor)
+
+        return icon
+    }
+
+    private createCoinShine(
+        context: RenderingContext,
+        win: boolean,
+    ): Graphics {
+        const style = win ? this.coinShineStyle.gold : this.coinShineStyle.silver
+        const { radius, blur, alpha, colorStops } = style
+
+        const texture = context.textures.get(COIN_SHINE, { radius, colorStops })
+
+        const shine = (new Graphics())
+            .beginTextureFill({ texture, alpha })
+            .drawCircle(radius, radius, radius)
+        shine.pivot.set(radius, radius)
+        shine.filters = [new BlurFilter(blur)]
+
+        return shine
+    }
+
+    private getCoinCurrencyTextureName(context: RenderingContext, win: boolean): symbol {
+        const key = `${context.metapool?.currency}_${win ? 'GOLD' : 'SILVER'}`
+
+        switch (key) {
+            case 'PARI_SILVER':
+                return PARI_SILVER_TEXTURE
+            case 'PARI_GOLD':
+                return PARI_GOLD_TEXTURE
+            case 'USDC_SILVER':
+                return USDC_SILVER_TEXTURE
+            case 'USDC_GOLD':
+                return USDC_GOLD_TEXTURE
+            default:
+                Logger.error(`currency "${key}" is not supported, fallback to UNKNOWN_CURRENCY_TEXTURE`)
+
+                return UNKNOWN_CURRENCY_TEXTURE
+        }
     }
 
 }
