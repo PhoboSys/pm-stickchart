@@ -14,5 +14,6 @@ export * from '@pixi/assets';
 export { Text, TextStyle } from '@pixi/text';
 export * as utils from '@pixi/utils';
 export * from '@pixi-essentials/gradients';
+export * from '@pixi/filter-blur';
 export { gsap } from 'gsap';
 import '@pixi/graphics-extras';

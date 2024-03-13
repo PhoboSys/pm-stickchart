@@ -45,6 +45,7 @@ Object.defineProperty(exports, "Text", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "TextStyle", { enumerable: true, get: function () { return text_1.TextStyle; } });
 exports.utils = __importStar(require("@pixi/utils"));
 __exportStar(require("@pixi-essentials/gradients"), exports);
+__exportStar(require("@pixi/filter-blur"), exports);
 var gsap_1 = require("gsap");
 Object.defineProperty(exports, "gsap", { enumerable: true, get: function () { return gsap_1.gsap; } });
 require("@pixi/graphics-extras");

@@ -60,6 +60,7 @@ declare const _default: {
             downcolor: number;
             zerocolor: number;
             nocontest: number;
+            won: number;
         };
         curvedresolution: {
             linesize: number;
@@ -69,8 +70,32 @@ declare const _default: {
             zerocolor: number;
             nocontest: number;
         };
-        poolRoundColor: number;
-        poolClaimaColors: {
+        poolActualRoundColor: number;
+        goldCoinShineColors: {
+            color: string;
+            offset: number;
+        }[];
+        silverCoinShineColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolRoundColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolRoundWinColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolRoundBottomColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolRoundWinBorderColors: {
+            color: string;
+            offset: number;
+        }[];
+        poolRoundNoContestColors: {
             color: string;
             offset: number;
         }[];

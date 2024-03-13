@@ -34,8 +34,16 @@ import {
     UNDEFINED_ICON_TEXTURE,
 
     GRADIENT_TEXTURE,
-    POOL_CLAIM_TEXTURE,
     CLAIM_FRAGMENT_TEXTURE,
+
+    COIN_SHINE,
+    GOLD_COIN_TEXTURE,
+    SILVER_COIN_TEXTURE,
+    UNKNOWN_CURRENCY_TEXTURE,
+    PARI_GOLD_TEXTURE,
+    PARI_SILVER_TEXTURE,
+    USDC_GOLD_TEXTURE,
+    USDC_SILVER_TEXTURE,
 } from './symbols'
 
 export class TextureStorage implements ITextureStorage {
@@ -53,6 +61,12 @@ export class TextureStorage implements ITextureStorage {
         CHAINLINK_TEXTURE,
         PARI_TEXTURE,
         CLAIM_FRAGMENT_TEXTURE,
+        GOLD_COIN_TEXTURE,
+        SILVER_COIN_TEXTURE,
+        PARI_GOLD_TEXTURE,
+        PARI_SILVER_TEXTURE,
+        USDC_GOLD_TEXTURE,
+        USDC_SILVER_TEXTURE,
     ]
 
     constructor(
@@ -168,29 +182,6 @@ export class TextureStorage implements ITextureStorage {
                     { color: top, offset: 0 },
                     { color: bottom, offset: 1 },
                 ],
-            },
-        )
-
-        return gradient
-    }
-
-    private [POOL_CLAIM_TEXTURE](): RenderTexture {
-        const x0 = 0
-        const y0 = 0 + config.padding.top
-        const x1 = 0
-        const y1 = this.application.screen.height
-
-        const { renderer } = this.application
-        const gradient = GradientFactory.createLinearGradient(
-            <Renderer>renderer,
-            RenderTexture.create({
-                width: renderer.width,
-                height: renderer.height,
-            }),
-            {
-                x0, y0,
-                x1, y1,
-                colorStops: config.style.poolClaimaColors
             },
         )
 
@@ -493,6 +484,223 @@ export class TextureStorage implements ITextureStorage {
                 <path d="M27 0H55L28 46H0L27 0Z" fill="white" fill-opacity="0.2"/>
                 <path d="M66.3803 0H75L47.6197 46H39L66.3803 0Z" fill="white" fill-opacity="0.2"/>
             </svg>
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    // Coins
+
+    private [COIN_SHINE]({ radius, colorStops }): RenderTexture {
+
+        const diameter = 2*radius
+
+        const x0 = radius
+        const y0 = radius
+        const x1 = radius
+        const y1 = radius
+        const r0 = 0
+        const r1 = radius
+
+        const renderer = <Renderer> this.application.renderer
+        const gradient = GradientFactory.createRadialGradient(
+            renderer,
+            RenderTexture.create({ width: diameter, height: diameter }),
+            {
+                x0, y0, r0,
+                x1, y1, r1,
+                colorStops,
+            },
+        )
+
+        return gradient
+    }
+
+    private [GOLD_COIN_TEXTURE](): Texture {
+        const svg = `
+            <svg width="295" height="280" viewBox="0 0 295 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <mask id="path-1-outside-1_11061_14497" maskUnits="userSpaceOnUse" x="0" y="0" width="295" height="280" fill="black">
+                <rect fill="white" width="295" height="280"/>
+                <path d="M15 140C15 62.6801 77.6801 0 155 0V0C232.32 0 295 62.6801 295 140V140C295 217.32 232.32 280 155 280V280C77.6801 280 15 217.32 15 140V140Z"/>
+                </mask>
+                <path d="M15 140C15 62.6801 77.6801 0 155 0V0C232.32 0 295 62.6801 295 140V140C295 217.32 232.32 280 155 280V280C77.6801 280 15 217.32 15 140V140Z" fill="url(#paint0_linear_11061_14497)"/>
+                <path d="M15 0H295H15ZM295 280H15H295ZM140 280C62.6801 280 0 217.32 0 140C0 62.6801 62.6801 0 140 0H155C85.9644 0 30 62.6801 30 140C30 217.32 85.9644 280 155 280H140ZM295 0V280V0Z" fill="#8B6C32" mask="url(#path-1-outside-1_11061_14497)"/>
+                <defs>
+                <linearGradient id="paint0_linear_11061_14497" x1="15" y1="280" x2="341.94" y2="205.218" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#F7C15B"/>
+                <stop offset="1" stop-color="#FFD78D"/>
+                </linearGradient>
+                </defs>
+            </svg>
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [SILVER_COIN_TEXTURE](): Texture {
+        const svg = `
+            <svg width="295" height="280" viewBox="0 0 295 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <mask id="path-1-outside-1_11061_14502" maskUnits="userSpaceOnUse" x="0" y="0" width="295" height="280" fill="black">
+                <rect fill="white" width="295" height="280"/>
+                <path d="M15 140C15 62.6801 77.6801 0 155 0V0C232.32 0 295 62.6801 295 140V140C295 217.32 232.32 280 155 280V280C77.6801 280 15 217.32 15 140V140Z"/>
+                </mask>
+                <path d="M15 140C15 62.6801 77.6801 0 155 0V0C232.32 0 295 62.6801 295 140V140C295 217.32 232.32 280 155 280V280C77.6801 280 15 217.32 15 140V140Z" fill="url(#paint0_linear_11061_14502)"/>
+                <path d="M15 0H295H15ZM295 280H15H295ZM140 280C62.6801 280 0 217.32 0 140C0 62.6801 62.6801 0 140 0H155C85.9644 0 30 62.6801 30 140C30 217.32 85.9644 280 155 280H140ZM295 0V280V0Z" fill="#40607A" mask="url(#path-1-outside-1_11061_14502)"/>
+                <defs>
+                <linearGradient id="paint0_linear_11061_14502" x1="15" y1="280" x2="341.94" y2="205.218" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8AACCC"/>
+                <stop offset="1" stop-color="#D4ECF3"/>
+                </linearGradient>
+                </defs>
+            </svg>        
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [PARI_SILVER_TEXTURE](): Texture {
+        const svg = `
+            <svg width="198" height="200" viewBox="0 0 198 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_i_11062_14511)">
+                <path d="M97.8451 0C50.4804 0 10.741 32.8817 0.402943 77.0414C-1.57669 88.7587 3.62902 104.211 18.4396 105.822C33.2502 107.36 39.3358 105.236 39.7024 97.1805V97.1805C39.7024 96.5382 39.8666 95.9054 39.9173 95.2651C41.0028 81.5696 46.8992 68.8278 56.7859 58.9528C67.7839 47.9678 82.3746 41.9627 97.9184 41.9627C113.462 41.9627 128.053 48.041 139.051 58.9528C150.049 69.9378 156.061 84.5112 156.061 100.037C156.061 115.562 149.975 130.135 139.051 141.12C128.053 152.105 113.462 158.111 97.9184 158.111C87.507 158.111 77.4621 155.401 68.6637 150.275C44.3215 134.529 94.8389 134.822 114.342 126.034C143.597 111.534 134.872 79.3116 119.474 74.9176C91.8328 66.7887 77.0222 87.4405 69.8369 100.037C62.6515 112.633 52.7533 116.148 43.0018 119.297C42.4886 119.443 42.0486 119.663 41.6087 119.81C32.6637 123.252 23.4254 128.012 21.5191 137.825C18.6596 152.472 22.2523 165.434 35.7431 178.396C52.8267 191.944 74.456 200 97.9184 200C153.202 200 198 155.254 198 100.037C197.927 44.7455 153.128 0 97.8451 0Z" fill="url(#paint0_linear_11062_14511)"/>
+                </g>
+                <defs>
+                <filter id="filter0_i_11062_14511" x="0" y="0" width="198" height="201" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dy="1"/>
+                <feGaussianBlur stdDeviation="1"/>
+                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_11062_14511"/>
+                </filter>
+                <linearGradient id="paint0_linear_11062_14511" x1="2.95043e-06" y1="200" x2="231.422" y2="147.595" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#597E9B"/>
+                <stop offset="1" stop-color="#8CB6DA"/>
+                <stop offset="1" stop-color="#8CB6DA"/>
+                </linearGradient>
+                </defs>
+            </svg>        
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [PARI_GOLD_TEXTURE](): Texture {
+        const svg = `
+            <svg width="198" height="200" viewBox="0 0 198 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_i_11062_14512)">
+                <path d="M97.8451 0C50.4804 0 10.741 32.8817 0.402943 77.0414C-1.57669 88.7587 3.62902 104.211 18.4396 105.822C33.2502 107.36 39.3358 105.236 39.7024 97.1805V97.1805C39.7024 96.5382 39.8666 95.9054 39.9173 95.2651C41.0028 81.5696 46.8992 68.8278 56.7859 58.9528C67.7839 47.9678 82.3746 41.9626 97.9184 41.9626C113.462 41.9626 128.053 48.041 139.051 58.9528C150.049 69.9378 156.061 84.5112 156.061 100.037C156.061 115.562 149.975 130.135 139.051 141.12C128.053 152.105 113.462 158.111 97.9184 158.111C87.507 158.111 77.4621 155.401 68.6637 150.275C44.3215 134.529 94.8389 134.822 114.342 126.034C143.597 111.534 134.872 79.3116 119.474 74.9176C91.8328 66.7887 77.0222 87.4405 69.8369 100.037C62.6515 112.633 52.7533 116.148 43.0018 119.297C42.4886 119.443 42.0486 119.663 41.6087 119.81C32.6637 123.252 23.4254 128.012 21.5191 137.825C18.6596 152.472 22.2523 165.434 35.7431 178.396C52.8267 191.944 74.456 200 97.9184 200C153.202 200 198 155.254 198 100.037C197.927 44.7455 153.128 0 97.8451 0Z" fill="url(#paint0_linear_11062_14512)"/>
+                </g>
+                <defs>
+                <filter id="filter0_i_11062_14512" x="0" y="0" width="198" height="201" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dy="1"/>
+                <feGaussianBlur stdDeviation="1"/>
+                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_11062_14512"/>
+                </filter>
+                <linearGradient id="paint0_linear_11062_14512" x1="2.95043e-06" y1="200" x2="231.422" y2="147.595" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#967332"/>
+                <stop offset="1" stop-color="#D1AB65"/>
+                </linearGradient>
+                </defs>
+            </svg>
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [USDC_SILVER_TEXTURE](): Texture {
+        const svg = `
+            <svg width="224" height="214" viewBox="0 0 224 214" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_i_11064_14524)">
+                <path d="M152.956 128.647C152.956 107 139.924 99.578 113.862 96.486C95.2454 94.0115 91.5222 89.064 91.5222 80.404C91.5222 71.744 97.7281 66.179 110.138 66.179C121.308 66.179 127.514 69.89 130.616 79.1675C131.237 81.023 133.099 82.2595 134.96 82.2595H144.888C147.371 82.2595 149.232 80.404 149.232 77.931V77.312C146.75 63.7045 135.58 53.1905 121.308 51.954V37.11C121.308 34.6355 119.446 32.78 116.344 32.161H107.036C104.554 32.161 102.692 34.0165 102.071 37.11V51.335C83.4547 53.8095 71.6655 66.179 71.6655 81.642C71.6655 102.053 84.0757 110.092 110.138 113.186C127.514 116.278 133.099 119.989 133.099 129.885C133.099 139.782 124.41 146.585 112.621 146.585C96.486 146.585 90.9012 139.78 89.0396 130.503C88.42 128.029 86.5584 126.792 84.6968 126.792H74.1466C71.6655 126.792 69.8038 128.647 69.8038 131.122V131.741C72.285 147.202 82.2141 158.335 102.692 161.429V176.272C102.692 178.746 104.554 180.601 107.656 181.22H116.964C119.446 181.22 121.308 179.365 121.929 176.272V161.429C140.545 158.335 152.956 145.347 152.956 128.647Z" fill="url(#paint0_linear_11064_14524)"/>
+                <path d="M80.3525 193.59C31.9505 176.272 7.12841 122.463 25.125 74.8375C34.4331 48.8605 54.9109 29.069 80.3525 19.7915C82.8352 18.555 84.0757 16.6995 84.0757 13.606V4.9475C84.0757 2.47301 82.8352 0.61751 80.3525 0C79.7315 0 78.4909 -3.95069e-06 77.8699 0.617506C18.9192 19.1725 -13.3494 81.642 5.26679 140.399C16.4365 175.035 43.1202 201.631 77.8699 212.764C80.3525 214 82.8352 212.763 83.4547 210.289C84.0757 209.671 84.0757 209.053 84.0757 207.816V199.156C84.0757 197.3 82.2141 194.827 80.3525 193.59ZM146.13 0.617506C143.647 -0.618999 141.165 0.617509 140.545 3.092C139.924 3.711 139.924 4.32851 139.924 5.5665V14.225C139.924 16.6995 141.786 19.1725 143.647 20.4105C192.05 37.7275 216.872 91.537 198.875 139.162C189.567 165.139 169.089 184.931 143.647 194.208C141.165 195.445 139.924 197.301 139.924 200.394V209.053C139.924 211.527 141.165 213.382 143.647 214C144.269 214 145.509 214 146.13 213.383C205.081 194.828 237.349 132.358 218.733 73.601C207.564 38.3465 180.259 11.7505 146.13 0.617506Z" fill="url(#paint1_linear_11064_14524)"/>
+                </g>
+                <defs>
+                <filter id="filter0_i_11064_14524" x="0" y="0" width="224" height="215" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dy="1"/>
+                <feGaussianBlur stdDeviation="1"/>
+                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_11064_14524"/>
+                </filter>
+                <linearGradient id="paint0_linear_11064_14524" x1="3.33786e-06" y1="214" x2="260.314" y2="151.675" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#597E9B"/>
+                <stop offset="1" stop-color="#8CB6DA"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear_11064_14524" x1="3.33786e-06" y1="214" x2="260.314" y2="151.675" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#597E9B"/>
+                <stop offset="1" stop-color="#8CB6DA"/>
+                </linearGradient>
+                </defs>
+            </svg>        
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [USDC_GOLD_TEXTURE](): Texture {
+        const svg = `
+            <svg width="224" height="214" viewBox="0 0 224 214" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_i_11064_14518)">
+                <path d="M152.956 128.647C152.956 107 139.924 99.578 113.862 96.486C95.2454 94.0115 91.5222 89.064 91.5222 80.404C91.5222 71.744 97.7281 66.179 110.138 66.179C121.308 66.179 127.514 69.89 130.616 79.1675C131.237 81.023 133.099 82.2595 134.96 82.2595H144.888C147.371 82.2595 149.232 80.404 149.232 77.931V77.312C146.75 63.7045 135.58 53.1905 121.308 51.954V37.11C121.308 34.6355 119.446 32.78 116.344 32.161H107.036C104.554 32.161 102.692 34.0165 102.071 37.11V51.335C83.4547 53.8095 71.6655 66.179 71.6655 81.642C71.6655 102.053 84.0757 110.092 110.138 113.186C127.514 116.278 133.099 119.989 133.099 129.885C133.099 139.782 124.41 146.585 112.621 146.585C96.486 146.585 90.9012 139.78 89.0396 130.503C88.42 128.029 86.5584 126.792 84.6968 126.792H74.1466C71.6655 126.792 69.8038 128.647 69.8038 131.122V131.741C72.285 147.202 82.2141 158.335 102.692 161.429V176.272C102.692 178.746 104.554 180.601 107.656 181.22H116.964C119.446 181.22 121.308 179.365 121.929 176.272V161.429C140.545 158.335 152.956 145.347 152.956 128.647Z" fill="url(#paint0_linear_11064_14518)"/>
+                <path d="M80.3525 193.59C31.9505 176.272 7.12841 122.463 25.125 74.8375C34.4331 48.8605 54.9109 29.069 80.3525 19.7915C82.8352 18.555 84.0757 16.6995 84.0757 13.606V4.9475C84.0757 2.47301 82.8352 0.61751 80.3525 0C79.7315 0 78.4909 -3.95069e-06 77.8699 0.617506C18.9192 19.1725 -13.3494 81.642 5.26679 140.399C16.4365 175.035 43.1202 201.631 77.8699 212.764C80.3525 214 82.8352 212.763 83.4547 210.289C84.0757 209.671 84.0757 209.053 84.0757 207.816V199.156C84.0757 197.3 82.2141 194.827 80.3525 193.59ZM146.13 0.617506C143.647 -0.618999 141.165 0.617509 140.545 3.092C139.924 3.711 139.924 4.32851 139.924 5.5665V14.225C139.924 16.6995 141.786 19.1725 143.647 20.4105C192.05 37.7275 216.872 91.537 198.875 139.162C189.567 165.139 169.089 184.931 143.647 194.208C141.165 195.445 139.924 197.301 139.924 200.394V209.053C139.924 211.527 141.165 213.382 143.647 214C144.269 214 145.509 214 146.13 213.383C205.081 194.828 237.349 132.358 218.733 73.601C207.564 38.3465 180.259 11.7505 146.13 0.617506Z" fill="url(#paint1_linear_11064_14518)"/>
+                </g>
+                <defs>
+                <filter id="filter0_i_11064_14518" x="0" y="0" width="224" height="215" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dy="1"/>
+                <feGaussianBlur stdDeviation="1"/>
+                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_11064_14518"/>
+                </filter>
+                <linearGradient id="paint0_linear_11064_14518" x1="3.33786e-06" y1="214" x2="260.314" y2="151.675" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#967332"/>
+                <stop offset="1" stop-color="#D1AB65"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear_11064_14518" x1="3.33786e-06" y1="214" x2="260.314" y2="151.675" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#967332"/>
+                <stop offset="1" stop-color="#D1AB65"/>
+                </linearGradient>
+                </defs>
+            </svg>        
+        `
+        const blob = new Blob([svg], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+
+        return RenderTexture.from(url)
+    }
+
+    private [UNKNOWN_CURRENCY_TEXTURE](): Texture {
+        const svg = `
+            <svg width="224" height="214" viewBox="0 0 224 214" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M152.956 128.647C152.956 107 139.924 99.578 113.862 96.486C95.2454 94.0115 91.5222 89.064 91.5222 80.404C91.5222 71.744 97.7281 66.179 110.138 66.179C121.308 66.179 127.514 69.89 130.616 79.1675C131.237 81.023 133.099 82.2595 134.96 82.2595H144.888C147.371 82.2595 149.232 80.404 149.232 77.931V77.312C146.75 63.7045 135.58 53.1905 121.308 51.954V37.11C121.308 34.6355 119.446 32.78 116.344 32.161H107.036C104.554 32.161 102.692 34.0165 102.071 37.11V51.335C83.4547 53.8095 71.6655 66.179 71.6655 81.642C71.6655 102.053 84.0757 110.092 110.138 113.186C127.514 116.278 133.099 119.989 133.099 129.885C133.099 139.782 124.41 146.585 112.621 146.585C96.486 146.585 90.9012 139.78 89.0396 130.503C88.42 128.029 86.5584 126.792 84.6968 126.792H74.1466C71.6655 126.792 69.8038 128.647 69.8038 131.122V131.741C72.285 147.202 82.2141 158.335 102.692 161.429V176.272C102.692 178.746 104.554 180.601 107.656 181.22H116.964C119.446 181.22 121.308 179.365 121.929 176.272V161.429C140.545 158.335 152.956 145.347 152.956 128.647Z" fill="white"/>
+            <path d="M80.3525 193.59C31.9505 176.272 7.12841 122.463 25.125 74.8375C34.4331 48.8605 54.9109 29.069 80.3525 19.7915C82.8352 18.555 84.0757 16.6995 84.0757 13.606V4.9475C84.0757 2.47301 82.8352 0.61751 80.3525 0C79.7315 0 78.4909 -3.95069e-06 77.8699 0.617506C18.9192 19.1725 -13.3494 81.642 5.26679 140.399C16.4365 175.035 43.1202 201.631 77.8699 212.764C80.3525 214 82.8352 212.763 83.4547 210.289C84.0757 209.671 84.0757 209.053 84.0757 207.816V199.156C84.0757 197.3 82.2141 194.827 80.3525 193.59ZM146.13 0.617506C143.647 -0.618999 141.165 0.617509 140.545 3.092C139.924 3.711 139.924 4.32851 139.924 5.5665V14.225C139.924 16.6995 141.786 19.1725 143.647 20.4105C192.05 37.7275 216.872 91.537 198.875 139.162C189.567 165.139 169.089 184.931 143.647 194.208C141.165 195.445 139.924 197.301 139.924 200.394V209.053C139.924 211.527 141.165 213.382 143.647 214C144.269 214 145.509 214 146.13 213.383C205.081 194.828 237.349 132.358 218.733 73.601C207.564 38.3465 180.259 11.7505 146.13 0.617506Z" fill="white"/>
+            </svg>        
         `
         const blob = new Blob([svg], { type: 'image/svg+xml' })
         const url = URL.createObjectURL(blob)

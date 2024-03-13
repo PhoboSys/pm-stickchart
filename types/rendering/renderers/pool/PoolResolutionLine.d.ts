@@ -3,7 +3,9 @@ import { Container } from '../../../lib/pixi';
 import { BasePoolsRenderer } from './BasePoolsRenderer';
 export declare class PoolResolutionLine extends BasePoolsRenderer {
     static readonly POOL_RESOLUTION_LINE_ID: symbol;
+    private baseTorusStyle;
     private torusStyle;
+    private baseLineStyle;
     private lineStyle;
     private configAnimations;
     protected get animations(): any;
