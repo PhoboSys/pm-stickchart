@@ -143,8 +143,11 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         this.updateCoinIcon(context, container, [ox, rx], pool, hasWonPari, shouldRenderClaimable);
     }
     udateDefaultBackground(context, container, [x1, x2], pool, shouldRender) {
-        if (!shouldRender)
-            return this.clear('backgroundContainer');
+        if (!shouldRender) {
+            this.clear('backgroundContainer');
+            this.clear('background');
+            return;
+        }
         const { height, width } = context.screen;
         const poolid = pool.poolid;
         const [backgroundContainer, backgroundContainerState] = this.get('backgroundContainer', () => new pixi_1.Container());
@@ -225,8 +228,14 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
     }
     udateClaimableBackground(context, container, [x1, x2], pool, textureColorStops, shouldRender) {
-        if (!shouldRender)
-            return this.clear('claimableContainer');
+        if (!shouldRender) {
+            this.clear('claimableContainer');
+            this.clear('topContainer');
+            this.clear('topGradient');
+            this.clear('bottomContainer');
+            this.clear('bottomGradient');
+            return;
+        }
         const [claimableContainer, claimableContainerState] = this.get('claimableContainer', () => new pixi_1.Container());
         if (claimableContainerState.new)
             container.addChild(claimableContainer);
@@ -306,8 +315,13 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
     }
     updateCoinIcon(context, container, [x1, x2], pool, win, shouldRender) {
-        if (!shouldRender)
-            return this.clear('iconContainer');
+        if (!shouldRender) {
+            this.clear('iconContainer');
+            this.clear('coinShine');
+            this.clear('coin');
+            this.clear('coinCurrency');
+            return;
+        }
         const { height } = context.screen;
         const [iconContainer, iconContainerState] = this.get('iconContainer', () => new pixi_1.Container());
         if (iconContainerState.new) {
