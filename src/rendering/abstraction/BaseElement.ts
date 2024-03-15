@@ -113,7 +113,8 @@ export abstract class BaseElement {
 
             let method = 'to'
             if (state.new && config.new) method = config.new
-            if (isFunction(state.timeline[method])) state.timeline[method](target, { ...config, ...vars })
+            const { clear, new: newConfig, ...pixiConfig } = config
+            if (isFunction(state.timeline[method])) state.timeline[method](target, { ...pixiConfig, ...vars })
             else Logger.warn('amination method "%s" unknown', method)
         }
 

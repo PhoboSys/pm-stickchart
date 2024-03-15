@@ -17,15 +17,13 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor() {
         super(...arguments);
         this.bgAnimOffset = 0.19;
-        this.winBorderStyle = {
+        this.borderStyle = {
             left: {
-                colorStops: _config_1.default.style.poolRoundWinBorderColors,
                 width: 2,
                 offset: [0, 0],
                 alpha: 0.33,
             },
             right: {
-                colorStops: _config_1.default.style.poolRoundWinBorderColors,
                 width: 2,
                 offset: [-2, 0],
                 alpha: 0.33,
@@ -139,7 +137,12 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         else if (nocontest)
             bgTextureColorStops = _config_1.default.style.poolRoundNoContestColors;
         this.udateClaimableBackground(context, container, [ox, rx], pool, bgTextureColorStops, shouldRenderClaimable);
-        this.updateClaimableBorder(context, container, [ox, rx], pool, shouldRenderClaimable && hasWonPari);
+        let borderTextureColorStops;
+        if (hasWonPari)
+            borderTextureColorStops = _config_1.default.style.poolRoundWinBorderColors;
+        else if (nocontest)
+            borderTextureColorStops = _config_1.default.style.poolRoundNoContestBorderColors;
+        this.updateClaimableBorder(context, container, [ox, rx], pool, borderTextureColorStops, shouldRenderClaimable);
         this.updateCoinIcon(context, container, [ox, rx], pool, hasWonPari, shouldRenderClaimable);
     }
     udateDefaultBackground(context, container, [x1, x2], pool, shouldRender) {
@@ -193,19 +196,19 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
             .closePath()
             .endFill();
     }
-    updateClaimableBorder(context, container, [x1, x2], pool, shouldRender) {
+    updateClaimableBorder(context, container, [x1, x2], pool, colorStops, shouldRender) {
         if (!shouldRender) {
-            this.clear('winBorderLeft');
-            this.clear('winBorderRight');
+            this.clear('borderLeft');
+            this.clear('borderRight');
             return;
         }
         const { height } = context.screen;
         const poolid = pool.poolid;
-        const [borderLeft, borderLeftState] = this.get('winBorderLeft', () => this.createBorder(context, height, this.winBorderStyle.left), [height]);
+        const [borderLeft, borderLeftState] = this.get('borderLeft', () => this.createBorder(context, height, Object.assign(Object.assign({}, this.borderStyle.left), { colorStops })), [height]);
         if (borderLeftState.new)
             container.addChild(borderLeft);
         borderLeft.position.x = x1;
-        const [borderRight, borderRightState] = this.get('winBorderRight', () => this.createBorder(context, height, this.winBorderStyle.right), [height]);
+        const [borderRight, borderRightState] = this.get('borderRight', () => this.createBorder(context, height, Object.assign(Object.assign({}, this.borderStyle.right), { colorStops })), [height]);
         if (borderRightState.new)
             container.addChild(borderRight);
         borderRight.position.x = x2;
@@ -215,15 +218,15 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
                 if (e.poolid !== poolid)
                     return;
                 this.rebind(poolid);
-                this.animate('winBorderLeft', 'hover_border');
-                this.animate('winBorderRight', 'hover_border');
+                this.animate('borderLeft', 'hover_border');
+                this.animate('borderRight', 'hover_border');
             });
             context.eventTarget.addEventListener('poolunhover', (e) => {
                 if (e.poolid !== poolid)
                     return;
                 this.rebind(poolid);
-                this.animate('winBorderLeft', 'unhover_border');
-                this.animate('winBorderRight', 'unhover_border');
+                this.animate('borderLeft', 'unhover_border');
+                this.animate('borderRight', 'unhover_border');
             });
         }
     }
