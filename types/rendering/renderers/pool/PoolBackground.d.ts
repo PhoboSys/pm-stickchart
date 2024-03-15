@@ -5,7 +5,7 @@ export declare class PoolBackground extends BasePoolsRenderer {
     static readonly POOL_BACKGROUND_ID: symbol;
     get rendererId(): symbol;
     private bgAnimOffset;
-    private winBorderStyle;
+    private borderStyle;
     private backgroundStyle;
     private coinStyle;
     private coinShineStyle;

@@ -33,15 +33,13 @@ export class PoolBackground extends BasePoolsRenderer {
 
     private bgAnimOffset = 0.19
 
-    private winBorderStyle: any = {
+    private borderStyle: any = {
         left: {
-            colorStops: config.style.poolRoundWinBorderColors,
             width: 2,
             offset: [0, 0],
             alpha: 0.33,
         },
         right: {
-            colorStops: config.style.poolRoundWinBorderColors,
             width: 2,
             offset: [-2, 0],
             alpha: 0.33,
@@ -167,9 +165,13 @@ export class PoolBackground extends BasePoolsRenderer {
         let bgTextureColorStops
         if (hasWonPari) bgTextureColorStops = config.style.poolRoundWinColors
         else if (nocontest) bgTextureColorStops = config.style.poolRoundNoContestColors
-
         this.udateClaimableBackground(context, container, [ox, rx], pool, bgTextureColorStops, shouldRenderClaimable)
-        this.updateClaimableBorder(context, container, [ox, rx], pool, shouldRenderClaimable && hasWonPari)
+
+        let borderTextureColorStops
+        if (hasWonPari) borderTextureColorStops = config.style.poolRoundWinBorderColors
+        else if (nocontest) borderTextureColorStops = config.style.poolRoundNoContestBorderColors
+        this.updateClaimableBorder(context, container, [ox, rx], pool, borderTextureColorStops, shouldRenderClaimable)
+
         this.updateCoinIcon(context, container, [ox, rx], pool, hasWonPari, shouldRenderClaimable)
     }
 
@@ -240,11 +242,12 @@ export class PoolBackground extends BasePoolsRenderer {
         container: Container,
         [x1, x2],
         pool: any,
+        colorStops: any,
         shouldRender: boolean,
     ): void {
         if (!shouldRender) {
-            this.clear('winBorderLeft')
-            this.clear('winBorderRight')
+            this.clear('borderLeft')
+            this.clear('borderRight')
 
             return
         }
@@ -253,16 +256,16 @@ export class PoolBackground extends BasePoolsRenderer {
         const poolid = pool.poolid
 
         const [borderLeft, borderLeftState] = this.get(
-            'winBorderLeft',
-            () => this.createBorder(context, height, this.winBorderStyle.left),
+            'borderLeft',
+            () => this.createBorder(context, height, { ...this.borderStyle.left, colorStops }),
             [height]
         )
         if (borderLeftState.new) container.addChild(borderLeft)
         borderLeft.position.x = x1
 
         const [borderRight, borderRightState] = this.get(
-            'winBorderRight',
-            () => this.createBorder(context, height, this.winBorderStyle.right),
+            'borderRight',
+            () => this.createBorder(context, height, { ...this.borderStyle.right, colorStops }),
             [height]
         )
         if (borderRightState.new) container.addChild(borderRight)
@@ -274,15 +277,15 @@ export class PoolBackground extends BasePoolsRenderer {
                 if (e.poolid !== poolid) return
 
                 this.rebind(poolid)
-                this.animate('winBorderLeft', 'hover_border')
-                this.animate('winBorderRight', 'hover_border')
+                this.animate('borderLeft', 'hover_border')
+                this.animate('borderRight', 'hover_border')
             })
             context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
                 if (e.poolid !== poolid) return
 
                 this.rebind(poolid)
-                this.animate('winBorderLeft', 'unhover_border')
-                this.animate('winBorderRight', 'unhover_border')
+                this.animate('borderLeft', 'unhover_border')
+                this.animate('borderRight', 'unhover_border')
             })
         }
     }

@@ -99,6 +99,10 @@ declare const _default: {
             color: string;
             offset: number;
         }[];
+        poolRoundNoContestBorderColors: {
+            color: string;
+            offset: number;
+        }[];
         lockCountdown: {
             colors: {
                 color: string;

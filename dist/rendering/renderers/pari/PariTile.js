@@ -21,6 +21,7 @@ const BaseParisRenderer_1 = require("./BaseParisRenderer");
 class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     constructor() {
         super(...arguments);
+        this.avatarResolvers = {};
         this.groupStyle = {
             [_enums_1.EPosition.Up]: {
                 offset: [0, 40],
@@ -855,7 +856,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             .drawCircle(radius, radius, radius)
             .endFill();
         const container = new pixi_1.Container();
-        pixi_1.Assets.load(url).then((texture) => {
+        // Presist avatarResolvers to prevent showing pixi warnings about loading same assets
+        this.avatarResolvers[url] = this.avatarResolvers[url] || pixi_1.Assets.load(url);
+        this.avatarResolvers[url].then((texture) => {
             const icon = new pixi_1.Sprite(texture);
             icon.scale.set(2 * radius / texture.height);
             container.addChild(icon);
