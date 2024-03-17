@@ -1,6 +1,7 @@
 import { Bettor, PlotData } from '@chartdata';
 import { Features } from '@features';
 import { Rectangle } from '../../lib/pixi';
+import { Timeframe } from '../../lib/timeframe';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '@enums';
 export type DoneFunction = () => void;
@@ -17,6 +18,7 @@ export type RenderingContext = {
     bettor: Bettor;
     screen: Rectangle;
     textures: ITextureStorage;
+    timeframe: Timeframe;
     charttype: EChartType;
     features: Features;
     plotdata: PlotData;

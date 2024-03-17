@@ -13,7 +13,7 @@ class PoolActualBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolActualBackground.POOL_ACTUAL_BACKGROUND_ID;
     }
     updatePool(pool, context, container) {
-        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isHistoricalPool(pool, context))
+        if (!pool.openPriceTimestamp || !pool.openPriceValue || !this.isActualPool(pool, context))
             return this.clear();
         this.updateBackground(pool, context, container);
     }

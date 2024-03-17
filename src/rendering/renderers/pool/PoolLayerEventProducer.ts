@@ -83,7 +83,7 @@ export class PoolLayerEventProducer extends BasePoolsRenderer {
             })
         }
 
-        if (!this.isActualPool(pool)) {
+        if (!this.isActualPool(pool, context)) {
             layer.cursor = 'pointer'
         }
 

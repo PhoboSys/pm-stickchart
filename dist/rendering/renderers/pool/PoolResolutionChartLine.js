@@ -96,7 +96,7 @@ class PoolResolutionChartLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             this.updateResPoint(context, group, resolution, rprice);
             this.drawResolutionLine(pool, context, group, resolution, rprice);
         }
-        else if (this.isActualPool(pool)) {
+        else if (this.isActualPool(pool, context)) {
             this.clear('group');
             this.clear('resolutionLine');
             this.clear('innerLine');

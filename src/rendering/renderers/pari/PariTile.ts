@@ -485,7 +485,8 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private avatarStyle: any = {
-        radius: 16,
+        radius: 20,
+        offset: [-5, -4],
         lineStyle: {
             width: 1,
             color: 0xFFFFFF,
@@ -1084,7 +1085,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private createAvatar(url): Container {
-        const { radius, lineStyle } = this.avatarStyle
+        const { radius, lineStyle, offset } = this.avatarStyle
 
         const circle = (new Graphics())
             .lineStyle(lineStyle)
@@ -1110,6 +1111,8 @@ export class PariTile extends BaseParisRenderer {
 
         circle.addChild(container)
         container.addChild(mask)
+
+        circle.position.set(...offset)
 
         return circle
     }

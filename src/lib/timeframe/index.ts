@@ -48,7 +48,7 @@ export class Timeframe {
         }
     }
 
-    private get until(): number {
+    public get until(): number {
         if (this._until) return this._until
 
         return this.untilmax(this.timeframe)
@@ -70,7 +70,7 @@ export class Timeframe {
         return this.nowTS + timeframe * PADDING_RIGHT
     }
 
-    private get since(): number {
+    public get since(): number {
         return this.until - this.timeframe
     }
 

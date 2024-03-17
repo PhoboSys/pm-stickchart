@@ -14,10 +14,10 @@ export declare class Timeframe {
     private set nowTS(value);
     private get timeframe();
     private set timeframe(value);
-    private get until();
+    get until(): number;
     private set until(value);
     private untilmax;
-    private get since();
+    get since(): number;
     private readonly zoomevent;
     private readonly pointermove;
     private shifting;

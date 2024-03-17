@@ -445,7 +445,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             },
         };
         this.avatarStyle = {
-            radius: 16,
+            radius: 20,
+            offset: [-5, -4],
             lineStyle: {
                 width: 1,
                 color: 0xFFFFFF,
@@ -849,7 +850,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         return circle;
     }
     createAvatar(url) {
-        const { radius, lineStyle } = this.avatarStyle;
+        const { radius, lineStyle, offset } = this.avatarStyle;
         const circle = (new pixi_1.Graphics())
             .lineStyle(lineStyle)
             .beginFill(0xFFFFFF, 1)
@@ -870,6 +871,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         container.mask = mask;
         circle.addChild(container);
         container.addChild(mask);
+        circle.position.set(...offset);
         return circle;
     }
     createContainer(style) {

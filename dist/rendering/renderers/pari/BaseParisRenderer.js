@@ -24,6 +24,11 @@ class BaseParisRenderer extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     updateEachPari(pool, paris, context, layer) {
         (0, utils_1.forEach)(paris, (pari, idx) => {
+            // NOTE: short exit if not in timeframe, [performance improvment]
+            if (pool.endDate < context.timeframe.since)
+                return;
+            if (pool.startDate > context.timeframe.until)
+                return;
             this.rebind(pool.poolid, pari.pariid);
             this.updatePari(pool, pari, context, layer, idx);
             this.newparis[pari.pariid] = pari.pariid;

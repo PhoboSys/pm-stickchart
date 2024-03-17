@@ -127,7 +127,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         return this._countdownTick();
     }
     updatePool(pool, context, container) {
-        if (!this.isActualPool(pool))
+        if (!this.isActualPool(pool, context))
             return this.clear();
         container.sortableChildren = true;
         this.updateBackground(pool, context, container);
@@ -137,7 +137,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         var _a;
         const { width, height, } = context.screen;
         const { lockDate, startDate, endDate } = pool;
-        const { timerange } = context.plotdata;
+        const { timerange, latestX } = context.plotdata;
         const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, (0, utils_1.nowUnixTS)()], timerange, width);
         const tolockx = Math.max(nowx, openx);
         if (lockx >= nowx) {
@@ -152,9 +152,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         else {
             this.clear('gradientlock');
         }
-        if (rx >= nowx) {
+        if (rx >= latestX) {
             const rheight = height - 2 * this.resolutionGradientStyle.offset[1];
-            const torx = Math.max(nowx, lockx);
+            const torx = Math.max(latestX, lockx);
             const rwidth = rx - torx;
             const [gradientres, gradientresState] = this.get('gradientres', () => this.createGradient(this.resolutionGradientStyle, [width, rheight], context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE, { width })), [rheight, width]);
             if (gradientresState.new)
@@ -248,6 +248,12 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const countdownValue = positioning
             ? ui_1.default.duration24(lockDate - now + 1)
             : ui_1.default.duration24(endDate - now + 1);
+        if (endDate < now) {
+            this.clear('textgroup');
+            this.clear('countdowntext');
+            this.clear('phasetext');
+            return;
+        }
         const [textgroup, textgroupstate] = this.get('textgroup', () => new pixi_1.Container());
         if (textgroupstate.new) {
             textgroup.alpha = 0;

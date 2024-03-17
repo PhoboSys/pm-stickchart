@@ -40,6 +40,10 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
     ): void {
 
         forEach(context.pools, (pool, idx) => {
+            // NOTE: short exit if not in timeframe, [performance improvment]
+            if (pool.endDate < context.timeframe.since) return
+            if (pool.startDate > context.timeframe.until) return
+
             this.rebind(pool.poolid)
             this.updatePool(pool, context, layer, idx)
             this.newpools[pool.poolid] = pool.poolid
@@ -92,7 +96,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         context: RenderingContext,
     ): boolean {
 
-        if (this.isActualPool(pool)) {
+        if (this.isActualPool(pool, context)) {
             if (nowUnixTS() < pool.lockDate) return false
 
             const price = DataBuilder.getLatest(context.chartdata)
@@ -135,7 +139,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         context: RenderingContext,
     ): boolean {
 
-        if (this.isActualPool(pool)) return false
+        if (this.isActualPool(pool, context)) return false
 
         return (
             pool.resolved ||
@@ -148,7 +152,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
         context: RenderingContext,
     ): PricePoint | null {
 
-        if (this.isActualPool(pool)) {
+        if (this.isActualPool(pool, context)) {
             const latest = DataBuilder.getLatest(context.chartdata)
             if (latest.timestamp > pool.openPriceTimestamp) return latest
 
@@ -208,8 +212,12 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     protected isActualPool(
         pool: any,
+        context: RenderingContext,
     ): boolean {
-        return pool.endDate > nowUnixTS()
+        const now = context?.plotdata?.latest?.timestamp || nowUnixTS()
+        const end = pool?.endDate
+
+        return end > now
     }
 
     protected getLevelTextureName(context: RenderingContext): symbol {

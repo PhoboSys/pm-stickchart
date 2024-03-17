@@ -27,6 +27,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     }
     updateEachPool(context, layer) {
         (0, utils_1.forEach)(context.pools, (pool, idx) => {
+            // NOTE: short exit if not in timeframe, [performance improvment]
+            if (pool.endDate < context.timeframe.since)
+                return;
+            if (pool.startDate > context.timeframe.until)
+                return;
             this.rebind(pool.poolid);
             this.updatePool(pool, context, layer, idx);
             this.newpools[pool.poolid] = pool.poolid;
@@ -63,7 +68,7 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         return _enums_1.EPosition.Undefined;
     }
     isNoContestPool(pool, context) {
-        if (this.isActualPool(pool)) {
+        if (this.isActualPool(pool, context)) {
             if ((0, utils_1.nowUnixTS)() < pool.lockDate)
                 return false;
             const price = _chartdata_1.DataBuilder.getLatest(context.chartdata);
@@ -97,14 +102,14 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
     }
     isHistoricalPool(pool, context) {
         var _a;
-        if (this.isActualPool(pool))
+        if (this.isActualPool(pool, context))
             return false;
         return (pool.resolved ||
             !!((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]));
     }
     getResolutionPricePoint(pool, context) {
         var _a, _b;
-        if (this.isActualPool(pool)) {
+        if (this.isActualPool(pool, context)) {
             const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (latest.timestamp > pool.openPriceTimestamp)
                 return latest;
@@ -148,8 +153,11 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             value: prices[index],
         };
     }
-    isActualPool(pool) {
-        return pool.endDate > (0, utils_1.nowUnixTS)();
+    isActualPool(pool, context) {
+        var _a, _b;
+        const now = ((_b = (_a = context === null || context === void 0 ? void 0 : context.plotdata) === null || _a === void 0 ? void 0 : _a.latest) === null || _b === void 0 ? void 0 : _b.timestamp) || (0, utils_1.nowUnixTS)();
+        const end = pool === null || pool === void 0 ? void 0 : pool.endDate;
+        return end > now;
     }
     getLevelTextureName(context) {
         var _a, _b;

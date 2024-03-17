@@ -59,7 +59,7 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         return PoolResolutionPriceTag.POOL_RESOLUTION_PRICE_TAG_ID;
     }
     updatePool(pool, context, container) {
-        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool))
+        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool, context))
             return this.clear();
         const rprice = this.getResolutionPricePoint(pool, context);
         if (!rprice)
