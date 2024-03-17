@@ -102,7 +102,7 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool)) return this.clear()
+        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isActualPool(pool, context)) return this.clear()
 
         const rprice = this.getResolutionPricePoint(pool, context)
         if (!rprice) return this.clear()

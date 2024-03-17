@@ -28,7 +28,7 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
     updatePool(pool, context, container) {
         var _a;
         const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[pool.poolid];
-        if (!pool.openPriceTimestamp || !this.isActualPool(pool) && (0, utils_1.isEmpty)(paris))
+        if (!pool.openPriceTimestamp || !this.isActualPool(pool, context) && (0, utils_1.isEmpty)(paris))
             return this.clear();
         const resolution = this.getPoolResolution(pool, context);
         const hasWinPari = paris && paris.some(pari => pari.position === resolution);

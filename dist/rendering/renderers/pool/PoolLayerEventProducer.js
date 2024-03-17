@@ -63,7 +63,7 @@ class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
                 layerState.pined = !layerState.pined;
             });
         }
-        if (!this.isActualPool(pool)) {
+        if (!this.isActualPool(pool, context)) {
             layer.cursor = 'pointer';
         }
     }

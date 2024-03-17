@@ -20,7 +20,7 @@ export class PoolActualBackground extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!pool.openPriceTimestamp || !pool.openPriceValue || this.isHistoricalPool(pool, context)) return this.clear()
+        if (!pool.openPriceTimestamp || !pool.openPriceValue || !this.isActualPool(pool, context)) return this.clear()
 
         this.updateBackground(pool, context, container)
 

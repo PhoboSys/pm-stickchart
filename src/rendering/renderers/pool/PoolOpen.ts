@@ -34,7 +34,7 @@ export class PoolOpen extends BasePoolsRenderer {
     ): void {
 
         const paris = context.paris?.[pool.poolid]
-        if (!pool.openPriceTimestamp || !this.isActualPool(pool) && isEmpty(paris)) return this.clear()
+        if (!pool.openPriceTimestamp || !this.isActualPool(pool, context) && isEmpty(paris)) return this.clear()
 
         const resolution = this.getPoolResolution(pool, context)
         const hasWinPari = paris && paris.some(pari => pari.position === resolution)

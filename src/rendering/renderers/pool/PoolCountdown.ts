@@ -153,7 +153,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        if (!this.isActualPool(pool)) return this.clear()
+        if (!this.isActualPool(pool, context)) return this.clear()
 
         container.sortableChildren = true
 
@@ -174,7 +174,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         } = context.screen
 
         const { lockDate, startDate, endDate } = pool
-        const { timerange } = context.plotdata
+        const { timerange, latestX } = context.plotdata
 
         const [openx, lockx, rx, nowx] = datamath.scale([startDate, lockDate, endDate, nowUnixTS()], timerange, width)
         const tolockx = Math.max(nowx, openx)
@@ -201,9 +201,9 @@ export class PoolCountdown extends BasePoolsRenderer {
             this.clear('gradientlock')
         }
 
-        if (rx >= nowx) {
+        if (rx >= latestX) {
             const rheight = height - 2 * this.resolutionGradientStyle.offset[1]
-            const torx = Math.max(nowx, lockx)
+            const torx = Math.max(latestX, lockx)
             const rwidth = rx - torx
 
             const [gradientres, gradientresState] = this.get(
@@ -338,6 +338,14 @@ export class PoolCountdown extends BasePoolsRenderer {
             ? ui.duration24(lockDate - now + 1)
             : ui.duration24(endDate - now + 1)
 
+        if (endDate < now) {
+            this.clear('textgroup')
+            this.clear('countdowntext')
+            this.clear('phasetext')
+
+            return
+        }
+
         const [textgroup, textgroupstate] = this.get('textgroup', () => new Container())
         if (textgroupstate.new) {
             textgroup.alpha = 0
@@ -345,8 +353,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             container.addChild(textgroup)
         }
 
-        const [countdowntext, countdownstate] = this.get(
-            'countdowntext',
+        const [countdowntext, countdownstate] = this.get('countdowntext',
             () => GraphicUtils.createText(
                 countdownValue,
                 [0, 0],
@@ -364,8 +371,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             ? 'Positioning'
             : 'Resolution'
 
-        const [phasetext, phasetextstate] = this.get(
-            'phasetext',
+        const [phasetext, phasetextstate] = this.get('phasetext',
             () => GraphicUtils.createText(
                 phaseName,
                 [0, 0],
