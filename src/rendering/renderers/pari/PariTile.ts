@@ -38,6 +38,8 @@ export class PariTile extends BaseParisRenderer {
         return PariTile.PARI_TILE_ID
     }
 
+    private avatarResolvers = {}
+
     private groupStyle: any = {
 
         [EPosition.Up]: {
@@ -1093,7 +1095,9 @@ export class PariTile extends BaseParisRenderer {
 
         const container = new Container()
 
-        Assets.load(url).then((texture) => {
+        // Presist avatarResolvers to prevent showing pixi warnings about loading same assets
+        this.avatarResolvers[url] = this.avatarResolvers[url] || Assets.load(url)
+        this.avatarResolvers[url].then((texture) => {
             const icon = new Sprite(texture)
             icon.scale.set(2*radius/texture.height)
             container.addChild(icon)

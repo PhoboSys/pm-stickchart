@@ -117,6 +117,11 @@ export default {
             { color: '#1C48DA00', offset: 0.79 },
             { color: '#1C48DA00', offset: 1 },
         ],
+        poolRoundNoContestBorderColors: [
+            { color: '#AECBDF0D', offset: 0 },
+            { color: '#AECBDF80', offset: 0.5 },
+            { color: '#AECBDF0D', offset: 1 },
+        ],
         lockCountdown: {
             colors: [
                 { color: '#7CD0FFFF', offset: 0 },
