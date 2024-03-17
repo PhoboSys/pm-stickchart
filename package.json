@@ -20,7 +20,7 @@
   "dependencies": {
     "@pixi-essentials/gradients": "0.0.5",
     "@pixi/app": "6.5.7",
-    "@pixi/assets": "^6.5.7",
+    "@pixi/assets": "6.5.7",
     "@pixi/canvas-display": "6.5.7",
     "@pixi/constants": "6.5.7",
     "@pixi/core": "6.5.7",
