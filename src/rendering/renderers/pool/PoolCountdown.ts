@@ -64,7 +64,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             ease: 'power2.out',
             new: 'set',
         },
-        resolution: {
+        locked: {
             pixi: {
                 tint: 0xA7E0FF,
             },
@@ -333,12 +333,12 @@ export class PoolCountdown extends BasePoolsRenderer {
         const y = latestY
 
         const now = nowUnixTS()
-        const positioning = lockDate >= now
-        const countdownValue = positioning
-            ? ui.duration24(lockDate - now + 1)
-            : ui.duration24(endDate - now + 1)
+        const locked = now >= lockDate
+        const countdownValue = locked
+            ? ui.duration24(endDate - now)
+            : ui.duration24(lockDate - now)
 
-        if (endDate < now) {
+        if (now >= endDate) {
             this.clear('textgroup')
             this.clear('countdowntext')
             this.clear('phasetext')
@@ -367,9 +367,9 @@ export class PoolCountdown extends BasePoolsRenderer {
         countdowntext.text = countdownValue
         countdowntext.position.set(x+xof, y+yof)
 
-        const phaseName = positioning
-            ? 'Positioning'
-            : 'Resolution'
+        const phaseName = locked
+            ? 'Lock-in'
+            : 'Entry'
 
         const [phasetext, phasetextstate] = this.get('phasetext',
             () => GraphicUtils.createText(
@@ -385,12 +385,12 @@ export class PoolCountdown extends BasePoolsRenderer {
         phasetext.text = phaseName
         phasetext.position.set(countdowntext.x + phxof, countdowntext.y - countdowntext.height + phyof)
 
-        if (positioning) {
+        if (locked) {
+            this.animate('phasetext', 'locked')
+            this.animate('countdowntext', 'locked')
+        } else {
             this.animate('phasetext', 'positioning')
             this.animate('countdowntext', 'positioning')
-        } else {
-            this.animate('phasetext', 'resolution')
-            this.animate('countdowntext', 'resolution')
         }
 
         if (textgroupstate.animation !== 'hover_text') this.animate('textgroup', 'unhover_text')
