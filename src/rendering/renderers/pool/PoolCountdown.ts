@@ -368,7 +368,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         countdowntext.position.set(x+xof, y+yof)
 
         const phaseName = locked
-            ? 'Lock-in'
+            ? 'Round'
             : 'Entry'
 
         const [phasetext, phasetextstate] = this.get('phasetext',

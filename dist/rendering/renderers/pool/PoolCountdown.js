@@ -267,7 +267,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         countdowntext.text = countdownValue;
         countdowntext.position.set(x + xof, y + yof);
         const phaseName = locked
-            ? 'Lock-in'
+            ? 'Round'
             : 'Entry';
         const [phasetext, phasetextstate] = this.get('phasetext', () => _rendering_1.GraphicUtils.createText(phaseName, [0, 0], this.phaseStyle.textstyle, this.phaseStyle.anchor));
         if (phasetextstate.new)
