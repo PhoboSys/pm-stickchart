@@ -1,3 +1,5 @@
+import merge from 'lodash/merge'
+
 import { PRIZEFUNDS } from '@constants'
 
 import { RenderingContext, GraphicUtils } from '@rendering'
@@ -60,7 +62,7 @@ export class PariTile extends BaseParisRenderer {
         offset: [14, (58-32)/2],
     }
 
-    private wagerContainerStyles: any = {
+    private wagerContainerBaseStyles: any = {
         [EPosition.Up]: {
             offset: [24, 0],
             background: {
@@ -108,6 +110,35 @@ export class PariTile extends BaseParisRenderer {
             },
         },
     }
+
+    private wagerOrphanContainerStyles: any = merge({}, this.wagerContainerBaseStyles, {
+        [EPosition.Up]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+        [EPosition.Zero]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+        [EPosition.Down]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+    })
+
+    private wagerContainerStyles: any = this.wagerContainerBaseStyles
 
     private wagerTextStyle: any = {
         [EPosition.Up]: {
@@ -462,9 +493,73 @@ export class PariTile extends BaseParisRenderer {
         offset: <[number, number]>[0, 0]
     }
 
+    private positionIconCircleStyle: any = {
+        [EPosition.Up]: {
+            offset: [0, 58/2],
+            radius: 16,
+            color: 0x01A37A,
+            lineStyle: {
+                color: 0xFFFFFF,
+                width: 2,
+                alpha: 1,
+                alignment: 0,
+            },
+        },
+        [EPosition.Down]: {
+            offset: [0, 58/2],
+            radius: 16,
+            color: 0xD7335B,
+            lineStyle: {
+                color: 0xFFFFFF,
+                width: 2,
+                alpha: 1,
+                alignment: 0,
+            },
+        },
+        [EPosition.Zero]: {
+            offset: [0, 58/2],
+            radius: 16,
+            color: 0xB7BDD7,
+            lineStyle: {
+                color: 0xFFFFFF,
+                width: 2,
+                alpha: 1,
+                alignment: 0,
+            },
+        },
+        orphan: {
+            offset: [0, 58/2],
+            radius: 16,
+            color: 0x081327,
+            lineStyle: {
+                color: 0xD32F2F,
+                width: 2,
+                alpha: 1,
+                alignment: 0,
+            },
+        }
+    }
+
     private positionIconStyle: any = {
-        size: 32,
-        offset: [-16, (58-32)/2],
+        [EPosition.Up]: {
+            size: 32,
+            offset: [0, 58/2],
+            anchor: [0.5, 0.5],
+            tint: 0xFFFFFF,
+        },
+        [EPosition.Down]: {
+            size: 32,
+            offset: [0, 58/2],
+            anchor: [0.5, 0.5],
+            tint: 0xFFFFFF,
+        },
+        [EPosition.Zero]: {
+            size: 32,
+            offset: [0, 58/2],
+            anchor: [0.5, 0.5],
+            tint: 0x071226,
+            orphanTint: 0xFFFFFF,
+        }
     }
 
     private profitCurrencyIconStyle: any = {
@@ -495,29 +590,48 @@ export class PariTile extends BaseParisRenderer {
         }
     }
 
+    private wagerCurrencyIconContainerStyle: any = {
+        offset: [32+16+7, 18],
+    }
+
+    private wagerCurrencyCircleStyle: any = {
+        [EPosition.Up]: {
+            color: 0xFFFFFF,
+            radius: 8,
+        },
+        [EPosition.Down]: {
+            color: 0xFFFFFF,
+            radius: 8,
+        },
+        [EPosition.Zero]: {
+            color: 0x071226,
+            radius: 8,
+        },
+        orphan: {
+            color: 0xD32F2F,
+            radius: 8,
+        },
+    }
+
     private wagerCurrencyIconStyle: any = {
         [EPosition.Up]: {
-            containerOffset: [32+16+7, 18],
             offset: [2, 2],
-            color: 0xFFFFFF,
             tint: 0x01A37A,
-            radius: 8,
             size: 12,
         },
         [EPosition.Down]: {
-            containerOffset: [32+16+7, 18],
             offset: [2, 2],
-            color: 0xFFFFFF,
             tint: 0xD7335B,
-            radius: 8,
             size: 12,
         },
         [EPosition.Zero]: {
-            containerOffset: [32+16+7, 18],
             offset: [2, 2],
-            color: 0x071226,
             tint: 0xB7BDD7,
-            radius: 8,
+            size: 12,
+        },
+        orphan: {
+            offset: [2, 2],
+            tint: 0x081327,
             size: 12,
         }
     }
@@ -584,16 +698,11 @@ export class PariTile extends BaseParisRenderer {
 
         const state = this.getPariState(pool, pari, context)
 
+        if (!state.win && !state.nocontest && state.isHistorical) return this.clear()
+
         const [group] = this.renderGroup(pool, pari, context, container, state)
 
-        if (!state.win && !state.nocontest && state.isHistorical) return
-
-        const [positionIcon, positionIconState] = this.get(
-            'positionIcon',
-            () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle)
-        )
-        if (positionIconState.new) group.addChild(positionIcon)
-
+        this.updatePositionIcon(pool, pari, context, group, state)
         this.updateWager(pool, pari, context, group, state)
         this.updateProfit(pool, pari, context, group, state)
         this.updateClaim(pool, pari, context, group, state)
@@ -642,6 +751,38 @@ export class PariTile extends BaseParisRenderer {
         return [group, groupstate]
     }
 
+    private updatePositionIcon(
+        pool: any,
+        pari: any,
+        context: RenderingContext,
+        container: Container,
+        state: any,
+    ): void {
+        const { orphan } = state
+
+        const circleStyle = orphan ? this.positionIconCircleStyle.orphan : this.positionIconCircleStyle[pari.position]
+        const { lineStyle, color, radius, offset: [ofx, ofy] } = circleStyle
+
+        const [positionIconCircle, positionIconCircleState] = this.get('positionIconCircle', () => new Graphics())
+        if (positionIconCircleState.new) container.addChild(positionIconCircle)
+
+        positionIconCircle
+            .clear()
+            .lineStyle(lineStyle)
+            .beginFill(color)
+            .drawCircle(ofx, ofy, radius)
+            .endFill()
+
+        const iconStyle = this.positionIconStyle[pari.position]
+        const [positionIcon, positionIconState] = this.get(
+            'positionIcon',
+            () => this.createIcon(context, this.getPositionIconTextureName(pari.position), iconStyle)
+        )
+        if (positionIconState.new) container.addChild(positionIcon)
+        if (orphan && iconStyle.orphanTint) positionIcon.tint = iconStyle.orphanTint
+        else positionIcon.tint = iconStyle.tint
+    }
+
     private updateProfit(
         pool: any,
         pari: any,
@@ -650,7 +791,31 @@ export class PariTile extends BaseParisRenderer {
         state: any,
     ): void {
 
-        const { emptypool, nocontest, undef, win, phantom, propagating, claimable } = state
+        const {
+            emptypool,
+            nocontest,
+            undef,
+            win,
+            phantom,
+            orphan,
+            propagating,
+            claimable,
+        } = state
+
+        if (orphan) {
+            this.clear('profit')
+            this.clear('profitcontent')
+            this.clear('profitCurrency')
+            this.clear('payout')
+            this.clear('prizeAmount')
+            this.clear('profitText')
+            this.clear('percent')
+            this.clear('percentText')
+            this.clear('profitpropagatingContainer')
+            this.clear('profitpropagating')
+
+            return
+        }
 
         const [profit, profitState] = this.get(
             'profit',
@@ -917,11 +1082,16 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
         state,
     ): void {
-        const { propagating } = state
+        const { propagating, orphan } = state
+
         const position = pari.position
         const [wager, wagerState] = this.get(
             'wager',
-            () => this.createContainer(this.wagerContainerStyles[position])
+            () => this.createContainer(orphan ?
+                this.wagerOrphanContainerStyles[position] :
+                this.wagerContainerStyles[position]
+            ),
+            [orphan]
         )
         if (wagerState.new) container.addChild(wager)
 
@@ -953,12 +1123,7 @@ export class PariTile extends BaseParisRenderer {
         if (wagerAmountState.new) wagercontent.addChild(wagerAmount)
         wagerAmount.text = ui.erc20(pari.wager)
 
-        const [wagerCurrency, wagerCurrencyState] = this.get(
-            'wagerCurrency',
-            () => this.createWagerCurrencyIcon(context, position)
-        )
-        if (wagerCurrencyState.new) wagercontent.addChild(wagerCurrency)
-        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].containerOffset[0]
+        this.updateWagerCurrencyIcon(context, wagercontent, position, [wagerAmount.width, 0], orphan)
 
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get(
             'wagerpropagatingContainer',
@@ -977,6 +1142,51 @@ export class PariTile extends BaseParisRenderer {
 
         if (propagating) this.animate('wagerpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.15 } })
         else this.animate('wagerpropagatingContainer', 'hide_propagating_bg')
+    }
+
+    private updateWagerCurrencyIcon(
+        context: RenderingContext,
+        container: Container,
+        position: EPosition,
+        [ofx, ofy]: [number, number],
+        orphan: boolean,
+    ): void {
+
+        const { offset: containerOffset } = this.wagerCurrencyIconContainerStyle
+
+        const [wagerCurrencyContainer, wagerCurrencyContainerState] = this.get(
+            'wagerCurrencyContainer',
+            () => new Container(),
+        )
+        if (wagerCurrencyContainerState.new) container.addChild(wagerCurrencyContainer)
+        wagerCurrencyContainer.position.set(containerOffset[0] + ofx, containerOffset[1] + ofy)
+
+        const [wagerCurrencyCircle, wagerCurrencyCircleState] = this.get(
+            'wagerCurrencyCircle',
+            () => new Graphics(),
+        )
+        if (wagerCurrencyCircleState.new) wagerCurrencyContainer.addChild(wagerCurrencyCircle)
+
+        const { radius, color } = orphan ? this.wagerCurrencyCircleStyle.orphan : this.wagerCurrencyCircleStyle[position]
+
+        wagerCurrencyCircle
+            .clear()
+            .beginFill(color, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill()
+
+        const [wagerCurrencyIcon, wagerCurrencyIconState] = this.get(
+            'wagerCurrencyIcon',
+            () => this.createIcon(
+                context,
+                this.getPariCurrencyIconTextureName(context),
+                this.wagerCurrencyIconStyle[position],
+            ),
+        )
+        if (wagerCurrencyIconState.new) wagerCurrencyContainer.addChild(wagerCurrencyIcon)
+        wagerCurrencyIcon.tint = orphan ?
+            this.wagerCurrencyIconStyle.orphan.tint :
+            this.wagerCurrencyIconStyle[position].tint
     }
 
     private getPositionIconTextureName(position: EPosition): symbol {
@@ -1017,7 +1227,7 @@ export class PariTile extends BaseParisRenderer {
         textureName: symbol,
         style,
     ): Sprite {
-        const { size, offset, tint, alpha } = style
+        const { size, offset, tint, alpha, anchor } = style
 
         const texture = context.textures.get(textureName)
         const icon = new Sprite(texture)
@@ -1026,38 +1236,9 @@ export class PariTile extends BaseParisRenderer {
         if (offset) icon.position.set(...offset)
         if (tint) icon.tint = tint
         if (alpha) icon.alpha = alpha
+        if (anchor) icon.anchor.set(...anchor)
 
         return icon
-    }
-
-    private createWagerCurrencyIcon(
-        context: RenderingContext,
-        position: EPosition,
-    ): Container {
-
-        const {
-            containerOffset,
-            radius,
-            color,
-        } = this.wagerCurrencyIconStyle[position]
-
-        const container = new Container()
-
-        const circle = (new Graphics())
-            .beginFill(color, 1)
-            .drawCircle(radius, radius, radius)
-            .endFill()
-
-        const icon = this.createIcon(
-            context,
-            this.getPariCurrencyIconTextureName(context),
-            this.wagerCurrencyIconStyle[position],
-        )
-
-        container.addChild(circle, icon)
-        container.position.set(...containerOffset)
-
-        return container
     }
 
     private createProfitCurrencyIcon(
@@ -1133,13 +1314,14 @@ export class PariTile extends BaseParisRenderer {
                 radiuses,
                 color,
                 texture,
+                alpha,
             } = backgroundStyle
 
             const background = GraphicUtils.createRoundedRect(
                 [0, 0],
                 [width, height],
                 radiuses,
-                { color, lineStyle, texture }
+                { color, lineStyle, texture, alpha }
             )
             container.addChild(background)
 

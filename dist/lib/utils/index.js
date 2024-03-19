@@ -93,6 +93,10 @@ function binarySearchNearest(data, value, larger) {
     if (data.length === 1) {
         if (data[0] === value)
             return 0;
+        else if (larger && data[0] > value)
+            return 0;
+        else if (!larger && data[0] < value)
+            return 0;
         else
             return -1;
     }

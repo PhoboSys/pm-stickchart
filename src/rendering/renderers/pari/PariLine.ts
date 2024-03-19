@@ -1,3 +1,5 @@
+import merge from 'lodash/merge'
+
 import { RenderingContext } from '@rendering'
 
 import datamath from '@lib/datamath'
@@ -8,6 +10,7 @@ import { EPosition } from '@enums'
 import { GroupComponent } from '@rendering/components/GroupComponent'
 
 import { BaseParisRenderer } from './BaseParisRenderer'
+
 export class PariLine extends BaseParisRenderer {
 
     static readonly PARI_LINE_ID: symbol = Symbol('PARI_LINE_ID')
@@ -16,13 +19,11 @@ export class PariLine extends BaseParisRenderer {
         return PariLine.PARI_LINE_ID
     }
 
-    private nocontestLineStyle: any = {
-
+    private baseLineStyle: any = {
         [EPosition.Up]: {
             startOffset: [0, -8],
             endOffset: [0, 40+(58-32)/2+32],
             lineStyle: {
-                color: 0xFFFFFF,
                 width: 2,
             }
         },
@@ -31,7 +32,6 @@ export class PariLine extends BaseParisRenderer {
             startOffset: [0, 8],
             endOffset: [0, -134-62+(58-32)/2],
             lineStyle: {
-                color: 0xFFFFFF,
                 width: 2,
             }
         },
@@ -40,41 +40,28 @@ export class PariLine extends BaseParisRenderer {
             startOffset: [0, 8],
             endOffset: [0, 14+(58-32)/2],
             lineStyle: {
-                color: 0xFFFFFF,
                 width: 2,
             }
         }
     }
 
-    private winlineStyle: any = {
+    private orphanlineStyle: any = merge({}, this.baseLineStyle, {
+        [EPosition.Up]: { lineStyle: { color: 0xD32F2F } },
+        [EPosition.Down]: { lineStyle: { color: 0xD32F2F } },
+        [EPosition.Zero]: { lineStyle: { color: 0xD32F2F } }
+    })
 
-        [EPosition.Up]: {
-            startOffset: [0, -8],
-            endOffset: [0, 40+(58-32)/2+32],
-            lineStyle: {
-                color: 0xF7C15B,
-                width: 2,
-            }
-        },
+    private nocontestLineStyle: any = merge({}, this.baseLineStyle, {
+        [EPosition.Up]: { lineStyle: { color: 0xFFFFFF } },
+        [EPosition.Down]: { lineStyle: { color: 0xFFFFFF } },
+        [EPosition.Zero]: { lineStyle: { color: 0xFFFFFF } }
+    })
 
-        [EPosition.Down]: {
-            startOffset: [0, 8],
-            endOffset: [0, -134-62+(58-32)/2],
-            lineStyle: {
-                color: 0xF7C15B,
-                width: 2,
-            }
-        },
-
-        [EPosition.Zero]: {
-            startOffset: [0, 8],
-            endOffset: [0, 14+(58-32)/2],
-            lineStyle: {
-                color: 0xF7C15B,
-                width: 2,
-            }
-        }
-    }
+    private winlineStyle: any = merge({}, this.baseLineStyle, {
+        [EPosition.Up]: { lineStyle: { color: 0xF7C15B } },
+        [EPosition.Down]: { lineStyle: { color: 0xF7C15B } },
+        [EPosition.Zero]: { lineStyle: { color: 0xF7C15B } }
+    })
 
     private validPariPositions = {
         [EPosition.Up]: EPosition.Up,
@@ -93,11 +80,11 @@ export class PariLine extends BaseParisRenderer {
 
         const state = this.getPariState(pool, pari, context)
 
+        if (!state.win && !state.nocontest && state.isHistorical) return this.clear()
+
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
         const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
         if (group && groupstate.new) container.addChild(group)
-
-        if (!state.win && !state.nocontest && state.isHistorical) return
 
         this.updateLine(pool, pari, context, group, state)
 
@@ -111,7 +98,7 @@ export class PariLine extends BaseParisRenderer {
         state: any,
     ): void {
         const position = pari.position
-        const { win } = state
+        const { win, orphan } = state
 
         if (!container) return this.clear('line')
 
@@ -125,7 +112,9 @@ export class PariLine extends BaseParisRenderer {
         const [line, linestate] = this.get('line', () => new Graphics())
         if (linestate.new) container.addChild(line)
 
-        const style = win ? this.winlineStyle : this.nocontestLineStyle
+        let style = this.nocontestLineStyle
+        if (orphan) style = this.orphanlineStyle
+        else if (win) style = this.winlineStyle
 
         const [startx, starty] = style[pari.position].startOffset
         const [endx, endy] = style[pari.position].endOffset

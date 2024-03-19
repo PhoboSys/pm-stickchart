@@ -40,8 +40,7 @@ class PoolOpen extends BasePoolsRenderer_1.BasePoolsRenderer {
             const win = pari.position === resolution;
             const won = win && isHistorical && !nocontest && !phantom;
             const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pari.pariid);
-            const orphan = phantom && reverted;
-            const claimable = !pari.claimed && (won || nocontest) && !orphan;
+            const claimable = !pari.claimed && (won || nocontest) && !phantom && !reverted;
             return claimable;
         });
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
