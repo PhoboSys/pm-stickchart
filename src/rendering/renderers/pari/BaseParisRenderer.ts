@@ -99,7 +99,7 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
         const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
         const orphan = phantom && reverted
         const emptypool = this.isNoContestEmptyPool(pool)
-        const claimable = !pari.claimed && (won || nocontest) && !orphan
+        const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom
         const propagating = EntityUtils.isEntityPropagating(context, pari.pariid)
 
         return {

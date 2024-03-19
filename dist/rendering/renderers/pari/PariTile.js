@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PariTile = void 0;
+const merge_1 = __importDefault(require("lodash/merge"));
 const _constants_1 = require("../../../constants/index.js");
 const _rendering_1 = require("../../index.js");
 const textures_1 = require("../../textures");
@@ -36,7 +37,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         this.contentStyle = {
             offset: [14, (58 - 32) / 2],
         };
-        this.wagerContainerStyles = {
+        this.wagerContainerBaseStyles = {
             [_enums_1.EPosition.Up]: {
                 offset: [24, 0],
                 background: {
@@ -84,6 +85,33 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 },
             },
         };
+        this.wagerOrphanContainerStyles = (0, merge_1.default)({}, this.wagerContainerBaseStyles, {
+            [_enums_1.EPosition.Up]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+            [_enums_1.EPosition.Zero]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+            [_enums_1.EPosition.Down]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+        });
+        this.wagerContainerStyles = this.wagerContainerBaseStyles;
         this.wagerTextStyle = {
             [_enums_1.EPosition.Up]: {
                 text: {
@@ -147,6 +175,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 },
                 offset: [32 + 16, 20]
             },
+            orphan: {
+                text: {
+                    fill: 0xD32F2F,
+                },
+            }
         };
         this.profitContainerStyle = {
             [_enums_1.EPosition.Up]: {
@@ -424,9 +457,72 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             },
             offset: [0, 0]
         };
+        this.positionIconCircleStyle = {
+            [_enums_1.EPosition.Up]: {
+                offset: [0, 58 / 2],
+                radius: 16,
+                color: 0x01A37A,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 2,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                offset: [0, 58 / 2],
+                radius: 16,
+                color: 0xD7335B,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 2,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                offset: [0, 58 / 2],
+                radius: 16,
+                color: 0xB7BDD7,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 2,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+            orphan: {
+                offset: [0, 58 / 2],
+                radius: 16,
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                    width: 2,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            }
+        };
         this.positionIconStyle = {
-            size: 32,
-            offset: [-16, (58 - 32) / 2],
+            [_enums_1.EPosition.Up]: {
+                size: 32,
+                offset: [0, 58 / 2],
+                anchor: [0.5, 0.5],
+                tint: 0xFFFFFF,
+            },
+            [_enums_1.EPosition.Down]: {
+                size: 32,
+                offset: [0, 58 / 2],
+                anchor: [0.5, 0.5],
+                tint: 0xFFFFFF,
+            },
+            [_enums_1.EPosition.Zero]: {
+                size: 32,
+                offset: [0, 58 / 2],
+                anchor: [0.5, 0.5],
+                tint: 0x071226,
+                orphanTint: 0xFFFFFF,
+            }
         };
         this.profitCurrencyIconStyle = {
             default: {
@@ -454,29 +550,46 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 alpha: 1,
             }
         };
+        this.wagerCurrencyIconContainerStyle = {
+            offset: [32 + 16 + 7, 18],
+        };
+        this.wagerCurrencyCircleStyle = {
+            [_enums_1.EPosition.Up]: {
+                color: 0xFFFFFF,
+                radius: 8,
+            },
+            [_enums_1.EPosition.Down]: {
+                color: 0xFFFFFF,
+                radius: 8,
+            },
+            [_enums_1.EPosition.Zero]: {
+                color: 0x071226,
+                radius: 8,
+            },
+            orphan: {
+                color: 0xD32F2F,
+                radius: 8,
+            },
+        };
         this.wagerCurrencyIconStyle = {
             [_enums_1.EPosition.Up]: {
-                containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
-                color: 0xFFFFFF,
                 tint: 0x01A37A,
-                radius: 8,
                 size: 12,
             },
             [_enums_1.EPosition.Down]: {
-                containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
-                color: 0xFFFFFF,
                 tint: 0xD7335B,
-                radius: 8,
                 size: 12,
             },
             [_enums_1.EPosition.Zero]: {
-                containerOffset: [32 + 16 + 7, 18],
                 offset: [2, 2],
-                color: 0x071226,
                 tint: 0xB7BDD7,
-                radius: 8,
+                size: 12,
+            },
+            orphan: {
+                offset: [2, 2],
+                tint: 0x081327,
                 size: 12,
             }
         };
@@ -535,13 +648,13 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     updatePari(pool, pari, context, container) {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
+        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+            return this.clear();
         const state = this.getPariState(pool, pari, context);
-        const [group] = this.renderGroup(pool, pari, context, container, state);
         if (!state.win && !state.nocontest && state.isHistorical)
-            return;
-        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), this.positionIconStyle));
-        if (positionIconState.new)
-            group.addChild(positionIcon);
+            return this.clear();
+        const [group] = this.renderGroup(pool, pari, context, container, state);
+        this.updatePositionIcon(pool, pari, context, group, state);
         this.updateWager(pool, pari, context, group, state);
         this.updateProfit(pool, pari, context, group, state);
         this.updateClaim(pool, pari, context, group, state);
@@ -575,8 +688,43 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         }
         return [group, groupstate];
     }
+    updatePositionIcon(pool, pari, context, container, state) {
+        const { orphan } = state;
+        const circleStyle = orphan ? this.positionIconCircleStyle.orphan : this.positionIconCircleStyle[pari.position];
+        const { lineStyle, color, radius, offset: [ofx, ofy] } = circleStyle;
+        const [positionIconCircle, positionIconCircleState] = this.get('positionIconCircle', () => new pixi_1.Graphics());
+        if (positionIconCircleState.new)
+            container.addChild(positionIconCircle);
+        positionIconCircle
+            .clear()
+            .lineStyle(lineStyle)
+            .beginFill(color)
+            .drawCircle(ofx, ofy, radius)
+            .endFill();
+        const iconStyle = this.positionIconStyle[pari.position];
+        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), iconStyle));
+        if (positionIconState.new)
+            container.addChild(positionIcon);
+        if (orphan && iconStyle.orphanTint)
+            positionIcon.tint = iconStyle.orphanTint;
+        else
+            positionIcon.tint = iconStyle.tint;
+    }
     updateProfit(pool, pari, context, container, state) {
-        const { emptypool, nocontest, undef, win, phantom, propagating, claimable } = state;
+        const { emptypool, nocontest, undef, win, phantom, orphan, propagating, claimable, } = state;
+        if (orphan) {
+            this.clear('profit');
+            this.clear('profitcontent');
+            this.clear('profitCurrency');
+            this.clear('payout');
+            this.clear('prizeAmount');
+            this.clear('profitText');
+            this.clear('percent');
+            this.clear('percentText');
+            this.clear('profitpropagatingContainer');
+            this.clear('profitpropagating');
+            return;
+        }
         const [profit, profitState] = this.get('profit', () => this.createProfitContainer(context, pari.position, claimable), [claimable]);
         if (profitState.new)
             container.addChild(profit);
@@ -753,13 +901,15 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         }
     }
     updateWager(pool, pari, context, container, state) {
-        const { propagating } = state;
+        const { propagating, orphan } = state;
         const position = pari.position;
-        const [wager, wagerState] = this.get('wager', () => this.createContainer(this.wagerContainerStyles[position]));
+        const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ?
+            this.wagerOrphanContainerStyles[position] :
+            this.wagerContainerStyles[position]), [orphan]);
         if (wagerState.new)
             container.addChild(wager);
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
-        if (wagercontentState.new)
+        if (wagercontentState.new || wagerState.new)
             wager.addChild(wagercontent);
         const [avatar, avatarState] = this.get('avatar', () => this.createAvatar(context.bettor.avatarUrl), [context.bettor.avatarUrl]);
         if (avatarState.new)
@@ -771,12 +921,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (wagerAmountState.new)
             wagercontent.addChild(wagerAmount);
         wagerAmount.text = ui_1.default.erc20(pari.wager);
-        const [wagerCurrency, wagerCurrencyState] = this.get('wagerCurrency', () => this.createWagerCurrencyIcon(context, position));
-        if (wagerCurrencyState.new)
-            wagercontent.addChild(wagerCurrency);
-        wagerCurrency.position.x = wagerAmount.width + this.wagerCurrencyIconStyle[position].containerOffset[0];
+        wagerAmount.style.fill = orphan ?
+            this.wagerStyle.orphan.text.fill :
+            this.wagerStyle[position].text.fill;
+        this.updateWagerCurrencyIcon(context, wagercontent, position, [wagerAmount.width, 0], orphan);
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
-        if (wagerpropagatingContainerState.new)
+        if (wagerpropagatingContainerState.new || wagerState.new)
             wager.addChild(wagerpropagatingContainer);
         const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground());
         if (wagerpropagatingState.new) {
@@ -787,6 +937,28 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             this.animate('wagerpropagatingContainer', 'show_propagating_bg', { pixi: { alpha: 0.15 } });
         else
             this.animate('wagerpropagatingContainer', 'hide_propagating_bg');
+    }
+    updateWagerCurrencyIcon(context, container, position, [ofx, ofy], orphan) {
+        const { offset: containerOffset } = this.wagerCurrencyIconContainerStyle;
+        const [wagerCurrencyContainer, wagerCurrencyContainerState] = this.get('wagerCurrencyContainer', () => new pixi_1.Container());
+        if (wagerCurrencyContainerState.new)
+            container.addChild(wagerCurrencyContainer);
+        wagerCurrencyContainer.position.set(containerOffset[0] + ofx, containerOffset[1] + ofy);
+        const [wagerCurrencyCircle, wagerCurrencyCircleState] = this.get('wagerCurrencyCircle', () => new pixi_1.Graphics());
+        if (wagerCurrencyCircleState.new)
+            wagerCurrencyContainer.addChild(wagerCurrencyCircle);
+        const { radius, color } = orphan ? this.wagerCurrencyCircleStyle.orphan : this.wagerCurrencyCircleStyle[position];
+        wagerCurrencyCircle
+            .clear()
+            .beginFill(color, 1)
+            .drawCircle(radius, radius, radius)
+            .endFill();
+        const [wagerCurrencyIcon, wagerCurrencyIconState] = this.get('wagerCurrencyIcon', () => this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.wagerCurrencyIconStyle[position]));
+        if (wagerCurrencyIconState.new)
+            wagerCurrencyContainer.addChild(wagerCurrencyIcon);
+        wagerCurrencyIcon.tint = orphan ?
+            this.wagerCurrencyIconStyle.orphan.tint :
+            this.wagerCurrencyIconStyle[position].tint;
     }
     getPositionIconTextureName(position) {
         switch (position) {
@@ -815,7 +987,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         }
     }
     createIcon(context, textureName, style) {
-        const { size, offset, tint, alpha } = style;
+        const { size, offset, tint, alpha, anchor } = style;
         const texture = context.textures.get(textureName);
         const icon = new pixi_1.Sprite(texture);
         icon.scale.set(size / icon.height);
@@ -825,19 +997,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             icon.tint = tint;
         if (alpha)
             icon.alpha = alpha;
+        if (anchor)
+            icon.anchor.set(...anchor);
         return icon;
-    }
-    createWagerCurrencyIcon(context, position) {
-        const { containerOffset, radius, color, } = this.wagerCurrencyIconStyle[position];
-        const container = new pixi_1.Container();
-        const circle = (new pixi_1.Graphics())
-            .beginFill(color, 1)
-            .drawCircle(radius, radius, radius)
-            .endFill();
-        const icon = this.createIcon(context, this.getPariCurrencyIconTextureName(context), this.wagerCurrencyIconStyle[position]);
-        container.addChild(circle, icon);
-        container.position.set(...containerOffset);
-        return container;
     }
     createProfitCurrencyIcon(context) {
         const { radius } = this.profitCurrencyIconStyle.default;
@@ -879,8 +1041,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const { background: backgroundStyle } = style;
         const container = new pixi_1.Container();
         if (backgroundStyle) {
-            const { width, height, anchor, lineStyle, radiuses, color, texture, } = backgroundStyle;
-            const background = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle, texture });
+            const { width, height, anchor, lineStyle, radiuses, color, texture, alpha, } = backgroundStyle;
+            const background = _rendering_1.GraphicUtils.createRoundedRect([0, 0], [width, height], radiuses, { color, lineStyle, texture, alpha });
             container.addChild(background);
             if (anchor) {
                 const [ax, ay] = anchor;

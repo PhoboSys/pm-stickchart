@@ -125,7 +125,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
             const won = win && isHistorical && !nocontest && !phantom;
             const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pari.pariid);
             const orphan = phantom && reverted;
-            const claimable = !pari.claimed && (won || nocontest) && !orphan;
+            const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom;
             return claimable;
         });
         const shouldRenderClaimable = !(0, utils_1.isEmpty)(paris) && hashClaimablePari;

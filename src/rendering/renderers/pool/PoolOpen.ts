@@ -47,7 +47,7 @@ export class PoolOpen extends BasePoolsRenderer {
             const won = win && isHistorical && !nocontest && !phantom
             const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
             const orphan = phantom && reverted
-            const claimable = !pari.claimed && (won || nocontest) && !orphan
+            const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom
 
             return claimable
         })
