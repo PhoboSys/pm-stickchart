@@ -63,7 +63,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 ease: 'power2.out',
                 new: 'set',
             },
-            resolution: {
+            locked: {
                 pixi: {
                     tint: 0xA7E0FF,
                 },
@@ -244,11 +244,11 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const x = latestX;
         const y = latestY;
         const now = (0, utils_1.nowUnixTS)();
-        const positioning = lockDate >= now;
-        const countdownValue = positioning
-            ? ui_1.default.duration24(lockDate - now + 1)
-            : ui_1.default.duration24(endDate - now + 1);
-        if (endDate < now) {
+        const locked = now >= lockDate;
+        const countdownValue = locked
+            ? ui_1.default.duration24(endDate - now)
+            : ui_1.default.duration24(lockDate - now);
+        if (now >= endDate) {
             this.clear('textgroup');
             this.clear('countdowntext');
             this.clear('phasetext');
@@ -266,22 +266,22 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [xof, yof] = this.countdownStyle.offset;
         countdowntext.text = countdownValue;
         countdowntext.position.set(x + xof, y + yof);
-        const phaseName = positioning
-            ? 'Positioning'
-            : 'Resolution';
+        const phaseName = locked
+            ? 'Lock-in'
+            : 'Entry';
         const [phasetext, phasetextstate] = this.get('phasetext', () => _rendering_1.GraphicUtils.createText(phaseName, [0, 0], this.phaseStyle.textstyle, this.phaseStyle.anchor));
         if (phasetextstate.new)
             textgroup.addChild(phasetext);
         const [phxof, phyof] = this.phaseStyle.offset;
         phasetext.text = phaseName;
         phasetext.position.set(countdowntext.x + phxof, countdowntext.y - countdowntext.height + phyof);
-        if (positioning) {
-            this.animate('phasetext', 'positioning');
-            this.animate('countdowntext', 'positioning');
+        if (locked) {
+            this.animate('phasetext', 'locked');
+            this.animate('countdowntext', 'locked');
         }
         else {
-            this.animate('phasetext', 'resolution');
-            this.animate('countdowntext', 'resolution');
+            this.animate('phasetext', 'positioning');
+            this.animate('countdowntext', 'positioning');
         }
         if (textgroupstate.animation !== 'hover_text')
             this.animate('textgroup', 'unhover_text');

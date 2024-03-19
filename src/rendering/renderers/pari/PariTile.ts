@@ -204,6 +204,11 @@ export class PariTile extends BaseParisRenderer {
             },
             offset: [32+16, 20]
         },
+        orphan: {
+            text: {
+                fill: 0xD32F2F,
+            },
+        }
     }
 
     private profitContainerStyle = {
@@ -695,6 +700,7 @@ export class PariTile extends BaseParisRenderer {
     ): void {
 
         if (!(pari.position in this.validPariPositions)) return this.clear()
+        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
         const state = this.getPariState(pool, pari, context)
 
@@ -1099,7 +1105,7 @@ export class PariTile extends BaseParisRenderer {
             'wagercontent',
             () => this.createContainer(this.contentStyle)
         )
-        if (wagercontentState.new) wager.addChild(wagercontent)
+        if (wagercontentState.new || wagerState.new) wager.addChild(wagercontent)
 
         const [avatar, avatarState] = this.get(
             'avatar',
@@ -1122,6 +1128,9 @@ export class PariTile extends BaseParisRenderer {
         ))
         if (wagerAmountState.new) wagercontent.addChild(wagerAmount)
         wagerAmount.text = ui.erc20(pari.wager)
+        wagerAmount.style.fill = orphan ?
+            this.wagerStyle.orphan.text.fill :
+            this.wagerStyle[position].text.fill
 
         this.updateWagerCurrencyIcon(context, wagercontent, position, [wagerAmount.width, 0], orphan)
 
@@ -1129,7 +1138,7 @@ export class PariTile extends BaseParisRenderer {
             'wagerpropagatingContainer',
             () => this.createPropagatingContainer(this.wagerContainerStyles[position])
         )
-        if (wagerpropagatingContainerState.new) wager.addChild(wagerpropagatingContainer)
+        if (wagerpropagatingContainerState.new || wagerState.new) wager.addChild(wagerpropagatingContainer)
 
         const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get(
             'wagerpropagating',

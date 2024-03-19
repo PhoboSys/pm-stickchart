@@ -175,6 +175,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 },
                 offset: [32 + 16, 20]
             },
+            orphan: {
+                text: {
+                    fill: 0xD32F2F,
+                },
+            }
         };
         this.profitContainerStyle = {
             [_enums_1.EPosition.Up]: {
@@ -643,6 +648,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     updatePari(pool, pari, context, container) {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
+        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+            return this.clear();
         const state = this.getPariState(pool, pari, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
@@ -902,7 +909,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (wagerState.new)
             container.addChild(wager);
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
-        if (wagercontentState.new)
+        if (wagercontentState.new || wagerState.new)
             wager.addChild(wagercontent);
         const [avatar, avatarState] = this.get('avatar', () => this.createAvatar(context.bettor.avatarUrl), [context.bettor.avatarUrl]);
         if (avatarState.new)
@@ -914,9 +921,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         if (wagerAmountState.new)
             wagercontent.addChild(wagerAmount);
         wagerAmount.text = ui_1.default.erc20(pari.wager);
+        wagerAmount.style.fill = orphan ?
+            this.wagerStyle.orphan.text.fill :
+            this.wagerStyle[position].text.fill;
         this.updateWagerCurrencyIcon(context, wagercontent, position, [wagerAmount.width, 0], orphan);
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
-        if (wagerpropagatingContainerState.new)
+        if (wagerpropagatingContainerState.new || wagerState.new)
             wager.addChild(wagerpropagatingContainer);
         const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground());
         if (wagerpropagatingState.new) {

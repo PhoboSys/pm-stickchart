@@ -77,6 +77,7 @@ export class PariLine extends BaseParisRenderer {
     ): void {
 
         if (!(pari.position in this.validPariPositions)) return this.clear()
+        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
 
         const state = this.getPariState(pool, pari, context)
 

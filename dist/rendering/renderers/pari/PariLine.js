@@ -63,6 +63,8 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
     updatePari(pool, pari, context, container) {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
+        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+            return this.clear();
         const state = this.getPariState(pool, pari, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
