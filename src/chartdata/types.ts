@@ -1,9 +1,5 @@
 export type ChartData = {
-    map: {
-        [key: number]: string,
-    },
-    timestamps: number[],
-    prices: string[],
+    [key: number]: string
 }
 
 export type PricePoint = {
