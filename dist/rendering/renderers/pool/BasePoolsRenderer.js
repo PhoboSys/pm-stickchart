@@ -113,6 +113,8 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (latest.timestamp > pool.openPriceTimestamp)
                 return latest;
+            if (latest.timestamp < pool.endDate)
+                return latest;
             return null;
         }
         const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]);

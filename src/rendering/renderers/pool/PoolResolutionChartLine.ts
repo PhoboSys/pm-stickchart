@@ -152,7 +152,6 @@ export class PoolResolutionChartLine extends BasePoolsRenderer {
 
         if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
         const rprice = this.getResolutionPricePoint(pool, context)
-
         if (context.features.curvedResolutionLines) {
             this.clear('actualLine')
 
