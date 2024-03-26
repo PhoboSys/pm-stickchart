@@ -19,7 +19,6 @@ export declare class PoolBackground extends BasePoolsRenderer {
     updateCoinIcon(context: RenderingContext, container: Container, [x1, x2]: [any, any], pool: any, win: boolean, shouldRender: boolean): void;
     private createBorder;
     private createCoin;
-    private createCoinCurrency;
     private createCoinShine;
-    private getCoinCurrencyTextureName;
+    private getCointAnimationName;
 }

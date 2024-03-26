@@ -3,8 +3,6 @@ import { EntityUtils, RenderingContext } from '@rendering'
 import { Logger } from '@infra'
 import {
     GRADIENT_TEXTURE,
-    GOLD_COIN_TEXTURE,
-    SILVER_COIN_TEXTURE,
     PARI_GOLD_TEXTURE,
     PARI_SILVER_TEXTURE,
     USDC_GOLD_TEXTURE,
@@ -14,7 +12,7 @@ import {
 } from '@rendering/textures'
 import config from '@config'
 import datamath from '@lib/datamath'
-import { Graphics, Container, Sprite, BlurFilter } from '@lib/pixi'
+import { Graphics, Container, AnimatedSprite, BlurFilter } from '@lib/pixi'
 import { isEmpty } from '@lib/utils'
 
 import { EPosition } from '@enums'
@@ -52,7 +50,8 @@ export class PoolBackground extends BasePoolsRenderer {
     }
 
     private coinStyle: any = {
-        scale: 0.2,
+        scale: 0.44,
+        speed: 0.33,
         offsetY: 0.075,
         anchor: [0.5, 0.5],
     }
@@ -409,7 +408,6 @@ export class PoolBackground extends BasePoolsRenderer {
             this.clear('iconContainer')
             this.clear('coinShine')
             this.clear('coin')
-            this.clear('coinCurrency')
 
             return
         }
@@ -432,10 +430,6 @@ export class PoolBackground extends BasePoolsRenderer {
         const [coin, coinState] = this.get('coin', () => this.createCoin(context, win), [win])
         if (coinState.new) iconContainer.addChild(coin)
         coin.position.set(ox, oy)
-
-        const [coinCurrency, coinCurrencyState] = this.get('coinCurrency', () => this.createCoinCurrency(context, win), [win])
-        if (coinCurrencyState.new) iconContainer.addChild(coinCurrency)
-        coinCurrency.position.set(ox+(coin.width-coin.height)/2, oy)
 
         if ((x2-x1) > coin.width+20 && iconContainerState.animation !== 'show_coin') this.animate('iconContainer', 'show_coin')
         else if ((x2-x1) < coin.width+20 && iconContainerState.animation !== 'hide_coin') this.animate('iconContainer', 'hide_coin')
@@ -474,28 +468,16 @@ export class PoolBackground extends BasePoolsRenderer {
     private createCoin(
         context: RenderingContext,
         win: boolean,
-    ): Sprite {
-        const { scale, anchor } = this.coinStyle
+    ): AnimatedSprite {
+        const { scale, anchor, speed } = this.coinStyle
 
-        const textureName = win ? GOLD_COIN_TEXTURE : SILVER_COIN_TEXTURE
-        const texture = context.textures.get(textureName)
-        const icon = new Sprite(texture)
+        const name = this.getCointAnimationName(context, win)
+        const animation = context.textures.animations(name)
+        const icon = new AnimatedSprite(animation)
 
-        icon.scale.set(scale)
-        icon.anchor.set(...anchor)
-
-        return icon
-    }
-
-    private createCoinCurrency(
-        context: RenderingContext,
-        win: boolean,
-    ): Sprite {
-        const { scale, anchor } = this.coinCurrencyStyle
-
-        const textureName = this.getCoinCurrencyTextureName(context, win)
-        const texture = context.textures.get(textureName)
-        const icon = new Sprite(texture)
+        // animation
+        icon.play()
+        icon.animationSpeed = speed
 
         icon.scale.set(scale)
         icon.anchor.set(...anchor)
@@ -521,7 +503,7 @@ export class PoolBackground extends BasePoolsRenderer {
         return shine
     }
 
-    private getCoinCurrencyTextureName(context: RenderingContext, win: boolean): symbol {
+    private getCointAnimationName(context: RenderingContext, win: boolean): symbol {
         const key = `${context.metapool?.currency}_${win ? 'GOLD' : 'SILVER'}`
 
         switch (key) {

@@ -10,10 +10,14 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
       "@src/*": [
         "src/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
       ],
       "@chartdata/*": [
         "src/chartdata/*"

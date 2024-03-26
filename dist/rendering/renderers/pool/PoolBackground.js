@@ -34,7 +34,8 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
             hoverAlpha: 0.39,
         };
         this.coinStyle = {
-            scale: 0.2,
+            scale: 0.44,
+            speed: 0.33,
             offsetY: 0.075,
             anchor: [0.5, 0.5],
         };
@@ -323,7 +324,6 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
             this.clear('iconContainer');
             this.clear('coinShine');
             this.clear('coin');
-            this.clear('coinCurrency');
             return;
         }
         const { height } = context.screen;
@@ -342,10 +342,6 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         if (coinState.new)
             iconContainer.addChild(coin);
         coin.position.set(ox, oy);
-        const [coinCurrency, coinCurrencyState] = this.get('coinCurrency', () => this.createCoinCurrency(context, win), [win]);
-        if (coinCurrencyState.new)
-            iconContainer.addChild(coinCurrency);
-        coinCurrency.position.set(ox + (coin.width - coin.height) / 2, oy);
         if ((x2 - x1) > coin.width + 20 && iconContainerState.animation !== 'show_coin')
             this.animate('iconContainer', 'show_coin');
         else if ((x2 - x1) < coin.width + 20 && iconContainerState.animation !== 'hide_coin')
@@ -369,19 +365,13 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         return container;
     }
     createCoin(context, win) {
-        const { scale, anchor } = this.coinStyle;
-        const textureName = win ? textures_1.GOLD_COIN_TEXTURE : textures_1.SILVER_COIN_TEXTURE;
-        const texture = context.textures.get(textureName);
-        const icon = new pixi_1.Sprite(texture);
-        icon.scale.set(scale);
-        icon.anchor.set(...anchor);
-        return icon;
-    }
-    createCoinCurrency(context, win) {
-        const { scale, anchor } = this.coinCurrencyStyle;
-        const textureName = this.getCoinCurrencyTextureName(context, win);
-        const texture = context.textures.get(textureName);
-        const icon = new pixi_1.Sprite(texture);
+        const { scale, anchor, speed } = this.coinStyle;
+        const name = this.getCointAnimationName(context, win);
+        const animation = context.textures.animations(name);
+        const icon = new pixi_1.AnimatedSprite(animation);
+        // animation
+        icon.play();
+        icon.animationSpeed = speed;
         icon.scale.set(scale);
         icon.anchor.set(...anchor);
         return icon;
@@ -397,7 +387,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         shine.filters = [new pixi_1.BlurFilter(blur)];
         return shine;
     }
-    getCoinCurrencyTextureName(context, win) {
+    getCointAnimationName(context, win) {
         var _a;
         const key = `${(_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency}_${win ? 'GOLD' : 'SILVER'}`;
         switch (key) {

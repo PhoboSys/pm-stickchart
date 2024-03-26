@@ -15,7 +15,7 @@ export default {
     //zoom
     zoom: {
         speed: 100,
-        throttle: 30, // once per frame
+        throttle: 30, // once per 30ms
     },
 
     grid: {

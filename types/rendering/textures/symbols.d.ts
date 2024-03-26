@@ -22,8 +22,6 @@ export declare const PARI_LIGHT_TEXTURE: unique symbol;
 export declare const CHAINLINK_TEXTURE: unique symbol;
 export declare const CLAIM_FRAGMENT_TEXTURE: unique symbol;
 export declare const COIN_SHINE: unique symbol;
-export declare const SILVER_COIN_TEXTURE: unique symbol;
-export declare const GOLD_COIN_TEXTURE: unique symbol;
 export declare const UNKNOWN_CURRENCY_TEXTURE: unique symbol;
 export declare const PARI_GOLD_TEXTURE: unique symbol;
 export declare const PARI_SILVER_TEXTURE: unique symbol;
