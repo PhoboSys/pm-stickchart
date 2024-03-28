@@ -44,8 +44,8 @@ export default {
 
     ui: {
         precision: {
-            erc20: 8,
-            percent: 2,
+            erc20: 3,
+            percent: 1,
         }
     },
 
