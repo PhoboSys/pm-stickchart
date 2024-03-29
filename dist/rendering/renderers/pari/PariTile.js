@@ -875,7 +875,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                         claim.interactive = false;
                 });
             }
-            const [[claimFragment, claimFragmentTimeline], claimFragmentState] = this.get('claimFragment', () => this.createClaimFragment(context, claim.width));
+            const [[claimFragment, claimFragmentTimeline], claimFragmentState] = this.get('claimFragment', () => this.createClaimFragment(claim.width));
             if (claimFragmentState.new) {
                 claimFragmentState.timeline = claimFragmentTimeline;
                 claim.addChild(claimFragment);
@@ -1083,20 +1083,33 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         container.addChild(borderBottom);
         return container;
     }
-    createClaimFragment(context, claimwidth) {
-        const fragmentTexture = context.textures.get(textures_1.CLAIM_FRAGMENT_TEXTURE);
-        const fragment = new pixi_1.Sprite(fragmentTexture);
-        fragment.anchor.set(1, 0);
-        fragment.position.y = 1;
-        const timeline = pixi_1.gsap.timeline().to(fragment, {
-            pixi: { x: claimwidth + fragment.width },
+    createClaimFragment(claimwidth) {
+        const rect = (new pixi_1.Graphics())
+            .beginFill(0xFFFFFF, 0.2)
+            .drawPolygon([
+            27, 0,
+            55, 0,
+            28, 46,
+            0, 46,
+        ])
+            .drawPolygon([
+            66, 0,
+            75, 0,
+            48, 46,
+            39, 46,
+        ])
+            .endFill();
+        rect.pivot.x = rect.width;
+        rect.position.y = 1;
+        const timeline = pixi_1.gsap.timeline().to(rect, {
+            pixi: { x: claimwidth + rect.width },
             delay: 5,
             repeatDelay: 5,
             duration: 1,
             ease: 'none',
             repeat: -1
         });
-        return [fragment, timeline];
+        return [rect, timeline];
     }
     createPropagatingContainer(style) {
         const container = new pixi_1.Container();

@@ -12,7 +12,6 @@ import {
     PARI_TEXTURE,
     USDC_TEXTURE,
     GRADIENT_TEXTURE,
-    CLAIM_FRAGMENT_TEXTURE,
 } from '@rendering/textures'
 
 import { Logger } from '@infra'
@@ -1048,7 +1047,7 @@ export class PariTile extends BaseParisRenderer {
 
             const [[claimFragment, claimFragmentTimeline], claimFragmentState] = this.get(
                 'claimFragment',
-                () => this.createClaimFragment(context, claim.width)
+                () => this.createClaimFragment(claim.width)
             )
             if (claimFragmentState.new) {
                 claimFragmentState.timeline = claimFragmentTimeline
@@ -1386,14 +1385,29 @@ export class PariTile extends BaseParisRenderer {
         return container
     }
 
-    private createClaimFragment(context, claimwidth): [Sprite, gsap.core.Timeline] {
-        const fragmentTexture = context.textures.get(CLAIM_FRAGMENT_TEXTURE)
-        const fragment = new Sprite(fragmentTexture)
-        fragment.anchor.set(1, 0)
-        fragment.position.y = 1
+    private createClaimFragment(claimwidth): [Graphics, gsap.core.Timeline] {
 
-        const timeline = gsap.timeline().to(fragment, {
-            pixi: { x: claimwidth + fragment.width },
+        const rect = (new Graphics())
+            .beginFill(0xFFFFFF, 0.2)
+            .drawPolygon([
+                27, 0,
+                55, 0,
+                28, 46,
+                0, 46,
+            ])
+            .drawPolygon([
+                66, 0,
+                75, 0,
+                48, 46,
+                39, 46,
+            ])
+            .endFill()
+
+        rect.pivot.x = rect.width
+        rect.position.y = 1
+
+        const timeline = gsap.timeline().to(rect, {
+            pixi: { x: claimwidth + rect.width },
             delay: 5,
             repeatDelay: 5,
             duration: 1,
@@ -1401,7 +1415,7 @@ export class PariTile extends BaseParisRenderer {
             repeat: -1
         })
 
-        return [fragment, timeline]
+        return [rect, timeline]
     }
 
     private createPropagatingContainer(style): Container {
