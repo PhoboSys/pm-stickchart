@@ -164,7 +164,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer());
                 if (winningcontainerState.new || gradientresState.new)
                     gradientres.addChild(winningcontainer);
-                const [winninggradient, winninggradientState] = this.get('winninggradient', () => this.createWinningGradient(context, [gradientres.width, 2 * rheight]), [rheight, gradientres.width]);
+                const [winninggradient, winninggradientState] = this.get('winninggradient', () => this.createWinningGradient(context, [width, 2 * rheight]), [rheight, width]);
                 if (winninggradientState.new) {
                     winningcontainer.addChild(winninggradient);
                     winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight);

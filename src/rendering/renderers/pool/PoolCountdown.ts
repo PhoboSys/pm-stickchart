@@ -225,8 +225,8 @@ export class PoolCountdown extends BasePoolsRenderer {
 
                 const [winninggradient, winninggradientState] = this.get(
                     'winninggradient',
-                    () => this.createWinningGradient(context, [gradientres.width, 2*rheight]),
-                    [rheight, gradientres.width]
+                    () => this.createWinningGradient(context, [width, 2*rheight]),
+                    [rheight, width]
                 )
                 if (winninggradientState.new) {
                     winningcontainer.addChild(winninggradient)
