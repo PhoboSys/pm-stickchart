@@ -24,6 +24,7 @@ import {
     PRICE_LINE_TEXTURE,
     LOCK_COUNTDOWN_TEXTURE,
     RESOLUTION_COUNTDOWN_TEXTURE,
+    SHADOW_COUNTDOWN_TEXTURE,
 
     SILVER_LEVEL_TEXTURE,
     GOLD_LEVEL_TEXTURE,
@@ -375,7 +376,28 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [LOCK_COUNTDOWN_TEXTURE]({ width }): RenderTexture {
+    private [LOCK_COUNTDOWN_TEXTURE]({ width, height }): RenderTexture {
+
+        const x0 = 0
+        const y0 = 0
+        const x1 = 0
+        const y1 = height
+
+        const renderer = <Renderer> this.application.renderer
+        const gradient = GradientFactory.createLinearGradient(
+            renderer,
+            RenderTexture.create({ width, height }),
+            {
+                x0, y0,
+                x1, y1,
+                colorStops: config.style.lockCountdown.colors,
+            },
+        )
+
+        return gradient
+    }
+
+    private [SHADOW_COUNTDOWN_TEXTURE]({ width }): RenderTexture {
         const { height } = this.application.screen
 
         const x0 = 0
@@ -390,7 +412,7 @@ export class TextureStorage implements ITextureStorage {
             {
                 x0, y0,
                 x1, y1,
-                colorStops: config.style.lockCountdown.colors,
+                colorStops: config.style.shadowCountdown.colors,
             },
         )
 

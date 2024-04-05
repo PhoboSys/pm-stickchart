@@ -21,14 +21,18 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
     constructor(renderer) {
         super(renderer);
         this.lockGradientStyle = {
-            alpha: 0.33,
-            offset: [0, _config_1.default.style.lockCountdown.padding],
-            radiuses: [24, 0, 0, 24]
+            alpha: 1,
+            offset: [0, _config_1.default.style.lockCountdown.paddingTop],
+            radiuses: [24, 24, 0, 0]
+        };
+        this.shadowGradientStyle = {
+            blur: 5,
+            offset: [0, _config_1.default.style.shadowCountdown.paddingTop + 27],
         };
         this.resolutionGradientStyle = {
             alpha: 1,
             offset: [0, _config_1.default.style.resolutionCountdown.padding],
-            radiuses: [24, 0, 0, 24]
+            radiuses: [16, 16, 0, 0]
         };
         this.winningGradientContainerStyle = {
             alpha: 0,
@@ -36,33 +40,33 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         };
         this.phaseStyle = {
             anchor: [0, 1],
-            offset: [0, 12],
+            offset: [0, 14],
             textstyle: {
                 fill: 0xFFFFFF,
                 fontWeight: 400,
                 fontFamily: 'Gilroy',
                 fontSize: 24,
+                dropShadow: true,
+                dropShadowAlpha: 0.1,
+                dropShadowBlur: 2,
+                dropShadowDistance: 2,
             }
         };
         this.countdownStyle = {
             anchor: [0, 1],
-            offset: [10, 10],
+            offset: [10, 12],
             textstyle: {
                 fill: 0xFFFFFF,
                 fontWeight: 400,
                 fontFamily: 'Gilroy',
                 fontSize: 72,
+                dropShadow: true,
+                dropShadowAlpha: 0.1,
+                dropShadowBlur: 2,
+                dropShadowDistance: 2,
             }
         };
         this.configAnimations = {
-            positioning: {
-                pixi: {
-                    tint: 0xA7E0FF,
-                },
-                duration: 0.5,
-                ease: 'power2.out',
-                new: 'set',
-            },
             locked: {
                 pixi: {
                     tint: 0xA7E0FF,
@@ -102,7 +106,23 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 },
                 duration: 0.5,
                 ease: 'power2.out',
-            }
+            },
+            to_primary_gradient: {
+                pixi: {
+                    y: 0,
+                },
+                new: 'set',
+                duration: 1,
+                ease: 'power2.out',
+            },
+            to_secondary_gradient: {
+                pixi: {
+                    y: 27,
+                },
+                new: 'set',
+                duration: 1,
+                ease: 'power2.out',
+            },
         };
         this.validPariPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
@@ -139,31 +159,56 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { lockDate, startDate, endDate } = pool;
         const { timerange, latestX } = context.plotdata;
         const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, (0, utils_1.nowUnixTS)()], timerange, width);
+        const lockheight = height - this.lockGradientStyle.offset[1];
         const tolockx = Math.max(nowx, openx);
+        const lockwidth = lockx - tolockx;
         if (lockx >= nowx) {
-            const lockheight = height - 2 * this.lockGradientStyle.offset[1];
-            const lockwidth = lockx - tolockx;
-            const [gradientlock, gradientlockState] = this.get('gradientlock', () => this.createGradient(this.lockGradientStyle, [width, lockheight], context.textures.get(textures_1.LOCK_COUNTDOWN_TEXTURE, { width })), [lockheight, width]);
+            const [gradientlock, gradientlockState] = this.get('gradientlock', () => new pixi_1.Container);
             if (gradientlockState.new)
                 container.addChild(gradientlock);
-            gradientlock.position.x = lockx;
-            gradientlock.mask.pivot.x = lockwidth;
+            const [gradientlockMask, gradientlockMaskState] = this.get('gradientlockMask', () => new pixi_1.Graphics);
+            if (gradientlockMaskState.new) {
+                gradientlock.mask = gradientlockMask;
+                gradientlock.addChild(gradientlockMask);
+            }
+            this.updateGradientMask(gradientlockMask, [lockx, 0], [lockwidth, lockheight], this.lockGradientStyle);
+            const gradientheight = 2 * lockheight;
+            const [gradientlockBackground, gradientlockBackgroundState] = this.get('gradientlockBackground', () => this.createGradientBackground(this.lockGradientStyle, [width, gradientheight], context.textures.get(textures_1.LOCK_COUNTDOWN_TEXTURE, { width, height: gradientheight })), [gradientheight, width]);
+            if (gradientlockBackgroundState.new)
+                gradientlock.addChild(gradientlockBackground);
+            gradientlockBackground.position.x = lockx;
+            const fullLockwidth = lockx - openx;
+            gradientlockBackground.position.y = -((gradientheight - lockheight) - lockwidth * (gradientheight - lockheight) / fullLockwidth);
         }
         else {
             this.clear('gradientlock');
         }
         if (rx >= latestX) {
-            const rheight = height - 2 * this.resolutionGradientStyle.offset[1];
+            const rheight = height - this.resolutionGradientStyle.offset[1];
             const torx = Math.max(latestX, lockx);
             const rwidth = rx - torx;
-            const [gradientres, gradientresState] = this.get('gradientres', () => this.createGradient(this.resolutionGradientStyle, [width, rheight], context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE, { width })), [rheight, width]);
+            const [gradientres, gradientresState] = this.get('gradientres', () => new pixi_1.Container);
             if (gradientresState.new)
                 container.addChild(gradientres);
+            if (nowx >= lockx)
+                this.animate('gradientres', 'to_primary_gradient');
+            else
+                this.animate('gradientres', 'to_secondary_gradient');
+            const [gradientresMask, gradientresMaskState] = this.get('gradientresMask', () => new pixi_1.Graphics);
+            if (gradientresMaskState.new) {
+                gradientres.mask = gradientresMask;
+                gradientres.addChild(gradientresMask);
+            }
+            this.updateGradientMask(gradientresMask, [rx, 0], [rwidth, rheight], this.resolutionGradientStyle);
+            const [gradientresBackground, gradientresBackgroundState] = this.get('gradientresBackground', () => this.createGradientBackground(this.resolutionGradientStyle, [width, rheight], context.textures.get(textures_1.RESOLUTION_COUNTDOWN_TEXTURE, { width })), [rheight, width]);
+            if (gradientresBackgroundState.new)
+                gradientres.addChild(gradientresBackground);
+            gradientresBackground.position.x = rx;
             const resolution = this.getPoolResolution(pool, context);
             if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions)) {
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer());
-                if (winningcontainerState.new || gradientresState.new)
-                    gradientres.addChild(winningcontainer);
+                if (winningcontainerState.new || gradientresBackgroundState.new)
+                    gradientresBackground.addChild(winningcontainer);
                 const [winninggradient, winninggradientState] = this.get('winninggradient', () => this.createWinningGradient(context, [width, 2 * rheight]), [rheight, width]);
                 if (winninggradientState.new) {
                     winningcontainer.addChild(winninggradient);
@@ -189,13 +234,23 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 this.clear('winningcontainer');
                 this.clear('winninggradient');
             }
-            gradientres.position.x = rx;
-            gradientres.mask.pivot.x = rwidth;
         }
         else {
             this.clear('winningcontainer');
             this.clear('winninggradient');
             this.clear('gradientres');
+        }
+        if (lockx >= nowx) {
+            const [gradientlockShadow, gradientlockShadowState] = this.get('gradientlockShadow', () => this.createGradientShadow(context, [width, lockheight]), [lockheight, width]);
+            if (gradientlockShadowState.new)
+                container.addChild(gradientlockShadow);
+            gradientlockShadow.position.x = lockx;
+            const gradientlockShadowBG = gradientlockShadow.getChildAt(0);
+            gradientlockShadowBG.width = lockwidth;
+            gradientlockShadow.mask.width = lockwidth - 1;
+        }
+        else {
+            this.clear('gradientlockShadow');
         }
     }
     createWinningContainer() {
@@ -226,20 +281,38 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             ease: 'power1.inOut',
         });
     }
-    createGradient(style, [width, height], texture) {
-        const group = new pixi_1.Container();
-        const gradient = _rendering_1.GraphicUtils.createRoundedRect(style.offset, [width, height], style.radiuses, { texture });
-        group.addChild(gradient);
-        const mask = gradient.clone();
-        group.addChild(mask);
-        group.pivot.x = width;
-        mask.position.x = width;
-        gradient.alpha = style.alpha;
-        group.mask = mask;
-        return group;
+    createGradientBackground(style, [width, height], texture) {
+        const { offset: [ofx, ofy] } = style;
+        const background = (new pixi_1.Graphics())
+            .beginTextureFill({ texture, alpha: style.alpha })
+            .drawRect(ofx, ofy, width, height)
+            .endFill();
+        background.pivot.x = width;
+        return background;
+    }
+    createGradientShadow(context, [width, height]) {
+        const container = new pixi_1.Container();
+        const { offset: [ofx, ofy] } = this.shadowGradientStyle;
+        const texture = context.textures.get(textures_2.SHADOW_COUNTDOWN_TEXTURE, { width, height });
+        const shadow = (new pixi_1.Graphics())
+            .beginTextureFill({ texture })
+            .drawRect(ofx, ofy, width, height)
+            .endFill();
+        const mask = shadow.clone();
+        container.mask = mask;
+        container.addChild(shadow, mask);
+        return container;
+    }
+    updateGradientMask(rect, offset, [width, height], style) {
+        const radiuses = style.radiuses.map((radius) => Math.min(width / 2, radius));
+        rect.clear();
+        const mask = _rendering_1.GraphicUtils.createRoundedRect(style.offset, [width, height], radiuses, { color: 0xFFFFFF }, rect);
+        mask.position.set(...offset);
+        mask.pivot.x = width;
+        return mask;
     }
     updateText(pool, context, container) {
-        const { lockDate, endDate, poolid } = pool;
+        const { startDate, lockDate, endDate, poolid } = pool;
         const { latestX, latestY, } = context.plotdata;
         const x = latestX;
         const y = latestY;
@@ -280,8 +353,11 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             this.animate('countdowntext', 'locked');
         }
         else {
-            this.animate('phasetext', 'positioning');
-            this.animate('countdowntext', 'positioning');
+            const offset = 1 - (lockDate - now) / (lockDate - startDate);
+            const hexColor = (0, utils_1.interpolateColorHex)(_config_1.default.style.lockCountdown.textColors, offset);
+            const tint = parseInt(hexColor.slice(1), 16);
+            phasetext.tint = tint;
+            countdowntext.tint = tint;
         }
         if (textgroupstate.animation !== 'hover_text')
             this.animate('textgroup', 'unhover_text');

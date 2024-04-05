@@ -108,7 +108,15 @@ declare const _default: {
                 color: string;
                 offset: number;
             }[];
-            padding: number;
+            textColors: string[];
+            paddingTop: number;
+        };
+        shadowCountdown: {
+            colors: {
+                color: string;
+                offset: number;
+            }[];
+            paddingTop: number;
         };
         winningCountdown: {
             colors: {

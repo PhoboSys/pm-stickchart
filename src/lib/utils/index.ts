@@ -166,3 +166,43 @@ export function binarySearchNearest<T = number | string>(
 
     return index
 }
+
+function hexToRgb(hex): { r: number, g: number, b: number } {
+    const bigint = parseInt(hex.slice(1), 16)
+
+    return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+    }
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
+
+export function interpolateColorHex(
+    [startColor, endColor]: [string, string],
+    offset: number
+): string {
+
+    if (offset <= 0) return startColor
+    if (offset >= 1) return endColor
+
+    const startRGB = hexToRgb(startColor)
+    const endRGB = hexToRgb(endColor)
+
+    const interpolatedColor = {
+        r: Math.round(startRGB.r + (endRGB.r - startRGB.r) * offset),
+        g: Math.round(startRGB.g + (endRGB.g - startRGB.g) * offset),
+        b: Math.round(startRGB.b + (endRGB.b - startRGB.b) * offset)
+    }
+
+    const interpolatedHex = rgbToHex(
+        interpolatedColor.r,
+        interpolatedColor.g,
+        interpolatedColor.b,
+    )
+
+    return interpolatedHex
+}

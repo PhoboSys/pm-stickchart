@@ -254,7 +254,20 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.LOCK_COUNTDOWN_TEXTURE]({ width }) {
+    [symbols_1.LOCK_COUNTDOWN_TEXTURE]({ width, height }) {
+        const x0 = 0;
+        const y0 = 0;
+        const x1 = 0;
+        const y1 = height;
+        const renderer = this.application.renderer;
+        const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
+            x0, y0,
+            x1, y1,
+            colorStops: _config_1.default.style.lockCountdown.colors,
+        });
+        return gradient;
+    }
+    [symbols_1.SHADOW_COUNTDOWN_TEXTURE]({ width }) {
         const { height } = this.application.screen;
         const x0 = 0;
         const y0 = 0;
@@ -264,7 +277,7 @@ class TextureStorage {
         const gradient = pixi_1.GradientFactory.createLinearGradient(renderer, pixi_1.RenderTexture.create({ width, height }), {
             x0, y0,
             x1, y1,
-            colorStops: _config_1.default.style.lockCountdown.colors,
+            colorStops: _config_1.default.style.shadowCountdown.colors,
         });
         return gradient;
     }

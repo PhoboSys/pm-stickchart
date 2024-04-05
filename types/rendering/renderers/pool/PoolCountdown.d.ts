@@ -4,6 +4,7 @@ import { BasePoolsRenderer } from './BasePoolsRenderer';
 export declare class PoolCountdown extends BasePoolsRenderer {
     static readonly POOL_LOCK_COUNTDOWN_ID: symbol;
     private readonly lockGradientStyle;
+    private readonly shadowGradientStyle;
     private readonly resolutionGradientStyle;
     private readonly winningGradientContainerStyle;
     private readonly phaseStyle;
@@ -21,8 +22,10 @@ export declare class PoolCountdown extends BasePoolsRenderer {
     protected createWinningContainer(): Container;
     protected createWinningGradient(context: any, [width, height]: [any, any]): Container;
     protected createWinningGradientTimeline(gradient: any, height: any): gsap.core.Timeline;
-    protected createGradient(style: any, [width, height]: [any, any], texture: any): {
+    protected createGradientBackground(style: any, [width, height]: [any, any], texture: any): Graphics;
+    protected createGradientShadow(context: any, [width, height]: [any, any]): {
         mask: Graphics;
-    } & Container;
+    } & Graphics;
+    protected updateGradientMask(rect: any, offset: any, [width, height]: [any, any], style: any): Graphics;
     protected updateText(pool: any, context: RenderingContext, container: Container): void;
 }
