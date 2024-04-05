@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.binarySearchNearest = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
+exports.interpolateColorHex = exports.binarySearchNearest = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
@@ -140,4 +140,31 @@ function binarySearchNearest(data, value, larger) {
     return index;
 }
 exports.binarySearchNearest = binarySearchNearest;
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+    };
+}
+function rgbToHex(r, g, b) {
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+function interpolateColorHex([startColor, endColor], offset) {
+    if (offset <= 0)
+        return startColor;
+    if (offset >= 1)
+        return endColor;
+    const startRGB = hexToRgb(startColor);
+    const endRGB = hexToRgb(endColor);
+    const interpolatedColor = {
+        r: Math.round(startRGB.r + (endRGB.r - startRGB.r) * offset),
+        g: Math.round(startRGB.g + (endRGB.g - startRGB.g) * offset),
+        b: Math.round(startRGB.b + (endRGB.b - startRGB.b) * offset)
+    };
+    const interpolatedHex = rgbToHex(interpolatedColor.r, interpolatedColor.g, interpolatedColor.b);
+    return interpolatedHex;
+}
+exports.interpolateColorHex = interpolateColorHex;
 //# sourceMappingURL=index.js.map

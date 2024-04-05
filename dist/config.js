@@ -115,10 +115,19 @@ exports.default = {
         ],
         lockCountdown: {
             colors: [
-                { color: '#7CD0FFFF', offset: 0 },
-                { color: '#7CD0FF80', offset: 1 },
+                { color: '#FEDF85', offset: 0 },
+                { color: '#D35439', offset: 0.73 },
+                { color: '#D35439', offset: 1 },
             ],
-            padding: 50,
+            textColors: ['#FEDF85', '#D35439'],
+            paddingTop: 24,
+        },
+        shadowCountdown: {
+            colors: [
+                { color: '#00000066', offset: 0 },
+                { color: '#00000000', offset: 1 },
+            ],
+            paddingTop: 24,
         },
         winningCountdown: {
             colors: [
@@ -129,14 +138,14 @@ exports.default = {
                 { color: '#F7C15B00', offset: 0.9 },
                 { color: '#F7C15B00', offset: 1 },
             ],
-            padding: 25,
+            padding: 24,
         },
         resolutionCountdown: {
             colors: [
                 { color: '#1F50F7FF', offset: 0 },
                 { color: '#1F50F7BF', offset: 1 },
             ],
-            padding: 25,
+            padding: 24,
         },
         levels: {
             bronzeLineColor: 0xFFFFFF,
