@@ -5,7 +5,7 @@ import { WINNING_COUNTDOWN_TEXTURE, SHADOW_COUNTDOWN_TEXTURE } from '@rendering/
 import config from '@config'
 import datamath from '@lib/datamath'
 import { Container, Graphics, gsap } from '@lib/pixi'
-import { interpolateColorHex, nowUnixTS } from '@lib/utils'
+import { nowUnixTS } from '@lib/utils'
 import ui from '@lib/ui'
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 import { EPosition } from '@enums'
@@ -69,6 +69,14 @@ export class PoolCountdown extends BasePoolsRenderer {
     }
 
     private configAnimations: any = {
+        positioning: {
+            pixi: {
+                tint: 0xFFEBC7,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            new: 'set',
+        },
         locked: {
             pixi: {
                 tint: 0xA7E0FF,
@@ -121,6 +129,21 @@ export class PoolCountdown extends BasePoolsRenderer {
             pixi: {
                 y: 27,
             },
+            new: 'set',
+            duration: 1,
+            ease: 'power2.out',
+        },
+        flickering: {
+            pixi: { alpha: 0.5 },
+            duration: 0.5,
+            ease: 'power2.out',
+            repeat: -1,
+            yoyo: true,
+            yoyoEase: 'power2.out',
+        },
+        hushed: {
+            pixi: { alpha: 0.5 },
+            clear: true,
             new: 'set',
             duration: 1,
             ease: 'power2.out',
@@ -197,7 +220,9 @@ export class PoolCountdown extends BasePoolsRenderer {
         const { lockDate, startDate, endDate } = pool
         const { timerange, latestX } = context.plotdata
 
-        const [openx, lockx, rx, nowx] = datamath.scale([startDate, lockDate, endDate, nowUnixTS()], timerange, width)
+        const now = nowUnixTS()
+        const locked = now >= lockDate
+        const [openx, lockx, rx, nowx] = datamath.scale([startDate, lockDate, endDate, now], timerange, width)
 
         const lockheight = height - this.lockGradientStyle.offset[1]
         const tolockx = Math.max(nowx, openx)
@@ -230,6 +255,10 @@ export class PoolCountdown extends BasePoolsRenderer {
             const fullLockwidth = lockx-openx
             gradientlockBackground.position.y = -((gradientheight-lockheight) - lockwidth*(gradientheight-lockheight)/fullLockwidth)
 
+            const secondsToLock = lockDate - now
+            if (secondsToLock <= context.options.positioningHushedAt) this.animate('gradientlock', 'hushed')
+            else if (secondsToLock <= context.options.positioningFlickeringAt) this.animate('gradientlock', 'flickering')
+
         } else {
             this.clear('gradientlock')
         }
@@ -241,7 +270,7 @@ export class PoolCountdown extends BasePoolsRenderer {
 
             const [gradientres, gradientresState] = this.get('gradientres', () => new Container)
             if (gradientresState.new) container.addChild(gradientres)
-            if (nowx >= lockx) this.animate('gradientres', 'to_primary_gradient')
+            if (locked) this.animate('gradientres', 'to_primary_gradient')
             else this.animate('gradientres', 'to_secondary_gradient')
 
             const [gradientresMask, gradientresMaskState] = this.get('gradientresMask', () => new Graphics)
@@ -264,7 +293,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             gradientresBackground.position.x = rx
 
             const resolution = this.getPoolResolution(pool, context)
-            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions)) {
+            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions) && locked) {
 
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer())
                 if (winningcontainerState.new || gradientresBackgroundState.new) gradientresBackground.addChild(winningcontainer)
@@ -416,7 +445,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         container: Container,
     ): void {
 
-        const { startDate, lockDate, endDate, poolid } = pool
+        const { poolid, lockDate, endDate } = pool
 
         const {
             latestX,
@@ -442,10 +471,13 @@ export class PoolCountdown extends BasePoolsRenderer {
 
         const [textgroup, textgroupstate] = this.get('textgroup', () => new Container())
         if (textgroupstate.new) {
-            textgroup.alpha = 0
             textgroup.zIndex = 3
             container.addChild(textgroup)
         }
+
+        const secondsToLock = lockDate - now
+        if (!locked && secondsToLock <= context.options.positioningHushedAt) this.animate('textgroup', 'hushed')
+        else if (!locked && secondsToLock <= context.options.positioningFlickeringAt) this.animate('textgroup', 'flickering')
 
         const [countdowntext, countdownstate] = this.get('countdowntext',
             () => GraphicUtils.createText(
@@ -483,32 +515,28 @@ export class PoolCountdown extends BasePoolsRenderer {
             this.animate('phasetext', 'locked')
             this.animate('countdowntext', 'locked')
         } else {
-            const offset = 1 - (lockDate - now)/(lockDate - startDate)
-            const hexColor = interpolateColorHex(
-                <[string, string]>config.style.lockCountdown.textColors,
-                offset
-            )
-            const tint = parseInt(hexColor.slice(1), 16)
-            phasetext.tint = tint
-            countdowntext.tint = tint
+            this.animate('phasetext', 'positioning')
+            this.animate('countdowntext', 'positioning')
         }
 
-        if (textgroupstate.animation !== 'hover_text') this.animate('textgroup', 'unhover_text')
+        if (locked) {
+            if (textgroupstate.animation !== 'hover_text') this.animate('textgroup', 'unhover_text')
 
-        if (!textgroupstate.subscribed) {
-            textgroupstate.subscribed = true
-            context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
-                if (e.poolid !== poolid) return
+            if (!textgroupstate.subscribed) {
+                textgroupstate.subscribed = true
+                context.eventTarget.addEventListener('poolhover', (e: PoolHoverEvent) => {
+                    if (e.poolid !== poolid) return
 
-                this.rebind(poolid)
-                this.animate('textgroup', 'hover_text')
-            })
-            context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
-                if (e.poolid !== poolid) return
+                    this.rebind(poolid)
+                    this.animate('textgroup', 'hover_text')
+                })
+                context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
+                    if (e.poolid !== poolid) return
 
-                this.rebind(poolid)
-                this.animate('textgroup', 'unhover_text')
-            })
+                    this.rebind(poolid)
+                    this.animate('textgroup', 'unhover_text')
+                })
+            }
         }
     }
 }

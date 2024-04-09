@@ -14,6 +14,7 @@ import { Timeframe } from '@lib/timeframe'
 
 import { RenderingPipelineFactory, RenderingContext } from '@rendering'
 import { TextureStorage, GraphicStorage } from '@rendering'
+import { createOptions, Options } from '@options'
 
 export class StickChart extends EventTarget {
 
@@ -32,9 +33,11 @@ export class StickChart extends EventTarget {
     private timeframe: Timeframe
 
     constructor(
-        private stageElement: HTMLElement
+        private stageElement: HTMLElement,
+        private options? : Options,
     ) {
         super()
+
         this.application = new Application({
             resizeTo: stageElement,
             antialias: config.antialias,
@@ -162,6 +165,7 @@ export class StickChart extends EventTarget {
             this.timeframe.now(DataBuilder.getLatestTS(chartdata)).get()
         )
         const features = createFeatures(context.features)
+        const options = createOptions(this.options)
 
         const ctx: RenderingContext = {
             metapool: context.metapool,
@@ -183,6 +187,8 @@ export class StickChart extends EventTarget {
             chartdata,
             plotdata,
             features,
+
+            options,
         }
 
         if (context.metapool.metapoolid !== this._context?.metapool.metapoolid) {

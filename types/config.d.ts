@@ -108,7 +108,6 @@ declare const _default: {
                 color: string;
                 offset: number;
             }[];
-            textColors: string[];
             paddingTop: number;
         };
         shadowCountdown: {
@@ -159,6 +158,10 @@ declare const _default: {
     features: {
         rectungedPriceLine: boolean;
         curvedResolutionLines: boolean;
+    };
+    limit: {
+        positioningFlickering: number;
+        positioningHushed: number;
     };
 };
 export default _default;

@@ -14,10 +14,12 @@ const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const _rendering_1 = require("./rendering/index.js");
 const _rendering_2 = require("./rendering/index.js");
+const _options_1 = require("./options/index.js");
 class StickChart extends EventTarget {
-    constructor(stageElement) {
+    constructor(stageElement, options) {
         super();
         this.stageElement = stageElement;
+        this.options = options;
         this.application = new pixi_1.Application({
             resizeTo: stageElement,
             antialias: _config_1.default.antialias,
@@ -107,6 +109,7 @@ class StickChart extends EventTarget {
         const chartdata = _chartdata_1.DataBuilder.chartdata(context.chartdata);
         const plotdata = _chartdata_1.DataBuilder.plotdata(chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(chartdata)).get());
         const features = (0, _features_1.createFeatures)(context.features);
+        const options = (0, _options_1.createOptions)(this.options);
         const ctx = {
             metapool: context.metapool,
             pools: context.pools,
@@ -126,6 +129,7 @@ class StickChart extends EventTarget {
             chartdata,
             plotdata,
             features,
+            options,
         };
         if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
             // clear context if metapoolid changed
