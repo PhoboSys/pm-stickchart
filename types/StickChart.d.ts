@@ -1,8 +1,10 @@
 import { ChartData, Bettor } from '@chartdata';
 import { EChartType } from '@enums';
 import { Features } from '@features';
+import { Options } from '@options';
 export declare class StickChart extends EventTarget {
     private stageElement;
+    private options?;
     private application;
     private eventsProducer;
     private pipelineFactory;
@@ -10,7 +12,7 @@ export declare class StickChart extends EventTarget {
     private morphController;
     private _context;
     private timeframe;
-    constructor(stageElement: HTMLElement);
+    constructor(stageElement: HTMLElement, options?: Options | undefined);
     setScreenSize({ width, height }: {
         width: any;
         height: any;

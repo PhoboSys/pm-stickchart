@@ -67,6 +67,14 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             }
         };
         this.configAnimations = {
+            positioning: {
+                pixi: {
+                    tint: 0xFFEBC7,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
+                new: 'set',
+            },
             locked: {
                 pixi: {
                     tint: 0xA7E0FF,
@@ -123,6 +131,21 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 duration: 1,
                 ease: 'power2.out',
             },
+            flickering: {
+                pixi: { alpha: 0.5 },
+                duration: 0.5,
+                ease: 'power2.out',
+                repeat: -1,
+                yoyo: true,
+                yoyoEase: 'power2.out',
+            },
+            hushed: {
+                pixi: { alpha: 0.5 },
+                clear: true,
+                new: 'set',
+                duration: 1,
+                ease: 'power2.out',
+            },
         };
         this.validPariPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
@@ -158,7 +181,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { width, height, } = context.screen;
         const { lockDate, startDate, endDate } = pool;
         const { timerange, latestX } = context.plotdata;
-        const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, (0, utils_1.nowUnixTS)()], timerange, width);
+        const now = (0, utils_1.nowUnixTS)();
+        const locked = now >= lockDate;
+        const [openx, lockx, rx, nowx] = datamath_1.default.scale([startDate, lockDate, endDate, now], timerange, width);
         const lockheight = height - this.lockGradientStyle.offset[1];
         const tolockx = Math.max(nowx, openx);
         const lockwidth = lockx - tolockx;
@@ -179,6 +204,11 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             gradientlockBackground.position.x = lockx;
             const fullLockwidth = lockx - openx;
             gradientlockBackground.position.y = -((gradientheight - lockheight) - lockwidth * (gradientheight - lockheight) / fullLockwidth);
+            const secondsToLock = lockDate - now;
+            if (secondsToLock <= context.options.positioningHushedAt)
+                this.animate('gradientlock', 'hushed');
+            else if (secondsToLock <= context.options.positioningFlickeringAt)
+                this.animate('gradientlock', 'flickering');
         }
         else {
             this.clear('gradientlock');
@@ -190,7 +220,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             const [gradientres, gradientresState] = this.get('gradientres', () => new pixi_1.Container);
             if (gradientresState.new)
                 container.addChild(gradientres);
-            if (nowx >= lockx)
+            if (locked)
                 this.animate('gradientres', 'to_primary_gradient');
             else
                 this.animate('gradientres', 'to_secondary_gradient');
@@ -205,7 +235,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
                 gradientres.addChild(gradientresBackground);
             gradientresBackground.position.x = rx;
             const resolution = this.getPoolResolution(pool, context);
-            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions)) {
+            if (pool.openPriceValue && pool.openPriceTimestamp && (resolution in this.validPariPositions) && locked) {
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer());
                 if (winningcontainerState.new || gradientresBackgroundState.new)
                     gradientresBackground.addChild(winningcontainer);
@@ -312,7 +342,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         return mask;
     }
     updateText(pool, context, container) {
-        const { startDate, lockDate, endDate, poolid } = pool;
+        const { poolid, lockDate, endDate } = pool;
         const { latestX, latestY, } = context.plotdata;
         const x = latestX;
         const y = latestY;
@@ -329,10 +359,14 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         }
         const [textgroup, textgroupstate] = this.get('textgroup', () => new pixi_1.Container());
         if (textgroupstate.new) {
-            textgroup.alpha = 0;
             textgroup.zIndex = 3;
             container.addChild(textgroup);
         }
+        const secondsToLock = lockDate - now;
+        if (!locked && secondsToLock <= context.options.positioningHushedAt)
+            this.animate('textgroup', 'hushed');
+        else if (!locked && secondsToLock <= context.options.positioningFlickeringAt)
+            this.animate('textgroup', 'flickering');
         const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));
         if (countdownstate.new)
             textgroup.addChild(countdowntext);
@@ -353,28 +387,27 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             this.animate('countdowntext', 'locked');
         }
         else {
-            const offset = 1 - (lockDate - now) / (lockDate - startDate);
-            const hexColor = (0, utils_1.interpolateColorHex)(_config_1.default.style.lockCountdown.textColors, offset);
-            const tint = parseInt(hexColor.slice(1), 16);
-            phasetext.tint = tint;
-            countdowntext.tint = tint;
+            this.animate('phasetext', 'positioning');
+            this.animate('countdowntext', 'positioning');
         }
-        if (textgroupstate.animation !== 'hover_text')
-            this.animate('textgroup', 'unhover_text');
-        if (!textgroupstate.subscribed) {
-            textgroupstate.subscribed = true;
-            context.eventTarget.addEventListener('poolhover', (e) => {
-                if (e.poolid !== poolid)
-                    return;
-                this.rebind(poolid);
-                this.animate('textgroup', 'hover_text');
-            });
-            context.eventTarget.addEventListener('poolunhover', (e) => {
-                if (e.poolid !== poolid)
-                    return;
-                this.rebind(poolid);
+        if (locked) {
+            if (textgroupstate.animation !== 'hover_text')
                 this.animate('textgroup', 'unhover_text');
-            });
+            if (!textgroupstate.subscribed) {
+                textgroupstate.subscribed = true;
+                context.eventTarget.addEventListener('poolhover', (e) => {
+                    if (e.poolid !== poolid)
+                        return;
+                    this.rebind(poolid);
+                    this.animate('textgroup', 'hover_text');
+                });
+                context.eventTarget.addEventListener('poolunhover', (e) => {
+                    if (e.poolid !== poolid)
+                        return;
+                    this.rebind(poolid);
+                    this.animate('textgroup', 'unhover_text');
+                });
+            }
         }
     }
 }

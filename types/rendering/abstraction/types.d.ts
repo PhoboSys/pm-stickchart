@@ -1,11 +1,13 @@
 import { Bettor, PlotData } from '@chartdata';
 import { Features } from '@features';
+import { Options } from '@options';
 import { Rectangle } from '../../lib/pixi';
 import { Timeframe } from '../../lib/timeframe';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '@enums';
 export type DoneFunction = () => void;
 export type RenderingContext = {
+    options: Options;
     metapool: any;
     pools: any[];
     paris: any[];

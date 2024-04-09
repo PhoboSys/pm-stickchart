@@ -55,6 +55,12 @@
       "@features": [
         "src/features/index.ts"
       ],
+      "@options/*": [
+        "src/options/*"
+      ],
+      "@options": [
+        "src/options/index.ts"
+      ],
     },
     "jsx": "react"
   },

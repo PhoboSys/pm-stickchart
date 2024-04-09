@@ -124,11 +124,10 @@ export default {
         ],
         lockCountdown: {
             colors: [
-                { color: '#FEDF85', offset: 0 },
-                { color: '#D35439', offset: 0.73 },
-                { color: '#D35439', offset: 1 },
+                { color: '#FEBF85', offset: 0 },
+                { color: '#F07E77', offset: 0.73 },
+                { color: '#F07E77', offset: 1 },
             ],
-            textColors: ['#FEDF85', '#D35439'],
             paddingTop: 24,
         },
         shadowCountdown: {
@@ -191,4 +190,9 @@ export default {
         rectungedPriceLine: false,
         curvedResolutionLines: false,
     },
+
+    limit: {
+        positioningFlickering: 15,
+        positioningHushed: 7,
+    }
 }
