@@ -43,6 +43,22 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             won: Object.assign(Object.assign({}, this.baseLineStyle), { color: _config_1.default.style.linearresolution.won }),
         };
         this.configAnimations = {
+            circlein: {
+                pixi: {
+                    alpha: 1,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
+                clear: true,
+            },
+            circleout: {
+                pixi: {
+                    alpha: 0,
+                },
+                duration: 0.3,
+                ease: 'power2.out',
+                delay: 0.2,
+            },
             fadein: {
                 pixi: {
                     alpha: 1,
@@ -53,7 +69,7 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             },
             fadeout: {
                 pixi: {
-                    alpha: 0.7,
+                    alpha: 0.8,
                 },
                 duration: 0.3,
                 ease: 'power2.out',
@@ -97,19 +113,25 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
                         return;
                     this.rebind(poolid);
                     this.animate('group', 'fadein');
+                    this.animate('openpoint', 'circlein');
+                    this.animate('respoint', 'circlein');
                 });
                 context.eventTarget.addEventListener('poolunhover', (e) => {
                     if (e.poolid !== poolid)
                         return;
                     this.rebind(poolid);
                     this.animate('group', 'fadeout');
+                    this.animate('openpoint', 'circleout');
+                    this.animate('respoint', 'circleout');
                 });
             }
             if (groupstate.new) {
-                group.alpha = 0.7;
+                group.alpha = 0.8;
             }
             else if (groupstate.animation !== 'fadein') {
                 this.animate('group', 'fadeout');
+                this.animate('openpoint', 'circleout');
+                this.animate('respoint', 'circleout');
             }
         }
         return [group, groupstate];
@@ -149,11 +171,14 @@ class PoolResolutionLine extends BasePoolsRenderer_1.BasePoolsRenderer {
             container.addChild(line);
             line.zIndex = style.zIndex;
         }
+        const radius = style.width / 4;
         line
             .clear()
             .lineStyle(style)
+            .drawCircle(x1, y1, radius)
             .moveTo(x1, y1)
-            .lineTo(x2, y2);
+            .lineTo(x2, y2)
+            .drawCircle(x2, y2, radius);
     }
     createPricePoint(style) {
         const inner = _rendering_1.GraphicUtils.createCircle([0, 0], style.inner, { color: style.innerColor, alpha: style.innerAlpha });

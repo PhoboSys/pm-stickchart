@@ -96,6 +96,22 @@ export class PoolResolutionLine extends BasePoolsRenderer {
     }
 
     private configAnimations: any = {
+        circlein: {
+            pixi: {
+                alpha: 1,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            clear: true,
+        },
+        circleout: {
+            pixi: {
+                alpha: 0,
+            },
+            duration: 0.3,
+            ease: 'power2.out',
+            delay: 0.2,
+        },
         fadein: {
             pixi: {
                 alpha: 1,
@@ -106,7 +122,7 @@ export class PoolResolutionLine extends BasePoolsRenderer {
         },
         fadeout: {
             pixi: {
-                alpha: 0.7,
+                alpha: 0.8,
             },
             duration: 0.3,
             ease: 'power2.out',
@@ -164,19 +180,25 @@ export class PoolResolutionLine extends BasePoolsRenderer {
 
                     this.rebind(poolid)
                     this.animate('group', 'fadein')
+                    this.animate('openpoint', 'circlein')
+                    this.animate('respoint', 'circlein')
                 })
                 context.eventTarget.addEventListener('poolunhover', (e: PoolUnhoverEvent) => {
                     if (e.poolid !== poolid) return
 
                     this.rebind(poolid)
                     this.animate('group', 'fadeout')
+                    this.animate('openpoint', 'circleout')
+                    this.animate('respoint', 'circleout')
                 })
             }
 
             if (groupstate.new) {
-                group.alpha = 0.7
+                group.alpha = 0.8
             } else if (groupstate.animation !== 'fadein') {
                 this.animate('group', 'fadeout')
+                this.animate('openpoint', 'circleout')
+                this.animate('respoint', 'circleout')
             }
         }
 
@@ -256,11 +278,14 @@ export class PoolResolutionLine extends BasePoolsRenderer {
             line.zIndex = style.zIndex
         }
 
+        const radius = style.width / 4
         line
             .clear()
             .lineStyle(style)
+            .drawCircle(x1, y1, radius)
             .moveTo(x1, y1)
             .lineTo(x2, y2)
+            .drawCircle(x2, y2, radius)
     }
 
     private createPricePoint(style: any): Container {
