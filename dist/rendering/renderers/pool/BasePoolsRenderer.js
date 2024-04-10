@@ -113,8 +113,6 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
             const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (latest.timestamp > pool.openPriceTimestamp)
                 return latest;
-            if (latest.timestamp < pool.endDate)
-                return latest;
             return null;
         }
         const isResolveReady = !pool.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]);
@@ -141,13 +139,13 @@ class BasePoolsRenderer extends _rendering_1.BaseRenderer {
         const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
         if (latest.timestamp <= pool.openPriceTimestamp)
             return null;
-        if (pool.endDate > latest.timestamp)
+        if (latest.timestamp < pool.endDate)
             return latest;
         return this.getPoolResolutionPriceFormPricefeed(pool.endDate, context.chartdata);
     }
     getPoolResolutionPriceFormPricefeed(endDate, chartdata) {
         const { timestamps, prices } = chartdata;
-        const index = (0, utils_1.binarySearchNearest)(timestamps, endDate);
+        const index = (0, utils_1.binarySearchNearest)(timestamps, endDate - 1);
         if (index === -1)
             return null;
         return {
