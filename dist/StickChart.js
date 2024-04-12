@@ -12,6 +12,7 @@ const _features_1 = require("./features/index.js");
 const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
+const fontsready_1 = require("./lib/fontsready");
 const _rendering_1 = require("./rendering/index.js");
 const _rendering_2 = require("./rendering/index.js");
 const _options_1 = require("./options/index.js");
@@ -31,6 +32,7 @@ class StickChart extends EventTarget {
             backgroundAlpha: _config_1.default.style.backgroundAlpha,
         });
         this.application.renderer.addSystem(pixi_1.EventSystem, 'events');
+        this.fontsready = new fontsready_1.FontsReady();
         this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new _rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
@@ -136,16 +138,26 @@ class StickChart extends EventTarget {
             this._context = null;
             this.timeframe.reset();
         }
-        window.requestAnimationFrame(() => {
-            if (!this._context || !_config_1.default.morph) {
-                pipeline.render(ctx, () => _infra_1.Logger.info('render', ctx.plotdata.latest.timestamp));
-            }
-            else {
-                this.morphController.morph(this._context.chartdata, ctx.chartdata);
-            }
-            // save latest rendered context
-            this._context = ctx;
-        });
+        if (!this.fontsready.succeed && !this.fontsready.inprogress) {
+            this.fontsready.load().then(() => {
+                window.requestAnimationFrame(() => {
+                    pipeline.render(ctx, () => _infra_1.Logger.info('render', ctx.plotdata.latest.timestamp));
+                    this._context = ctx;
+                });
+            });
+        }
+        if (this.fontsready.succeed) {
+            window.requestAnimationFrame(() => {
+                if (!this._context || !_config_1.default.morph) {
+                    pipeline.render(ctx, () => _infra_1.Logger.info('render', ctx.plotdata.latest.timestamp));
+                }
+                else {
+                    this.morphController.morph(this._context.chartdata, ctx.chartdata);
+                }
+                // save latest rendered context
+                this._context = ctx;
+            });
+        }
     }
     destroy() {
         this.application.destroy();
