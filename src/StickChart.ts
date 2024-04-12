@@ -11,6 +11,7 @@ import { Features } from '@features'
 import MorphController from '@lib/morph'
 import { Application, EventSystem } from '@lib/pixi'
 import { Timeframe } from '@lib/timeframe'
+import { FontsReady } from '@lib/fontsready'
 
 import { RenderingPipelineFactory, RenderingContext } from '@rendering'
 import { TextureStorage, GraphicStorage } from '@rendering'
@@ -32,6 +33,8 @@ export class StickChart extends EventTarget {
 
     private timeframe: Timeframe
 
+    private fontsready: FontsReady
+
     constructor(
         private stageElement: HTMLElement,
         private options? : Options,
@@ -52,6 +55,7 @@ export class StickChart extends EventTarget {
 
         this.application.renderer.addSystem(EventSystem, 'events')
 
+        this.fontsready = new FontsReady()
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
         this.timeframe = new Timeframe(this, () => this.applyTimeframe())
@@ -197,22 +201,36 @@ export class StickChart extends EventTarget {
             this.timeframe.reset()
         }
 
-        window.requestAnimationFrame(() => {
-            if (!this._context || !config.morph) {
-                pipeline.render(
-                    ctx,
-                    () => Logger.info('render', ctx.plotdata.latest.timestamp)
-                )
+        if (!this.fontsready.succeed && !this.fontsready.inprogress) {
+            this.fontsready.load().then(() => {
+                window.requestAnimationFrame(() => {
+                    pipeline.render(
+                        ctx,
+                        () => Logger.info('render', ctx.plotdata.latest.timestamp)
+                    )
+                    this._context = ctx
+                })
+            })
+        }
 
-            } else {
+        if (this.fontsready.succeed) {
+            window.requestAnimationFrame(() => {
+                if (!this._context || !config.morph) {
+                    pipeline.render(
+                        ctx,
+                        () => Logger.info('render', ctx.plotdata.latest.timestamp)
+                    )
 
-                this.morphController.morph(this._context.chartdata, ctx.chartdata)
+                } else {
 
-            }
+                    this.morphController.morph(this._context.chartdata, ctx.chartdata)
 
-            // save latest rendered context
-            this._context = ctx
-        })
+                }
+
+                // save latest rendered context
+                this._context = ctx
+            })
+        }
     }
 
     public destroy(): void {
