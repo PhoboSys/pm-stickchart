@@ -73,8 +73,12 @@ export function unixTStoDate(timestamp: number): Date {
     return new Date(timestamp * 1000)
 }
 
+export function nowTS(): number {
+    return Date.now() + (window.time_correction || 0)
+}
+
 export function nowUnixTS(): number {
-    return Math.floor(Date.now() / 1000)
+    return Math.floor(nowTS() / 1000)
 }
 
 export function toUnixTS(timestamp: number): number {

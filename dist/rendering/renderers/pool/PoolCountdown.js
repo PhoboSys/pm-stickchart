@@ -161,7 +161,7 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
         if (this._countdownTick)
             this._countdownTick();
         const period = 1000;
-        const now = Date.now();
+        const now = (0, utils_1.nowTS)();
         const firein = Math.floor((now + period) / 1000) * 1000 - now;
         setTimeout(() => this.countdown(), firein);
     }

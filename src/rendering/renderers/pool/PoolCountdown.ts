@@ -5,7 +5,7 @@ import { WINNING_COUNTDOWN_TEXTURE, SHADOW_COUNTDOWN_TEXTURE } from '@rendering/
 import config from '@config'
 import datamath from '@lib/datamath'
 import { Container, Graphics, gsap } from '@lib/pixi'
-import { nowUnixTS } from '@lib/utils'
+import { nowUnixTS, nowTS } from '@lib/utils'
 import ui from '@lib/ui'
 import { PoolHoverEvent, PoolUnhoverEvent } from '@events'
 import { EPosition } from '@enums'
@@ -176,7 +176,7 @@ export class PoolCountdown extends BasePoolsRenderer {
         if (this._countdownTick) this._countdownTick()
 
         const period = 1000
-        const now = Date.now()
+        const now = nowTS()
         const firein = Math.floor((now + period) / 1000) * 1000 - now
 
         setTimeout(() => this.countdown(), firein)

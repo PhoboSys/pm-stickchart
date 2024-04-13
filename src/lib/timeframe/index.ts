@@ -1,5 +1,6 @@
 import { ZoomEvent, PointermoveEvent } from '@events'
 import { TimeframeChangedEvent, TimeframeStickToNowEvent, TimeframeUnstickToNowEvent } from '@events'
+import { nowUnixTS } from '@lib/utils'
 
 import { Logger } from '@infra'
 
@@ -26,7 +27,7 @@ export class Timeframe {
     private _timeframe: number = MAX_FRAME_DURATION
 
     private get nowTS(): number {
-        return this._now || Math.floor(Date.now() / 1000)
+        return this._now || nowUnixTS()
     }
 
     private set nowTS(now: number) {

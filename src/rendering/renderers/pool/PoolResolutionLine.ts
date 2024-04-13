@@ -278,7 +278,7 @@ export class PoolResolutionLine extends BasePoolsRenderer {
             line.zIndex = style.zIndex
         }
 
-        const radius = style.width / 4
+        const radius = style.width / 2
         line
             .clear()
             .lineStyle(style)

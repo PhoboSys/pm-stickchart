@@ -4,6 +4,7 @@ export declare function mapValues(collection: any, visitor: (value?: any, key?: 
 export declare function forEach(collection: any, visitor: (value?: any, key?: any, idx?: number) => void): void;
 export declare function pick(collection: any, keys: any[]): object;
 export declare function unixTStoDate(timestamp: number): Date;
+export declare function nowTS(): number;
 export declare function nowUnixTS(): number;
 export declare function toUnixTS(timestamp: number): number;
 export declare function orderBy(collection: any, visitor: (value?: any, key?: any, idx?: number) => any, order?: 'asc' | 'desc'): any;

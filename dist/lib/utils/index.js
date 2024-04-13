@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.interpolateColorHex = exports.binarySearchNearest = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
+exports.interpolateColorHex = exports.binarySearchNearest = exports.orderBy = exports.toUnixTS = exports.nowUnixTS = exports.nowTS = exports.unixTStoDate = exports.pick = exports.forEach = exports.mapValues = exports.isFunction = exports.isEmpty = void 0;
 function isEmpty(value) {
     return value === undefined ||
         value === null ||
@@ -52,8 +52,12 @@ function unixTStoDate(timestamp) {
     return new Date(timestamp * 1000);
 }
 exports.unixTStoDate = unixTStoDate;
+function nowTS() {
+    return Date.now() + (window.time_correction || 0);
+}
+exports.nowTS = nowTS;
 function nowUnixTS() {
-    return Math.floor(Date.now() / 1000);
+    return Math.floor(nowTS() / 1000);
 }
 exports.nowUnixTS = nowUnixTS;
 function toUnixTS(timestamp) {

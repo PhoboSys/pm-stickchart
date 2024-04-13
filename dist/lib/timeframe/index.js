@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
 const _events_1 = require("../../events/index.js");
+const utils_1 = require("../utils");
 const _infra_1 = require("../../infra/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
 exports.UNIX_MINUTE = 60;
@@ -15,7 +16,7 @@ exports.MIN_FRAME_DURATION = 5 * exports.UNIX_MINUTE;
 exports.PADDING_RIGHT = 0.382;
 class Timeframe {
     get nowTS() {
-        return this._now || Math.floor(Date.now() / 1000);
+        return this._now || (0, utils_1.nowUnixTS)();
     }
     set nowTS(now) {
         this._now = now || null;
