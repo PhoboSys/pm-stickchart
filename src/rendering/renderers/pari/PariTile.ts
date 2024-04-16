@@ -711,7 +711,28 @@ export class PariTile extends BaseParisRenderer {
         this.updateWager(pool, pari, context, group, state)
         this.updateProfit(pool, pari, context, group, state)
         this.updateClaim(pool, pari, context, group, state)
+    }
 
+    private getGroupPosition(
+        context: RenderingContext,
+        pool: any,
+        position: EPosition,
+    ): [number, number] {
+        const [ox] = datamath.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width)
+        const [oy] = datamath.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height)
+
+        let vertical: any = null
+        if (position === EPosition.Up) vertical = 0
+        if (position === EPosition.Zero) vertical = oy
+        if (position === EPosition.Down) vertical = context.screen.height
+
+        const bgStyle = this.groupStyle[position]
+
+        const [ofx, ofy] = bgStyle.offset
+        const bgx = ox + ofx
+        const bgy = vertical + ofy
+
+        return [bgx, bgy]
     }
 
     private renderGroup(
@@ -721,11 +742,13 @@ export class PariTile extends BaseParisRenderer {
         container: Container,
         state: any,
     ): any[] {
-        const position = pari.position
-        const { isHistorical } = state
 
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
-        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
+
+        const [group, groupstate] = groupElement.update(context, {
+            poolid: pool.poolid,
+            pariState: state,
+        })
 
         if (group) {
 
@@ -734,21 +757,7 @@ export class PariTile extends BaseParisRenderer {
                 container.addChild(group)
             }
 
-            const [ox] = datamath.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width)
-            const [oy] = datamath.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height)
-
-            let vertical: any = null
-            if (position === EPosition.Up) vertical = 0
-            if (position === EPosition.Zero) vertical = oy
-            if (position === EPosition.Down) vertical = context.screen.height
-
-            const bgStyle = this.groupStyle[position]
-
-            const [ofx, ofy] = bgStyle.offset
-            const bgx = ox + ofx
-            const bgy = vertical + ofy
-
-            if (!isHistorical) group.zIndex = 10
+            const [bgx, bgy] = this.getGroupPosition(context, pool, pari.position)
 
             group.position.set(bgx, bgy)
         }

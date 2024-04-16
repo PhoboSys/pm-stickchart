@@ -13,6 +13,7 @@ export declare class StickChart extends EventTarget {
     private _context;
     private timeframe;
     private fontsready;
+    private statedata;
     constructor(stageElement: HTMLElement, options?: Options | undefined);
     setScreenSize({ width, height }: {
         width: any;

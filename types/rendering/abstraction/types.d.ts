@@ -28,6 +28,7 @@ export type RenderingContext = {
         prices: string[];
         timestamps: number[];
     };
+    statedata: any;
     eventTarget: EventTarget;
     rerender?: boolean;
 };

@@ -3,34 +3,55 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupComponent = void 0;
 const _rendering_1 = require("../index.js");
 const pixi_1 = require("../../lib/pixi");
+const utils_1 = require("../../lib/utils");
 class GroupComponent extends _rendering_1.BaseComponent {
     constructor() {
         super(...arguments);
         this.configAnimations = {
-            winning_group: {
+            winning_group_primary: {
                 pixi: {
                     alpha: 1,
-                    zIndex: 3,
+                    zIndex: 5,
                 },
                 duration: 0.5,
                 ease: 'back.out(4)',
                 clear: true,
                 new: 'set'
             },
-            loseing_group: {
+            loseing_group_primary: {
                 pixi: {
                     alpha: 1,
-                    zIndex: 3,
+                    zIndex: 4,
                 },
                 duration: 0.5,
                 ease: 'back.out(4)',
+                clear: true,
+                new: 'set'
+            },
+            winning_group_secondary: {
+                pixi: {
+                    alpha: 0.25,
+                    zIndex: 3,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
+                clear: true,
+                new: 'set'
+            },
+            loseing_group_secondary: {
+                pixi: {
+                    alpha: 0.25,
+                    zIndex: 2,
+                },
+                duration: 0.5,
+                ease: 'power2.out',
                 clear: true,
                 new: 'set'
             },
             pin_group_claimable: {
                 pixi: {
                     alpha: 1,
-                    zIndex: 4,
+                    zIndex: 7,
                 },
                 duration: 0.5,
                 ease: 'back.out(4)',
@@ -57,7 +78,7 @@ class GroupComponent extends _rendering_1.BaseComponent {
             pin_group_unclaimable: {
                 pixi: {
                     alpha: 0.9,
-                    zIndex: 3,
+                    zIndex: 6,
                 },
                 duration: 0.3,
                 ease: 'power2.out',
@@ -86,8 +107,9 @@ class GroupComponent extends _rendering_1.BaseComponent {
         return this.configAnimations;
     }
     update(context, props) {
+        const pinnedPoolid = context.statedata.pinnedPoolid;
         const { poolid, pariState } = props;
-        const { win, isHistorical, nocontest, emptypool, claimable } = pariState;
+        const { win, isHistorical, nocontest, emptypool, claimable, } = pariState;
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
@@ -100,46 +122,76 @@ class GroupComponent extends _rendering_1.BaseComponent {
         const [group, groupstate] = this.get('group', () => new pixi_1.Container(), []);
         if (groupstate.new)
             group.alpha = 0;
-        if (isHistorical) {
-            if (claimable) {
-                if (groupstate.animation !== 'pin_group_claimable')
-                    this.animate('group', 'hide_group_claimable');
+        if (pinnedPoolid) {
+            if (poolid === pinnedPoolid) {
+                if (claimable)
+                    this.animate('group', 'pin_group_claimable');
+                else
+                    this.animate('group', 'pin_group_unclaimable');
+            }
+            else if (isHistorical) {
+                if (claimable) {
+                    if (groupstate.animation !== 'pin_group_claimable') {
+                        this.animate('group', 'hide_group_claimable');
+                    }
+                    else {
+                        this.animate('group', 'unpin_group_claimable');
+                    }
+                }
+                else {
+                    this.animate('group', 'unpin_group_unclaimable');
+                }
             }
             else {
-                if (groupstate.animation !== 'pin_group_unclaimable')
-                    this.animate('group', 'unpin_group_unclaimable');
-            }
-            if (!groupstate.subscribed) {
-                groupstate.subscribed = true;
-                context.eventTarget.addEventListener('poolpin', (e) => {
-                    if (e.poolid !== poolid)
-                        return;
-                    const [claimable] = this.read('claimable');
-                    if (claimable)
-                        this.animate('group', 'pin_group_claimable');
-                    else
-                        this.animate('group', 'pin_group_unclaimable');
-                });
-                context.eventTarget.addEventListener('poolunpin', (e) => {
-                    if (e.poolid !== poolid)
-                        return;
-                    const [claimable] = this.read('claimable');
-                    if (claimable)
-                        this.animate('group', 'unpin_group_claimable');
-                    else
-                        this.animate('group', 'unpin_group_unclaimable');
-                });
+                if (win && !emptypool)
+                    this.animate('group', 'winning_group_secondary');
+                else
+                    this.animate('group', 'loseing_group_secondary');
             }
         }
         else {
-            if (win && !emptypool) {
-                this.animate('group', 'winning_group');
+            if (isHistorical) {
+                if (claimable) {
+                    if (groupstate.animation !== 'pin_group_claimable') {
+                        this.animate('group', 'hide_group_claimable');
+                    }
+                    else {
+                        this.animate('group', 'unpin_group_claimable');
+                    }
+                }
+                else {
+                    this.animate('group', 'unpin_group_unclaimable');
+                }
             }
             else {
-                this.animate('group', 'loseing_group');
+                if (this.isPrimaryPool(poolid, context)) {
+                    if (win && !emptypool)
+                        this.animate('group', 'winning_group_primary');
+                    else
+                        this.animate('group', 'loseing_group_primary');
+                }
+                else {
+                    if (win && !emptypool)
+                        this.animate('group', 'winning_group_secondary');
+                    else
+                        this.animate('group', 'loseing_group_secondary');
+                }
             }
         }
         return [group, groupstate];
+    }
+    isPrimaryPool(poolid, context) {
+        const actualPoolid = context.actualPoolid;
+        const actualParis = context.paris[actualPoolid];
+        if ((0, utils_1.isEmpty)(actualParis)) {
+            return true;
+        }
+        else {
+            if (poolid === actualPoolid)
+                return true;
+            else
+                return false;
+        }
     }
 }
 exports.GroupComponent = GroupComponent;

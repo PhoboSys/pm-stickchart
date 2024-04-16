@@ -659,31 +659,34 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         this.updateProfit(pool, pari, context, group, state);
         this.updateClaim(pool, pari, context, group, state);
     }
+    getGroupPosition(context, pool, position) {
+        const [ox] = datamath_1.default.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
+        const [oy] = datamath_1.default.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height);
+        let vertical = null;
+        if (position === _enums_1.EPosition.Up)
+            vertical = 0;
+        if (position === _enums_1.EPosition.Zero)
+            vertical = oy;
+        if (position === _enums_1.EPosition.Down)
+            vertical = context.screen.height;
+        const bgStyle = this.groupStyle[position];
+        const [ofx, ofy] = bgStyle.offset;
+        const bgx = ox + ofx;
+        const bgy = vertical + ofy;
+        return [bgx, bgy];
+    }
     renderGroup(pool, pari, context, container, state) {
-        const position = pari.position;
-        const { isHistorical } = state;
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
-        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state });
+        const [group, groupstate] = groupElement.update(context, {
+            poolid: pool.poolid,
+            pariState: state,
+        });
         if (group) {
             if (groupstate.new) {
                 container.sortableChildren = true;
                 container.addChild(group);
             }
-            const [ox] = datamath_1.default.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
-            const [oy] = datamath_1.default.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height);
-            let vertical = null;
-            if (position === _enums_1.EPosition.Up)
-                vertical = 0;
-            if (position === _enums_1.EPosition.Zero)
-                vertical = oy;
-            if (position === _enums_1.EPosition.Down)
-                vertical = context.screen.height;
-            const bgStyle = this.groupStyle[position];
-            const [ofx, ofy] = bgStyle.offset;
-            const bgx = ox + ofx;
-            const bgy = vertical + ofy;
-            if (!isHistorical)
-                group.zIndex = 10;
+            const [bgx, bgy] = this.getGroupPosition(context, pool, pari.position);
             group.position.set(bgx, bgy);
         }
         return [group, groupstate];

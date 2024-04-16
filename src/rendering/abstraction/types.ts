@@ -31,6 +31,7 @@ export type RenderingContext = {
     features: Features
     plotdata: PlotData
     chartdata: { prices: string[], timestamps: number[] }
+    statedata: any,
 
     eventTarget: EventTarget
     rerender?: boolean
