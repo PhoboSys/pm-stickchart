@@ -75,8 +75,10 @@ export class PoolLayerEventProducer extends BasePoolsRenderer {
             })
             layer.addEventListener('pointertap', (e) => {
                 if (layerState.pined) {
+                    context.statedata.setPinnedPoolid(null)
                     context.eventTarget.dispatchEvent(new PoolUnpinEvent(poolid, e))
                 } else {
+                    context.statedata.setPinnedPoolid(poolid)
                     context.eventTarget.dispatchEvent(new PoolPinEvent(poolid, e))
                 }
                 layerState.pined = !layerState.pined

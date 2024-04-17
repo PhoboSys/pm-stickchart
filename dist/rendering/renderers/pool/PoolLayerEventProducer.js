@@ -55,9 +55,11 @@ class PoolLayerEventProducer extends BasePoolsRenderer_1.BasePoolsRenderer {
             });
             layer.addEventListener('pointertap', (e) => {
                 if (layerState.pined) {
+                    context.statedata.setPinnedPoolid(null);
                     context.eventTarget.dispatchEvent(new _events_1.PoolUnpinEvent(poolid, e));
                 }
                 else {
+                    context.statedata.setPinnedPoolid(poolid);
                     context.eventTarget.dispatchEvent(new _events_1.PoolPinEvent(poolid, e));
                 }
                 layerState.pined = !layerState.pined;

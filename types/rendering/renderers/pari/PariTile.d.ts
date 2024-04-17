@@ -31,6 +31,7 @@ export declare class PariTile extends BaseParisRenderer {
     private configAnimations;
     protected get animations(): any;
     protected updatePari(pool: any, pari: any, context: RenderingContext, container: Container): void;
+    private getGroupPosition;
     private renderGroup;
     private updatePositionIcon;
     private updateProfit;

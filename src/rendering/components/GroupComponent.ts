@@ -1,35 +1,55 @@
 import { RenderingContext, BaseComponent } from '@rendering'
-import { PoolPinEvent, PoolUnpinEvent } from '@events'
 
 import { Container } from '@lib/pixi'
+import { isEmpty } from '@lib/utils'
 
 export class GroupComponent extends BaseComponent {
 
     private configAnimations: any = {
-        winning_group: {
+        winning_group_primary: {
             pixi: {
                 alpha: 1,
-                zIndex: 3,
+                zIndex: 5,
             },
             duration: 0.5,
             ease: 'back.out(4)',
             clear: true,
             new: 'set'
         },
-        loseing_group: {
+        loseing_group_primary: {
             pixi: {
                 alpha: 1,
-                zIndex: 3,
+                zIndex: 4,
             },
             duration: 0.5,
             ease: 'back.out(4)',
+            clear: true,
+            new: 'set'
+        },
+        winning_group_secondary: {
+            pixi: {
+                alpha: 0.25,
+                zIndex: 3,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
+            clear: true,
+            new: 'set'
+        },
+        loseing_group_secondary: {
+            pixi: {
+                alpha: 0.25,
+                zIndex: 2,
+            },
+            duration: 0.5,
+            ease: 'power2.out',
             clear: true,
             new: 'set'
         },
         pin_group_claimable: {
             pixi: {
                 alpha: 1,
-                zIndex: 4,
+                zIndex: 7,
             },
             duration: 0.5,
             ease: 'back.out(4)',
@@ -56,7 +76,7 @@ export class GroupComponent extends BaseComponent {
         pin_group_unclaimable: {
             pixi: {
                 alpha: 0.9,
-                zIndex: 3,
+                zIndex: 6,
             },
             duration: 0.3,
             ease: 'power2.out',
@@ -90,8 +110,15 @@ export class GroupComponent extends BaseComponent {
         props,
     ): any[] {
 
+        const pinnedPoolid = context.statedata.pinnedPoolid
         const { poolid, pariState } = props
-        const { win, isHistorical, nocontest, emptypool, claimable } = pariState
+        const {
+            win,
+            isHistorical,
+            nocontest,
+            emptypool,
+            claimable,
+        } = pariState
 
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
@@ -108,47 +135,75 @@ export class GroupComponent extends BaseComponent {
         const [group, groupstate] = this.get('group', () => new Container(), [])
         if (groupstate.new) group.alpha = 0
 
-        if (isHistorical) {
+        if (pinnedPoolid) {
 
-            if (claimable) {
-                if (groupstate.animation !== 'pin_group_claimable') this.animate('group', 'hide_group_claimable')
+            if (poolid === pinnedPoolid) {
+
+                if (claimable) this.animate('group', 'pin_group_claimable')
+                else this.animate('group', 'pin_group_unclaimable')
+
+            } else if (isHistorical) {
+
+                if (claimable) {
+                    if (groupstate.animation !== 'pin_group_claimable') {
+                        this.animate('group', 'hide_group_claimable')
+                    } else {
+                        this.animate('group', 'unpin_group_claimable')
+                    }
+                } else {
+                    this.animate('group', 'unpin_group_unclaimable')
+                }
+
             } else {
-                if (groupstate.animation !== 'pin_group_unclaimable') this.animate('group', 'unpin_group_unclaimable')
-            }
 
-            if (!groupstate.subscribed) {
-                groupstate.subscribed = true
-
-                context.eventTarget.addEventListener('poolpin', (e: PoolPinEvent) => {
-
-                    if (e.poolid !== poolid) return
-
-                    const [claimable] = this.read('claimable')
-                    if (claimable) this.animate('group', 'pin_group_claimable')
-                    else this.animate('group', 'pin_group_unclaimable')
-                })
-
-                context.eventTarget.addEventListener('poolunpin', (e: PoolUnpinEvent) => {
-
-                    if (e.poolid !== poolid) return
-
-                    const [claimable] = this.read('claimable')
-                    if (claimable) this.animate('group', 'unpin_group_claimable')
-                    else this.animate('group', 'unpin_group_unclaimable')
-                })
+                if (win && !emptypool) this.animate('group', 'winning_group_secondary')
+                else this.animate('group', 'loseing_group_secondary')
 
             }
 
         } else {
-            if (win && !emptypool) {
-                this.animate('group', 'winning_group')
+
+            if (isHistorical) {
+
+                if (claimable) {
+                    if (groupstate.animation !== 'pin_group_claimable') {
+                        this.animate('group', 'hide_group_claimable')
+                    } else {
+                        this.animate('group', 'unpin_group_claimable')
+                    }
+                } else {
+                    this.animate('group', 'unpin_group_unclaimable')
+                }
+
             } else {
-                this.animate('group', 'loseing_group')
+
+                if (this.isPrimaryPool(poolid, context)) {
+                    if (win && !emptypool) this.animate('group', 'winning_group_primary')
+                    else this.animate('group', 'loseing_group_primary')
+
+                } else {
+                    if (win && !emptypool) this.animate('group', 'winning_group_secondary')
+                    else this.animate('group', 'loseing_group_secondary')
+
+                }
+
             }
 
         }
 
         return [group, groupstate]
+    }
+
+    private isPrimaryPool(poolid, context): boolean {
+        const actualPoolid = context.actualPoolid
+        const actualParis = context.paris[actualPoolid]
+
+        if (isEmpty(actualParis)) {
+            return true
+        } else {
+            if (poolid === actualPoolid) return true
+            else return false
+        }
     }
 
 }
