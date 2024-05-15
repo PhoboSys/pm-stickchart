@@ -274,7 +274,7 @@ export class PoolCountdown extends BasePoolsRenderer {
             else this.animate('gradientres', 'to_secondary_gradient')
 
             const [gradientresMask, gradientresMaskState] = this.get('gradientresMask', () => new Graphics)
-            if (gradientresMaskState.new) {
+            if (gradientresMaskState.new || gradientresState.new) {
                 gradientres.mask = gradientresMask
                 gradientres.addChild(gradientresMask)
             }

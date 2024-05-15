@@ -22,12 +22,12 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         };
         this.metapoolQuoteStyle = {
             text: {
-                fill: 0x071226,
+                fill: 0xFFFFFF00,
                 fontWeight: 700,
                 fontFamily: 'Gilroy',
                 fontSize: 48,
                 stroke: 0x455077,
-                strokeThickness: 2,
+                strokeThickness: 1,
                 trim: true,
             },
             offset: [6, 0]
