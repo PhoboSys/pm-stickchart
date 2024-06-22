@@ -10,8 +10,14 @@ const _infra_1 = require("../../infra/index.js");
 const pixi_1 = require("../../lib/pixi");
 const pixi_2 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
-const COIN_PARI_GOLD_base64_png_1 = __importDefault(require("../../assets/COIN_PARI_GOLD.base64.png"));
-const COIN_PARI_GOLD_json_1 = __importDefault(require("../../assets/COIN_PARI_GOLD.json"));
+const COIN_DEMO_GOLD_base64_png_1 = __importDefault(require("../../assets/COIN_DEMO_GOLD.base64.png"));
+const COIN_DEMO_GOLD_json_1 = __importDefault(require("../../assets/COIN_DEMO_GOLD.json"));
+const COIN_DEMO_SILVER_base64_png_1 = __importDefault(require("../../assets/COIN_DEMO_SILVER.base64.png"));
+const COIN_DEMO_SILVER_json_1 = __importDefault(require("../../assets/COIN_DEMO_SILVER.json"));
+const COIN_USDC_GOLD_base64_png_1 = __importDefault(require("../../assets/COIN_USDC_GOLD.base64.png"));
+const COIN_USDC_GOLD_json_1 = __importDefault(require("../../assets/COIN_USDC_GOLD.json"));
+const COIN_USDC_SILVER_base64_png_1 = __importDefault(require("../../assets/COIN_USDC_SILVER.base64.png"));
+const COIN_USDC_SILVER_json_1 = __importDefault(require("../../assets/COIN_USDC_SILVER.json"));
 class TextureStorage {
     constructor(application) {
         this.application = application;
@@ -31,8 +37,8 @@ class TextureStorage {
                 symbols_1.ORCY_TEXTURE,
             ],
             animations: [
-                symbols_1.PARI_GOLD_TEXTURE,
-                symbols_1.PARI_SILVER_TEXTURE,
+                symbols_1.DEMO_GOLD_TEXTURE,
+                symbols_1.DEMO_SILVER_TEXTURE,
                 symbols_1.USDC_SILVER_TEXTURE,
                 symbols_1.USDC_GOLD_TEXTURE,
                 symbols_1.UNKNOWN_CURRENCY_TEXTURE,
@@ -382,40 +388,37 @@ class TextureStorage {
         });
         return gradient;
     }
-    [symbols_1.PARI_GOLD_TEXTURE](onready) {
-        const texture = pixi_1.BaseTexture.from(COIN_PARI_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_PARI_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_PARI_GOLD_json_1.default.animations);
+    [symbols_1.DEMO_GOLD_TEXTURE](onready) {
+        const texture = pixi_1.BaseTexture.from(COIN_DEMO_GOLD_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_DEMO_GOLD_json_1.default);
+        const [name] = Object.keys(COIN_DEMO_GOLD_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);
         });
     }
-    [symbols_1.PARI_SILVER_TEXTURE](onready) {
-        // TODO: update with COIN_PARI_SILVER_base64_png as soon as ready
-        const texture = pixi_1.BaseTexture.from(COIN_PARI_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_PARI_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_PARI_GOLD_json_1.default.animations);
+    [symbols_1.DEMO_SILVER_TEXTURE](onready) {
+        const texture = pixi_1.BaseTexture.from(COIN_DEMO_SILVER_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_DEMO_SILVER_json_1.default);
+        const [name] = Object.keys(COIN_DEMO_SILVER_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);
         });
     }
     [symbols_1.USDC_SILVER_TEXTURE](onready) {
-        // TODO: update with COIN_USDC_SILVER_base64_png as soon as ready
-        const texture = pixi_1.BaseTexture.from(COIN_PARI_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_PARI_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_PARI_GOLD_json_1.default.animations);
+        const texture = pixi_1.BaseTexture.from(COIN_USDC_SILVER_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_USDC_SILVER_json_1.default);
+        const [name] = Object.keys(COIN_USDC_SILVER_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);
         });
     }
     [symbols_1.USDC_GOLD_TEXTURE](onready) {
-        // TODO: update with COIN_USDC_GOLD_base64_png as soon as ready
-        const texture = pixi_1.BaseTexture.from(COIN_PARI_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_PARI_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_PARI_GOLD_json_1.default.animations);
+        const texture = pixi_1.BaseTexture.from(COIN_USDC_GOLD_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_USDC_GOLD_json_1.default);
+        const [name] = Object.keys(COIN_USDC_GOLD_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);
@@ -423,9 +426,9 @@ class TextureStorage {
     }
     [symbols_1.UNKNOWN_CURRENCY_TEXTURE](onready) {
         // TODO: update with UNKNOWN_CURRENCY_base64_png sprite as soon as ready
-        const texture = pixi_1.BaseTexture.from(COIN_PARI_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_PARI_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_PARI_GOLD_json_1.default.animations);
+        const texture = pixi_1.BaseTexture.from(COIN_DEMO_GOLD_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_DEMO_GOLD_json_1.default);
+        const [name] = Object.keys(COIN_DEMO_GOLD_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);

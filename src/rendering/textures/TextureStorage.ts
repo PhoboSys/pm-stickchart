@@ -40,16 +40,27 @@ import {
 
     COIN_SHINE,
     UNKNOWN_CURRENCY_TEXTURE,
-    PARI_SILVER_TEXTURE,
+
+    // Animated
+    DEMO_GOLD_TEXTURE,
+    DEMO_SILVER_TEXTURE,
+
     USDC_GOLD_TEXTURE,
     USDC_SILVER_TEXTURE,
 
-    // Animated
-    PARI_GOLD_TEXTURE,
 } from './symbols'
 
-import COIN_PARI_GOLD_base64_png from '@assets/COIN_PARI_GOLD.base64.png'
-import COIN_PARI_GOLD_json from '@assets/COIN_PARI_GOLD.json'
+import COIN_DEMO_GOLD_base64_png from '@assets/COIN_DEMO_GOLD.base64.png'
+import COIN_DEMO_GOLD_json from '@assets/COIN_DEMO_GOLD.json'
+
+import COIN_DEMO_SILVER_base64_png from '@assets/COIN_DEMO_SILVER.base64.png'
+import COIN_DEMO_SILVER_json from '@assets/COIN_DEMO_SILVER.json'
+
+import COIN_USDC_GOLD_base64_png from '@assets/COIN_USDC_GOLD.base64.png'
+import COIN_USDC_GOLD_json from '@assets/COIN_USDC_GOLD.json'
+
+import COIN_USDC_SILVER_base64_png from '@assets/COIN_USDC_SILVER.base64.png'
+import COIN_USDC_SILVER_json from '@assets/COIN_USDC_SILVER.json'
 
 export class TextureStorage implements ITextureStorage {
 
@@ -71,8 +82,8 @@ export class TextureStorage implements ITextureStorage {
             ORCY_TEXTURE,
         ],
         animations: [
-            PARI_GOLD_TEXTURE,
-            PARI_SILVER_TEXTURE,
+            DEMO_GOLD_TEXTURE,
+            DEMO_SILVER_TEXTURE,
             USDC_SILVER_TEXTURE,
             USDC_GOLD_TEXTURE,
             UNKNOWN_CURRENCY_TEXTURE,
@@ -553,11 +564,11 @@ export class TextureStorage implements ITextureStorage {
         return gradient
     }
 
-    private [PARI_GOLD_TEXTURE](onready): void {
+    private [DEMO_GOLD_TEXTURE](onready): void {
 
-        const texture = BaseTexture.from(COIN_PARI_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_PARI_GOLD_json)
-        const [name] = Object.keys(COIN_PARI_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_DEMO_GOLD_base64_png)
+        const sheet = new Spritesheet(texture, COIN_DEMO_GOLD_json)
+        const [name] = Object.keys(COIN_DEMO_GOLD_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)
@@ -566,12 +577,11 @@ export class TextureStorage implements ITextureStorage {
 
     }
 
-    private [PARI_SILVER_TEXTURE](onready): void {
+    private [DEMO_SILVER_TEXTURE](onready): void {
 
-        // TODO: update with COIN_PARI_SILVER_base64_png as soon as ready
-        const texture = BaseTexture.from(COIN_PARI_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_PARI_GOLD_json)
-        const [name] = Object.keys(COIN_PARI_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_DEMO_SILVER_base64_png)
+        const sheet = new Spritesheet(texture, COIN_DEMO_SILVER_json)
+        const [name] = Object.keys(COIN_DEMO_SILVER_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)
@@ -582,10 +592,9 @@ export class TextureStorage implements ITextureStorage {
 
     private [USDC_SILVER_TEXTURE](onready): void {
 
-        // TODO: update with COIN_USDC_SILVER_base64_png as soon as ready
-        const texture = BaseTexture.from(COIN_PARI_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_PARI_GOLD_json)
-        const [name] = Object.keys(COIN_PARI_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_USDC_SILVER_base64_png)
+        const sheet = new Spritesheet(texture, COIN_USDC_SILVER_json)
+        const [name] = Object.keys(COIN_USDC_SILVER_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)
@@ -595,10 +604,9 @@ export class TextureStorage implements ITextureStorage {
 
     private [USDC_GOLD_TEXTURE](onready): void {
 
-        // TODO: update with COIN_USDC_GOLD_base64_png as soon as ready
-        const texture = BaseTexture.from(COIN_PARI_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_PARI_GOLD_json)
-        const [name] = Object.keys(COIN_PARI_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_USDC_GOLD_base64_png)
+        const sheet = new Spritesheet(texture, COIN_USDC_GOLD_json)
+        const [name] = Object.keys(COIN_USDC_GOLD_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)
@@ -609,9 +617,9 @@ export class TextureStorage implements ITextureStorage {
     private [UNKNOWN_CURRENCY_TEXTURE](onready): void {
 
         // TODO: update with UNKNOWN_CURRENCY_base64_png sprite as soon as ready
-        const texture = BaseTexture.from(COIN_PARI_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_PARI_GOLD_json)
-        const [name] = Object.keys(COIN_PARI_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_DEMO_GOLD_base64_png)
+        const sheet = new Spritesheet(texture, COIN_DEMO_GOLD_json)
+        const [name] = Object.keys(COIN_DEMO_GOLD_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)

@@ -391,10 +391,10 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
         var _a;
         const key = `${(_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency}_${win ? 'GOLD' : 'SILVER'}`;
         switch (key) {
-            case 'PARI_SILVER':
-                return textures_1.PARI_SILVER_TEXTURE;
-            case 'PARI_GOLD':
-                return textures_1.PARI_GOLD_TEXTURE;
+            case 'DEMO_SILVER':
+                return textures_1.DEMO_SILVER_TEXTURE;
+            case 'DEMO_GOLD':
+                return textures_1.DEMO_GOLD_TEXTURE;
             case 'USDC_SILVER':
                 return textures_1.USDC_SILVER_TEXTURE;
             case 'USDC_GOLD':

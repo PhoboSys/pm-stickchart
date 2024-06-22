@@ -3,8 +3,8 @@ import { EntityUtils, RenderingContext } from '@rendering'
 import { Logger } from '@infra'
 import {
     GRADIENT_TEXTURE,
-    PARI_GOLD_TEXTURE,
-    PARI_SILVER_TEXTURE,
+    DEMO_GOLD_TEXTURE,
+    DEMO_SILVER_TEXTURE,
     USDC_GOLD_TEXTURE,
     USDC_SILVER_TEXTURE,
     UNKNOWN_CURRENCY_TEXTURE,
@@ -507,10 +507,10 @@ export class PoolBackground extends BasePoolsRenderer {
         const key = `${context.metapool?.currency}_${win ? 'GOLD' : 'SILVER'}`
 
         switch (key) {
-            case 'PARI_SILVER':
-                return PARI_SILVER_TEXTURE
-            case 'PARI_GOLD':
-                return PARI_GOLD_TEXTURE
+            case 'DEMO_SILVER':
+                return DEMO_SILVER_TEXTURE
+            case 'DEMO_GOLD':
+                return DEMO_GOLD_TEXTURE
             case 'USDC_SILVER':
                 return USDC_SILVER_TEXTURE
             case 'USDC_GOLD':
