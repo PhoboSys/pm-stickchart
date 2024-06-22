@@ -980,9 +980,11 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         var _a;
         const key = (_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency;
         switch (key) {
-            case 'PARI':
-                return textures_1.PARI_TEXTURE;
-            case 'USDC':
+            case _constants_1.ORCY:
+                return textures_1.ORCY_TEXTURE;
+            case _constants_1.DEMO:
+                return textures_1.DEMO_TEXTURE;
+            case _constants_1.USDC:
                 return textures_1.USDC_TEXTURE;
             default:
                 _infra_1.Logger.error(`currency "${key}" is not supported, fallback to Undeliden`);

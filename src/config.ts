@@ -192,7 +192,7 @@ export default {
     },
 
     limit: {
-        positioningFlickering: 15,
-        positioningHushed: 7,
+        entryFlickering: 20,
+        entryHushed: 10,
     }
 }

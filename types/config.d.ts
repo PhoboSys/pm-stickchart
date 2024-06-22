@@ -160,8 +160,8 @@ declare const _default: {
         curvedResolutionLines: boolean;
     };
     limit: {
-        positioningFlickering: number;
-        positioningHushed: number;
+        entryFlickering: number;
+        entryHushed: number;
     };
 };
 export default _default;

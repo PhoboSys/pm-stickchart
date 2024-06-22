@@ -1,4 +1,4 @@
 export interface Options {
-    positioningFlickeringAt: number,
-    positioningHushedAt: number,
+    entryFlickeringAt: number,
+    entryHushedAt: number,
 }
