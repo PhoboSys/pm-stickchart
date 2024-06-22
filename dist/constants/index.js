@@ -18,4 +18,5 @@ __exportStar(require("./currencies"), exports);
 __exportStar(require("./poollevels"), exports);
 __exportStar(require("./prizefunds"), exports);
 __exportStar(require("./pricefeed"), exports);
+__exportStar(require("./erc20"), exports);
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import { PRIZEFUNDS } from '@constants'
+import { PRIZEFUNDS, ORCY, DEMO, USDC } from '@constants'
 
 import { RenderingContext, GraphicUtils } from '@rendering'
 import {
@@ -9,7 +9,8 @@ import {
     ZERO_ICON_TEXTURE,
     UNDEFINED_ICON_TEXTURE,
     UNKNOWN_DARK_TEXTURE,
-    PARI_TEXTURE,
+    DEMO_TEXTURE,
+    ORCY_TEXTURE,
     USDC_TEXTURE,
     GRADIENT_TEXTURE,
 } from '@rendering/textures'
@@ -1228,9 +1229,11 @@ export class PariTile extends BaseParisRenderer {
         const key = context.metapool?.currency
 
         switch (key) {
-            case 'PARI':
-                return PARI_TEXTURE
-            case 'USDC':
+            case ORCY:
+                return ORCY_TEXTURE
+            case DEMO:
+                return DEMO_TEXTURE
+            case USDC:
                 return USDC_TEXTURE
             default:
                 Logger.error(`currency "${key}" is not supported, fallback to Undeliden`)

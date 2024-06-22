@@ -179,8 +179,8 @@ exports.default = {
         curvedResolutionLines: false,
     },
     limit: {
-        positioningFlickering: 15,
-        positioningHushed: 7,
+        entryFlickering: 15,
+        entryHushed: 7,
     }
 };
 //# sourceMappingURL=config.js.map

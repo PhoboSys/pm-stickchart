@@ -22,8 +22,8 @@ const merge_1 = __importDefault(require("lodash/merge"));
 const _config_1 = __importDefault(require("../config.js"));
 __exportStar(require("./types"), exports);
 const defaultOptions = {
-    positioningFlickeringAt: _config_1.default.limit.positioningFlickering,
-    positioningHushedAt: _config_1.default.limit.positioningHushed,
+    entryFlickeringAt: _config_1.default.limit.entryFlickering,
+    entryHushedAt: _config_1.default.limit.entryHushed,
 };
 function createOptions(options) {
     return (0, merge_1.default)({}, defaultOptions, options);

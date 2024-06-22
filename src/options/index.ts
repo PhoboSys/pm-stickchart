@@ -7,8 +7,8 @@ import { Options } from './types'
 export * from './types'
 
 const defaultOptions = {
-    positioningFlickeringAt: config.limit.positioningFlickering,
-    positioningHushedAt: config.limit.positioningHushed,
+    entryFlickeringAt: config.limit.entryFlickering,
+    entryHushedAt: config.limit.entryHushed,
 }
 
 export function createOptions(options?: Options): Options {

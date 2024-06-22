@@ -205,9 +205,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             const fullLockwidth = lockx - openx;
             gradientlockBackground.position.y = -((gradientheight - lockheight) - lockwidth * (gradientheight - lockheight) / fullLockwidth);
             const secondsToLock = lockDate - now;
-            if (secondsToLock <= context.options.positioningHushedAt)
+            if (secondsToLock <= context.options.entryHushedAt)
                 this.animate('gradientlock', 'hushed');
-            else if (secondsToLock <= context.options.positioningFlickeringAt)
+            else if (secondsToLock <= context.options.entryFlickeringAt)
                 this.animate('gradientlock', 'flickering');
         }
         else {
@@ -363,9 +363,9 @@ class PoolCountdown extends BasePoolsRenderer_1.BasePoolsRenderer {
             container.addChild(textgroup);
         }
         const secondsToLock = lockDate - now;
-        if (!locked && secondsToLock <= context.options.positioningHushedAt)
+        if (!locked && secondsToLock <= context.options.entryHushedAt)
             this.animate('textgroup', 'hushed');
-        else if (!locked && secondsToLock <= context.options.positioningFlickeringAt)
+        else if (!locked && secondsToLock <= context.options.entryFlickeringAt)
             this.animate('textgroup', 'flickering');
         const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));
         if (countdownstate.new)

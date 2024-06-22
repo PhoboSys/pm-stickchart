@@ -256,8 +256,8 @@ export class PoolCountdown extends BasePoolsRenderer {
             gradientlockBackground.position.y = -((gradientheight-lockheight) - lockwidth*(gradientheight-lockheight)/fullLockwidth)
 
             const secondsToLock = lockDate - now
-            if (secondsToLock <= context.options.positioningHushedAt) this.animate('gradientlock', 'hushed')
-            else if (secondsToLock <= context.options.positioningFlickeringAt) this.animate('gradientlock', 'flickering')
+            if (secondsToLock <= context.options.entryHushedAt) this.animate('gradientlock', 'hushed')
+            else if (secondsToLock <= context.options.entryFlickeringAt) this.animate('gradientlock', 'flickering')
 
         } else {
             this.clear('gradientlock')
@@ -476,8 +476,8 @@ export class PoolCountdown extends BasePoolsRenderer {
         }
 
         const secondsToLock = lockDate - now
-        if (!locked && secondsToLock <= context.options.positioningHushedAt) this.animate('textgroup', 'hushed')
-        else if (!locked && secondsToLock <= context.options.positioningFlickeringAt) this.animate('textgroup', 'flickering')
+        if (!locked && secondsToLock <= context.options.entryHushedAt) this.animate('textgroup', 'hushed')
+        else if (!locked && secondsToLock <= context.options.entryFlickeringAt) this.animate('textgroup', 'flickering')
 
         const [countdowntext, countdownstate] = this.get('countdowntext',
             () => GraphicUtils.createText(
