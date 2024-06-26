@@ -9,7 +9,7 @@ export type DoneFunction = () => void;
 export type RenderingContext = {
     options: Options;
     game: any;
-    pools: any[];
+    rounds: any[];
     paris: any[];
     resolved: any[];
     settlements: any;

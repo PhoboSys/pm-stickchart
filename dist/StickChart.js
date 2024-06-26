@@ -116,7 +116,7 @@ class StickChart extends EventTarget {
         const options = (0, _options_1.createOptions)(this.options);
         const ctx = {
             game: context.game,
-            pools: context.pools,
+            rounds: context.rounds,
             paris: context.paris,
             settlements: context.settlements,
             blocksLatest: context.blocksLatest,

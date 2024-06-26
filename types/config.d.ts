@@ -70,7 +70,7 @@ declare const _default: {
             zerocolor: number;
             nocontest: number;
         };
-        poolActualRoundColor: number;
+        roundActualRoundColor: number;
         goldCoinShineColors: {
             color: string;
             offset: number;
@@ -79,27 +79,27 @@ declare const _default: {
             color: string;
             offset: number;
         }[];
-        poolRoundColors: {
+        roundRoundColors: {
             color: string;
             offset: number;
         }[];
-        poolRoundWinColors: {
+        roundRoundWinColors: {
             color: string;
             offset: number;
         }[];
-        poolRoundBottomColors: {
+        roundRoundBottomColors: {
             color: string;
             offset: number;
         }[];
-        poolRoundWinBorderColors: {
+        roundRoundWinBorderColors: {
             color: string;
             offset: number;
         }[];
-        poolRoundNoContestColors: {
+        roundRoundNoContestColors: {
             color: string;
             offset: number;
         }[];
-        poolRoundNoContestBorderColors: {
+        roundRoundNoContestBorderColors: {
             color: string;
             offset: number;
         }[];

@@ -29,7 +29,7 @@ export declare class StickChart extends EventTarget {
         chartdata: ChartData;
         charttype: EChartType;
         game: any;
-        pools: any[];
+        rounds: any[];
         paris: any[];
         resolved: any[];
         settlements: any;

@@ -70,29 +70,29 @@ export class PariLine extends BaseParisRenderer {
     }
 
     protected updatePari(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,
     ): void {
 
         if (!(pari.position in this.validPariPositions)) return this.clear()
-        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
+        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
 
-        const state = this.getPariState(pool, pari, context)
+        const state = this.getPariState(round, pari, context)
 
         if (!state.win && !state.nocontest && state.isHistorical) return this.clear()
 
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
-        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state })
+        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, pariState: state })
         if (group && groupstate.new) container.addChild(group)
 
-        this.updateLine(pool, pari, context, group, state)
+        this.updateLine(round, pari, context, group, state)
 
     }
 
     private updateLine(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,
@@ -105,7 +105,7 @@ export class PariLine extends BaseParisRenderer {
 
         const { height } = context.screen
         const { pricerange } = context.plotdata
-        const { openPriceValue, openPriceTimestamp } = pool
+        const { openPriceValue, openPriceTimestamp } = round
 
         const [ox] = datamath.scale([openPriceTimestamp], context.plotdata.timerange, context.screen.width)
         const [oy] = datamath.scaleReverse([openPriceValue], pricerange, height)

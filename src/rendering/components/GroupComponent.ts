@@ -110,13 +110,13 @@ export class GroupComponent extends BaseComponent {
         props,
     ): any[] {
 
-        const pinnedPoolid = context.statedata.pinnedPoolid
-        const { poolid, pariState } = props
+        const pinnedRoundid = context.statedata.pinnedRoundid
+        const { roundid, pariState } = props
         const {
             win,
             isHistorical,
             nocontest,
-            emptypool,
+            emptyround,
             claimable,
         } = pariState
 
@@ -135,9 +135,9 @@ export class GroupComponent extends BaseComponent {
         const [group, groupstate] = this.get('group', () => new Container(), [])
         if (groupstate.new) group.alpha = 0
 
-        if (pinnedPoolid) {
+        if (pinnedRoundid) {
 
-            if (poolid === pinnedPoolid) {
+            if (roundid === pinnedRoundid) {
 
                 if (claimable) this.animate('group', 'pin_group_claimable')
                 else this.animate('group', 'pin_group_unclaimable')
@@ -156,7 +156,7 @@ export class GroupComponent extends BaseComponent {
 
             } else {
 
-                if (win && !emptypool) this.animate('group', 'winning_group_secondary')
+                if (win && !emptyround) this.animate('group', 'winning_group_secondary')
                 else this.animate('group', 'loseing_group_secondary')
 
             }
@@ -177,12 +177,12 @@ export class GroupComponent extends BaseComponent {
 
             } else {
 
-                if (this.isPrimaryPool(poolid, context)) {
-                    if (win && !emptypool) this.animate('group', 'winning_group_primary')
+                if (this.isPrimaryRound(roundid, context)) {
+                    if (win && !emptyround) this.animate('group', 'winning_group_primary')
                     else this.animate('group', 'loseing_group_primary')
 
                 } else {
-                    if (win && !emptypool) this.animate('group', 'winning_group_secondary')
+                    if (win && !emptyround) this.animate('group', 'winning_group_secondary')
                     else this.animate('group', 'loseing_group_secondary')
 
                 }
@@ -194,14 +194,14 @@ export class GroupComponent extends BaseComponent {
         return [group, groupstate]
     }
 
-    private isPrimaryPool(poolid, context): boolean {
-        const actualPoolid = context.actualPoolid
-        const actualParis = context.paris[actualPoolid]
+    private isPrimaryRound(roundid, context): boolean {
+        const actualRoundid = context.actualRoundid
+        const actualParis = context.paris[actualRoundid]
 
         if (isEmpty(actualParis)) {
             return true
         } else {
-            if (poolid === actualPoolid) return true
+            if (roundid === actualRoundid) return true
             else return false
         }
     }

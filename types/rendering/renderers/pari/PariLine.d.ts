@@ -9,6 +9,6 @@ export declare class PariLine extends BaseParisRenderer {
     private nocontestLineStyle;
     private winlineStyle;
     private validPariPositions;
-    protected updatePari(pool: any, pari: any, context: RenderingContext, container: Container): void;
+    protected updatePari(round: any, pari: any, context: RenderingContext, container: Container): void;
     private updateLine;
 }

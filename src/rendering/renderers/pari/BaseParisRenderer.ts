@@ -1,5 +1,5 @@
 import { EntityUtils, RenderingContext } from '@rendering'
-import { BasePoolsRenderer } from '@rendering/renderers/pool/BasePoolsRenderer'
+import { BaseRoundsRenderer } from '@rendering/renderers/round/BaseRoundsRenderer'
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach } from '@lib/utils'
@@ -19,37 +19,37 @@ type PariState = {
     reverted,
     orphan,
     claimable,
-    emptypool,
+    emptyround,
     resolution,
     propagating,
 }
 
-export abstract class BaseParisRenderer extends BasePoolsRenderer {
+export abstract class BaseParisRenderer extends BaseRoundsRenderer {
 
     protected prevparis: { [key:string]: string } = {}
 
     protected newparis: { [key:string]: string } = {}
 
-    protected updatePool(
-        pool: any,
+    protected updateRound(
+        round: any,
         context: RenderingContext,
         layer: Container,
     ): Container {
-        const paris = context.paris?.[pool.poolid]
+        const paris = context.paris?.[round.roundid]
         if (isEmpty(paris)) {
-            this.cleanupPari(pool)
+            this.cleanupPari(round)
 
             return layer
         }
 
-        this.updateEachPari(pool, paris, context, layer)
-        this.cleanupPari(pool)
+        this.updateEachPari(round, paris, context, layer)
+        this.cleanupPari(round)
 
         return layer
     }
 
     private updateEachPari(
-        pool: any,
+        round: any,
         paris: any[],
         context: RenderingContext,
         layer: Container,
@@ -57,22 +57,22 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
 
         forEach(paris, (pari, idx) => {
             // NOTE: short exit if not in timeframe, [performance improvment]
-            if (pool.endDate < context.timeframe.since) return
-            if (pool.startDate > context.timeframe.until) return
+            if (round.endDate < context.timeframe.since) return
+            if (round.startDate > context.timeframe.until) return
 
-            this.rebind(pool.poolid, pari.pariid)
-            this.updatePari(pool, pari, context, layer, idx)
+            this.rebind(round.roundid, pari.pariid)
+            this.updatePari(round, pari, context, layer, idx)
             this.newparis[pari.pariid] = pari.pariid
         })
 
     }
 
-    private cleanupPari(pool: any): void {
+    private cleanupPari(round: any): void {
 
         forEach(this.prevparis, pariid => {
             if (pariid in this.newparis) return
 
-            this.rebind(pool.poolid, pariid)
+            this.rebind(round.roundid, pariid)
             this.clear()
         })
 
@@ -81,23 +81,23 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
     }
 
     protected getPariState(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
     ): PariState {
 
-        const resolution: EPosition = this.getPoolResolution(pool, context)
+        const resolution: EPosition = this.getRoundResolution(round, context)
         const phantom = pari.phantom
         const undef = resolution === EPosition.Undefined
         const nocontest = resolution === EPosition.NoContest
-        const isHistorical = this.isHistoricalPool(pool, context)
+        const isHistorical = this.isHistoricalRound(round, context)
         const win = pari.position === resolution
         const lose = !win && !phantom
         const winning = win && !isHistorical && !phantom
         const loseing = lose && !isHistorical && !phantom
         const won = win && isHistorical && !nocontest && !phantom
         const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
-        const emptypool = this.isNoContestEmptyPool(pool)
+        const emptyround = this.isNoContestEmptyRound(round)
         const propagating = EntityUtils.isEntityPropagating(context, pari.pariid)
         const orphan = phantom && reverted || isHistorical && phantom && !propagating
         const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom
@@ -115,12 +115,12 @@ export abstract class BaseParisRenderer extends BasePoolsRenderer {
             reverted,
             orphan,
             claimable,
-            emptypool,
+            emptyround,
             resolution,
             propagating,
         }
     }
 
-    protected abstract updatePari(pool: any, pari: any, context: RenderingContext, container: Container, index: number): void
+    protected abstract updatePari(round: any, pari: any, context: RenderingContext, container: Container, index: number): void
 
 }

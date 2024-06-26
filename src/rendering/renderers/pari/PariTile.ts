@@ -22,8 +22,8 @@ import { Graphics, Container, Sprite, Assets, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { PoolHoverEvent, PoolUnhoverEvent, WithdrawEvent } from '@events'
-import { ResolveWithdrawEvent, PoolPinEvent, PoolUnpinEvent } from '@events'
+import { RoundHoverEvent, RoundUnhoverEvent, WithdrawEvent } from '@events'
+import { ResolveWithdrawEvent, RoundPinEvent, RoundUnpinEvent } from '@events'
 import { ResolveWithdrawNocontestEvent } from '@events'
 
 import { EPosition } from '@enums'
@@ -693,34 +693,34 @@ export class PariTile extends BaseParisRenderer {
     }
 
     protected updatePari(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,
     ): void {
 
         if (!(pari.position in this.validPariPositions)) return this.clear()
-        if (!pool.openPriceTimestamp || !pool.openPriceValue) return this.clear()
+        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
 
-        const state = this.getPariState(pool, pari, context)
+        const state = this.getPariState(round, pari, context)
 
         if (!state.win && !state.nocontest && state.isHistorical) return this.clear()
 
-        const [group] = this.renderGroup(pool, pari, context, container, state)
+        const [group] = this.renderGroup(round, pari, context, container, state)
 
-        this.updatePositionIcon(pool, pari, context, group, state)
-        this.updateWager(pool, pari, context, group, state)
-        this.updateProfit(pool, pari, context, group, state)
-        this.updateClaim(pool, pari, context, group, state)
+        this.updatePositionIcon(round, pari, context, group, state)
+        this.updateWager(round, pari, context, group, state)
+        this.updateProfit(round, pari, context, group, state)
+        this.updateClaim(round, pari, context, group, state)
     }
 
     private getGroupPosition(
         context: RenderingContext,
-        pool: any,
+        round: any,
         position: EPosition,
     ): [number, number] {
-        const [ox] = datamath.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width)
-        const [oy] = datamath.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height)
+        const [ox] = datamath.scale([round.openPriceTimestamp], context.plotdata.timerange, context.screen.width)
+        const [oy] = datamath.scaleReverse([round.openPriceValue], context.plotdata.pricerange, context.screen.height)
 
         let vertical: any = null
         if (position === EPosition.Up) vertical = 0
@@ -737,7 +737,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private renderGroup(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,
@@ -747,7 +747,7 @@ export class PariTile extends BaseParisRenderer {
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
 
         const [group, groupstate] = groupElement.update(context, {
-            poolid: pool.poolid,
+            roundid: round.roundid,
             pariState: state,
         })
 
@@ -758,7 +758,7 @@ export class PariTile extends BaseParisRenderer {
                 container.addChild(group)
             }
 
-            const [bgx, bgy] = this.getGroupPosition(context, pool, pari.position)
+            const [bgx, bgy] = this.getGroupPosition(context, round, pari.position)
 
             group.position.set(bgx, bgy)
         }
@@ -767,7 +767,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private updatePositionIcon(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,
@@ -799,7 +799,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private updateProfit(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Graphics | Container,
@@ -807,7 +807,7 @@ export class PariTile extends BaseParisRenderer {
     ): void {
 
         const {
-            emptypool,
+            emptyround,
             nocontest,
             undef,
             win,
@@ -869,7 +869,7 @@ export class PariTile extends BaseParisRenderer {
             if (payoutState.new) profitcontent.addChild(payout)
             payout.style.fill = claimable ? this.payoutStyle.claimable.text.fill : this.payoutStyle.default.text.fill
 
-            if (win && !emptypool) {
+            if (win && !emptyround) {
                 profit.alpha = 1
 
                 const [prizeAmount] = this.get(
@@ -877,13 +877,13 @@ export class PariTile extends BaseParisRenderer {
                     () => {
                         if (pari.claimed) {
                             return ui.erc20(pari.payout)
-                        } else if (emptypool) {
+                        } else if (emptyround) {
                             return ui.erc20(pari.wager)
                         } else {
-                            return ui.erc20(actualReturn(pool.prizefunds, pari.wager, pari.position))
+                            return ui.erc20(actualReturn(round.prizefunds, pari.wager, pari.position))
                         }
                     },
-                    [pari.wager, pari.position, pari.claimed, pool.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptypool]
+                    [pari.wager, pari.position, pari.claimed, round.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptyround]
                 )
                 payout.text = prizeAmount
                 payout.position.set(...this.payoutStyle.default.offset)
@@ -922,7 +922,7 @@ export class PariTile extends BaseParisRenderer {
                 if (pari.claimed) {
                     profit.alpha = 1
                     payoutAmount = ui.erc20(pari.payout)
-                } else if ((nocontest || emptypool) && !phantom) {
+                } else if ((nocontest || emptyround) && !phantom) {
                     profit.alpha = 1
                     payoutAmount = ui.erc20(pari.wager)
                 } else {
@@ -955,16 +955,16 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private updateClaim(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Graphics | Container,
         state: any,
     ): void {
-        const { claimable, emptypool, isHistorical, propagating } = state
+        const { claimable, emptyround, isHistorical, propagating } = state
 
         if (claimable) {
-            const poolid = pool.poolid
+            const roundid = round.roundid
             const pariid = pari.pariid
             const erc20 = pari.erc20
 
@@ -972,24 +972,24 @@ export class PariTile extends BaseParisRenderer {
             if (claimState.new) {
                 container.addChild(claim)
 
-                this.get('resolved', () => pool.resolved, [pool.resolved])
-                this.get('settlement', () => context.settlements?.[pool.endDate], [context.settlements?.[pool.endDate]])
+                this.get('resolved', () => round.resolved, [round.resolved])
+                this.get('settlement', () => context.settlements?.[round.endDate], [context.settlements?.[round.endDate]])
                 this.get('nocontest', () => state.nocontest, [state.nocontest])
 
                 claim.interactive = true
                 claim.cursor = 'pointer'
                 claim.addEventListener('pointerover', (e) => {
-                    this.rebind(poolid, pariid)
+                    this.rebind(roundid, pariid)
                     // this.animate('claim', 'hover_claim')
-                    context.eventTarget.dispatchEvent(new PoolHoverEvent(poolid, e))
+                    context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
                 })
                 claim.addEventListener('pointerout', (e) => {
-                    this.rebind(poolid, pariid)
+                    this.rebind(roundid, pariid)
                     // this.animate('claim', 'unhover_claim')
-                    context.eventTarget.dispatchEvent(new PoolUnhoverEvent(poolid, e))
+                    context.eventTarget.dispatchEvent(new RoundUnhoverEvent(roundid, e))
                 })
                 claim.addEventListener('pointertap', (e) => {
-                    this.rebind(poolid, pariid)
+                    this.rebind(roundid, pariid)
                     // this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved')
                     const [sttlmnt] = this.read('settlement')
@@ -998,7 +998,7 @@ export class PariTile extends BaseParisRenderer {
                     if (rslvd) {
                         context.eventTarget.dispatchEvent(
                             new WithdrawEvent(
-                                poolid,
+                                roundid,
                                 pariid,
                                 erc20,
                                 e
@@ -1007,10 +1007,10 @@ export class PariTile extends BaseParisRenderer {
                     }
 
                     if (!rslvd) {
-                        if (nocontest && emptypool) {
+                        if (nocontest && emptyround) {
                             context.eventTarget.dispatchEvent(
                                 new ResolveWithdrawNocontestEvent(
-                                    poolid,
+                                    roundid,
                                     pariid,
                                     erc20,
                                     e
@@ -1019,7 +1019,7 @@ export class PariTile extends BaseParisRenderer {
                         } else if (sttlmnt) {
                             context.eventTarget.dispatchEvent(
                                 new ResolveWithdrawEvent(
-                                    poolid,
+                                    roundid,
                                     pariid,
                                     erc20,
                                     sttlmnt.resolutionPrice,
@@ -1035,19 +1035,19 @@ export class PariTile extends BaseParisRenderer {
             if (isHistorical && !claimState.subscribed) {
                 claimState.subscribed = true
 
-                context.eventTarget.addEventListener('poolpin', (e: PoolPinEvent) => {
-                    if (e.poolid !== poolid) return
+                context.eventTarget.addEventListener('roundpin', (e: RoundPinEvent) => {
+                    if (e.roundid !== roundid) return
 
-                    this.rebind(poolid, pariid)
+                    this.rebind(roundid, pariid)
 
                     const [claim] = this.read('claim')
                     if (claim) claim.interactive = true
                 })
 
-                context.eventTarget.addEventListener('poolunpin', (e: PoolUnpinEvent) => {
-                    if (e.poolid !== poolid) return
+                context.eventTarget.addEventListener('roundunpin', (e: RoundUnpinEvent) => {
+                    if (e.roundid !== roundid) return
 
-                    this.rebind(poolid, pariid)
+                    this.rebind(roundid, pariid)
 
                     const [claim] = this.read('claim')
                     if (claim) claim.interactive = false
@@ -1091,7 +1091,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private updateWager(
-        pool: any,
+        round: any,
         pari: any,
         context: RenderingContext,
         container: Container,

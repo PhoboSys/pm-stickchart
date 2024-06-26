@@ -4,10 +4,10 @@ exports.StateData = void 0;
 class StateData {
     constructor(onStateChange) {
         this.onStateChange = onStateChange;
-        this.pinnedPoolid = null;
+        this.pinnedRoundid = null;
     }
-    setPinnedPoolid(poolid) {
-        this.update('pinnedPoolid', poolid);
+    setPinnedRoundid(roundid) {
+        this.update('pinnedRoundid', roundid);
     }
     update(path, data) {
         this[path] = data;

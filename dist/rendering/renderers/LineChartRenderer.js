@@ -6,19 +6,19 @@ const _rendering_2 = require("../index.js");
 const _rendering_3 = require("../index.js");
 const _rendering_4 = require("../index.js");
 const _rendering_5 = require("../index.js");
-const PoolActualBackground_1 = require("./pool/PoolActualBackground");
-const PoolCountdown_1 = require("./pool/PoolCountdown");
+const RoundActualBackground_1 = require("./round/RoundActualBackground");
+const RoundCountdown_1 = require("./round/RoundCountdown");
 class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new _rendering_2.RenderingCompositor([
-            new PoolActualBackground_1.PoolActualBackground(renderer),
-            new PoolCountdown_1.PoolCountdown(renderer),
+            new RoundActualBackground_1.RoundActualBackground(renderer),
+            new RoundCountdown_1.RoundCountdown(renderer),
             new _rendering_3.GridRenderer(renderer),
             new _rendering_5.PricefeedInfoRenderer(renderer),
             new _rendering_2.PriceLineRenderer(renderer),
             new _rendering_1.LatestPriceLineRenderer(renderer),
-            new _rendering_4.Pool(renderer),
+            new _rendering_4.Round(renderer),
             new _rendering_3.LatestPriceRenderer(renderer),
             new _rendering_4.CrosshairRenderer(renderer),
             new _rendering_4.Pari(renderer),

@@ -645,23 +645,23 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     get animations() {
         return this.configAnimations;
     }
-    updatePari(pool, pari, context, container) {
+    updatePari(round, pari, context, container) {
         if (!(pari.position in this.validPariPositions))
             return this.clear();
-        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+        if (!round.openPriceTimestamp || !round.openPriceValue)
             return this.clear();
-        const state = this.getPariState(pool, pari, context);
+        const state = this.getPariState(round, pari, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
-        const [group] = this.renderGroup(pool, pari, context, container, state);
-        this.updatePositionIcon(pool, pari, context, group, state);
-        this.updateWager(pool, pari, context, group, state);
-        this.updateProfit(pool, pari, context, group, state);
-        this.updateClaim(pool, pari, context, group, state);
+        const [group] = this.renderGroup(round, pari, context, container, state);
+        this.updatePositionIcon(round, pari, context, group, state);
+        this.updateWager(round, pari, context, group, state);
+        this.updateProfit(round, pari, context, group, state);
+        this.updateClaim(round, pari, context, group, state);
     }
-    getGroupPosition(context, pool, position) {
-        const [ox] = datamath_1.default.scale([pool.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
-        const [oy] = datamath_1.default.scaleReverse([pool.openPriceValue], context.plotdata.pricerange, context.screen.height);
+    getGroupPosition(context, round, position) {
+        const [ox] = datamath_1.default.scale([round.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
+        const [oy] = datamath_1.default.scaleReverse([round.openPriceValue], context.plotdata.pricerange, context.screen.height);
         let vertical = null;
         if (position === _enums_1.EPosition.Up)
             vertical = 0;
@@ -675,10 +675,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const bgy = vertical + ofy;
         return [bgx, bgy];
     }
-    renderGroup(pool, pari, context, container, state) {
+    renderGroup(round, pari, context, container, state) {
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
         const [group, groupstate] = groupElement.update(context, {
-            poolid: pool.poolid,
+            roundid: round.roundid,
             pariState: state,
         });
         if (group) {
@@ -686,12 +686,12 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 container.sortableChildren = true;
                 container.addChild(group);
             }
-            const [bgx, bgy] = this.getGroupPosition(context, pool, pari.position);
+            const [bgx, bgy] = this.getGroupPosition(context, round, pari.position);
             group.position.set(bgx, bgy);
         }
         return [group, groupstate];
     }
-    updatePositionIcon(pool, pari, context, container, state) {
+    updatePositionIcon(round, pari, context, container, state) {
         const { orphan } = state;
         const circleStyle = orphan ? this.positionIconCircleStyle.orphan : this.positionIconCircleStyle[pari.position];
         const { lineStyle, color, radius, offset: [ofx, ofy] } = circleStyle;
@@ -713,8 +713,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         else
             positionIcon.tint = iconStyle.tint;
     }
-    updateProfit(pool, pari, context, container, state) {
-        const { emptypool, nocontest, undef, win, phantom, orphan, propagating, claimable, } = state;
+    updateProfit(round, pari, context, container, state) {
+        const { emptyround, nocontest, undef, win, phantom, orphan, propagating, claimable, } = state;
         if (orphan) {
             this.clear('profit');
             this.clear('profitcontent');
@@ -750,19 +750,19 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (payoutState.new)
                 profitcontent.addChild(payout);
             payout.style.fill = claimable ? this.payoutStyle.claimable.text.fill : this.payoutStyle.default.text.fill;
-            if (win && !emptypool) {
+            if (win && !emptyround) {
                 profit.alpha = 1;
                 const [prizeAmount] = this.get('prizeAmount', () => {
                     if (pari.claimed) {
                         return ui_1.default.erc20(pari.payout);
                     }
-                    else if (emptypool) {
+                    else if (emptyround) {
                         return ui_1.default.erc20(pari.wager);
                     }
                     else {
-                        return ui_1.default.erc20((0, calc_utils_1.actualReturn)(pool.prizefunds, pari.wager, pari.position));
+                        return ui_1.default.erc20((0, calc_utils_1.actualReturn)(round.prizefunds, pari.wager, pari.position));
                     }
-                }, [pari.wager, pari.position, pari.claimed, pool.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptypool]);
+                }, [pari.wager, pari.position, pari.claimed, round.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptyround]);
                 payout.text = prizeAmount;
                 payout.position.set(...this.payoutStyle.default.offset);
                 const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.default.offset, this.profitTextStyle.default.text));
@@ -790,7 +790,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     profit.alpha = 1;
                     payoutAmount = ui_1.default.erc20(pari.payout);
                 }
-                else if ((nocontest || emptypool) && !phantom) {
+                else if ((nocontest || emptyround) && !phantom) {
                     profit.alpha = 1;
                     payoutAmount = ui_1.default.erc20(pari.wager);
                 }
@@ -815,64 +815,64 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         else
             this.animate('profitpropagatingContainer', 'hide_propagating_bg');
     }
-    updateClaim(pool, pari, context, container, state) {
+    updateClaim(round, pari, context, container, state) {
         var _a;
-        const { claimable, emptypool, isHistorical, propagating } = state;
+        const { claimable, emptyround, isHistorical, propagating } = state;
         if (claimable) {
-            const poolid = pool.poolid;
+            const roundid = round.roundid;
             const pariid = pari.pariid;
             const erc20 = pari.erc20;
             const [claim, claimState] = this.get('claim', () => this.createClaim(context, pari.position));
             if (claimState.new) {
                 container.addChild(claim);
-                this.get('resolved', () => pool.resolved, [pool.resolved]);
-                this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[pool.endDate]]);
+                this.get('resolved', () => round.resolved, [round.resolved]);
+                this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]]);
                 this.get('nocontest', () => state.nocontest, [state.nocontest]);
                 claim.interactive = true;
                 claim.cursor = 'pointer';
                 claim.addEventListener('pointerover', (e) => {
-                    this.rebind(poolid, pariid);
+                    this.rebind(roundid, pariid);
                     // this.animate('claim', 'hover_claim')
-                    context.eventTarget.dispatchEvent(new _events_1.PoolHoverEvent(poolid, e));
+                    context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointerout', (e) => {
-                    this.rebind(poolid, pariid);
+                    this.rebind(roundid, pariid);
                     // this.animate('claim', 'unhover_claim')
-                    context.eventTarget.dispatchEvent(new _events_1.PoolUnhoverEvent(poolid, e));
+                    context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointertap', (e) => {
-                    this.rebind(poolid, pariid);
+                    this.rebind(roundid, pariid);
                     // this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved');
                     const [sttlmnt] = this.read('settlement');
                     const [nocontest] = this.read('nocontest');
                     if (rslvd) {
-                        context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(poolid, pariid, erc20, e));
+                        context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(roundid, pariid, erc20, e));
                     }
                     if (!rslvd) {
-                        if (nocontest && emptypool) {
-                            context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(poolid, pariid, erc20, e));
+                        if (nocontest && emptyround) {
+                            context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(roundid, pariid, erc20, e));
                         }
                         else if (sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(poolid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
                         }
                     }
                 });
             }
             if (isHistorical && !claimState.subscribed) {
                 claimState.subscribed = true;
-                context.eventTarget.addEventListener('poolpin', (e) => {
-                    if (e.poolid !== poolid)
+                context.eventTarget.addEventListener('roundpin', (e) => {
+                    if (e.roundid !== roundid)
                         return;
-                    this.rebind(poolid, pariid);
+                    this.rebind(roundid, pariid);
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = true;
                 });
-                context.eventTarget.addEventListener('poolunpin', (e) => {
-                    if (e.poolid !== poolid)
+                context.eventTarget.addEventListener('roundunpin', (e) => {
+                    if (e.roundid !== roundid)
                         return;
-                    this.rebind(poolid, pariid);
+                    this.rebind(roundid, pariid);
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = false;
@@ -903,7 +903,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             this.clear('nocontest');
         }
     }
-    updateWager(pool, pari, context, container, state) {
+    updateWager(round, pari, context, container, state) {
         const { propagating, orphan } = state;
         const position = pari.position;
         const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ?

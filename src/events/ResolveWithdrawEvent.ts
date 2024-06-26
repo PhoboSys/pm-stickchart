@@ -5,7 +5,7 @@ export class ResolveWithdrawEvent extends Event {
 
     public readonly inner: Event
 
-    public readonly poolid: string
+    public readonly roundid: string
 
     public readonly pariid: string
 
@@ -16,7 +16,7 @@ export class ResolveWithdrawEvent extends Event {
     public readonly controlPrice: PricefeedPoint
 
     constructor(
-        poolid: string,
+        roundid: string,
         pariid: string,
         erc20: string,
         resolutionPrice: PricefeedPoint,
@@ -25,7 +25,7 @@ export class ResolveWithdrawEvent extends Event {
     ) {
         super(ResolveWithdrawEvent.NAME)
 
-        this.poolid = poolid
+        this.roundid = roundid
         this.pariid = pariid
         this.erc20 = erc20
         this.resolutionPrice = resolutionPrice

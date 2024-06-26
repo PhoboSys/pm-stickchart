@@ -15,7 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./currencies"), exports);
-__exportStar(require("./poollevels"), exports);
+__exportStar(require("./roundlevels"), exports);
 __exportStar(require("./prizefunds"), exports);
 __exportStar(require("./pricefeed"), exports);
 __exportStar(require("./erc20"), exports);

@@ -1,8 +1,8 @@
 export declare class WithdrawEvent extends Event {
     static readonly NAME: string;
     readonly inner: Event;
-    readonly poolid: string;
+    readonly roundid: string;
     readonly pariid: string;
     readonly erc20: string;
-    constructor(poolid: string, pariid: string, erc20: string, inner: Event);
+    constructor(roundid: string, pariid: string, erc20: string, inner: Event);
 }
