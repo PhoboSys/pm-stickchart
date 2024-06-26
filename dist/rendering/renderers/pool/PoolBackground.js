@@ -389,7 +389,7 @@ class PoolBackground extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     getCointAnimationName(context, win) {
         var _a;
-        const key = `${(_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency}_${win ? 'GOLD' : 'SILVER'}`;
+        const key = `${(_a = context.game) === null || _a === void 0 ? void 0 : _a.currency}_${win ? 'GOLD' : 'SILVER'}`;
         switch (key) {
             case 'DEMO_SILVER':
                 return textures_1.DEMO_SILVER_TEXTURE;

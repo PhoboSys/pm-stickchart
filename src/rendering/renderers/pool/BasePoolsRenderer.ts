@@ -221,7 +221,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
 
     protected getLevelTextureName(context: RenderingContext): symbol {
 
-        switch (context.metapool?.level) {
+        switch (context.game?.level) {
             case BRONZE:
                 return BRONZE_LEVEL_TEXTURE
             case SILVER:
@@ -230,7 +230,7 @@ export abstract class BasePoolsRenderer extends BaseRenderer {
                 return GOLD_LEVEL_TEXTURE
 
             default:
-                Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
+                Logger.error(`game level "${context.game?.level}" is not supported, fallback to SILVER`)
 
                 return SILVER_LEVEL_TEXTURE
         }

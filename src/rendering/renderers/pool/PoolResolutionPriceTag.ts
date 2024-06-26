@@ -128,7 +128,7 @@ export class PoolResolutionPriceTag extends BasePoolsRenderer {
 
         const [x] = datamath.scale([rprice.timestamp], timerange, width)
         const [y] = datamath.scaleReverse([Number(rprice.value)], pricerange, height)
-        const priceValue = ui.currency(rprice.value, context.metapool.quote)
+        const priceValue = ui.currency(rprice.value, context.game.quote)
         const position = this.getPoolResolution(pool, context)
         const coverStyle = this.coverStyle[position]
 

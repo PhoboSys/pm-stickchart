@@ -67,7 +67,7 @@ export class PoolResolution extends BasePoolsRenderer {
 
     private getLevelLineColor(context: RenderingContext): number {
 
-        switch (context.metapool?.level) {
+        switch (context.game?.level) {
             case BRONZE:
                 return config.style.levels.bronzeLineColor
             case SILVER:
@@ -76,7 +76,7 @@ export class PoolResolution extends BasePoolsRenderer {
                 return config.style.levels.goldLineColor
 
             default:
-                Logger.error(`metapool level "${context.metapool?.level}" is not supported, fallback to SILVER`)
+                Logger.error(`game level "${context.game?.level}" is not supported, fallback to SILVER`)
 
                 return config.style.levels.silverLineColor
         }

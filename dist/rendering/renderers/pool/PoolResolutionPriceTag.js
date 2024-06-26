@@ -71,7 +71,7 @@ class PoolResolutionPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const { width, height, } = context.screen;
         const [x] = datamath_1.default.scale([rprice.timestamp], timerange, width);
         const [y] = datamath_1.default.scaleReverse([Number(rprice.value)], pricerange, height);
-        const priceValue = index_1.default.currency(rprice.value, context.metapool.quote);
+        const priceValue = index_1.default.currency(rprice.value, context.game.quote);
         const position = this.getPoolResolution(pool, context);
         const coverStyle = this.coverStyle[position];
         const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(priceValue, coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));

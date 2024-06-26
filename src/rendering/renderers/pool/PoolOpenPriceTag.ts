@@ -128,7 +128,7 @@ export class PoolOpenPriceTag extends BasePoolsRenderer {
         const coverStyle = this.coverStyle[position]
 
         const [cover, coverState] = this.get('cover', () => GraphicUtils.createCoveredText(
-            ui.currency(pool.openPriceValue, context.metapool.quote),
+            ui.currency(pool.openPriceValue, context.game.quote),
             coverStyle.offset,
             { ...coverStyle, color: 0xFFFFFF },
         ))

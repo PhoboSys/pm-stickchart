@@ -504,7 +504,7 @@ export class PoolBackground extends BasePoolsRenderer {
     }
 
     private getCointAnimationName(context: RenderingContext, win: boolean): symbol {
-        const key = `${context.metapool?.currency}_${win ? 'GOLD' : 'SILVER'}`
+        const key = `${context.game?.currency}_${win ? 'GOLD' : 'SILVER'}`
 
         switch (key) {
             case 'DEMO_SILVER':

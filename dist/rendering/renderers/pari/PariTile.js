@@ -978,7 +978,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     }
     getPariCurrencyIconTextureName(context) {
         var _a;
-        const key = (_a = context.metapool) === null || _a === void 0 ? void 0 : _a.currency;
+        const key = (_a = context.game) === null || _a === void 0 ? void 0 : _a.currency;
         switch (key) {
             case _constants_1.ORCY:
                 return textures_1.ORCY_TEXTURE;

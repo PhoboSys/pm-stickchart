@@ -28,7 +28,7 @@ export declare class StickChart extends EventTarget {
     render(context: {
         chartdata: ChartData;
         charttype: EChartType;
-        metapool: any;
+        game: any;
         pools: any[];
         paris: any[];
         resolved: any[];

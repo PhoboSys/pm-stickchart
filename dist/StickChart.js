@@ -100,8 +100,8 @@ class StickChart extends EventTarget {
     }
     render(context) {
         var _a;
-        if (!context.metapool) {
-            return _infra_1.Logger.error('Cannot initiate chart "metapool" is not provided!');
+        if (!context.game) {
+            return _infra_1.Logger.error('Cannot initiate chart "game" is not provided!');
         }
         if (!this.application.screen)
             return;
@@ -115,7 +115,7 @@ class StickChart extends EventTarget {
         const features = (0, _features_1.createFeatures)(context.features);
         const options = (0, _options_1.createOptions)(this.options);
         const ctx = {
-            metapool: context.metapool,
+            game: context.game,
             pools: context.pools,
             paris: context.paris,
             settlements: context.settlements,
@@ -136,8 +136,8 @@ class StickChart extends EventTarget {
             features,
             options,
         };
-        if (context.metapool.metapoolid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.metapool.metapoolid)) {
-            // clear context if metapoolid changed
+        if (context.game.gameid !== ((_a = this._context) === null || _a === void 0 ? void 0 : _a.game.gameid)) {
+            // clear context if gameid changed
             this._context = null;
             this.timeframe.reset();
         }

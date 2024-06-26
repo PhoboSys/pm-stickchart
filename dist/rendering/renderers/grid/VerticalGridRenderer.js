@@ -29,7 +29,7 @@ class VerticalGridRenderer extends _rendering_1.BaseRenderer {
     update(context, container) {
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
-        const stepsize = context.metapool.schedule;
+        const stepsize = context.game.schedule;
         const timesteps = datamath_1.default.steps(timerange, stepsize, _config_1.default.grid.time.max);
         const xs = datamath_1.default.scale(timesteps, timerange, width);
         const outsideX = -100;

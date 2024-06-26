@@ -42,7 +42,7 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
     }
     getLevelLineColor(context) {
         var _a, _b;
-        switch ((_a = context.metapool) === null || _a === void 0 ? void 0 : _a.level) {
+        switch ((_a = context.game) === null || _a === void 0 ? void 0 : _a.level) {
             case _constants_1.BRONZE:
                 return _config_1.default.style.levels.bronzeLineColor;
             case _constants_1.SILVER:
@@ -50,7 +50,7 @@ class PoolResolution extends BasePoolsRenderer_1.BasePoolsRenderer {
             case _constants_1.GOLD:
                 return _config_1.default.style.levels.goldLineColor;
             default:
-                _infra_1.Logger.error(`metapool level "${(_b = context.metapool) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
+                _infra_1.Logger.error(`game level "${(_b = context.game) === null || _b === void 0 ? void 0 : _b.level}" is not supported, fallback to SILVER`);
                 return _config_1.default.style.levels.silverLineColor;
         }
     }

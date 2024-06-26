@@ -70,7 +70,7 @@ class PoolOpenPriceTag extends BasePoolsRenderer_1.BasePoolsRenderer {
         const [y] = datamath_1.default.scaleReverse([pool.openPriceValue], pricerange, height);
         const position = this.getPoolResolution(pool, context);
         const coverStyle = this.coverStyle[position];
-        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(index_1.default.currency(pool.openPriceValue, context.metapool.quote), coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
+        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(index_1.default.currency(pool.openPriceValue, context.game.quote), coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
         const [ofx, ofy] = coverStyle.offset;
         if (coverState.new)
             container.addChild(cover);

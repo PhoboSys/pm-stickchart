@@ -1226,7 +1226,7 @@ export class PariTile extends BaseParisRenderer {
     }
 
     private getPariCurrencyIconTextureName(context: RenderingContext): symbol {
-        const key = context.metapool?.currency
+        const key = context.game?.currency
 
         switch (key) {
             case ORCY:
