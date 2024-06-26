@@ -9,14 +9,14 @@ import { EPosition } from '@enums'
 
 import { GroupComponent } from '@rendering/components/GroupComponent'
 
-import { BaseParisRenderer } from './BaseParisRenderer'
+import { BasePredictionsRenderer } from './BasePredictionsRenderer'
 
-export class PariLine extends BaseParisRenderer {
+export class PredictionLine extends BasePredictionsRenderer {
 
-    static readonly PARI_LINE_ID: symbol = Symbol('PARI_LINE_ID')
+    static readonly PREDICTION_LINE_ID: symbol = Symbol('PREDICTION_LINE_ID')
 
     public get rendererId(): symbol {
-        return PariLine.PARI_LINE_ID
+        return PredictionLine.PREDICTION_LINE_ID
     }
 
     private baseLineStyle: any = {
@@ -63,42 +63,42 @@ export class PariLine extends BaseParisRenderer {
         [EPosition.Zero]: { lineStyle: { color: 0xF7C15B } }
     })
 
-    private validPariPositions = {
+    private validPredictionPositions = {
         [EPosition.Up]: EPosition.Up,
         [EPosition.Down]: EPosition.Down,
         [EPosition.Zero]: EPosition.Zero,
     }
 
-    protected updatePari(
+    protected updatePrediction(
         round: any,
-        pari: any,
+        prediction: any,
         context: RenderingContext,
         container: Container,
     ): void {
 
-        if (!(pari.position in this.validPariPositions)) return this.clear()
+        if (!(prediction.position in this.validPredictionPositions)) return this.clear()
         if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
 
-        const state = this.getPariState(round, pari, context)
+        const state = this.getPredictionState(round, prediction, context)
 
         if (!state.win && !state.nocontest && state.isHistorical) return this.clear()
 
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
-        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, pariState: state })
+        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, predictionState: state })
         if (group && groupstate.new) container.addChild(group)
 
-        this.updateLine(round, pari, context, group, state)
+        this.updateLine(round, prediction, context, group, state)
 
     }
 
     private updateLine(
         round: any,
-        pari: any,
+        prediction: any,
         context: RenderingContext,
         container: Container,
         state: any,
     ): void {
-        const position = pari.position
+        const position = prediction.position
         const { win, orphan } = state
 
         if (!container) return this.clear('line')
@@ -117,8 +117,8 @@ export class PariLine extends BaseParisRenderer {
         if (orphan) style = this.orphanlineStyle
         else if (win) style = this.winlineStyle
 
-        const [startx, starty] = style[pari.position].startOffset
-        const [endx, endy] = style[pari.position].endOffset
+        const [startx, starty] = style[prediction.position].startOffset
+        const [endx, endy] = style[prediction.position].endOffset
 
         let vertical: any = null
         if (position === EPosition.Up) vertical = 0
@@ -127,7 +127,7 @@ export class PariLine extends BaseParisRenderer {
 
         line
             .clear()
-            .lineStyle(style[pari.position].lineStyle)
+            .lineStyle(style[prediction.position].lineStyle)
             .moveTo(ox+startx, oy+starty)
             .lineTo(ox+endx, vertical+endy)
 

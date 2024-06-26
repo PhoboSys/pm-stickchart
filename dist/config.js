@@ -4,7 +4,7 @@ exports.default = {
     positioning: {
         alert: 30000, // 30 sec
     },
-    pari: {
+    prediction: {
         historical: true,
     },
     performance: {

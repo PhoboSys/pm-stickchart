@@ -1,10 +1,10 @@
 import { IGraphicStorage, RenderingCompositor } from '@rendering'
 import { RenderingContext, DoneFunction, IRenderer } from '@rendering'
 
-import { PariTile } from './PariTile'
-import { PariLine } from './PariLine'
+import { PredictionTile } from './PredictionTile'
+import { PredictionLine } from './PredictionLine'
 
-export class Pari implements IRenderer {
+export class Prediction implements IRenderer {
 
     private readonly compositor: RenderingCompositor
 
@@ -12,8 +12,8 @@ export class Pari implements IRenderer {
         private readonly renderer: IGraphicStorage
     ) {
         this.compositor = new RenderingCompositor([
-            new PariLine(renderer),
-            new PariTile(renderer),
+            new PredictionLine(renderer),
+            new PredictionTile(renderer),
         ])
     }
 

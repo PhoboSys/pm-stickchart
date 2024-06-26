@@ -19,16 +19,16 @@ type PariState = {
     propagating: any;
 };
 export declare abstract class BaseParisRenderer extends BaseRoundsRenderer {
-    protected prevparis: {
+    protected prevpredictions: {
         [key: string]: string;
     };
-    protected newparis: {
+    protected newpredictions: {
         [key: string]: string;
     };
     protected updateRound(round: any, context: RenderingContext, layer: Container): Container;
     private updateEachPari;
     private cleanupPari;
-    protected getPariState(round: any, pari: any, context: RenderingContext): PariState;
-    protected abstract updatePari(round: any, pari: any, context: RenderingContext, container: Container, index: number): void;
+    protected getPariState(round: any, prediction: any, context: RenderingContext): PariState;
+    protected abstract updatePari(round: any, prediction: any, context: RenderingContext, container: Container, index: number): void;
 }
 export {};

@@ -21,7 +21,7 @@ class LineChartRenderer {
             new _rendering_4.Round(renderer),
             new _rendering_3.LatestPriceRenderer(renderer),
             new _rendering_4.CrosshairRenderer(renderer),
-            new _rendering_4.Pari(renderer),
+            new _rendering_4.Prediction(renderer),
         ]);
     }
     render(context, done) {

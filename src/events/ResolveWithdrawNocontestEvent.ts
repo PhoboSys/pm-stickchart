@@ -5,20 +5,20 @@ export class ResolveWithdrawNocontestEvent extends Event {
 
     public readonly roundid: string
 
-    public readonly pariid: string
+    public readonly predictionid: string
 
     public readonly erc20: string
 
     constructor(
         roundid: string,
-        pariid: string,
+        predictionid: string,
         erc20: string,
         inner: Event,
     ) {
         super(ResolveWithdrawNocontestEvent.NAME)
 
         this.roundid = roundid
-        this.pariid = pariid
+        this.predictionid = predictionid
         this.erc20 = erc20
         this.inner = inner
     }

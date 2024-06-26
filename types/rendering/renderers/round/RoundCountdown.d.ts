@@ -11,7 +11,7 @@ export declare class RoundCountdown extends BaseRoundsRenderer {
     private readonly countdownStyle;
     private configAnimations;
     protected get animations(): any;
-    private validPariPositions;
+    private validPredictionPositions;
     private _countdownTick;
     constructor(renderer: IGraphicStorage);
     get rendererId(): symbol;

@@ -60,22 +60,22 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
     get rendererId() {
         return PariLine.PARI_LINE_ID;
     }
-    updatePari(round, pari, context, container) {
-        if (!(pari.position in this.validPariPositions))
+    updatePari(round, prediction, context, container) {
+        if (!(prediction.position in this.validPariPositions))
             return this.clear();
         if (!round.openPriceTimestamp || !round.openPriceValue)
             return this.clear();
-        const state = this.getPariState(round, pari, context);
+        const state = this.getPariState(round, prediction, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
-        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, pariState: state });
+        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, predictionState: state });
         if (group && groupstate.new)
             container.addChild(group);
-        this.updateLine(round, pari, context, group, state);
+        this.updateLine(round, prediction, context, group, state);
     }
-    updateLine(round, pari, context, container, state) {
-        const position = pari.position;
+    updateLine(round, prediction, context, container, state) {
+        const position = prediction.position;
         const { win, orphan } = state;
         if (!container)
             return this.clear('line');
@@ -92,8 +92,8 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             style = this.orphanlineStyle;
         else if (win)
             style = this.winlineStyle;
-        const [startx, starty] = style[pari.position].startOffset;
-        const [endx, endy] = style[pari.position].endOffset;
+        const [startx, starty] = style[prediction.position].startOffset;
+        const [endx, endy] = style[prediction.position].endOffset;
         let vertical = null;
         if (position === _enums_1.EPosition.Up)
             vertical = 0;
@@ -103,7 +103,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             vertical = context.screen.height;
         line
             .clear()
-            .lineStyle(style[pari.position].lineStyle)
+            .lineStyle(style[prediction.position].lineStyle)
             .moveTo(ox + startx, oy + starty)
             .lineTo(ox + endx, vertical + endy);
         line.position.y = -container.position.y;

@@ -2,7 +2,7 @@ declare const _default: {
     positioning: {
         alert: number;
     };
-    pari: {
+    prediction: {
         historical: boolean;
     };
     performance: {

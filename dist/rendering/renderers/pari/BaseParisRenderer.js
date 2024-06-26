@@ -8,58 +8,58 @@ const _enums_1 = require("../../../enums/index.js");
 class BaseParisRenderer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     constructor() {
         super(...arguments);
-        this.prevparis = {};
-        this.newparis = {};
+        this.prevpredictions = {};
+        this.newpredictions = {};
     }
     updateRound(round, context, layer) {
         var _a;
-        const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[round.roundid];
-        if ((0, utils_1.isEmpty)(paris)) {
+        const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
+        if ((0, utils_1.isEmpty)(predictions)) {
             this.cleanupPari(round);
             return layer;
         }
-        this.updateEachPari(round, paris, context, layer);
+        this.updateEachPari(round, predictions, context, layer);
         this.cleanupPari(round);
         return layer;
     }
-    updateEachPari(round, paris, context, layer) {
-        (0, utils_1.forEach)(paris, (pari, idx) => {
+    updateEachPari(round, predictions, context, layer) {
+        (0, utils_1.forEach)(predictions, (prediction, idx) => {
             // NOTE: short exit if not in timeframe, [performance improvment]
             if (round.endDate < context.timeframe.since)
                 return;
             if (round.startDate > context.timeframe.until)
                 return;
-            this.rebind(round.roundid, pari.pariid);
-            this.updatePari(round, pari, context, layer, idx);
-            this.newparis[pari.pariid] = pari.pariid;
+            this.rebind(round.roundid, prediction.predictionid);
+            this.updatePari(round, prediction, context, layer, idx);
+            this.newpredictions[prediction.predictionid] = prediction.predictionid;
         });
     }
     cleanupPari(round) {
-        (0, utils_1.forEach)(this.prevparis, pariid => {
-            if (pariid in this.newparis)
+        (0, utils_1.forEach)(this.prevpredictions, predictionid => {
+            if (predictionid in this.newpredictions)
                 return;
-            this.rebind(round.roundid, pariid);
+            this.rebind(round.roundid, predictionid);
             this.clear();
         });
-        this.prevparis = this.newparis;
-        this.newparis = {};
+        this.prevpredictions = this.newpredictions;
+        this.newpredictions = {};
     }
-    getPariState(round, pari, context) {
+    getPariState(round, prediction, context) {
         const resolution = this.getRoundResolution(round, context);
-        const phantom = pari.phantom;
+        const phantom = prediction.phantom;
         const undef = resolution === _enums_1.EPosition.Undefined;
         const nocontest = resolution === _enums_1.EPosition.NoContest;
         const isHistorical = this.isHistoricalRound(round, context);
-        const win = pari.position === resolution;
+        const win = prediction.position === resolution;
         const lose = !win && !phantom;
         const winning = win && !isHistorical && !phantom;
         const loseing = lose && !isHistorical && !phantom;
         const won = win && isHistorical && !nocontest && !phantom;
-        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pari.pariid);
+        const reverted = _rendering_1.EntityUtils.isEnityReverted(context, prediction.predictionid);
         const emptyround = this.isNoContestEmptyRound(round);
-        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pari.pariid);
+        const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, prediction.predictionid);
         const orphan = phantom && reverted || isHistorical && phantom && !propagating;
-        const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom;
+        const claimable = !prediction.claimed && (won || nocontest) && !orphan && !phantom;
         return {
             phantom,
             undef,

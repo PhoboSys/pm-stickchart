@@ -117,7 +117,7 @@ class StickChart extends EventTarget {
         const ctx = {
             game: context.game,
             rounds: context.rounds,
-            paris: context.paris,
+            predictions: context.predictions,
             settlements: context.settlements,
             blocksLatest: context.blocksLatest,
             transactions: context.transactions,

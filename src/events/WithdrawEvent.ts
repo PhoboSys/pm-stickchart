@@ -5,13 +5,13 @@ export class WithdrawEvent extends Event {
 
     public readonly roundid: string
 
-    public readonly pariid: string
+    public readonly predictionid: string
 
     public readonly erc20: string
 
     constructor(
         roundid: string,
-        pariid: string,
+        predictionid: string,
         erc20: string,
         inner: Event,
     ) {
@@ -19,7 +19,7 @@ export class WithdrawEvent extends Event {
 
         this.inner = inner
         this.roundid = roundid
-        this.pariid = pariid
+        this.predictionid = predictionid
         this.erc20 = erc20
     }
 }

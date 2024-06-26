@@ -15,7 +15,7 @@ export type RenderingContext = {
 
     game: any
     rounds: any[]
-    paris: any[]
+    predictions: any[]
     resolved: any[]
     settlements: any
     blocksLatest: any

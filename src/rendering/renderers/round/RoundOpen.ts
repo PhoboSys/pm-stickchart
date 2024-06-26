@@ -33,29 +33,29 @@ export class RoundOpen extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        const paris = context.paris?.[round.roundid]
-        if (!round.openPriceTimestamp || !this.isActualRound(round, context) && isEmpty(paris)) return this.clear()
+        const predictions = context.predictions?.[round.roundid]
+        if (!round.openPriceTimestamp || !this.isActualRound(round, context) && isEmpty(predictions)) return this.clear()
 
         const resolution = this.getRoundResolution(round, context)
-        const hasWinPari = paris && paris.some(pari => pari.position === resolution)
+        const hasWinPrediction = predictions && predictions.some(prediction => prediction.position === resolution)
         const isHistorical = this.isHistoricalRound(round, context)
         const nocontest = resolution === EPosition.NoContest
         const emptyround = this.isNoContestEmptyRound(round)
-        const hashClaimablePari = paris && paris.some(pari => {
-            const phantom = pari.phantom
-            const win = pari.position === resolution
+        const hashClaimablePrediction = predictions && predictions.some(prediction => {
+            const phantom = prediction.phantom
+            const win = prediction.position === resolution
             const won = win && isHistorical && !nocontest && !phantom
-            const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
-            const propagating = EntityUtils.isEntityPropagating(context, pari.pariid)
+            const reverted = EntityUtils.isEnityReverted(context, prediction.predictionid)
+            const propagating = EntityUtils.isEntityPropagating(context, prediction.predictionid)
             const orphan = phantom && reverted || isHistorical && phantom && !propagating
-            const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom
+            const claimable = !prediction.claimed && (won || nocontest) && !orphan && !phantom
 
             return claimable
         })
 
         const [groupElement] = this.get('groupElement', () => new GroupComponent())
-        const state = { win: hasWinPari, isHistorical, nocontest, emptyround, claimable: hashClaimablePari }
-        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, pariState: state })
+        const state = { win: hasWinPrediction, isHistorical, nocontest, emptyround, claimable: hashClaimablePrediction }
+        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, predictionState: state })
         if (group && groupstate.new) container.addChild(group)
 
         this.updateOpenLine(round, context, group)

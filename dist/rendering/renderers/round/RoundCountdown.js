@@ -147,7 +147,7 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
                 ease: 'power2.out',
             },
         };
-        this.validPariPositions = {
+        this.validPredictionPositions = {
             [_enums_1.EPosition.Up]: _enums_1.EPosition.Up,
             [_enums_1.EPosition.Down]: _enums_1.EPosition.Down,
             [_enums_1.EPosition.Zero]: _enums_1.EPosition.Zero,
@@ -235,7 +235,7 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
                 gradientres.addChild(gradientresBackground);
             gradientresBackground.position.x = rx;
             const resolution = this.getRoundResolution(round, context);
-            if (round.openPriceValue && round.openPriceTimestamp && (resolution in this.validPariPositions) && locked) {
+            if (round.openPriceValue && round.openPriceTimestamp && (resolution in this.validPredictionPositions) && locked) {
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer());
                 if (winningcontainerState.new || gradientresBackgroundState.new)
                     gradientresBackground.addChild(winningcontainer);
@@ -244,10 +244,10 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
                     winningcontainer.addChild(winninggradient);
                     winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight);
                 }
-                const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[round.roundid];
-                const hasWinPari = paris && paris.some(pari => pari.position === resolution);
+                const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
+                const hasWinPrediction = predictions && predictions.some(prediction => prediction.position === resolution);
                 const ofy = this.winningGradientContainerStyle.offset[1];
-                if (hasWinPari) {
+                if (hasWinPrediction) {
                     if (resolution === _enums_1.EPosition.Up)
                         winningcontainer.position.y = ofy - rheight;
                     if (resolution === _enums_1.EPosition.Zero)

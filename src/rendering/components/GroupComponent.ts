@@ -111,14 +111,14 @@ export class GroupComponent extends BaseComponent {
     ): any[] {
 
         const pinnedRoundid = context.statedata.pinnedRoundid
-        const { roundid, pariState } = props
+        const { roundid, predictionState } = props
         const {
             win,
             isHistorical,
             nocontest,
             emptyround,
             claimable,
-        } = pariState
+        } = predictionState
 
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
@@ -196,9 +196,9 @@ export class GroupComponent extends BaseComponent {
 
     private isPrimaryRound(roundid, context): boolean {
         const actualRoundid = context.actualRoundid
-        const actualParis = context.paris[actualRoundid]
+        const actualPredictions = context.predictions[actualRoundid]
 
-        if (isEmpty(actualParis)) {
+        if (isEmpty(actualPredictions)) {
             return true
         } else {
             if (roundid === actualRoundid) return true

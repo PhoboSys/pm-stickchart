@@ -645,19 +645,19 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
     get animations() {
         return this.configAnimations;
     }
-    updatePari(round, pari, context, container) {
-        if (!(pari.position in this.validPariPositions))
+    updatePari(round, prediction, context, container) {
+        if (!(prediction.position in this.validPariPositions))
             return this.clear();
         if (!round.openPriceTimestamp || !round.openPriceValue)
             return this.clear();
-        const state = this.getPariState(round, pari, context);
+        const state = this.getPariState(round, prediction, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
-        const [group] = this.renderGroup(round, pari, context, container, state);
-        this.updatePositionIcon(round, pari, context, group, state);
-        this.updateWager(round, pari, context, group, state);
-        this.updateProfit(round, pari, context, group, state);
-        this.updateClaim(round, pari, context, group, state);
+        const [group] = this.renderGroup(round, prediction, context, container, state);
+        this.updatePositionIcon(round, prediction, context, group, state);
+        this.updateWager(round, prediction, context, group, state);
+        this.updateProfit(round, prediction, context, group, state);
+        this.updateClaim(round, prediction, context, group, state);
     }
     getGroupPosition(context, round, position) {
         const [ox] = datamath_1.default.scale([round.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
@@ -675,25 +675,25 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const bgy = vertical + ofy;
         return [bgx, bgy];
     }
-    renderGroup(round, pari, context, container, state) {
+    renderGroup(round, prediction, context, container, state) {
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
         const [group, groupstate] = groupElement.update(context, {
             roundid: round.roundid,
-            pariState: state,
+            predictionState: state,
         });
         if (group) {
             if (groupstate.new) {
                 container.sortableChildren = true;
                 container.addChild(group);
             }
-            const [bgx, bgy] = this.getGroupPosition(context, round, pari.position);
+            const [bgx, bgy] = this.getGroupPosition(context, round, prediction.position);
             group.position.set(bgx, bgy);
         }
         return [group, groupstate];
     }
-    updatePositionIcon(round, pari, context, container, state) {
+    updatePositionIcon(round, prediction, context, container, state) {
         const { orphan } = state;
-        const circleStyle = orphan ? this.positionIconCircleStyle.orphan : this.positionIconCircleStyle[pari.position];
+        const circleStyle = orphan ? this.positionIconCircleStyle.orphan : this.positionIconCircleStyle[prediction.position];
         const { lineStyle, color, radius, offset: [ofx, ofy] } = circleStyle;
         const [positionIconCircle, positionIconCircleState] = this.get('positionIconCircle', () => new pixi_1.Graphics());
         if (positionIconCircleState.new)
@@ -704,8 +704,8 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             .beginFill(color)
             .drawCircle(ofx, ofy, radius)
             .endFill();
-        const iconStyle = this.positionIconStyle[pari.position];
-        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(pari.position), iconStyle));
+        const iconStyle = this.positionIconStyle[prediction.position];
+        const [positionIcon, positionIconState] = this.get('positionIcon', () => this.createIcon(context, this.getPositionIconTextureName(prediction.position), iconStyle));
         if (positionIconState.new)
             container.addChild(positionIcon);
         if (orphan && iconStyle.orphanTint)
@@ -713,7 +713,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         else
             positionIcon.tint = iconStyle.tint;
     }
-    updateProfit(round, pari, context, container, state) {
+    updateProfit(round, prediction, context, container, state) {
         const { emptyround, nocontest, undef, win, phantom, orphan, propagating, claimable, } = state;
         if (orphan) {
             this.clear('profit');
@@ -728,7 +728,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             this.clear('profitpropagating');
             return;
         }
-        const [profit, profitState] = this.get('profit', () => this.createProfitContainer(context, pari.position, claimable), [claimable]);
+        const [profit, profitState] = this.get('profit', () => this.createProfitContainer(context, prediction.position, claimable), [claimable]);
         if (profitState.new)
             container.addChild(profit);
         profit.alpha = 0;
@@ -753,16 +753,16 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             if (win && !emptyround) {
                 profit.alpha = 1;
                 const [prizeAmount] = this.get('prizeAmount', () => {
-                    if (pari.claimed) {
-                        return ui_1.default.erc20(pari.payout);
+                    if (prediction.claimed) {
+                        return ui_1.default.erc20(prediction.payout);
                     }
                     else if (emptyround) {
-                        return ui_1.default.erc20(pari.wager);
+                        return ui_1.default.erc20(prediction.wager);
                     }
                     else {
-                        return ui_1.default.erc20((0, calc_utils_1.actualReturn)(round.prizefunds, pari.wager, pari.position));
+                        return ui_1.default.erc20((0, calc_utils_1.actualReturn)(round.prizefunds, prediction.wager, prediction.position));
                     }
-                }, [pari.wager, pari.position, pari.claimed, round.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptyround]);
+                }, [prediction.wager, prediction.position, prediction.claimed, round.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptyround]);
                 payout.text = prizeAmount;
                 payout.position.set(...this.payoutStyle.default.offset);
                 const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.default.offset, this.profitTextStyle.default.text));
@@ -770,7 +770,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                     profitcontent.addChild(profitText);
                 profitText.alpha = this.profitTextStyle.default.text.alpha;
                 profitText.style.fill = claimable ? this.profitTextStyle.claimable.text.fill : this.profitTextStyle.default.text.fill;
-                const [percentAmount] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, pari.wager)), [prizeAmount, pari.wager]);
+                const [percentAmount] = this.get('percent', () => ui_1.default.percent((0, calc_utils_1.profitPercent)(prizeAmount, prediction.wager)), [prizeAmount, prediction.wager]);
                 const [percentText, percentTextState] = this.get('percentText', () => _rendering_1.GraphicUtils.createText(percentAmount, this.percentStyle.default.offset, this.percentStyle.default.text));
                 if (percentTextState.new)
                     profitcontent.addChild(percentText);
@@ -786,13 +786,13 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 if (percentText)
                     percentText.alpha = 0;
                 let payoutAmount = 0;
-                if (pari.claimed) {
+                if (prediction.claimed) {
                     profit.alpha = 1;
-                    payoutAmount = ui_1.default.erc20(pari.payout);
+                    payoutAmount = ui_1.default.erc20(prediction.payout);
                 }
                 else if ((nocontest || emptyround) && !phantom) {
                     profit.alpha = 1;
-                    payoutAmount = ui_1.default.erc20(pari.wager);
+                    payoutAmount = ui_1.default.erc20(prediction.wager);
                 }
                 else {
                     profit.alpha = 0;
@@ -802,7 +802,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer(this.profitContainerStyle[pari.position].default));
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer(this.profitContainerStyle[prediction.position].default));
         if (profitpropagatingContainerState.new || profitState.new)
             profit.addChild(profitpropagatingContainer);
         const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
@@ -815,14 +815,14 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         else
             this.animate('profitpropagatingContainer', 'hide_propagating_bg');
     }
-    updateClaim(round, pari, context, container, state) {
+    updateClaim(round, prediction, context, container, state) {
         var _a;
         const { claimable, emptyround, isHistorical, propagating } = state;
         if (claimable) {
             const roundid = round.roundid;
-            const pariid = pari.pariid;
-            const erc20 = pari.erc20;
-            const [claim, claimState] = this.get('claim', () => this.createClaim(context, pari.position));
+            const predictionid = prediction.predictionid;
+            const erc20 = prediction.erc20;
+            const [claim, claimState] = this.get('claim', () => this.createClaim(context, prediction.position));
             if (claimState.new) {
                 container.addChild(claim);
                 this.get('resolved', () => round.resolved, [round.resolved]);
@@ -831,30 +831,30 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 claim.interactive = true;
                 claim.cursor = 'pointer';
                 claim.addEventListener('pointerover', (e) => {
-                    this.rebind(roundid, pariid);
+                    this.rebind(roundid, predictionid);
                     // this.animate('claim', 'hover_claim')
                     context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointerout', (e) => {
-                    this.rebind(roundid, pariid);
+                    this.rebind(roundid, predictionid);
                     // this.animate('claim', 'unhover_claim')
                     context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointertap', (e) => {
-                    this.rebind(roundid, pariid);
+                    this.rebind(roundid, predictionid);
                     // this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved');
                     const [sttlmnt] = this.read('settlement');
                     const [nocontest] = this.read('nocontest');
                     if (rslvd) {
-                        context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(roundid, pariid, erc20, e));
+                        context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(roundid, predictionid, erc20, e));
                     }
                     if (!rslvd) {
                         if (nocontest && emptyround) {
-                            context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(roundid, pariid, erc20, e));
+                            context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(roundid, predictionid, erc20, e));
                         }
                         else if (sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, pariid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, predictionid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
                         }
                     }
                 });
@@ -864,7 +864,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 context.eventTarget.addEventListener('roundpin', (e) => {
                     if (e.roundid !== roundid)
                         return;
-                    this.rebind(roundid, pariid);
+                    this.rebind(roundid, predictionid);
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = true;
@@ -872,7 +872,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 context.eventTarget.addEventListener('roundunpin', (e) => {
                     if (e.roundid !== roundid)
                         return;
-                    this.rebind(roundid, pariid);
+                    this.rebind(roundid, predictionid);
                     const [claim] = this.read('claim');
                     if (claim)
                         claim.interactive = false;
@@ -883,7 +883,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
                 claimFragmentState.timeline = claimFragmentTimeline;
                 claim.addChild(claimFragment);
             }
-            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => this.createPropagatingContainer(this.claimStyle[pari.position]));
+            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => this.createPropagatingContainer(this.claimStyle[prediction.position]));
             if (claimpropagatingContainerState.new)
                 claim.addChild(claimpropagatingContainer);
             const [[claimpropagating, claimpropagatingtimeline], claimpropagatingState] = this.get('claimpropagating', () => this.createPropagatingBackground());
@@ -903,9 +903,9 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             this.clear('nocontest');
         }
     }
-    updateWager(round, pari, context, container, state) {
+    updateWager(round, prediction, context, container, state) {
         const { propagating, orphan } = state;
-        const position = pari.position;
+        const position = prediction.position;
         const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ?
             this.wagerOrphanContainerStyles[position] :
             this.wagerContainerStyles[position]), [orphan]);
@@ -920,10 +920,10 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
         const [wagerText, wagerTextState] = this.get('wagerText', () => _rendering_1.GraphicUtils.createText('Deposit', this.wagerTextStyle[position].offset, this.wagerTextStyle[position].text));
         if (wagerTextState.new)
             wagercontent.addChild(wagerText);
-        const [wagerAmount, wagerAmountState] = this.get('wagerAmount', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(pari.wager), this.wagerStyle[position].offset, this.wagerStyle[position].text));
+        const [wagerAmount, wagerAmountState] = this.get('wagerAmount', () => _rendering_1.GraphicUtils.createText(ui_1.default.erc20(prediction.wager), this.wagerStyle[position].offset, this.wagerStyle[position].text));
         if (wagerAmountState.new)
             wagercontent.addChild(wagerAmount);
-        wagerAmount.text = ui_1.default.erc20(pari.wager);
+        wagerAmount.text = ui_1.default.erc20(prediction.wager);
         wagerAmount.style.fill = orphan ?
             this.wagerStyle.orphan.text.fill :
             this.wagerStyle[position].text.fill;
@@ -972,7 +972,7 @@ class PariTile extends BaseParisRenderer_1.BaseParisRenderer {
             case _enums_1.EPosition.Zero:
                 return textures_1.ZERO_ICON_TEXTURE;
             default:
-                _infra_1.Logger.error(`pari position "${position}" is not supported, fallback to Undeliden`);
+                _infra_1.Logger.error(`prediction position "${position}" is not supported, fallback to Undeliden`);
                 return textures_1.UNDEFINED_ICON_TEXTURE;
         }
     }

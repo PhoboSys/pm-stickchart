@@ -148,7 +148,7 @@ export class StickChart extends EventTarget {
         charttype: EChartType,
         game: any,
         rounds: any[],
-        paris: any[],
+        predictions: any[],
         resolved: any[],
         settlements: any,
         blocksLatest: any,
@@ -178,7 +178,7 @@ export class StickChart extends EventTarget {
         const ctx: RenderingContext = {
             game: context.game,
             rounds: context.rounds,
-            paris: context.paris,
+            predictions: context.predictions,
             settlements: context.settlements,
             blocksLatest: context.blocksLatest,
             transactions: context.transactions,

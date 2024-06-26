@@ -2,7 +2,7 @@ import { IGraphicStorage, IRenderer, LatestPriceLineRenderer } from '@rendering'
 import { DoneFunction, RenderingContext } from '@rendering'
 import { RenderingCompositor, PriceLineRenderer } from '@rendering'
 import { GridRenderer, LatestPriceRenderer } from '@rendering'
-import { Round, Pari, CrosshairRenderer } from '@rendering'
+import { Round, Prediction, CrosshairRenderer } from '@rendering'
 import { PricefeedInfoRenderer } from '@rendering'
 
 import { RoundActualBackground } from './round/RoundActualBackground'
@@ -25,7 +25,7 @@ export class LineChartRenderer implements IRenderer {
             new Round(renderer),
             new LatestPriceRenderer(renderer),
             new CrosshairRenderer(renderer),
-            new Pari(renderer),
+            new Prediction(renderer),
         ])
     }
 

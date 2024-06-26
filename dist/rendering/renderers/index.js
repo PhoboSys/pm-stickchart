@@ -23,5 +23,5 @@ __exportStar(require("./LineChartRenderer"), exports);
 __exportStar(require("./NotSupportedChartTypeRenderer"), exports);
 __exportStar(require("./pointer/CrosshairRenderer"), exports);
 __exportStar(require("./round/Round"), exports);
-__exportStar(require("./pari/Pari"), exports);
+__exportStar(require("./prediction/Prediction"), exports);
 //# sourceMappingURL=index.js.map

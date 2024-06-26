@@ -92,11 +92,11 @@ class RoundResolutionLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const resolution = this.getRoundResolution(round, context);
         const isHistorical = this.isHistoricalRound(round, context);
         const nocontest = resolution === _enums_1.EPosition.NoContest;
-        const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[round.roundid];
-        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom);
-        this.updateOpenPoint(context, group, resolution, round, hasWonPari);
-        this.updateResPoint(context, group, resolution, rprice, hasWonPari);
-        this.updateResolutionLine(context, group, resolution, round, rprice, hasWonPari);
+        const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
+        const hasWonPrediction = predictions && predictions.some(prediction => prediction.position === resolution && isHistorical && !nocontest && !prediction.phantom);
+        this.updateOpenPoint(context, group, resolution, round, hasWonPrediction);
+        this.updateResPoint(context, group, resolution, rprice, hasWonPrediction);
+        this.updateResolutionLine(context, group, resolution, round, rprice, hasWonPrediction);
     }
     updateGroup(context, container, round) {
         const [group, groupstate] = this.get('group', () => new pixi_1.Graphics());

@@ -152,12 +152,14 @@ export class RoundResolutionLine extends BaseRoundsRenderer {
         const resolution = this.getRoundResolution(round, context)
         const isHistorical = this.isHistoricalRound(round, context)
         const nocontest = resolution === EPosition.NoContest
-        const paris = context.paris?.[round.roundid]
-        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom)
+        const predictions = context.predictions?.[round.roundid]
+        const hasWonPrediction = predictions && predictions.some(prediction =>
+            prediction.position === resolution && isHistorical && !nocontest && !prediction.phantom
+        )
 
-        this.updateOpenPoint(context, group, resolution, round, hasWonPari)
-        this.updateResPoint(context, group, resolution, rprice, hasWonPari)
-        this.updateResolutionLine(context, group, resolution, round, rprice, hasWonPari)
+        this.updateOpenPoint(context, group, resolution, round, hasWonPrediction)
+        this.updateResPoint(context, group, resolution, rprice, hasWonPrediction)
+        this.updateResolutionLine(context, group, resolution, round, rprice, hasWonPrediction)
     }
 
     private updateGroup(

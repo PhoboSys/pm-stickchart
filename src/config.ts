@@ -4,7 +4,7 @@ export default {
         alert: 30_000, // 30 sec
     },
 
-    pari: {
+    prediction: {
         historical: true,
     },
 

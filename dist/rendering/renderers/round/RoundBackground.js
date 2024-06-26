@@ -116,36 +116,36 @@ class RoundBackground extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const { openPriceTimestamp, endDate } = round;
         const rprice = this.getResolutionPricePoint(round, context);
         const rdate = (rprice === null || rprice === void 0 ? void 0 : rprice.timestamp) || endDate;
-        const paris = (_a = context.paris) === null || _a === void 0 ? void 0 : _a[round.roundid];
+        const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
         const resolution = this.getRoundResolution(round, context);
         const nocontest = resolution === _enums_1.EPosition.NoContest;
-        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom);
-        const hashClaimablePari = paris && paris.some(pari => {
-            const phantom = pari.phantom;
-            const win = pari.position === resolution;
+        const hasWonPrediction = predictions && predictions.some(prediction => prediction.position === resolution && isHistorical && !nocontest && !prediction.phantom);
+        const hashClaimablePrediction = predictions && predictions.some(prediction => {
+            const phantom = prediction.phantom;
+            const win = prediction.position === resolution;
             const won = win && isHistorical && !nocontest && !phantom;
-            const reverted = _rendering_1.EntityUtils.isEnityReverted(context, pari.pariid);
-            const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, pari.pariid);
+            const reverted = _rendering_1.EntityUtils.isEnityReverted(context, prediction.predictionid);
+            const propagating = _rendering_1.EntityUtils.isEntityPropagating(context, prediction.predictionid);
             const orphan = phantom && reverted || isHistorical && phantom && !propagating;
-            const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom;
+            const claimable = !prediction.claimed && (won || nocontest) && !orphan && !phantom;
             return claimable;
         });
-        const shouldRenderClaimable = !(0, utils_1.isEmpty)(paris) && hashClaimablePari;
+        const shouldRenderClaimable = !(0, utils_1.isEmpty)(predictions) && hashClaimablePrediction;
         const [ox, rx] = datamath_1.default.scale([openPriceTimestamp, rdate], timerange, width);
         this.udateDefaultBackground(context, container, [ox, rx], round, !shouldRenderClaimable);
         let bgTextureColorStops;
-        if (hasWonPari)
+        if (hasWonPrediction)
             bgTextureColorStops = _config_1.default.style.roundRoundWinColors;
         else if (nocontest)
             bgTextureColorStops = _config_1.default.style.roundRoundNoContestColors;
         this.udateClaimableBackground(context, container, [ox, rx], round, bgTextureColorStops, shouldRenderClaimable);
         let borderTextureColorStops;
-        if (hasWonPari)
+        if (hasWonPrediction)
             borderTextureColorStops = _config_1.default.style.roundRoundWinBorderColors;
         else if (nocontest)
             borderTextureColorStops = _config_1.default.style.roundRoundNoContestBorderColors;
         this.updateClaimableBorder(context, container, [ox, rx], round, borderTextureColorStops, shouldRenderClaimable);
-        this.updateCoinIcon(context, container, [ox, rx], round, hasWonPari, shouldRenderClaimable);
+        this.updateCoinIcon(context, container, [ox, rx], round, hasWonPrediction, shouldRenderClaimable);
     }
     udateDefaultBackground(context, container, [x1, x2], round, shouldRender) {
         if (!shouldRender) {

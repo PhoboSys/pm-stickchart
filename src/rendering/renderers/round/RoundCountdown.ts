@@ -154,7 +154,7 @@ export class RoundCountdown extends BaseRoundsRenderer {
         return this.configAnimations
     }
 
-    private validPariPositions = {
+    private validPredictionPositions = {
         [EPosition.Up]: EPosition.Up,
         [EPosition.Down]: EPosition.Down,
         [EPosition.Zero]: EPosition.Zero,
@@ -293,7 +293,7 @@ export class RoundCountdown extends BaseRoundsRenderer {
             gradientresBackground.position.x = rx
 
             const resolution = this.getRoundResolution(round, context)
-            if (round.openPriceValue && round.openPriceTimestamp && (resolution in this.validPariPositions) && locked) {
+            if (round.openPriceValue && round.openPriceTimestamp && (resolution in this.validPredictionPositions) && locked) {
 
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer())
                 if (winningcontainerState.new || gradientresBackgroundState.new) gradientresBackground.addChild(winningcontainer)
@@ -308,11 +308,11 @@ export class RoundCountdown extends BaseRoundsRenderer {
                     winninggradientState.timeline = this.createWinningGradientTimeline(winninggradient, rheight)
                 }
 
-                const paris = context.paris?.[round.roundid]
-                const hasWinPari = paris && paris.some(pari => pari.position === resolution)
+                const predictions = context.predictions?.[round.roundid]
+                const hasWinPrediction = predictions && predictions.some(prediction => prediction.position === resolution)
                 const ofy = this.winningGradientContainerStyle.offset[1]
 
-                if (hasWinPari) {
+                if (hasWinPrediction) {
                     if (resolution === EPosition.Up) winningcontainer.position.y = ofy-rheight
                     if (resolution === EPosition.Zero) winningcontainer.position.y = ofy-rheight/2
                     if (resolution === EPosition.Down) winningcontainer.position.y = ofy

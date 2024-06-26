@@ -141,38 +141,40 @@ export class RoundBackground extends BaseRoundsRenderer {
         const rprice = this.getResolutionPricePoint(round, context)
         const rdate = rprice?.timestamp || endDate
 
-        const paris = context.paris?.[round.roundid]
+        const predictions = context.predictions?.[round.roundid]
         const resolution = this.getRoundResolution(round, context)
         const nocontest = resolution === EPosition.NoContest
-        const hasWonPari = paris && paris.some(pari => pari.position === resolution && isHistorical && !nocontest && !pari.phantom)
-        const hashClaimablePari = paris && paris.some(pari => {
-            const phantom = pari.phantom
-            const win = pari.position === resolution
+        const hasWonPrediction = predictions && predictions.some(prediction =>
+            prediction.position === resolution && isHistorical && !nocontest && !prediction.phantom
+        )
+        const hashClaimablePrediction = predictions && predictions.some(prediction => {
+            const phantom = prediction.phantom
+            const win = prediction.position === resolution
             const won = win && isHistorical && !nocontest && !phantom
-            const reverted = EntityUtils.isEnityReverted(context, pari.pariid)
-            const propagating = EntityUtils.isEntityPropagating(context, pari.pariid)
+            const reverted = EntityUtils.isEnityReverted(context, prediction.predictionid)
+            const propagating = EntityUtils.isEntityPropagating(context, prediction.predictionid)
             const orphan = phantom && reverted || isHistorical && phantom && !propagating
-            const claimable = !pari.claimed && (won || nocontest) && !orphan && !phantom
+            const claimable = !prediction.claimed && (won || nocontest) && !orphan && !phantom
 
             return claimable
         })
-        const shouldRenderClaimable = !isEmpty(paris) && hashClaimablePari
+        const shouldRenderClaimable = !isEmpty(predictions) && hashClaimablePrediction
 
         const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)
 
         this.udateDefaultBackground(context, container, [ox, rx], round, !shouldRenderClaimable)
 
         let bgTextureColorStops
-        if (hasWonPari) bgTextureColorStops = config.style.roundRoundWinColors
+        if (hasWonPrediction) bgTextureColorStops = config.style.roundRoundWinColors
         else if (nocontest) bgTextureColorStops = config.style.roundRoundNoContestColors
         this.udateClaimableBackground(context, container, [ox, rx], round, bgTextureColorStops, shouldRenderClaimable)
 
         let borderTextureColorStops
-        if (hasWonPari) borderTextureColorStops = config.style.roundRoundWinBorderColors
+        if (hasWonPrediction) borderTextureColorStops = config.style.roundRoundWinBorderColors
         else if (nocontest) borderTextureColorStops = config.style.roundRoundNoContestBorderColors
         this.updateClaimableBorder(context, container, [ox, rx], round, borderTextureColorStops, shouldRenderClaimable)
 
-        this.updateCoinIcon(context, container, [ox, rx], round, hasWonPari, shouldRenderClaimable)
+        this.updateCoinIcon(context, container, [ox, rx], round, hasWonPrediction, shouldRenderClaimable)
     }
 
     private udateDefaultBackground(
