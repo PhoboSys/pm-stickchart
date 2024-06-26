@@ -13,9 +13,9 @@ export type DoneFunction = () => void
 export type RenderingContext = {
     options: Options,
 
-    metapool: any
-    pools: any[]
-    paris: any[]
+    game: any
+    rounds: any[]
+    predictions: any[]
     resolved: any[]
     settlements: any
     blocksLatest: any

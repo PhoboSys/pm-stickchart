@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PoolUnhoverEvent = void 0;
-class PoolUnhoverEvent extends Event {
-    constructor(poolid, inner) {
-        super(PoolUnhoverEvent.NAME);
+exports.RoundUnhoverEvent = void 0;
+class RoundUnhoverEvent extends Event {
+    constructor(roundid, inner) {
+        super(RoundUnhoverEvent.NAME);
         this.inner = inner;
-        this.poolid = poolid;
+        this.roundid = roundid;
     }
 }
-exports.PoolUnhoverEvent = PoolUnhoverEvent;
-PoolUnhoverEvent.NAME = 'poolunhover';
+exports.RoundUnhoverEvent = RoundUnhoverEvent;
+RoundUnhoverEvent.NAME = 'roundunhover';
 //# sourceMappingURL=PoolUnhoverEvent.js.map

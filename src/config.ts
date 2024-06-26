@@ -4,7 +4,7 @@ export default {
         alert: 30_000, // 30 sec
     },
 
-    pari: {
+    prediction: {
         historical: true,
     },
 
@@ -80,7 +80,7 @@ export default {
             zerocolor: 0xFFFFFF,
             nocontest: 0x474C67,
         },
-        poolActualRoundColor: 0x1F50F7,
+        roundActualRoundColor: 0x1F50F7,
         goldCoinShineColors: [
             { color: '#EEBC61B8', offset: 0 },
             { color: '#EEBC6100', offset: 1 },
@@ -89,35 +89,35 @@ export default {
             { color: '#D4ECF3B8', offset: 0 },
             { color: '#D4ECF300', offset: 1 },
         ],
-        poolRoundColors: [
+        roundRoundColors: [
             { color: '#1F4EEF00', offset: 0 },
             { color: '#1F4EEF33', offset: 1 },
         ],
-        poolRoundWinColors: [
+        roundRoundWinColors: [
             { color: '#F7C15BFF', offset: 0 },
             { color: '#F7C15BFF', offset: 0.27 },
             { color: '#1C48DA00', offset: 0.79 },
             { color: '#1C48DA00', offset: 1 },
         ],
-        poolRoundBottomColors: [
+        roundRoundBottomColors: [
             { color: '#1C48DA00', offset: 0 },
             { color: '#1C48DA00', offset: 0.27 },
             { color: '#1C48DA54', offset: 0.79 },
             { color: '#1C48DA54', offset: 1 },
         ],
-        poolRoundWinBorderColors: [
+        roundRoundWinBorderColors: [
             { color: '#EDBC6200', offset: 0.13 },
             { color: '#EDBC62FF', offset: 0.38 },
             { color: '#1D49DBFF', offset: 0.65 },
             { color: '#1D49DB00', offset: 0.94 },
         ],
-        poolRoundNoContestColors: [
+        roundRoundNoContestColors: [
             { color: '#7A7A7AFF', offset: 0 },
             { color: '#7A7A7AFF', offset: 0.27 },
             { color: '#1C48DA00', offset: 0.79 },
             { color: '#1C48DA00', offset: 1 },
         ],
-        poolRoundNoContestBorderColors: [
+        roundRoundNoContestBorderColors: [
             { color: '#AECBDF0D', offset: 0 },
             { color: '#AECBDF80', offset: 0.5 },
             { color: '#AECBDF0D', offset: 1 },

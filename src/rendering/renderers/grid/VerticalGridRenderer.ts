@@ -36,7 +36,7 @@ export class VerticalGridRenderer extends BaseRenderer {
         const { width, height } = context.screen
         const { timerange } = context.plotdata
 
-        const stepsize = context.metapool.schedule
+        const stepsize = context.game.schedule
         const timesteps = datamath.steps(timerange, stepsize, config.grid.time.max)
         const xs = datamath.scale(timesteps, timerange, width)
 

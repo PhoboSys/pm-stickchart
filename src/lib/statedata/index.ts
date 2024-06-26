@@ -1,10 +1,10 @@
 export class StateData {
-    public pinnedPoolid: string | null = null
+    public pinnedRoundid: string | null = null
 
     constructor(private onStateChange: () => any) {}
 
-    public setPinnedPoolid(poolid): void {
-        this.update('pinnedPoolid', poolid)
+    public setPinnedRoundid(roundid): void {
+        this.update('pinnedRoundid', roundid)
     }
 
     private update(path, data): void {

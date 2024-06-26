@@ -60,28 +60,28 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
     get rendererId() {
         return PariLine.PARI_LINE_ID;
     }
-    updatePari(pool, pari, context, container) {
-        if (!(pari.position in this.validPariPositions))
+    updatePari(round, prediction, context, container) {
+        if (!(prediction.position in this.validPariPositions))
             return this.clear();
-        if (!pool.openPriceTimestamp || !pool.openPriceValue)
+        if (!round.openPriceTimestamp || !round.openPriceValue)
             return this.clear();
-        const state = this.getPariState(pool, pari, context);
+        const state = this.getPariState(round, prediction, context);
         if (!state.win && !state.nocontest && state.isHistorical)
             return this.clear();
         const [groupElement] = this.get('groupElement', () => new GroupComponent_1.GroupComponent());
-        const [group, groupstate] = groupElement.update(context, { poolid: pool.poolid, pariState: state });
+        const [group, groupstate] = groupElement.update(context, { roundid: round.roundid, predictionState: state });
         if (group && groupstate.new)
             container.addChild(group);
-        this.updateLine(pool, pari, context, group, state);
+        this.updateLine(round, prediction, context, group, state);
     }
-    updateLine(pool, pari, context, container, state) {
-        const position = pari.position;
+    updateLine(round, prediction, context, container, state) {
+        const position = prediction.position;
         const { win, orphan } = state;
         if (!container)
             return this.clear('line');
         const { height } = context.screen;
         const { pricerange } = context.plotdata;
-        const { openPriceValue, openPriceTimestamp } = pool;
+        const { openPriceValue, openPriceTimestamp } = round;
         const [ox] = datamath_1.default.scale([openPriceTimestamp], context.plotdata.timerange, context.screen.width);
         const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
@@ -92,8 +92,8 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             style = this.orphanlineStyle;
         else if (win)
             style = this.winlineStyle;
-        const [startx, starty] = style[pari.position].startOffset;
-        const [endx, endy] = style[pari.position].endOffset;
+        const [startx, starty] = style[prediction.position].startOffset;
+        const [endx, endy] = style[prediction.position].endOffset;
         let vertical = null;
         if (position === _enums_1.EPosition.Up)
             vertical = 0;
@@ -103,7 +103,7 @@ class PariLine extends BaseParisRenderer_1.BaseParisRenderer {
             vertical = context.screen.height;
         line
             .clear()
-            .lineStyle(style[pari.position].lineStyle)
+            .lineStyle(style[prediction.position].lineStyle)
             .moveTo(ox + startx, oy + starty)
             .lineTo(ox + endx, vertical + endy);
         line.position.y = -container.position.y;

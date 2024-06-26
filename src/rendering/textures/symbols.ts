@@ -26,7 +26,7 @@ export const USDC_TEXTURE = Symbol('USDC_TEXTURE')
 export const USDC_LIGHT_TEXTURE = Symbol('USDC_LIGHT_TEXTURE')
 export const DEMO_TEXTURE = Symbol('DEMO_TEXTURE')
 export const ORCY_TEXTURE = Symbol('ORCY_TEXTURE')
-export const PARI_LIGHT_TEXTURE = Symbol('PARI_LIGHT_TEXTURE')
+export const PREDICTION_LIGHT_TEXTURE = Symbol('PREDICTION_LIGHT_TEXTURE')
 
 export const CHAINLINK_TEXTURE = Symbol('CHAINLINK_TEXTURE')
 

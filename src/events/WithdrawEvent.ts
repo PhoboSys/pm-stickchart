@@ -3,23 +3,23 @@ export class WithdrawEvent extends Event {
 
     public readonly inner: Event
 
-    public readonly poolid: string
+    public readonly roundid: string
 
-    public readonly pariid: string
+    public readonly predictionid: string
 
     public readonly erc20: string
 
     constructor(
-        poolid: string,
-        pariid: string,
+        roundid: string,
+        predictionid: string,
         erc20: string,
         inner: Event,
     ) {
         super(WithdrawEvent.NAME)
 
         this.inner = inner
-        this.poolid = poolid
-        this.pariid = pariid
+        this.roundid = roundid
+        this.predictionid = predictionid
         this.erc20 = erc20
     }
 }

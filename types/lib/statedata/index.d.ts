@@ -1,7 +1,7 @@
 export declare class StateData {
     private onStateChange;
-    pinnedPoolid: string | null;
+    pinnedRoundid: string | null;
     constructor(onStateChange: () => any);
-    setPinnedPoolid(poolid: any): void;
+    setPinnedRoundid(roundid: any): void;
     private update;
 }

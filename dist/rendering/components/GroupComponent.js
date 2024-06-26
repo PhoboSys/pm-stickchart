@@ -107,9 +107,9 @@ class GroupComponent extends _rendering_1.BaseComponent {
         return this.configAnimations;
     }
     update(context, props) {
-        const pinnedPoolid = context.statedata.pinnedPoolid;
-        const { poolid, pariState } = props;
-        const { win, isHistorical, nocontest, emptypool, claimable, } = pariState;
+        const pinnedRoundid = context.statedata.pinnedRoundid;
+        const { roundid, predictionState } = props;
+        const { win, isHistorical, nocontest, emptyround, claimable, } = predictionState;
         if (!win && !nocontest && isHistorical) {
             this.animate('group', 'hide_group', {
                 onComplete: () => {
@@ -122,8 +122,8 @@ class GroupComponent extends _rendering_1.BaseComponent {
         const [group, groupstate] = this.get('group', () => new pixi_1.Container(), []);
         if (groupstate.new)
             group.alpha = 0;
-        if (pinnedPoolid) {
-            if (poolid === pinnedPoolid) {
+        if (pinnedRoundid) {
+            if (roundid === pinnedRoundid) {
                 if (claimable)
                     this.animate('group', 'pin_group_claimable');
                 else
@@ -143,7 +143,7 @@ class GroupComponent extends _rendering_1.BaseComponent {
                 }
             }
             else {
-                if (win && !emptypool)
+                if (win && !emptyround)
                     this.animate('group', 'winning_group_secondary');
                 else
                     this.animate('group', 'loseing_group_secondary');
@@ -164,14 +164,14 @@ class GroupComponent extends _rendering_1.BaseComponent {
                 }
             }
             else {
-                if (this.isPrimaryPool(poolid, context)) {
-                    if (win && !emptypool)
+                if (this.isPrimaryRound(roundid, context)) {
+                    if (win && !emptyround)
                         this.animate('group', 'winning_group_primary');
                     else
                         this.animate('group', 'loseing_group_primary');
                 }
                 else {
-                    if (win && !emptypool)
+                    if (win && !emptyround)
                         this.animate('group', 'winning_group_secondary');
                     else
                         this.animate('group', 'loseing_group_secondary');
@@ -180,14 +180,14 @@ class GroupComponent extends _rendering_1.BaseComponent {
         }
         return [group, groupstate];
     }
-    isPrimaryPool(poolid, context) {
-        const actualPoolid = context.actualPoolid;
-        const actualParis = context.paris[actualPoolid];
-        if ((0, utils_1.isEmpty)(actualParis)) {
+    isPrimaryRound(roundid, context) {
+        const actualRoundid = context.actualRoundid;
+        const actualPredictions = context.predictions[actualRoundid];
+        if ((0, utils_1.isEmpty)(actualPredictions)) {
             return true;
         }
         else {
-            if (poolid === actualPoolid)
+            if (roundid === actualRoundid)
                 return true;
             else
                 return false;

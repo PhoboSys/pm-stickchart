@@ -10,7 +10,7 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         this.groupStyle = {
             offset: [70, 55]
         };
-        this.metapoolBaseStyle = {
+        this.gameBaseStyle = {
             text: {
                 fill: 0x455077,
                 fontWeight: 700,
@@ -20,7 +20,7 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             },
             offset: [0, 0]
         };
-        this.metapoolQuoteStyle = {
+        this.gameQuoteStyle = {
             text: {
                 fill: 0xFFFFFF00,
                 fontWeight: 700,
@@ -58,12 +58,12 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             layer.addChild(group);
             group.position.set(...this.groupStyle.offset);
         }
-        const [metapoolBase, metapoolBaseState] = this.get('metapoolBase', () => _rendering_1.GraphicUtils.createText(context.metapool.base, this.metapoolBaseStyle.offset, this.metapoolBaseStyle.text));
-        if (metapoolBaseState.new)
-            group.addChild(metapoolBase);
-        const [metapoolQuote, metapoolQuoteState] = this.get('metapoolQuote', () => _rendering_1.GraphicUtils.createText(context.metapool.quote, [metapoolBase.width + this.metapoolQuoteStyle.offset[0], this.metapoolQuoteStyle.offset[1]], this.metapoolQuoteStyle.text));
-        if (metapoolQuoteState.new)
-            group.addChild(metapoolQuote);
+        const [gameBase, gameBaseState] = this.get('gameBase', () => _rendering_1.GraphicUtils.createText(context.game.base, this.gameBaseStyle.offset, this.gameBaseStyle.text));
+        if (gameBaseState.new)
+            group.addChild(gameBase);
+        const [gameQuote, gameQuoteState] = this.get('gameQuote', () => _rendering_1.GraphicUtils.createText(context.game.quote, [gameBase.width + this.gameQuoteStyle.offset[0], this.gameQuoteStyle.offset[1]], this.gameQuoteStyle.text));
+        if (gameQuoteState.new)
+            group.addChild(gameQuote);
         const [subtitle, subtitleState] = this.get('subtitle', () => this.createSubtitle(context));
         if (subtitleState.new)
             group.addChild(subtitle);
@@ -79,7 +79,7 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         logo.interactive = true;
         logo.cursor = 'pointer';
         logo.addEventListener('pointertap', () => {
-            const link = _constants_1.PRICEFEED.CL_URL[context.metapool.pricefeed];
+            const link = _constants_1.PRICEFEED.CL_URL[context.game.pricefeed];
             window.open(link, '__blank');
         });
         logo.scale.set(this.logoStyle.size / logo.height);
