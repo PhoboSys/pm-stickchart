@@ -13,7 +13,7 @@ export declare const DOWN_ICON_TEXTURE: unique symbol;
 export declare const ZERO_ICON_TEXTURE: unique symbol;
 export declare const UNDEFINED_ICON_TEXTURE: unique symbol;
 export declare const GRADIENT_TEXTURE: unique symbol;
-export declare const UNKNOWN_DARK_TEXTURE: unique symbol;
+export declare const UNKNOWN_ERC20_TEXTURE: unique symbol;
 export declare const ETH_DARK_TEXTURE: unique symbol;
 export declare const USDT_DARK_TEXTURE: unique symbol;
 export declare const USDC_TEXTURE: unique symbol;

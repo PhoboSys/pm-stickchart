@@ -83,13 +83,13 @@ class RoundOpenPriceTag extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             const roundid = round.roundid;
             if (!coverState.subscribed) {
                 coverState.subscribed = true;
-                context.eventTarget.addEventListener('roundhover', (e) => {
+                context.eventTarget.addEventListener('roundpin', (e) => {
                     if (e.roundid !== roundid)
                         return;
                     this.rebind(roundid);
                     this.animate('cover', 'fadein');
                 });
-                context.eventTarget.addEventListener('roundunhover', (e) => {
+                context.eventTarget.addEventListener('roundunpin', (e) => {
                     if (e.roundid !== roundid)
                         return;
                     this.rebind(roundid);

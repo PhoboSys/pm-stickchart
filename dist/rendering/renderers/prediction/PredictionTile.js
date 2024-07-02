@@ -988,7 +988,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 return textures_1.USDC_TEXTURE;
             default:
                 _infra_1.Logger.error(`currency "${key}" is not supported, fallback to Undeliden`);
-                return textures_1.UNKNOWN_DARK_TEXTURE;
+                return textures_1.UNKNOWN_ERC20_TEXTURE;
         }
     }
     createIcon(context, textureName, style) {

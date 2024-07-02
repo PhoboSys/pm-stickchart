@@ -8,7 +8,7 @@ import {
     DOWN_ICON_TEXTURE,
     ZERO_ICON_TEXTURE,
     UNDEFINED_ICON_TEXTURE,
-    UNKNOWN_DARK_TEXTURE,
+    UNKNOWN_ERC20_TEXTURE,
     DEMO_TEXTURE,
     ORCY_TEXTURE,
     USDC_TEXTURE,
@@ -1238,7 +1238,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             default:
                 Logger.error(`currency "${key}" is not supported, fallback to Undeliden`)
 
-                return UNKNOWN_DARK_TEXTURE
+                return UNKNOWN_ERC20_TEXTURE
         }
     }
 

@@ -6,7 +6,7 @@ import { PricePoint } from '@chartdata'
 import datamath from '@lib/datamath'
 import { Container } from '@lib/pixi'
 import ui from '@lib/ui/index'
-import { RoundHoverEvent, RoundUnhoverEvent } from '@events'
+import { RoundPinEvent, RoundUnpinEvent } from '@events'
 
 import { BaseRoundsRenderer } from './BaseRoundsRenderer'
 
@@ -151,13 +151,13 @@ export class RoundResolutionPriceTag extends BaseRoundsRenderer {
             const roundid = round.roundid
             if (!coverState.subscribed) {
                 coverState.subscribed = true
-                context.eventTarget.addEventListener('roundhover', (e: RoundHoverEvent) => {
+                context.eventTarget.addEventListener('roundpin', (e: RoundPinEvent) => {
                     if (e.roundid !== roundid) return
 
                     this.rebind(roundid)
                     this.animate('cover', 'fadein')
                 })
-                context.eventTarget.addEventListener('roundunhover', (e: RoundUnhoverEvent) => {
+                context.eventTarget.addEventListener('roundunpin', (e: RoundUnpinEvent) => {
                     if (e.roundid !== roundid) return
 
                     this.rebind(roundid)
