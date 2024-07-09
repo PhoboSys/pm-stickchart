@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupComponent = void 0;
 const _rendering_1 = require("../index.js");
 const pixi_1 = require("../../lib/pixi");
-const utils_1 = require("../../lib/utils");
 class GroupComponent extends _rendering_1.BaseComponent {
     constructor() {
         super(...arguments);
@@ -107,7 +106,7 @@ class GroupComponent extends _rendering_1.BaseComponent {
         return this.configAnimations;
     }
     update(context, props) {
-        const pinnedRoundid = context.focusroundid;
+        const focusroundid = context.focusroundid;
         const { roundid, predictionState } = props;
         const { win, isHistorical, nocontest, emptyround, claimable, } = predictionState;
         if (!win && !nocontest && isHistorical) {
@@ -122,8 +121,8 @@ class GroupComponent extends _rendering_1.BaseComponent {
         const [group, groupstate] = this.get('group', () => new pixi_1.Container(), []);
         if (groupstate.new)
             group.alpha = 0;
-        if (pinnedRoundid) {
-            if (roundid === pinnedRoundid) {
+        if (focusroundid) {
+            if (roundid === focusroundid) {
                 if (claimable)
                     this.animate('group', 'pin_group_claimable');
                 else
@@ -143,10 +142,20 @@ class GroupComponent extends _rendering_1.BaseComponent {
                 }
             }
             else {
-                if (win && !emptyround)
-                    this.animate('group', 'winning_group_secondary');
-                else
-                    this.animate('group', 'loseing_group_secondary');
+                // NOTE: Highlight the actual round if the focus round is out of the timeframe
+                const focusround = context.rounds[focusroundid];
+                if ((focusround === null || focusround === void 0 ? void 0 : focusround.endDate) < context.timeframe.since) {
+                    if (win && !emptyround)
+                        this.animate('group', 'winning_group_primary');
+                    else
+                        this.animate('group', 'loseing_group_primary');
+                }
+                else {
+                    if (win && !emptyround)
+                        this.animate('group', 'winning_group_secondary');
+                    else
+                        this.animate('group', 'loseing_group_secondary');
+                }
             }
         }
         else {
@@ -164,34 +173,13 @@ class GroupComponent extends _rendering_1.BaseComponent {
                 }
             }
             else {
-                if (this.isPrimaryRound(roundid, context)) {
-                    if (win && !emptyround)
-                        this.animate('group', 'winning_group_primary');
-                    else
-                        this.animate('group', 'loseing_group_primary');
-                }
-                else {
-                    if (win && !emptyround)
-                        this.animate('group', 'winning_group_secondary');
-                    else
-                        this.animate('group', 'loseing_group_secondary');
-                }
+                if (win && !emptyround)
+                    this.animate('group', 'winning_group_primary');
+                else
+                    this.animate('group', 'loseing_group_primary');
             }
         }
         return [group, groupstate];
-    }
-    isPrimaryRound(roundid, context) {
-        const actualRoundid = context.actualRoundid;
-        const actualPredictions = context.predictions[actualRoundid];
-        if ((0, utils_1.isEmpty)(actualPredictions)) {
-            return true;
-        }
-        else {
-            if (roundid === actualRoundid)
-                return true;
-            else
-                return false;
-        }
     }
 }
 exports.GroupComponent = GroupComponent;

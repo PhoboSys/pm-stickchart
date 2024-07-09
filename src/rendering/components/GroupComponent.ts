@@ -1,7 +1,6 @@
 import { RenderingContext, BaseComponent } from '@rendering'
 
 import { Container } from '@lib/pixi'
-import { isEmpty } from '@lib/utils'
 
 export class GroupComponent extends BaseComponent {
 
@@ -110,7 +109,7 @@ export class GroupComponent extends BaseComponent {
         props,
     ): any[] {
 
-        const pinnedRoundid = context.focusroundid
+        const focusroundid = context.focusroundid
         const { roundid, predictionState } = props
         const {
             win,
@@ -135,9 +134,9 @@ export class GroupComponent extends BaseComponent {
         const [group, groupstate] = this.get('group', () => new Container(), [])
         if (groupstate.new) group.alpha = 0
 
-        if (pinnedRoundid) {
+        if (focusroundid) {
 
-            if (roundid === pinnedRoundid) {
+            if (roundid === focusroundid) {
 
                 if (claimable) this.animate('group', 'pin_group_claimable')
                 else this.animate('group', 'pin_group_unclaimable')
@@ -156,8 +155,19 @@ export class GroupComponent extends BaseComponent {
 
             } else {
 
-                if (win && !emptyround) this.animate('group', 'winning_group_secondary')
-                else this.animate('group', 'loseing_group_secondary')
+                // NOTE: Highlight the actual round if the focus round is out of the timeframe
+                const focusround = context.rounds[focusroundid]
+                if (focusround?.endDate < context.timeframe.since) {
+
+                    if (win && !emptyround) this.animate('group', 'winning_group_primary')
+                    else this.animate('group', 'loseing_group_primary')
+
+                } else {
+
+                    if (win && !emptyround) this.animate('group', 'winning_group_secondary')
+                    else this.animate('group', 'loseing_group_secondary')
+
+                }
 
             }
 
@@ -177,33 +187,14 @@ export class GroupComponent extends BaseComponent {
 
             } else {
 
-                if (this.isPrimaryRound(roundid, context)) {
-                    if (win && !emptyround) this.animate('group', 'winning_group_primary')
-                    else this.animate('group', 'loseing_group_primary')
-
-                } else {
-                    if (win && !emptyround) this.animate('group', 'winning_group_secondary')
-                    else this.animate('group', 'loseing_group_secondary')
-
-                }
+                if (win && !emptyround) this.animate('group', 'winning_group_primary')
+                else this.animate('group', 'loseing_group_primary')
 
             }
 
         }
 
         return [group, groupstate]
-    }
-
-    private isPrimaryRound(roundid, context): boolean {
-        const actualRoundid = context.actualRoundid
-        const actualPredictions = context.predictions[actualRoundid]
-
-        if (isEmpty(actualPredictions)) {
-            return true
-        } else {
-            if (roundid === actualRoundid) return true
-            else return false
-        }
     }
 
 }
