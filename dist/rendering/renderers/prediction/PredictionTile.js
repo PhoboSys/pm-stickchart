@@ -602,7 +602,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             hover_claim: {
                 pixi: {
                     alpha: 1.2,
-                    scale: 1.1,
+                    scale: 1.02,
                 },
                 duration: 0.5,
                 ease: 'back.out(4)',
@@ -618,7 +618,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             },
             tab_claim: {
                 pixi: {
-                    scale: 1.2,
+                    scale: 1.04,
                 },
                 duration: 0.2,
                 ease: 'back.out(2)',
@@ -832,17 +832,17 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 claim.cursor = 'pointer';
                 claim.addEventListener('pointerover', (e) => {
                     this.rebind(roundid, predictionid);
-                    // this.animate('claim', 'hover_claim')
+                    this.animate('claim', 'hover_claim');
                     context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointerout', (e) => {
                     this.rebind(roundid, predictionid);
-                    // this.animate('claim', 'unhover_claim')
+                    this.animate('claim', 'unhover_claim');
                     context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
                 });
                 claim.addEventListener('pointertap', (e) => {
                     this.rebind(roundid, predictionid);
-                    // this.animate('claim', 'tab_claim')
+                    this.animate('claim', 'tab_claim');
                     const [rslvd] = this.read('resolved');
                     const [sttlmnt] = this.read('settlement');
                     const [nocontest] = this.read('nocontest');

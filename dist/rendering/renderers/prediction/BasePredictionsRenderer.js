@@ -51,7 +51,7 @@ class BasePredictionsRenderer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const nocontest = resolution === _enums_1.EPosition.NoContest;
         const isHistorical = this.isHistoricalRound(round, context);
         const win = prediction.position === resolution;
-        const lose = !win && !phantom;
+        const lose = !win && !phantom && !nocontest;
         const winning = win && !isHistorical && !phantom;
         const loseing = lose && !isHistorical && !phantom;
         const won = win && isHistorical && !nocontest && !phantom;

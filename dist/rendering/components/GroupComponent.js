@@ -107,7 +107,7 @@ class GroupComponent extends _rendering_1.BaseComponent {
         return this.configAnimations;
     }
     update(context, props) {
-        const pinnedRoundid = context.statedata.pinnedRoundid;
+        const pinnedRoundid = context.focusroundid;
         const { roundid, predictionState } = props;
         const { win, isHistorical, nocontest, emptyround, claimable, } = predictionState;
         if (!win && !nocontest && isHistorical) {

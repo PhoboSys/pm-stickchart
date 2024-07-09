@@ -41,12 +41,6 @@ class RoundLayerEventProducer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         if (layerState.new) {
             container.addChild(layer);
             layer.interactive = true;
-            context.eventTarget.addEventListener('roundpin', (e) => {
-                if (layerState.pined && e.roundid !== roundid) {
-                    layerState.pined = false;
-                    context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid, e));
-                }
-            });
             layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
             });
@@ -55,18 +49,23 @@ class RoundLayerEventProducer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             });
             layer.addEventListener('pointertap', (e) => {
                 if (layerState.pined) {
-                    context.statedata.setPinnedRoundid(null);
                     context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid, e));
                 }
                 else {
-                    context.statedata.setPinnedRoundid(roundid);
                     context.eventTarget.dispatchEvent(new _events_1.RoundPinEvent(roundid, e));
                 }
-                layerState.pined = !layerState.pined;
             });
         }
         if (!this.isActualRound(round, context)) {
             layer.cursor = 'pointer';
+        }
+        if (context.focusroundid === roundid && !layerState.pined) {
+            context.eventTarget.dispatchEvent(new _events_1.RoundPinEvent(roundid));
+            layerState.pined = true;
+        }
+        if (context.focusroundid !== roundid && layerState.pined) {
+            context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid));
+            layerState.pined = false;
         }
     }
 }

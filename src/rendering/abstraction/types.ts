@@ -16,6 +16,7 @@ export type RenderingContext = {
     game: any
     rounds: any[]
     predictions: any[]
+    focusroundid: any
     resolved: any[]
     settlements: any
     blocksLatest: any
@@ -31,7 +32,6 @@ export type RenderingContext = {
     features: Features
     plotdata: PlotData
     chartdata: { prices: string[], timestamps: number[] }
-    statedata: any,
 
     eventTarget: EventTarget
     rerender?: boolean

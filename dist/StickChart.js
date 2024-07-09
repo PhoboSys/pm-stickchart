@@ -13,7 +13,6 @@ const morph_1 = __importDefault(require("./lib/morph"));
 const pixi_1 = require("./lib/pixi");
 const timeframe_1 = require("./lib/timeframe");
 const fontsready_1 = require("./lib/fontsready");
-const statedata_1 = require("./lib/statedata");
 const _rendering_1 = require("./rendering/index.js");
 const _rendering_2 = require("./rendering/index.js");
 const _options_1 = require("./options/index.js");
@@ -33,7 +32,6 @@ class StickChart extends EventTarget {
             backgroundAlpha: _config_1.default.style.backgroundAlpha,
         });
         this.application.renderer.addSystem(pixi_1.EventSystem, 'events');
-        this.statedata = new statedata_1.StateData(() => this.rerender('state'));
         this.fontsready = new fontsready_1.FontsReady();
         this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement);
         this.textureStorage = new _rendering_2.TextureStorage(this.application);
@@ -119,6 +117,7 @@ class StickChart extends EventTarget {
             rounds: context.rounds,
             predictions: context.predictions,
             settlements: context.settlements,
+            focusroundid: context.focusroundid,
             blocksLatest: context.blocksLatest,
             transactions: context.transactions,
             blocksEntities: context.blocksEntities,
@@ -130,7 +129,6 @@ class StickChart extends EventTarget {
             textures: this.textureStorage,
             timeframe: this.timeframe,
             eventTarget: this,
-            statedata: this.statedata,
             chartdata,
             plotdata,
             features,

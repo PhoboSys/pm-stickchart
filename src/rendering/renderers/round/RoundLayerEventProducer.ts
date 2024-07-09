@@ -60,13 +60,6 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             container.addChild(layer)
             layer.interactive = true
 
-            context.eventTarget.addEventListener('roundpin', (e: RoundPinEvent) => {
-                if (layerState.pined && e.roundid !== roundid) {
-                    layerState.pined = false
-                    context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
-                }
-            })
-
             layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
             })
@@ -75,18 +68,29 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             })
             layer.addEventListener('pointertap', (e) => {
                 if (layerState.pined) {
-                    context.statedata.setPinnedRoundid(null)
                     context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
                 } else {
-                    context.statedata.setPinnedRoundid(roundid)
                     context.eventTarget.dispatchEvent(new RoundPinEvent(roundid, e))
                 }
-                layerState.pined = !layerState.pined
             })
         }
 
         if (!this.isActualRound(round, context)) {
             layer.cursor = 'pointer'
+        }
+
+        if (context.focusroundid === roundid && !layerState.pined) {
+
+            context.eventTarget.dispatchEvent(new RoundPinEvent(roundid))
+            layerState.pined = true
+
+        }
+
+        if (context.focusroundid !== roundid && layerState.pined) {
+
+            context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid))
+            layerState.pined = false
+
         }
 
     }

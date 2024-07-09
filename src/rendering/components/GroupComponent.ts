@@ -110,7 +110,7 @@ export class GroupComponent extends BaseComponent {
         props,
     ): any[] {
 
-        const pinnedRoundid = context.statedata.pinnedRoundid
+        const pinnedRoundid = context.focusroundid
         const { roundid, predictionState } = props
         const {
             win,

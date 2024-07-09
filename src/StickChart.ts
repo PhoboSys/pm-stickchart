@@ -12,7 +12,6 @@ import MorphController from '@lib/morph'
 import { Application, EventSystem } from '@lib/pixi'
 import { Timeframe } from '@lib/timeframe'
 import { FontsReady } from '@lib/fontsready'
-import { StateData } from '@lib/statedata'
 
 import { RenderingPipelineFactory, RenderingContext } from '@rendering'
 import { TextureStorage, GraphicStorage } from '@rendering'
@@ -36,8 +35,6 @@ export class StickChart extends EventTarget {
 
     private fontsready: FontsReady
 
-    private statedata: StateData
-
     constructor(
         private stageElement: HTMLElement,
         private options? : Options,
@@ -58,7 +55,6 @@ export class StickChart extends EventTarget {
 
         this.application.renderer.addSystem(EventSystem, 'events')
 
-        this.statedata = new StateData(() => this.rerender('state'))
         this.fontsready = new FontsReady()
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
         this.textureStorage = new TextureStorage(this.application)
@@ -151,6 +147,7 @@ export class StickChart extends EventTarget {
         predictions: any[],
         resolved: any[],
         settlements: any,
+        focusroundid: any,
         blocksLatest: any,
         transactions: any,
         blocksEntities: any,
@@ -180,6 +177,7 @@ export class StickChart extends EventTarget {
             rounds: context.rounds,
             predictions: context.predictions,
             settlements: context.settlements,
+            focusroundid: context.focusroundid,
             blocksLatest: context.blocksLatest,
             transactions: context.transactions,
             blocksEntities: context.blocksEntities,
@@ -192,7 +190,6 @@ export class StickChart extends EventTarget {
             timeframe: this.timeframe,
 
             eventTarget: this,
-            statedata: this.statedata,
             chartdata,
             plotdata,
             features,
