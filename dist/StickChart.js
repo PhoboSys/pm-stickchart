@@ -93,7 +93,7 @@ class StickChart extends EventTarget {
             if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
                 return;
             const pipeline = this.pipelineFactory.get(this._context.charttype);
-            pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => { var _a, _b, _c; return _infra_1.Logger.info('re-render', reason, (_c = (_b = (_a = this._context) === null || _a === void 0 ? void 0 : _a.plotdata) === null || _b === void 0 ? void 0 : _b.latest) === null || _c === void 0 ? void 0 : _c.timestamp); });
+            pipeline.render(Object.assign(Object.assign({}, this._context), { rerender: true }), () => { });
         });
     }
     render(context) {

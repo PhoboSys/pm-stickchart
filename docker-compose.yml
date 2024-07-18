@@ -1,7 +1,7 @@
 ---
 version: "3.0"
 services:
-  parimarket:
+  bulder:
     image: node:16.17.1
     user: "${UID:-node}:${GID:-node}"
     tty: "${TTY:-true}"

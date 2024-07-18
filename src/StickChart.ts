@@ -121,7 +121,7 @@ export class StickChart extends EventTarget {
         this.rerender('morph')
     }
 
-    public rerender(reason: string): void {
+    public rerender(reason: string): void { // eslint-disable-line
         window.requestAnimationFrame(() => {
             if (!this._context) return
             if (this._context.screen?.width === 0) return
@@ -134,7 +134,7 @@ export class StickChart extends EventTarget {
                     ...this._context,
                     rerender: true
                 },
-                () => Logger.info('re-render', reason, this._context?.plotdata?.latest?.timestamp)
+                () => {}
             )
         })
     }
