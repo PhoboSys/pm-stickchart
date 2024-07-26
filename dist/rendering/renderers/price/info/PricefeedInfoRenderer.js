@@ -10,6 +10,9 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         this.groupStyle = {
             offset: [70, 55]
         };
+        this.mobileGroupStyle = {
+            offset: [15, 15]
+        };
         this.gameBaseStyle = {
             text: {
                 fill: 0x455077,
@@ -32,6 +35,28 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             },
             offset: [6, 0]
         };
+        this.mobileGameBaseStyle = {
+            text: {
+                fill: 0x455077,
+                fontWeight: 700,
+                fontFamily: 'Gilroy',
+                fontSize: 30,
+                trim: true,
+            },
+            offset: [0, 0]
+        };
+        this.mobileGameQuoteStyle = {
+            text: {
+                fill: 0xFFFFFF00,
+                fontWeight: 700,
+                fontFamily: 'Gilroy',
+                fontSize: 28,
+                stroke: 0x455077,
+                strokeThickness: 1,
+                trim: true,
+            },
+            offset: [6, 0]
+        };
         this.subtitleContainerStyle = {
             offset: [0, 49]
         };
@@ -44,9 +69,25 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
             },
             offset: [0, 0]
         };
+        this.mobileSubtitleContainerStyle = {
+            offset: [0, 29]
+        };
+        this.mobileSubtitleStyle = {
+            text: {
+                fill: 0x455077,
+                fontWeight: 500,
+                fontFamily: 'Proxima Nova',
+                fontSize: 8,
+            },
+            offset: [0, 0]
+        };
         this.logoStyle = {
             size: 24,
             offset: [7, -3.5]
+        };
+        this.mobileLogoStyle = {
+            size: 15,
+            offset: [4, -2]
         };
     }
     get rendererId() {
@@ -56,12 +97,14 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         const [group, groupstate] = this.get('group', () => new pixi_1.Container());
         if (groupstate.new) {
             layer.addChild(group);
-            group.position.set(...this.groupStyle.offset);
+            group.position.set(...(context.options.isMobile ? this.mobileGroupStyle : this.groupStyle).offset);
         }
-        const [gameBase, gameBaseState] = this.get('gameBase', () => _rendering_1.GraphicUtils.createText(context.game.base, this.gameBaseStyle.offset, this.gameBaseStyle.text));
+        const gamebaseStyle = context.options.isMobile ? this.mobileGameBaseStyle : this.gameBaseStyle;
+        const [gameBase, gameBaseState] = this.get('gameBase', () => _rendering_1.GraphicUtils.createText(context.game.base, gamebaseStyle.offset, gamebaseStyle.text));
         if (gameBaseState.new)
             group.addChild(gameBase);
-        const [gameQuote, gameQuoteState] = this.get('gameQuote', () => _rendering_1.GraphicUtils.createText(context.game.quote, [gameBase.width + this.gameQuoteStyle.offset[0], this.gameQuoteStyle.offset[1]], this.gameQuoteStyle.text));
+        const gameQuoteStyle = context.options.isMobile ? this.mobileGameQuoteStyle : this.gameQuoteStyle;
+        const [gameQuote, gameQuoteState] = this.get('gameQuote', () => _rendering_1.GraphicUtils.createText(context.game.quote, [gameBase.width + gameQuoteStyle.offset[0], gameQuoteStyle.offset[1]], gameQuoteStyle.text));
         if (gameQuoteState.new)
             group.addChild(gameQuote);
         const [subtitle, subtitleState] = this.get('subtitle', () => this.createSubtitle(context));
@@ -71,19 +114,20 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
     }
     createSubtitle(context) {
         const container = new pixi_1.Container();
-        container.position.set(...this.subtitleContainerStyle.offset);
-        const text = _rendering_1.GraphicUtils.createText('Pricefeed by', this.subtitleStyle.offset, this.subtitleStyle.text);
+        container.position.set(...(context.options.isMobile ? this.mobileSubtitleContainerStyle : this.subtitleContainerStyle).offset);
+        const text = _rendering_1.GraphicUtils.createText('Pricefeed by', (context.options.isMobile ? this.mobileSubtitleStyle : this.subtitleStyle).offset, (context.options.isMobile ? this.mobileSubtitleStyle : this.subtitleStyle).text);
         container.addChild(text);
         const texture = context.textures.get(_rendering_1.CHAINLINK_TEXTURE);
         const logo = new pixi_1.Sprite(texture);
+        const logoStyle = context.options.isMobile ? this.mobileLogoStyle : this.logoStyle;
         logo.interactive = true;
         logo.cursor = 'pointer';
         logo.addEventListener('pointertap', () => {
             const link = _constants_1.PRICEFEED.CL_URL[context.game.pricefeed];
             window.open(link, '__blank');
         });
-        logo.scale.set(this.logoStyle.size / logo.height);
-        logo.position.set(text.width + this.logoStyle.offset[0], this.logoStyle.offset[1]);
+        logo.scale.set(logoStyle.size / logo.height);
+        logo.position.set(text.width + logoStyle.offset[0], logoStyle.offset[1]);
         container.addChild(logo);
         return container;
     }

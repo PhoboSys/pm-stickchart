@@ -66,6 +66,20 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
                 dropShadowDistance: 2,
             }
         };
+        this.mobileCountdownStyle = {
+            anchor: [0, 1],
+            offset: [10, -5],
+            textstyle: {
+                fill: 0xFFFFFF,
+                fontWeight: 400,
+                fontFamily: 'Gilroy',
+                fontSize: 72,
+                dropShadow: true,
+                dropShadowAlpha: 0.1,
+                dropShadowBlur: 2,
+                dropShadowDistance: 2,
+            }
+        };
         this.configAnimations = {
             positioning: {
                 pixi: {
@@ -367,10 +381,11 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             this.animate('textgroup', 'hushed');
         else if (!locked && secondsToLock <= context.options.entryFlickeringAt)
             this.animate('textgroup', 'flickering');
-        const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], this.countdownStyle.textstyle, this.countdownStyle.anchor));
+        const countdownStyle = context.options.isMobile ? this.mobileCountdownStyle : this.countdownStyle;
+        const [countdowntext, countdownstate] = this.get('countdowntext', () => _rendering_1.GraphicUtils.createText(countdownValue, [0, 0], countdownStyle.textstyle, countdownStyle.anchor));
         if (countdownstate.new)
             textgroup.addChild(countdowntext);
-        const [xof, yof] = this.countdownStyle.offset;
+        const [xof, yof] = countdownStyle.offset;
         countdowntext.text = countdownValue;
         countdowntext.position.set(x + xof, y + yof);
         const phaseName = locked

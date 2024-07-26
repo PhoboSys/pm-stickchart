@@ -9,6 +9,7 @@ export declare class RoundCountdown extends BaseRoundsRenderer {
     private readonly winningGradientContainerStyle;
     private readonly phaseStyle;
     private readonly countdownStyle;
+    private readonly mobileCountdownStyle;
     private configAnimations;
     protected get animations(): any;
     private validPredictionPositions;

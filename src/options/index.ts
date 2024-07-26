@@ -9,6 +9,7 @@ export * from './types'
 const defaultOptions = {
     entryFlickeringAt: config.limit.entryFlickering,
     entryHushedAt: config.limit.entryHushed,
+    isMobile: false,
 }
 
 export function createOptions(options?: Options): Options {
