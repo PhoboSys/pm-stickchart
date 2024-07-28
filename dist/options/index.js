@@ -24,6 +24,7 @@ __exportStar(require("./types"), exports);
 const defaultOptions = {
     entryFlickeringAt: _config_1.default.limit.entryFlickering,
     entryHushedAt: _config_1.default.limit.entryHushed,
+    isMobile: false,
 };
 function createOptions(options) {
     return (0, merge_1.default)({}, defaultOptions, options);
