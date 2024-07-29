@@ -33,9 +33,9 @@ class StickChart extends EventTarget {
         });
         this.application.renderer.addSystem(pixi_1.EventSystem, 'events');
         this.fontsready = new fontsready_1.FontsReady();
-        this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement);
+        this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement, !!(options === null || options === void 0 ? void 0 : options.isMobile));
         this.textureStorage = new _rendering_2.TextureStorage(this.application);
-        this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe());
+        this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe(), !!(options === null || options === void 0 ? void 0 : options.isMobile));
         this.morphController = new morph_1.default(() => this.applyMorph());
         const renderer = new _rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new _rendering_1.RenderingPipelineFactory(renderer);
