@@ -30,5 +30,6 @@ __exportStar(require("./WithdrawEvent"), exports);
 __exportStar(require("./TimeframeStickToNowEvent"), exports);
 __exportStar(require("./TimeframeUnstickToNowEvent"), exports);
 __exportStar(require("./TimeframeChangedEvent"), exports);
+__exportStar(require("./TouchZoomEvent"), exports);
 __exportStar(require("./EventsProducer"), exports);
 //# sourceMappingURL=index.js.map

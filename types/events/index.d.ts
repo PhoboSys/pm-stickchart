@@ -14,4 +14,5 @@ export * from './WithdrawEvent';
 export * from './TimeframeStickToNowEvent';
 export * from './TimeframeUnstickToNowEvent';
 export * from './TimeframeChangedEvent';
+export * from './TouchZoomEvent';
 export * from './EventsProducer';

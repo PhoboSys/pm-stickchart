@@ -1,4 +1,4 @@
-import { ZoomEvent, CanvasErrorEvent } from '@events'
+import { ZoomEvent, CanvasErrorEvent, TouchZoomEvent } from '@events'
 import { PointerupEvent, PointermoveEvent, PointerdownEvent, PointerleaveEvent } from '@events'
 
 export class EventsProducer {
@@ -14,11 +14,14 @@ export class EventsProducer {
     private readonly pointerup: (e: PointerEvent) => any
 
     private readonly pointerdown: (e: PointerEvent) => any
+    
+    private readonly touchzoom: (e: TouchEvent) => any
 
     constructor(
         private readonly target: EventTarget,
         private readonly canvas: HTMLCanvasElement,
         private readonly stage: HTMLElement,
+        private readonly isMobile: boolean
     ) {
         // bind to instance
         this.scroll = (e: WheelEvent): boolean => this.target.dispatchEvent(new ZoomEvent(e))
@@ -29,23 +32,34 @@ export class EventsProducer {
         this.pointerup = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerupEvent(e))
         this.pointerdown = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerdownEvent(e))
 
-        this.canvas.addEventListener('webglcontextlost', this.error)
-        this.stage.addEventListener('wheel', this.scroll)
+        this.touchzoom = (e: TouchEvent): boolean => {
+            if (e.touches.length === 2) {
+                return this.target.dispatchEvent(new TouchZoomEvent(e))
+            } 
+            return false
+        }
+
         this.stage.addEventListener('pointerup', this.pointerup)
         this.stage.addEventListener('pointerdown', this.pointerdown)
         this.stage.addEventListener('pointermove', this.pointermove)
         this.stage.addEventListener('pointerleave', this.pointerleave)
+        this.canvas.addEventListener('webglcontextlost', this.error)
+    
+        if (this.isMobile) { 
+            this.stage.addEventListener('touchmove', this.touchzoom)
+        } else {
+            this.stage.addEventListener('wheel', this.scroll)
+        }
     }
 
     public destroy(): void {
         this.canvas.removeEventListener('webglcontextlost', this.error)
 
-        this.stage.removeEventListener('wheel', this.scroll)
-
-        this.stage.removeEventListener('pointerup', this.pointerup)
-        this.stage.removeEventListener('pointerdown', this.pointerdown)
-        this.stage.removeEventListener('pointermove', this.pointermove)
-        this.stage.removeEventListener('pointerleave', this.pointerleave)
+        if (this.isMobile) { 
+            this.stage.removeEventListener('touchmove', this.touchzoom)
+        } else {
+            this.stage.removeEventListener('wheel', this.scroll)
+        }
     }
 
 }

@@ -56,9 +56,9 @@ export class StickChart extends EventTarget {
         this.application.renderer.addSystem(EventSystem, 'events')
 
         this.fontsready = new FontsReady()
-        this.eventsProducer = new EventsProducer(this, this.canvas, stageElement)
+        this.eventsProducer = new EventsProducer(this, this.canvas, stageElement, !!options?.isMobile)
         this.textureStorage = new TextureStorage(this.application)
-        this.timeframe = new Timeframe(this, () => this.applyTimeframe())
+        this.timeframe = new Timeframe(this, () => this.applyTimeframe(), !!options?.isMobile)
         this.morphController = new MorphController(() => this.applyMorph())
 
         const renderer = new GraphicStorage(this.application.stage)
