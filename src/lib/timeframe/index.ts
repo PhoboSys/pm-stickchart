@@ -12,7 +12,7 @@ export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
 
 export const MAX_FRAME_DURATION = UNIX_DAY
-export const MAX_MOBILE_FRAME_DURATION = 25 * UNIX_MINUTE
+export const MAX_MOBILE_FRAME_DURATION = 40 * UNIX_MINUTE
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
 
 export const PADDING_RIGHT = 0.382
@@ -28,8 +28,6 @@ export class Timeframe {
 
     private _timeframe: number = MAX_FRAME_DURATION
 
-    private maxFrameDuration: number
-
     private get nowTS(): number {
         return this._now || nowUnixTS()
     }
@@ -42,15 +40,15 @@ export class Timeframe {
         return this._timeframe
     }
 
-    private latestDistance: number
+    private latestDistance: number | null = null
 
     private set timeframe(timeframe: number) {
-        timeframe = timeframe || this.maxFrameDuration
-        timeframe = Math.min(timeframe, this.maxFrameDuration)
+        timeframe = timeframe || MAX_FRAME_DURATION
+        timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
         timeframe = Math.max(timeframe, MIN_FRAME_DURATION)
 
         const since = this.until - timeframe
-        if (since >= this.nowTS - this.maxFrameDuration) {
+        if (since >= this.nowTS - MAX_FRAME_DURATION) {
             this._timeframe = timeframe
         }
     }
@@ -64,7 +62,7 @@ export class Timeframe {
     private set until(until: number) {
         if (until < this.untilmax(this.timeframe)) {
             const since = until - this.timeframe
-            if (since >= this.nowTS - this.maxFrameDuration) {
+            if (since >= this.nowTS - MAX_FRAME_DURATION) {
                 if (this._until === null) this.eventTarget.dispatchEvent(new TimeframeUnstickToNowEvent(this.get()))
                 this._until = until
             }
@@ -117,11 +115,9 @@ export class Timeframe {
             this.zoomevent = this.throttle((e: ZoomEvent) =>
                 this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle
             )
-    
+
             this.eventTarget.addEventListener('zoom', this.zoomevent)
         }
-
-        this.maxFrameDuration = this.isMobile ? MAX_MOBILE_FRAME_DURATION : MAX_FRAME_DURATION
 
         this.pointermove = this.throttle((e: PointermoveEvent) =>
             this.shiftprogress(e.movementX, e.screen, e.inner.buttons), config.zoom.throttle
@@ -202,7 +198,7 @@ export class Timeframe {
         const since = until - this.timeframe
 
         if (
-            since >= this.nowTS - this.maxFrameDuration
+            since >= this.nowTS - MAX_FRAME_DURATION
         ) {
             const prevuntil = this.until
 
@@ -225,7 +221,7 @@ export class Timeframe {
         until = this.until - Math.ceil(diff*percent)
 
         let since = until - timeframe
-        if (since < this.nowTS - this.maxFrameDuration) {
+        if (since < this.nowTS - MAX_FRAME_DURATION) {
             until = this.since + timeframe
             since = until - timeframe
         }
@@ -238,10 +234,10 @@ export class Timeframe {
         since = until - timeframe
 
         if (
-            timeframe < this.maxFrameDuration &&
+            timeframe < MAX_FRAME_DURATION &&
             timeframe > MIN_FRAME_DURATION &&
             until <= this.untilmax(timeframe) &&
-            since >= this.nowTS - this.maxFrameDuration
+            since >= this.nowTS - MAX_FRAME_DURATION
         ) {
             const prevuntil = this.until
 
@@ -259,7 +255,7 @@ export class Timeframe {
 
     private pinch(distance: number, screen: Rect): void {
         if (!this.latestDistance) {
-            this.latestDistance = distance;
+            this.latestDistance = distance
         }
 
         const zoom = Number(div(distance, this.latestDistance))

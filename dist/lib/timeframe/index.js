@@ -13,7 +13,7 @@ exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.MAX_FRAME_DURATION = exports.UNIX_DAY;
-exports.MAX_MOBILE_FRAME_DURATION = 25 * exports.UNIX_MINUTE;
+exports.MAX_MOBILE_FRAME_DURATION = 40 * exports.UNIX_MINUTE;
 exports.MIN_FRAME_DURATION = 5 * exports.UNIX_MINUTE;
 exports.PADDING_RIGHT = 0.382;
 class Timeframe {
@@ -27,11 +27,11 @@ class Timeframe {
         return this._timeframe;
     }
     set timeframe(timeframe) {
-        timeframe = timeframe || this.maxFrameDuration;
-        timeframe = Math.min(timeframe, this.maxFrameDuration);
+        timeframe = timeframe || exports.MAX_FRAME_DURATION;
+        timeframe = Math.min(timeframe, exports.MAX_FRAME_DURATION);
         timeframe = Math.max(timeframe, exports.MIN_FRAME_DURATION);
         const since = this.until - timeframe;
-        if (since >= this.nowTS - this.maxFrameDuration) {
+        if (since >= this.nowTS - exports.MAX_FRAME_DURATION) {
             this._timeframe = timeframe;
         }
     }
@@ -43,7 +43,7 @@ class Timeframe {
     set until(until) {
         if (until < this.untilmax(this.timeframe)) {
             const since = until - this.timeframe;
-            if (since >= this.nowTS - this.maxFrameDuration) {
+            if (since >= this.nowTS - exports.MAX_FRAME_DURATION) {
                 if (this._until === null)
                     this.eventTarget.dispatchEvent(new _events_1.TimeframeUnstickToNowEvent(this.get()));
                 this._until = until;
@@ -83,6 +83,7 @@ class Timeframe {
         this._until = null;
         this._now = null;
         this._timeframe = exports.MAX_FRAME_DURATION;
+        this.latestDistance = null;
         this.shifting = 0;
         if (this.isMobile) {
             this.zoomevent = this.throttle((e) => this.pinch(e.distance, e.screen), _config_1.default.zoom.throttle);
@@ -92,7 +93,6 @@ class Timeframe {
             this.zoomevent = this.throttle((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle);
             this.eventTarget.addEventListener('zoom', this.zoomevent);
         }
-        this.maxFrameDuration = this.isMobile ? exports.MAX_MOBILE_FRAME_DURATION : exports.MAX_FRAME_DURATION;
         this.pointermove = this.throttle((e) => this.shiftprogress(e.movementX, e.screen, e.inner.buttons), _config_1.default.zoom.throttle);
         this.eventTarget.addEventListener('pointermove', this.pointermove);
         this.eventTarget.addEventListener('timeframechanged', this.onUpdate);
@@ -150,7 +150,7 @@ class Timeframe {
         const timeshift = Math.floor(this.timeframe * shift * speed);
         const until = this.until - timeshift;
         const since = until - this.timeframe;
-        if (since >= this.nowTS - this.maxFrameDuration) {
+        if (since >= this.nowTS - exports.MAX_FRAME_DURATION) {
             const prevuntil = this.until;
             this.until = until;
             if (this.until !== prevuntil) {
@@ -165,7 +165,7 @@ class Timeframe {
         const diff = this.timeframe - timeframe;
         until = this.until - Math.ceil(diff * percent);
         let since = until - timeframe;
-        if (since < this.nowTS - this.maxFrameDuration) {
+        if (since < this.nowTS - exports.MAX_FRAME_DURATION) {
             until = this.since + timeframe;
             since = until - timeframe;
         }
@@ -175,10 +175,10 @@ class Timeframe {
         until = until + timeshift;
         until = Math.min(until, this.untilmax(timeframe));
         since = until - timeframe;
-        if (timeframe < this.maxFrameDuration &&
+        if (timeframe < exports.MAX_FRAME_DURATION &&
             timeframe > exports.MIN_FRAME_DURATION &&
             until <= this.untilmax(timeframe) &&
-            since >= this.nowTS - this.maxFrameDuration) {
+            since >= this.nowTS - exports.MAX_FRAME_DURATION) {
             const prevuntil = this.until;
             this.timeframe = timeframe;
             this.until = until;

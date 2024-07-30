@@ -14,7 +14,7 @@ export class EventsProducer {
     private readonly pointerup: (e: PointerEvent) => any
 
     private readonly pointerdown: (e: PointerEvent) => any
-    
+
     private readonly touchzoom: (e: TouchEvent) => any
 
     constructor(
@@ -35,7 +35,8 @@ export class EventsProducer {
         this.touchzoom = (e: TouchEvent): boolean => {
             if (e.touches.length === 2) {
                 return this.target.dispatchEvent(new TouchZoomEvent(e))
-            } 
+            }
+
             return false
         }
 
@@ -44,8 +45,8 @@ export class EventsProducer {
         this.stage.addEventListener('pointermove', this.pointermove)
         this.stage.addEventListener('pointerleave', this.pointerleave)
         this.canvas.addEventListener('webglcontextlost', this.error)
-    
-        if (this.isMobile) { 
+
+        if (this.isMobile) {
             this.stage.addEventListener('touchmove', this.touchzoom)
         } else {
             this.stage.addEventListener('wheel', this.scroll)
@@ -55,7 +56,7 @@ export class EventsProducer {
     public destroy(): void {
         this.canvas.removeEventListener('webglcontextlost', this.error)
 
-        if (this.isMobile) { 
+        if (this.isMobile) {
             this.stage.removeEventListener('touchmove', this.touchzoom)
         } else {
             this.stage.removeEventListener('wheel', this.scroll)
