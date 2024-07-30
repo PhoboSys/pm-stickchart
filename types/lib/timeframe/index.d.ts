@@ -12,7 +12,6 @@ export declare class Timeframe {
     private _until;
     private _now;
     private _timeframe;
-    private maxFrameDuration;
     private get nowTS();
     private set nowTS(value);
     private get timeframe();
