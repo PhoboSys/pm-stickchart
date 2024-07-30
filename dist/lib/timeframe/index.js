@@ -83,8 +83,8 @@ class Timeframe {
         this._until = null;
         this._now = null;
         this._timeframe = exports.MAX_FRAME_DURATION;
-        this.latestDistance = null;
         this.shifting = 0;
+        this.latestDistance = null;
         if (this.isMobile) {
             this.zoomevent = this.throttle((e) => this.pinch(e.distance, e.screen), _config_1.default.zoom.throttle);
             this.eventTarget.addEventListener('touchzoom', this.zoomevent);

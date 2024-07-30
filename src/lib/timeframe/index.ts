@@ -40,8 +40,6 @@ export class Timeframe {
         return this._timeframe
     }
 
-    private latestDistance: number | null = null
-
     private set timeframe(timeframe: number) {
         timeframe = timeframe || MAX_FRAME_DURATION
         timeframe = Math.min(timeframe, MAX_FRAME_DURATION)
@@ -101,6 +99,8 @@ export class Timeframe {
             tid = Number(setTimeout(() => { thred = false }, timeout))
         }
     }
+
+    private latestDistance: number | null = null
 
     constructor(
         private readonly eventTarget: EventTarget,
