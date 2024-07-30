@@ -15,7 +15,6 @@ export declare class Timeframe {
     private get nowTS();
     private set nowTS(value);
     private get timeframe();
-    private latestDistance;
     private set timeframe(value);
     get until(): number;
     private set until(value);
@@ -25,6 +24,7 @@ export declare class Timeframe {
     private readonly pointermove;
     private shifting;
     private throttle;
+    private latestDistance;
     constructor(eventTarget: EventTarget, onUpdate: () => any, isMobile: boolean);
     save(timeframe: number): this;
     reset(): this;
