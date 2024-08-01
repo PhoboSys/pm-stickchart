@@ -15,5 +15,6 @@ export * from './TimeframeStickToNowEvent'
 export * from './TimeframeUnstickToNowEvent'
 export * from './TimeframeChangedEvent'
 export * from './TouchZoomEvent'
+export * from './TouchEndEvent'
 
 export * from './EventsProducer'

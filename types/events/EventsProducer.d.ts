@@ -10,6 +10,7 @@ export declare class EventsProducer {
     private readonly pointerup;
     private readonly pointerdown;
     private readonly touchzoom;
+    private readonly touchend;
     constructor(target: EventTarget, canvas: HTMLCanvasElement, stage: HTMLElement, isMobile: boolean);
     destroy(): void;
 }

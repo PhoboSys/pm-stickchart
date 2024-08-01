@@ -15,6 +15,10 @@ exports.default = {
         speed: 100,
         throttle: 30, // once per 30ms
     },
+    pinch: {
+        speed: 0.005,
+        throttle: 30, // once per 30ms
+    },
     grid: {
         time: { max: 20, fontsize: 12 },
         price: { max: 20, fontsize: 12 },
