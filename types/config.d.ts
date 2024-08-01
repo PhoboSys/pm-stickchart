@@ -12,6 +12,10 @@ declare const _default: {
         speed: number;
         throttle: number;
     };
+    pinch: {
+        speed: number;
+        throttle: number;
+    };
     grid: {
         time: {
             max: number;

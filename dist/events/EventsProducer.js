@@ -22,6 +22,12 @@ class EventsProducer {
             }
             return false;
         };
+        this.touchend = (e) => {
+            if (e.touches.length === 0) {
+                return this.target.dispatchEvent(new _events_1.TouchEndEvent());
+            }
+            return false;
+        };
         this.stage.addEventListener('pointerup', this.pointerup);
         this.stage.addEventListener('pointerdown', this.pointerdown);
         this.stage.addEventListener('pointermove', this.pointermove);
@@ -29,6 +35,7 @@ class EventsProducer {
         this.canvas.addEventListener('webglcontextlost', this.error);
         if (this.isMobile) {
             this.stage.addEventListener('touchmove', this.touchzoom);
+            this.stage.addEventListener('touchend', this.touchend);
         }
         else {
             this.stage.addEventListener('wheel', this.scroll);
@@ -38,6 +45,7 @@ class EventsProducer {
         this.canvas.removeEventListener('webglcontextlost', this.error);
         if (this.isMobile) {
             this.stage.removeEventListener('touchmove', this.touchzoom);
+            this.stage.removeEventListener('touchend', this.touchend);
         }
         else {
             this.stage.removeEventListener('wheel', this.scroll);

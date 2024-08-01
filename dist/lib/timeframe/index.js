@@ -13,7 +13,7 @@ exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.MAX_FRAME_DURATION = exports.UNIX_DAY;
-exports.MAX_MOBILE_FRAME_DURATION = 40 * exports.UNIX_MINUTE;
+exports.MAX_MOBILE_FRAME_DURATION = 30 * exports.UNIX_MINUTE;
 exports.MIN_FRAME_DURATION = 5 * exports.UNIX_MINUTE;
 exports.PADDING_RIGHT = 0.382;
 class Timeframe {
@@ -85,9 +85,12 @@ class Timeframe {
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = 0;
         this.latestDistance = null;
+        this.pinchLevel = 1;
         if (this.isMobile) {
-            this.zoomevent = this.throttle((e) => this.pinch(e.distance, e.screen), _config_1.default.zoom.throttle);
-            this.eventTarget.addEventListener('touchzoom', this.zoomevent);
+            this.pinchevent = this.throttle((e) => this.pinch(e.distance, e.screen), _config_1.default.zoom.throttle);
+            this.touchstopevent = this.throttle(() => this.clearDistance(), _config_1.default.zoom.throttle);
+            this.eventTarget.addEventListener('touchzoom', this.pinchevent);
+            this.eventTarget.addEventListener('touchend', this.touchstopevent);
         }
         else {
             this.zoomevent = this.throttle((e) => this.zoom(e.zoom, e.shift, e.position, e.screen), _config_1.default.zoom.throttle);
@@ -124,7 +127,8 @@ class Timeframe {
     }
     destroy() {
         if (this.isMobile) {
-            this.eventTarget.removeEventListener('touchzoom', this.zoomevent);
+            this.eventTarget.removeEventListener('touchzoom', this.pinchevent);
+            this.eventTarget.removeEventListener('touchend', this.touchstopevent);
         }
         else {
             this.eventTarget.removeEventListener('zoom', this.zoomevent);
@@ -188,12 +192,21 @@ class Timeframe {
             }
         }
     }
+    clearDistance() {
+        this.latestDistance = null;
+    }
     pinch(distance, screen) {
         if (!this.latestDistance) {
             this.latestDistance = distance;
         }
-        const zoom = Number((0, calc_utils_1.div)(distance, this.latestDistance));
-        const timeframe = Math.round(this.timeframe / zoom);
+        if (this.latestDistance < distance) {
+            this.pinchLevel = Number((0, calc_utils_1.sub)(this.pinchLevel, _config_1.default.pinch.speed));
+        }
+        if (this.latestDistance > distance) {
+            this.pinchLevel = Number((0, calc_utils_1.add)(this.pinchLevel, _config_1.default.pinch.speed));
+        }
+        this.latestDistance = distance;
+        const timeframe = Math.round(this.timeframe * this.pinchLevel);
         let until = this.until;
         const percent = 1 - distance / screen.width;
         const diff = this.timeframe - timeframe;

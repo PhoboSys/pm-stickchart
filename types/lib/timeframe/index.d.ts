@@ -21,10 +21,13 @@ export declare class Timeframe {
     private untilmax;
     get since(): number;
     private readonly zoomevent;
+    private readonly pinchevent;
+    private readonly touchstopevent;
     private readonly pointermove;
     private shifting;
     private throttle;
     private latestDistance;
+    private pinchLevel;
     constructor(eventTarget: EventTarget, onUpdate: () => any, isMobile: boolean);
     save(timeframe: number): this;
     reset(): this;
@@ -37,5 +40,6 @@ export declare class Timeframe {
     private shiftprogress;
     private shift;
     private zoom;
+    private clearDistance;
     private pinch;
 }

@@ -1,4 +1,4 @@
-import { ZoomEvent, CanvasErrorEvent, TouchZoomEvent } from '@events'
+import { ZoomEvent, CanvasErrorEvent, TouchZoomEvent, TouchEndEvent } from '@events'
 import { PointerupEvent, PointermoveEvent, PointerdownEvent, PointerleaveEvent } from '@events'
 
 export class EventsProducer {
@@ -16,6 +16,8 @@ export class EventsProducer {
     private readonly pointerdown: (e: PointerEvent) => any
 
     private readonly touchzoom: (e: TouchEvent) => any
+
+    private readonly touchend: (e: TouchEvent) => any
 
     constructor(
         private readonly target: EventTarget,
@@ -40,6 +42,14 @@ export class EventsProducer {
             return false
         }
 
+        this.touchend = (e: TouchEvent): boolean => {
+            if (e.touches.length === 0) {
+                return this.target.dispatchEvent(new TouchEndEvent())
+            }
+
+            return false
+        }
+
         this.stage.addEventListener('pointerup', this.pointerup)
         this.stage.addEventListener('pointerdown', this.pointerdown)
         this.stage.addEventListener('pointermove', this.pointermove)
@@ -48,6 +58,8 @@ export class EventsProducer {
 
         if (this.isMobile) {
             this.stage.addEventListener('touchmove', this.touchzoom)
+            this.stage.addEventListener('touchend', this.touchend)
+
         } else {
             this.stage.addEventListener('wheel', this.scroll)
         }
@@ -58,6 +70,8 @@ export class EventsProducer {
 
         if (this.isMobile) {
             this.stage.removeEventListener('touchmove', this.touchzoom)
+            this.stage.removeEventListener('touchend', this.touchend)
+
         } else {
             this.stage.removeEventListener('wheel', this.scroll)
         }

@@ -5,14 +5,14 @@ import { nowUnixTS } from '@lib/utils'
 import { Logger } from '@infra'
 
 import config from '@config'
-import { div } from '../calc-utils'
+import { add, sub } from '../calc-utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
 
 export const MAX_FRAME_DURATION = UNIX_DAY
-export const MAX_MOBILE_FRAME_DURATION = 40 * UNIX_MINUTE
+export const MAX_MOBILE_FRAME_DURATION = 30 * UNIX_MINUTE
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
 
 export const PADDING_RIGHT = 0.382
@@ -79,6 +79,10 @@ export class Timeframe {
 
     private readonly zoomevent: any
 
+    private readonly pinchevent: any
+
+    private readonly touchstopevent: any
+
     private readonly pointermove: any
 
     private shifting = 0
@@ -102,15 +106,19 @@ export class Timeframe {
 
     private latestDistance: number | null = null
 
+    private pinchLevel = 1
+
     constructor(
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
         private readonly isMobile: boolean,
     ) {
         if (this.isMobile) {
-            this.zoomevent = this.throttle((e: TouchZoomEvent) => this.pinch(e.distance, e.screen), config.zoom.throttle)
+            this.pinchevent = this.throttle((e: TouchZoomEvent) => this.pinch(e.distance, e.screen), config.zoom.throttle)
+            this.touchstopevent = this.throttle(() => this.clearDistance(), config.zoom.throttle)
 
-            this.eventTarget.addEventListener('touchzoom', this.zoomevent)
+            this.eventTarget.addEventListener('touchzoom', this.pinchevent)
+            this.eventTarget.addEventListener('touchend', this.touchstopevent)
         } else {
             this.zoomevent = this.throttle((e: ZoomEvent) =>
                 this.zoom(e.zoom, e.shift, e.position, e.screen), config.zoom.throttle
@@ -165,7 +173,8 @@ export class Timeframe {
 
     public destroy(): this {
         if (this.isMobile) {
-            this.eventTarget.removeEventListener('touchzoom', this.zoomevent)
+            this.eventTarget.removeEventListener('touchzoom', this.pinchevent)
+            this.eventTarget.removeEventListener('touchend', this.touchstopevent)
         } else {
             this.eventTarget.removeEventListener('zoom', this.zoomevent)
         }
@@ -253,14 +262,26 @@ export class Timeframe {
         }
     }
 
+    private clearDistance(): void {
+        this.latestDistance = null
+    }
+
     private pinch(distance: number, screen: Rect): void {
         if (!this.latestDistance) {
             this.latestDistance = distance
         }
 
-        const zoom = Number(div(distance, this.latestDistance))
+        if (this.latestDistance < distance) {
+            this.pinchLevel = Number(sub(this.pinchLevel, config.pinch.speed))
+        }
 
-        const timeframe = Math.round(this.timeframe / zoom)
+        if (this.latestDistance > distance) {
+            this.pinchLevel = Number(add(this.pinchLevel, config.pinch.speed))
+        }
+
+        this.latestDistance = distance
+
+        const timeframe = Math.round(this.timeframe * this.pinchLevel)
 
         let until = this.until
         const percent = 1 - distance / screen.width
