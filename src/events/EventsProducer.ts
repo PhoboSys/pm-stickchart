@@ -15,9 +15,13 @@ export class EventsProducer {
 
     private readonly pointerdown: (e: PointerEvent) => any
 
+    private readonly touchstart: (e: TouchEvent) => any
+
     private readonly touchzoom: (e: TouchEvent) => any
 
     private readonly touchend: (e: TouchEvent) => any
+
+    private isMultiTouch: boolean = false;
 
     constructor(
         private readonly target: EventTarget,
@@ -29,10 +33,42 @@ export class EventsProducer {
         this.scroll = (e: WheelEvent): boolean => this.target.dispatchEvent(new ZoomEvent(e))
         this.error = (e: Event): boolean => this.target.dispatchEvent(new CanvasErrorEvent(e))
 
-        this.pointermove = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointermoveEvent(e))
-        this.pointerleave = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerleaveEvent(e))
-        this.pointerup = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerupEvent(e))
-        this.pointerdown = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerdownEvent(e))
+        this.pointermove = (e: PointerEvent): boolean => {
+            if (this.isMultiTouch) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+            }
+            return this.target.dispatchEvent(new PointermoveEvent(e))
+        }
+        this.pointerleave = (e: PointerEvent): boolean => {
+            if (this.isMultiTouch) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+            }
+            return this.target.dispatchEvent(new PointerleaveEvent(e))
+        }
+        this.pointerup = (e: PointerEvent): boolean => {
+            if (this.isMultiTouch) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+            }
+            return this.target.dispatchEvent(new PointerupEvent(e))
+        }
+        this.pointerdown = (e: PointerEvent): boolean => { 
+            if (this.isMultiTouch) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+            }
+            return this.target.dispatchEvent(new PointerdownEvent(e))
+        }
+
+        this.touchstart = (e: TouchEvent): void => {
+            this.isMultiTouch = e.touches.length === 2
+        }
 
         this.touchzoom = (e: TouchEvent): boolean => {
             if (e.touches.length === 2) {
@@ -44,8 +80,10 @@ export class EventsProducer {
 
         this.touchend = (e: TouchEvent): boolean => {
             if (e.touches.length === 0) {
+                this.isMultiTouch = false
                 return this.target.dispatchEvent(new TouchEndEvent())
             }
+
 
             return false
         }
@@ -57,6 +95,7 @@ export class EventsProducer {
         this.canvas.addEventListener('webglcontextlost', this.error)
 
         if (this.isMobile) {
+            this.stage.addEventListener('touchstart', this.touchstart)
             this.stage.addEventListener('touchmove', this.touchzoom)
             this.stage.addEventListener('touchend', this.touchend)
 
@@ -69,6 +108,7 @@ export class EventsProducer {
         this.canvas.removeEventListener('webglcontextlost', this.error)
 
         if (this.isMobile) {
+            this.stage.removeEventListener('touchstart', this.touchstart)
             this.stage.removeEventListener('touchmove', this.touchzoom)
             this.stage.removeEventListener('touchend', this.touchend)
 
