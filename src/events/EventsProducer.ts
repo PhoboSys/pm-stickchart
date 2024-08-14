@@ -21,7 +21,7 @@ export class EventsProducer {
 
     private readonly touchend: (e: TouchEvent) => any
 
-    private isMultiTouch: boolean = false;
+    private isMultiTouch = false
 
     constructor(
         private readonly target: EventTarget,
@@ -37,32 +37,40 @@ export class EventsProducer {
             if (this.isMultiTouch) {
                 e.preventDefault()
                 e.stopPropagation()
+
                 return false
             }
+
             return this.target.dispatchEvent(new PointermoveEvent(e))
         }
         this.pointerleave = (e: PointerEvent): boolean => {
             if (this.isMultiTouch) {
                 e.preventDefault()
                 e.stopPropagation()
+
                 return false
             }
+
             return this.target.dispatchEvent(new PointerleaveEvent(e))
         }
         this.pointerup = (e: PointerEvent): boolean => {
             if (this.isMultiTouch) {
                 e.preventDefault()
                 e.stopPropagation()
+
                 return false
             }
+
             return this.target.dispatchEvent(new PointerupEvent(e))
         }
-        this.pointerdown = (e: PointerEvent): boolean => { 
+        this.pointerdown = (e: PointerEvent): boolean => {
             if (this.isMultiTouch) {
                 e.preventDefault()
                 e.stopPropagation()
+
                 return false
             }
+
             return this.target.dispatchEvent(new PointerdownEvent(e))
         }
 
@@ -81,9 +89,9 @@ export class EventsProducer {
         this.touchend = (e: TouchEvent): boolean => {
             if (e.touches.length === 0) {
                 this.isMultiTouch = false
+
                 return this.target.dispatchEvent(new TouchEndEvent())
             }
-
 
             return false
         }
