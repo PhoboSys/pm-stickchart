@@ -8,7 +8,6 @@ const _events_1 = require("../../events/index.js");
 const utils_1 = require("../utils");
 const _infra_1 = require("../../infra/index.js");
 const _config_1 = __importDefault(require("../../config.js"));
-const calc_utils_1 = require("../calc-utils");
 exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
@@ -85,7 +84,6 @@ class Timeframe {
         this._timeframe = exports.MAX_FRAME_DURATION;
         this.shifting = 0;
         this.latestDistance = null;
-        this.pinchLevel = 1;
         if (this.isMobile) {
             this.pinchevent = this.throttle((e) => this.pinch(e.distance, e.screen), _config_1.default.zoom.throttle);
             this.touchstopevent = this.throttle(() => this.clearDistance(), _config_1.default.zoom.throttle);
@@ -198,38 +196,35 @@ class Timeframe {
     pinch(distance, screen) {
         if (!this.latestDistance) {
             this.latestDistance = distance;
+            return;
         }
-        if (this.latestDistance < distance) {
-            this.pinchLevel = Number((0, calc_utils_1.sub)(this.pinchLevel, _config_1.default.pinch.speed));
-        }
-        if (this.latestDistance > distance) {
-            this.pinchLevel = Number((0, calc_utils_1.add)(this.pinchLevel, _config_1.default.pinch.speed));
-        }
+        const pinchDelta = this.latestDistance - distance;
+        const pinchRatio = pinchDelta / this.latestDistance;
         this.latestDistance = distance;
-        const timeframe = Math.round(this.timeframe * this.pinchLevel);
+        const scaleFactor = 1 + (pinchRatio * _config_1.default.pinch.speed);
+        const newTimeframe = Math.round(this.timeframe * scaleFactor);
         let until = this.until;
-        const percent = 1 - distance / screen.width;
-        const diff = this.timeframe - timeframe;
-        until = this.until - Math.ceil(diff * percent);
-        let since = until - timeframe;
+        const diff = this.timeframe - newTimeframe;
+        until = this.until - Math.ceil(diff * 0.5);
+        let since = until - newTimeframe;
         if (since < this.nowTS - exports.MAX_MOBILE_FRAME_DURATION) {
-            until = this.since + timeframe;
-            since = until - timeframe;
+            until = this.since + newTimeframe;
+            since = until - newTimeframe;
         }
-        const speed = 2;
-        const timeshift = Math.floor(timeframe * speed);
+        const speed = 1.0;
+        const shiftRatio = pinchDelta / screen.width;
+        const timeshift = Math.floor(newTimeframe * shiftRatio * speed);
         until = until + timeshift;
-        until = Math.min(until, this.untilmax(timeframe));
-        since = until - timeframe;
-        if (timeframe < exports.MAX_MOBILE_FRAME_DURATION &&
-            timeframe > exports.MIN_FRAME_DURATION &&
-            until <= this.untilmax(timeframe) &&
+        until = Math.min(until, this.untilmax(newTimeframe));
+        since = until - newTimeframe;
+        if (newTimeframe < exports.MAX_MOBILE_FRAME_DURATION &&
+            newTimeframe > exports.MIN_FRAME_DURATION &&
+            until <= this.untilmax(newTimeframe) &&
             since >= this.nowTS - exports.MAX_MOBILE_FRAME_DURATION) {
             const prevuntil = this.until;
-            this.timeframe = timeframe;
+            this.timeframe = newTimeframe;
             this.until = until;
-            if (this.timeframe !== prevuntil ||
-                this.until !== prevuntil) {
+            if (this.timeframe !== prevuntil || this.until !== prevuntil) {
                 this.eventTarget.dispatchEvent(new _events_1.TimeframeChangedEvent(this.get()));
             }
         }
