@@ -106,8 +106,6 @@ export class Timeframe {
 
     private latestDistance: number | null = null
 
-    private pinchLevel = 1
-
     constructor(
         private readonly eventTarget: EventTarget,
         private readonly onUpdate: () => any,
@@ -269,52 +267,47 @@ export class Timeframe {
     private pinch(distance: number, screen: Rect): void {
         if (!this.latestDistance) {
             this.latestDistance = distance
+
+            return
         }
 
-        if (this.latestDistance < distance) {
-            this.pinchLevel = Number(sub(this.pinchLevel, config.pinch.speed))
-        }
-
-        if (this.latestDistance > distance) {
-            this.pinchLevel = Number(add(this.pinchLevel, config.pinch.speed))
-        }
+        const pinchDelta = this.latestDistance - distance
+        const pinchRatio = pinchDelta / this.latestDistance
 
         this.latestDistance = distance
 
-        const timeframe = Math.round(this.timeframe * this.pinchLevel)
+        const scaleFactor = 1 + (pinchRatio * config.pinch.speed)
+        const newTimeframe = Math.round(this.timeframe * scaleFactor)
 
         let until = this.until
-        const percent = 1 - distance / screen.width
-        const diff = this.timeframe - timeframe
-        until = this.until - Math.ceil(diff*percent)
+        const diff = this.timeframe - newTimeframe
+        until = this.until - Math.ceil(diff * 0.5)
 
-        let since = until - timeframe
+        let since = until - newTimeframe
         if (since < this.nowTS - MAX_MOBILE_FRAME_DURATION) {
-            until = this.since + timeframe
-            since = until - timeframe
+            until = this.since + newTimeframe
+            since = until - newTimeframe
         }
 
-        const speed = 2
-        const timeshift = Math.floor(timeframe * speed)
+        const speed = 1.0
+        const shiftRatio = pinchDelta / screen.width
+        const timeshift = Math.floor(newTimeframe * shiftRatio * speed)
         until = until + timeshift
-        until = Math.min(until, this.untilmax(timeframe))
-        since = until - timeframe
+        until = Math.min(until, this.untilmax(newTimeframe))
+        since = until - newTimeframe
 
         if (
-            timeframe < MAX_MOBILE_FRAME_DURATION &&
-            timeframe > MIN_FRAME_DURATION &&
-            until <= this.untilmax(timeframe) &&
+            newTimeframe < MAX_MOBILE_FRAME_DURATION &&
+            newTimeframe > MIN_FRAME_DURATION &&
+            until <= this.untilmax(newTimeframe) &&
             since >= this.nowTS - MAX_MOBILE_FRAME_DURATION
         ) {
             const prevuntil = this.until
 
-            this.timeframe = timeframe
+            this.timeframe = newTimeframe
             this.until = until
 
-            if (
-                this.timeframe !== prevuntil ||
-                this.until !== prevuntil
-            ) {
+            if (this.timeframe !== prevuntil || this.until !== prevuntil) {
                 this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
             }
         }

@@ -27,7 +27,6 @@ export declare class Timeframe {
     private shifting;
     private throttle;
     private latestDistance;
-    private pinchLevel;
     constructor(eventTarget: EventTarget, onUpdate: () => any, isMobile: boolean);
     save(timeframe: number): this;
     reset(): this;
