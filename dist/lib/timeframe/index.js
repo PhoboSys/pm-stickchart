@@ -198,10 +198,9 @@ class Timeframe {
             this.latestDistance = distance;
             return;
         }
-        const pinchDelta = this.latestDistance - distance;
-        const pinchRatio = pinchDelta / this.latestDistance;
+        const pinchDirection = distance > this.latestDistance ? -1 : 1;
+        const scaleFactor = 1 + (pinchDirection * 0.2); // Adjust for zoom sensitivity
         this.latestDistance = distance;
-        const scaleFactor = 1 + (pinchRatio * _config_1.default.pinch.speed);
         const newTimeframe = Math.round(this.timeframe * scaleFactor);
         let until = this.until;
         const diff = this.timeframe - newTimeframe;
@@ -212,7 +211,7 @@ class Timeframe {
             since = until - newTimeframe;
         }
         const speed = 1.0;
-        const shiftRatio = pinchDelta / screen.width;
+        const shiftRatio = (distance - this.latestDistance) / screen.width;
         const timeshift = Math.floor(newTimeframe * shiftRatio * speed);
         until = until + timeshift;
         until = Math.min(until, this.untilmax(newTimeframe));

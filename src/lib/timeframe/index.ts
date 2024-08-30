@@ -5,7 +5,6 @@ import { nowUnixTS } from '@lib/utils'
 import { Logger } from '@infra'
 
 import config from '@config'
-import { add, sub } from '../calc-utils'
 
 export const UNIX_MINUTE = 60
 export const UNIX_HOUR = 60 * UNIX_MINUTE
@@ -267,35 +266,34 @@ export class Timeframe {
     private pinch(distance: number, screen: Rect): void {
         if (!this.latestDistance) {
             this.latestDistance = distance
-
             return
         }
-
-        const pinchDelta = this.latestDistance - distance
-        const pinchRatio = pinchDelta / this.latestDistance
-
+    
+        const pinchDirection = distance > this.latestDistance ? -1 : 1
+    
+        const scaleFactor = 1 + (pinchDirection * 0.2) // Adjust for zoom sensitivity
+    
         this.latestDistance = distance
-
-        const scaleFactor = 1 + (pinchRatio * config.pinch.speed)
+    
         const newTimeframe = Math.round(this.timeframe * scaleFactor)
-
+    
         let until = this.until
         const diff = this.timeframe - newTimeframe
         until = this.until - Math.ceil(diff * 0.5)
-
+    
         let since = until - newTimeframe
         if (since < this.nowTS - MAX_MOBILE_FRAME_DURATION) {
             until = this.since + newTimeframe
             since = until - newTimeframe
         }
-
-        const speed = 1.0
-        const shiftRatio = pinchDelta / screen.width
+    
+        const speed = 1.0 
+        const shiftRatio = (distance - this.latestDistance) / screen.width
         const timeshift = Math.floor(newTimeframe * shiftRatio * speed)
         until = until + timeshift
         until = Math.min(until, this.untilmax(newTimeframe))
         since = until - newTimeframe
-
+    
         if (
             newTimeframe < MAX_MOBILE_FRAME_DURATION &&
             newTimeframe > MIN_FRAME_DURATION &&
@@ -303,10 +301,10 @@ export class Timeframe {
             since >= this.nowTS - MAX_MOBILE_FRAME_DURATION
         ) {
             const prevuntil = this.until
-
+    
             this.timeframe = newTimeframe
             this.until = until
-
+    
             if (this.timeframe !== prevuntil || this.until !== prevuntil) {
                 this.eventTarget.dispatchEvent(new TimeframeChangedEvent(this.get()))
             }
