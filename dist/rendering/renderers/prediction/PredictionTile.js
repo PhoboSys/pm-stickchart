@@ -830,17 +830,17 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 this.get('nocontest', () => state.nocontest, [state.nocontest]);
                 claim.interactive = true;
                 claim.cursor = 'pointer';
-                claim.addEventListener('pointerover', (e) => {
+                const pointerover = (e) => {
                     this.rebind(roundid, predictionid);
                     this.animate('claim', 'hover_claim');
                     context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
-                });
-                claim.addEventListener('pointerout', (e) => {
+                };
+                const pointerout = (e) => {
                     this.rebind(roundid, predictionid);
                     this.animate('claim', 'unhover_claim');
                     context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
-                });
-                claim.addEventListener('pointertap', (e) => {
+                };
+                const pointertap = (e) => {
                     this.rebind(roundid, predictionid);
                     this.animate('claim', 'tab_claim');
                     const [rslvd] = this.read('resolved');
@@ -857,7 +857,24 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                             context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, predictionid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
                         }
                     }
-                });
+                };
+                if (context.options.isMobile) {
+                    context.eventTarget.addEventListener('touchstart', (e) => {
+                        if (e.multitouch) {
+                            claim.removeEventListener('pointerover', pointerover);
+                            claim.removeEventListener('pointerout', pointerout);
+                            claim.removeEventListener('pointertap', pointertap);
+                        }
+                        else {
+                            claim.addEventListener('pointerover', pointerover);
+                            claim.addEventListener('pointerout', pointerout);
+                            claim.addEventListener('pointertap', pointertap);
+                        }
+                    });
+                }
+                claim.addEventListener('pointerover', pointerover);
+                claim.addEventListener('pointerout', pointerout);
+                claim.addEventListener('pointertap', pointertap);
             }
             if (isHistorical && !claimState.subscribed) {
                 claimState.subscribed = true;

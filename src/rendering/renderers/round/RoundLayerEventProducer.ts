@@ -2,7 +2,7 @@ import { RenderingContext } from '@rendering'
 
 import datamath from '@lib/datamath'
 import { Graphics, Container } from '@lib/pixi'
-import { RoundHoverEvent, RoundPinEvent, RoundUnhoverEvent, RoundUnpinEvent } from '@events'
+import { RoundHoverEvent, RoundPinEvent, RoundUnhoverEvent, RoundUnpinEvent, TouchStartEvent } from '@events'
 
 import { BaseRoundsRenderer } from './BaseRoundsRenderer'
 
@@ -60,19 +60,31 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             container.addChild(layer)
             layer.interactive = true
 
+            const pointertap = (e) => {
+                if (layerState.pined) {
+                    context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
+                } else {
+                    context.eventTarget.dispatchEvent(new RoundPinEvent(roundid, e))
+                }
+            }
+
+            if (context.options.isMobile) {
+                context.eventTarget.addEventListener('touchstart', (e: TouchStartEvent) => {
+                    if (e.multitouch) {
+                        layer.removeEventListener('pointertap', pointertap)
+                    } else {
+                        layer.addEventListener('pointertap', pointertap)
+                    }
+                })
+            }
+
             layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
             })
             layer.addEventListener('pointerout', (e) => {
                 context.eventTarget.dispatchEvent(new RoundUnhoverEvent(roundid, e))
             })
-            layer.addEventListener('pointertap', (e) => {
-                if (layerState.pined) {
-                    context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
-                } else {
-                    context.eventTarget.dispatchEvent(new RoundPinEvent(roundid, e))
-                }
-            })
+            layer.addEventListener('pointertap', pointertap)
         }
 
         if (!this.isActualRound(round, context)) {

@@ -9,44 +9,21 @@ class EventsProducer {
         this.canvas = canvas;
         this.stage = stage;
         this.isMobile = isMobile;
-        this.isMultiTouch = false;
         // bind to instance
         this.scroll = (e) => this.target.dispatchEvent(new _events_1.ZoomEvent(e));
         this.error = (e) => this.target.dispatchEvent(new _events_1.CanvasErrorEvent(e));
-        this.pointermove = (e) => {
-            if (this.isMultiTouch) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-            return this.target.dispatchEvent(new _events_2.PointermoveEvent(e));
-        };
-        this.pointerleave = (e) => {
-            if (this.isMultiTouch) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-            return this.target.dispatchEvent(new _events_2.PointerleaveEvent(e));
-        };
-        this.pointerup = (e) => {
-            if (this.isMultiTouch) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-            return this.target.dispatchEvent(new _events_2.PointerupEvent(e));
-        };
-        this.pointerdown = (e) => {
-            if (this.isMultiTouch) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-            return this.target.dispatchEvent(new _events_2.PointerdownEvent(e));
-        };
+        this.pointermove = (e) => this.target.dispatchEvent(new _events_2.PointermoveEvent(e));
+        this.pointerleave = (e) => this.target.dispatchEvent(new _events_2.PointerleaveEvent(e));
+        this.pointerup = (e) => this.target.dispatchEvent(new _events_2.PointerupEvent(e));
+        this.pointerdown = (e) => this.target.dispatchEvent(new _events_2.PointerdownEvent(e));
         this.touchstart = (e) => {
-            this.isMultiTouch = e.touches.length === 2;
+            if (e.touches.length === 2) {
+                this.stage.removeEventListener('pointerup', this.pointerup);
+                this.stage.removeEventListener('pointerdown', this.pointerdown);
+                this.stage.removeEventListener('pointermove', this.pointermove);
+                this.stage.removeEventListener('pointerleave', this.pointerleave);
+            }
+            return this.target.dispatchEvent(new _events_1.TouchStartEvent(e));
         };
         this.touchzoom = (e) => {
             if (e.touches.length === 2) {
@@ -56,7 +33,10 @@ class EventsProducer {
         };
         this.touchend = (e) => {
             if (e.touches.length === 0) {
-                this.isMultiTouch = false;
+                this.stage.addEventListener('pointerup', this.pointerup);
+                this.stage.addEventListener('pointerdown', this.pointerdown);
+                this.stage.addEventListener('pointermove', this.pointermove);
+                this.stage.addEventListener('pointerleave', this.pointerleave);
                 return this.target.dispatchEvent(new _events_1.TouchEndEvent());
             }
             return false;
@@ -76,6 +56,10 @@ class EventsProducer {
         }
     }
     destroy() {
+        this.stage.removeEventListener('pointerup', this.pointerup);
+        this.stage.removeEventListener('pointerdown', this.pointerdown);
+        this.stage.removeEventListener('pointermove', this.pointermove);
+        this.stage.removeEventListener('pointerleave', this.pointerleave);
         this.canvas.removeEventListener('webglcontextlost', this.error);
         if (this.isMobile) {
             this.stage.removeEventListener('touchstart', this.touchstart);

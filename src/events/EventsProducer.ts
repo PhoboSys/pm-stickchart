@@ -1,4 +1,4 @@
-import { ZoomEvent, CanvasErrorEvent, TouchZoomEvent, TouchEndEvent } from '@events'
+import { ZoomEvent, CanvasErrorEvent, TouchZoomEvent, TouchEndEvent, TouchStartEvent } from '@events'
 import { PointerupEvent, PointermoveEvent, PointerdownEvent, PointerleaveEvent } from '@events'
 
 export class EventsProducer {
@@ -21,8 +21,6 @@ export class EventsProducer {
 
     private readonly touchend: (e: TouchEvent) => any
 
-    private isMultiTouch = false
-
     constructor(
         private readonly target: EventTarget,
         private readonly canvas: HTMLCanvasElement,
@@ -33,49 +31,23 @@ export class EventsProducer {
         this.scroll = (e: WheelEvent): boolean => this.target.dispatchEvent(new ZoomEvent(e))
         this.error = (e: Event): boolean => this.target.dispatchEvent(new CanvasErrorEvent(e))
 
-        this.pointermove = (e: PointerEvent): boolean => {
-            if (this.isMultiTouch) {
-                e.preventDefault()
-                e.stopPropagation()
+        this.pointermove = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointermoveEvent(e))
 
-                return false
+        this.pointerleave = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerleaveEvent(e))
+
+        this.pointerup = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerupEvent(e))
+
+        this.pointerdown = (e: PointerEvent): boolean => this.target.dispatchEvent(new PointerdownEvent(e))
+
+        this.touchstart = (e: TouchEvent): boolean => {
+            if (e.touches.length === 2) {
+                this.stage.removeEventListener('pointerup', this.pointerup)
+                this.stage.removeEventListener('pointerdown', this.pointerdown)
+                this.stage.removeEventListener('pointermove', this.pointermove)
+                this.stage.removeEventListener('pointerleave', this.pointerleave)
             }
 
-            return this.target.dispatchEvent(new PointermoveEvent(e))
-        }
-        this.pointerleave = (e: PointerEvent): boolean => {
-            if (this.isMultiTouch) {
-                e.preventDefault()
-                e.stopPropagation()
-
-                return false
-            }
-
-            return this.target.dispatchEvent(new PointerleaveEvent(e))
-        }
-        this.pointerup = (e: PointerEvent): boolean => {
-            if (this.isMultiTouch) {
-                e.preventDefault()
-                e.stopPropagation()
-
-                return false
-            }
-
-            return this.target.dispatchEvent(new PointerupEvent(e))
-        }
-        this.pointerdown = (e: PointerEvent): boolean => {
-            if (this.isMultiTouch) {
-                e.preventDefault()
-                e.stopPropagation()
-
-                return false
-            }
-
-            return this.target.dispatchEvent(new PointerdownEvent(e))
-        }
-
-        this.touchstart = (e: TouchEvent): void => {
-            this.isMultiTouch = e.touches.length === 2
+            return this.target.dispatchEvent(new TouchStartEvent(e))
         }
 
         this.touchzoom = (e: TouchEvent): boolean => {
@@ -88,7 +60,10 @@ export class EventsProducer {
 
         this.touchend = (e: TouchEvent): boolean => {
             if (e.touches.length === 0) {
-                this.isMultiTouch = false
+                this.stage.addEventListener('pointerup', this.pointerup)
+                this.stage.addEventListener('pointerdown', this.pointerdown)
+                this.stage.addEventListener('pointermove', this.pointermove)
+                this.stage.addEventListener('pointerleave', this.pointerleave)
 
                 return this.target.dispatchEvent(new TouchEndEvent())
             }
@@ -113,6 +88,10 @@ export class EventsProducer {
     }
 
     public destroy(): void {
+        this.stage.removeEventListener('pointerup', this.pointerup)
+        this.stage.removeEventListener('pointerdown', this.pointerdown)
+        this.stage.removeEventListener('pointermove', this.pointermove)
+        this.stage.removeEventListener('pointerleave', this.pointerleave)
         this.canvas.removeEventListener('webglcontextlost', this.error)
 
         if (this.isMobile) {

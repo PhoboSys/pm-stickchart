@@ -22,7 +22,7 @@ import { Graphics, Container, Sprite, Assets, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
 import { actualReturn, profitPercent } from '@lib/calc-utils'
 
-import { RoundHoverEvent, RoundUnhoverEvent, WithdrawEvent } from '@events'
+import { RoundHoverEvent, RoundUnhoverEvent, TouchStartEvent, WithdrawEvent } from '@events'
 import { ResolveWithdrawEvent, RoundPinEvent, RoundUnpinEvent } from '@events'
 import { ResolveWithdrawNocontestEvent } from '@events'
 
@@ -978,17 +978,20 @@ export class PredictionTile extends BasePredictionsRenderer {
 
                 claim.interactive = true
                 claim.cursor = 'pointer'
-                claim.addEventListener('pointerover', (e) => {
+
+                const pointerover = (e) => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'hover_claim')
                     context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
-                })
-                claim.addEventListener('pointerout', (e) => {
+                }
+
+                const pointerout = (e) => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'unhover_claim')
                     context.eventTarget.dispatchEvent(new RoundUnhoverEvent(roundid, e))
-                })
-                claim.addEventListener('pointertap', (e) => {
+                }
+
+                const pointertap = (e) => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved')
@@ -1029,7 +1032,26 @@ export class PredictionTile extends BasePredictionsRenderer {
                             )
                         }
                     }
-                })
+                }
+
+                if (context.options.isMobile) {
+
+                    context.eventTarget.addEventListener('touchstart', (e: TouchStartEvent) => {
+                        if (e.multitouch) {
+                            claim.removeEventListener('pointerover', pointerover)
+                            claim.removeEventListener('pointerout', pointerout)
+                            claim.removeEventListener('pointertap', pointertap)
+                        } else {
+                            claim.addEventListener('pointerover', pointerover)
+                            claim.addEventListener('pointerout', pointerout)
+                            claim.addEventListener('pointertap', pointertap)
+                        }
+                    })
+                }
+
+                claim.addEventListener('pointerover', pointerover)
+                claim.addEventListener('pointerout', pointerout)
+                claim.addEventListener('pointertap', pointertap)
             }
 
             if (isHistorical && !claimState.subscribed) {

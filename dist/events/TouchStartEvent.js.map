@@ -1,0 +1,1 @@
+{"version":3,"file":"TouchStartEvent.js","sourceRoot":"","sources":["../../src/events/TouchStartEvent.ts"],"names":[],"mappings":";;;AAAA,MAAa,eAAgB,SAAQ,KAAK;IAKtC,YAAY,KAAiB;QACzB,KAAK,CAAC,eAAe,CAAC,IAAI,CAAC,CAAA;QAH/B,eAAU,GAAG,KAAK,CAAA;QAKd,IAAI,CAAC,UAAU,GAAG,KAAK,CAAC,OAAO,CAAC,MAAM,KAAK,CAAC,CAAA;IAChD,CAAC;;AATL,0CAUC;AAT0B,oBAAI,GAAW,YAAY,CAAA"}
