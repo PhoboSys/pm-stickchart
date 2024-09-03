@@ -12,10 +12,10 @@ class LineChartRenderer {
     constructor(renderer) {
         this.renderer = renderer;
         this.compositor = new _rendering_2.RenderingCompositor([
+            new _rendering_5.PricefeedInfoRenderer(renderer),
             new RoundActualBackground_1.RoundActualBackground(renderer),
             new RoundCountdown_1.RoundCountdown(renderer),
             new _rendering_3.GridRenderer(renderer),
-            new _rendering_5.PricefeedInfoRenderer(renderer),
             new _rendering_2.PriceLineRenderer(renderer),
             new _rendering_1.LatestPriceLineRenderer(renderer),
             new _rendering_4.Round(renderer),
