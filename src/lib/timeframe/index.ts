@@ -11,7 +11,6 @@ export const UNIX_HOUR = 60 * UNIX_MINUTE
 export const UNIX_DAY = 24 * UNIX_HOUR
 
 export const MAX_FRAME_DURATION = UNIX_DAY
-export const MAX_MOBILE_FRAME_DURATION = 30 * UNIX_MINUTE
 export const MIN_FRAME_DURATION = 5 * UNIX_MINUTE
 
 export const PADDING_RIGHT = 0.382
@@ -271,7 +270,7 @@ export class Timeframe {
     
         const pinchDirection = distance > this.latestDistance ? -1 : 1
     
-        const scaleFactor = 1 + (pinchDirection * 0.2) // Adjust for zoom sensitivity
+        const scaleFactor = 1 + (pinchDirection * 0.15) // Adjust for zoom sensitivity
     
         this.latestDistance = distance
     
@@ -282,7 +281,7 @@ export class Timeframe {
         until = this.until - Math.ceil(diff * 0.5)
     
         let since = until - newTimeframe
-        if (since < this.nowTS - MAX_MOBILE_FRAME_DURATION) {
+        if (since < this.nowTS - MAX_FRAME_DURATION) {
             until = this.since + newTimeframe
             since = until - newTimeframe
         }
@@ -295,10 +294,10 @@ export class Timeframe {
         since = until - newTimeframe
     
         if (
-            newTimeframe < MAX_MOBILE_FRAME_DURATION &&
+            newTimeframe < MAX_FRAME_DURATION &&
             newTimeframe > MIN_FRAME_DURATION &&
             until <= this.untilmax(newTimeframe) &&
-            since >= this.nowTS - MAX_MOBILE_FRAME_DURATION
+            since >= this.nowTS - MAX_FRAME_DURATION
         ) {
             const prevuntil = this.until
     

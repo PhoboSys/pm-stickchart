@@ -120,12 +120,23 @@ class PricefeedInfoRenderer extends _rendering_1.BaseRenderer {
         const texture = context.textures.get(_rendering_1.CHAINLINK_TEXTURE);
         const logo = new pixi_1.Sprite(texture);
         const logoStyle = context.options.isMobile ? this.mobileLogoStyle : this.logoStyle;
-        logo.interactive = true;
-        logo.cursor = 'pointer';
-        logo.addEventListener('pointertap', () => {
+        const pointertap = () => {
             const link = _constants_1.PRICEFEED.CL_URL[context.game.pricefeed];
             window.open(link, '__blank');
-        });
+        };
+        if (context.options.isMobile) {
+            context.eventTarget.addEventListener('touchstart', (e) => {
+                if (e.multitouch) {
+                    logo.removeEventListener('pointertap', pointertap);
+                }
+                else {
+                    logo.addEventListener('pointertap', pointertap);
+                }
+            });
+        }
+        logo.interactive = true;
+        logo.cursor = 'pointer';
+        logo.addEventListener('pointertap', pointertap);
         logo.scale.set(logoStyle.size / logo.height);
         logo.position.set(text.width + logoStyle.offset[0], logoStyle.offset[1]);
         container.addChild(logo);

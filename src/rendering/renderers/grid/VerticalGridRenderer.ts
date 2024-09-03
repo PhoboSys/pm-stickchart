@@ -35,16 +35,16 @@ export class VerticalGridRenderer extends BaseRenderer {
 
         const { width, height } = context.screen
         const { timerange } = context.plotdata
-
+        const maxTime = context.options.isMobile ? config.grid.time.max/2 : config.grid.time.max
         const stepsize = context.game.schedule
-        const timesteps = datamath.steps(timerange, stepsize, config.grid.time.max)
+        const timesteps = datamath.steps(timerange, stepsize, maxTime)
         const xs = datamath.scale(timesteps, timerange, width)
 
         const outsideX = -100
         let idx = 0
         // create a set lines and texts and reuse them
         // fix GL_OUT_OF_MEMORY
-        while (idx++ < config.grid.time.max*2) {
+        while (idx++ < maxTime*2) {
             this.rebind(idx)
 
             const x = xs[idx] || outsideX

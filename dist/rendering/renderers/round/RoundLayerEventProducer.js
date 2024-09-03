@@ -41,20 +41,31 @@ class RoundLayerEventProducer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         if (layerState.new) {
             container.addChild(layer);
             layer.interactive = true;
-            layer.addEventListener('pointerover', (e) => {
-                context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
-            });
-            layer.addEventListener('pointerout', (e) => {
-                context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
-            });
-            layer.addEventListener('pointertap', (e) => {
+            const pointertap = (e) => {
                 if (layerState.pined) {
                     context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid, e));
                 }
                 else {
                     context.eventTarget.dispatchEvent(new _events_1.RoundPinEvent(roundid, e));
                 }
+            };
+            if (context.options.isMobile) {
+                context.eventTarget.addEventListener('touchstart', (e) => {
+                    if (e.multitouch) {
+                        layer.removeEventListener('pointertap', pointertap);
+                    }
+                    else {
+                        layer.addEventListener('pointertap', pointertap);
+                    }
+                });
+            }
+            layer.addEventListener('pointerover', (e) => {
+                context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
             });
+            layer.addEventListener('pointerout', (e) => {
+                context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
+            });
+            layer.addEventListener('pointertap', pointertap);
         }
         if (!this.isActualRound(round, context)) {
             layer.cursor = 'pointer';

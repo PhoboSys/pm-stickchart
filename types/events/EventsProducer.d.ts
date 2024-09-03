@@ -12,7 +12,6 @@ export declare class EventsProducer {
     private readonly touchstart;
     private readonly touchzoom;
     private readonly touchend;
-    private isMultiTouch;
     constructor(target: EventTarget, canvas: HTMLCanvasElement, stage: HTMLElement, isMobile: boolean);
     destroy(): void;
 }

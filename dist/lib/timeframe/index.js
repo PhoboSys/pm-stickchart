@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_MOBILE_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
+exports.Timeframe = exports.PADDING_RIGHT = exports.MIN_FRAME_DURATION = exports.MAX_FRAME_DURATION = exports.UNIX_DAY = exports.UNIX_HOUR = exports.UNIX_MINUTE = void 0;
 const _events_1 = require("../../events/index.js");
 const utils_1 = require("../utils");
 const _infra_1 = require("../../infra/index.js");
@@ -12,7 +12,6 @@ exports.UNIX_MINUTE = 60;
 exports.UNIX_HOUR = 60 * exports.UNIX_MINUTE;
 exports.UNIX_DAY = 24 * exports.UNIX_HOUR;
 exports.MAX_FRAME_DURATION = exports.UNIX_DAY;
-exports.MAX_MOBILE_FRAME_DURATION = 30 * exports.UNIX_MINUTE;
 exports.MIN_FRAME_DURATION = 5 * exports.UNIX_MINUTE;
 exports.PADDING_RIGHT = 0.382;
 class Timeframe {
@@ -199,14 +198,14 @@ class Timeframe {
             return;
         }
         const pinchDirection = distance > this.latestDistance ? -1 : 1;
-        const scaleFactor = 1 + (pinchDirection * 0.2); // Adjust for zoom sensitivity
+        const scaleFactor = 1 + (pinchDirection * 0.15); // Adjust for zoom sensitivity
         this.latestDistance = distance;
         const newTimeframe = Math.round(this.timeframe * scaleFactor);
         let until = this.until;
         const diff = this.timeframe - newTimeframe;
         until = this.until - Math.ceil(diff * 0.5);
         let since = until - newTimeframe;
-        if (since < this.nowTS - exports.MAX_MOBILE_FRAME_DURATION) {
+        if (since < this.nowTS - exports.MAX_FRAME_DURATION) {
             until = this.since + newTimeframe;
             since = until - newTimeframe;
         }
@@ -216,10 +215,10 @@ class Timeframe {
         until = until + timeshift;
         until = Math.min(until, this.untilmax(newTimeframe));
         since = until - newTimeframe;
-        if (newTimeframe < exports.MAX_MOBILE_FRAME_DURATION &&
+        if (newTimeframe < exports.MAX_FRAME_DURATION &&
             newTimeframe > exports.MIN_FRAME_DURATION &&
             until <= this.untilmax(newTimeframe) &&
-            since >= this.nowTS - exports.MAX_MOBILE_FRAME_DURATION) {
+            since >= this.nowTS - exports.MAX_FRAME_DURATION) {
             const prevuntil = this.until;
             this.timeframe = newTimeframe;
             this.until = until;

@@ -2,6 +2,7 @@ import { BaseRenderer, RenderingContext, GraphicUtils, CHAINLINK_TEXTURE } from 
 
 import { Container, Sprite } from '@lib/pixi'
 import { PRICEFEED } from '@constants'
+import { TouchStartEvent } from '@src/events'
 
 export class PricefeedInfoRenderer extends BaseRenderer {
     static readonly PRICEFEED_INFO_ID: symbol = Symbol('PRICEFEED_INFO_ID')
@@ -151,12 +152,24 @@ export class PricefeedInfoRenderer extends BaseRenderer {
         const texture = context.textures.get(CHAINLINK_TEXTURE)
         const logo = new Sprite(texture)
         const logoStyle = context.options.isMobile ? this.mobileLogoStyle : this.logoStyle
-        logo.interactive = true
-        logo.cursor = 'pointer'
-        logo.addEventListener('pointertap', () => {
+
+        const pointertap = () => {
             const link = PRICEFEED.CL_URL[context.game.pricefeed]
             window.open(link, '__blank')
-        })
+        }
+        if (context.options.isMobile) {
+            context.eventTarget.addEventListener('touchstart', (e: TouchStartEvent) => {
+                if (e.multitouch) {
+                    logo.removeEventListener('pointertap', pointertap)
+                } else {
+                    logo.addEventListener('pointertap', pointertap)
+                }
+            })
+        }
+
+        logo.interactive = true
+        logo.cursor = 'pointer'
+        logo.addEventListener('pointertap', pointertap)
         logo.scale.set(logoStyle.size / logo.height)
         logo.position.set(text.width + logoStyle.offset[0], logoStyle.offset[1])
         container.addChild(logo)
