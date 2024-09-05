@@ -979,19 +979,19 @@ export class PredictionTile extends BasePredictionsRenderer {
                 claim.interactive = true
                 claim.cursor = 'pointer'
 
-                const pointerover = (e) => {
+                const pointerover = (e): void => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'hover_claim')
                     context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
                 }
 
-                const pointerout = (e) => {
+                const pointerout = (e): void  => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'unhover_claim')
                     context.eventTarget.dispatchEvent(new RoundUnhoverEvent(roundid, e))
                 }
 
-                const pointertap = (e) => {
+                const pointertap = (e): void  => {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved')

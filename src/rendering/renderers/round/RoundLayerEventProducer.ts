@@ -60,7 +60,7 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             container.addChild(layer)
             layer.interactive = true
 
-            const pointertap = (e) => {
+            const pointertap = (e): void  => {
                 if (layerState.pined) {
                     context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
                 } else {
