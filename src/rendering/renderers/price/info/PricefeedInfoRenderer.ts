@@ -153,7 +153,7 @@ export class PricefeedInfoRenderer extends BaseRenderer {
         const logo = new Sprite(texture)
         const logoStyle = context.options.isMobile ? this.mobileLogoStyle : this.logoStyle
 
-        const pointertap = () => {
+        const pointertap = (): void  => {
             const link = PRICEFEED.CL_URL[context.game.pricefeed]
             window.open(link, '__blank')
         }
