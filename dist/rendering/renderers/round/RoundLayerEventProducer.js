@@ -41,31 +41,35 @@ class RoundLayerEventProducer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         if (layerState.new) {
             container.addChild(layer);
             layer.interactive = true;
-            const pointertap = (e) => {
-                if (layerState.pined) {
-                    context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid, e));
+            layer.addEventListener('pointerdown', (e) => {
+                if (e.buttons === 1) {
+                    this.moved = false;
+                    this.lastTouch = { x: e.x, y: e.y };
                 }
-                else {
-                    context.eventTarget.dispatchEvent(new _events_1.RoundPinEvent(roundid, e));
+            });
+            layer.addEventListener('pointermove', (e) => {
+                if (e.buttons === 1) {
+                    if (this.lastTouch.x !== e.x || this.lastTouch.y !== e.y) {
+                        this.moved = true;
+                    }
                 }
-            };
-            if (context.options.isMobile) {
-                context.eventTarget.addEventListener('touchstart', (e) => {
-                    if (e.multitouch) {
-                        layer.removeEventListener('pointertap', pointertap);
+            });
+            layer.addEventListener('pointerup', (e) => {
+                if (!this.moved) {
+                    if (layerState.pined) {
+                        context.eventTarget.dispatchEvent(new _events_1.RoundUnpinEvent(roundid, e));
                     }
                     else {
-                        layer.addEventListener('pointertap', pointertap);
+                        context.eventTarget.dispatchEvent(new _events_1.RoundPinEvent(roundid, e));
                     }
-                });
-            }
+                }
+            });
             layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new _events_1.RoundHoverEvent(roundid, e));
             });
             layer.addEventListener('pointerout', (e) => {
                 context.eventTarget.dispatchEvent(new _events_1.RoundUnhoverEvent(roundid, e));
             });
-            layer.addEventListener('pointertap', pointertap);
         }
         if (!this.isActualRound(round, context)) {
             layer.cursor = 'pointer';

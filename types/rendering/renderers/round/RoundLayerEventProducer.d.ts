@@ -5,6 +5,8 @@ export declare class RoundLayerEventProducer extends BaseRoundsRenderer {
     static readonly ROUND_LAYER_EVENT_PRODUCER_ID: symbol;
     get rendererId(): symbol;
     private readonly isHover;
+    private lastTouch;
+    private moved;
     protected updateRound(round: any, context: RenderingContext, container: Container): void;
     private updateEvent;
 }

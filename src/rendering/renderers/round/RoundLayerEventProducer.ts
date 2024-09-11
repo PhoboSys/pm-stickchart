@@ -2,7 +2,7 @@ import { RenderingContext } from '@rendering'
 
 import datamath from '@lib/datamath'
 import { Graphics, Container } from '@lib/pixi'
-import { RoundHoverEvent, RoundPinEvent, RoundUnhoverEvent, RoundUnpinEvent, TouchStartEvent } from '@events'
+import { RoundHoverEvent, RoundPinEvent, RoundUnhoverEvent, RoundUnpinEvent } from '@events'
 
 import { BaseRoundsRenderer } from './BaseRoundsRenderer'
 
@@ -15,6 +15,10 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
     }
 
     private readonly isHover: { [key:string]: boolean } = { }
+
+    private lastTouch: { x: number, y: number }
+
+    private moved: boolean
 
     protected updateRound(
         round: any,
@@ -60,23 +64,30 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             container.addChild(layer)
             layer.interactive = true
 
-            const pointertap = (e): void  => {
-                if (layerState.pined) {
-                    context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
-                } else {
-                    context.eventTarget.dispatchEvent(new RoundPinEvent(roundid, e))
+            layer.addEventListener('pointerdown', (e: PointerEvent) => {
+                if (e.buttons === 1) {
+                    this.moved = false
+                    this.lastTouch = { x: e.x, y: e.y }
                 }
-            }
+            })
 
-            if (context.options.isMobile) {
-                context.eventTarget.addEventListener('touchstart', (e: TouchStartEvent) => {
-                    if (e.multitouch) {
-                        layer.removeEventListener('pointertap', pointertap)
-                    } else {
-                        layer.addEventListener('pointertap', pointertap)
+            layer.addEventListener('pointermove', (e: PointerEvent) => {
+                if (e.buttons === 1) {
+                    if (this.lastTouch.x !== e.x || this.lastTouch.y !== e.y) {
+                        this.moved = true
                     }
-                })
-            }
+                }
+            })
+
+            layer.addEventListener('pointerup', (e) => {
+                if (!this.moved) {
+                    if (layerState.pined) {
+                        context.eventTarget.dispatchEvent(new RoundUnpinEvent(roundid, e))
+                    } else {
+                        context.eventTarget.dispatchEvent(new RoundPinEvent(roundid, e))
+                    }
+                }
+            })
 
             layer.addEventListener('pointerover', (e) => {
                 context.eventTarget.dispatchEvent(new RoundHoverEvent(roundid, e))
@@ -84,7 +95,6 @@ export class RoundLayerEventProducer extends BaseRoundsRenderer {
             layer.addEventListener('pointerout', (e) => {
                 context.eventTarget.dispatchEvent(new RoundUnhoverEvent(roundid, e))
             })
-            layer.addEventListener('pointertap', pointertap)
         }
 
         if (!this.isActualRound(round, context)) {

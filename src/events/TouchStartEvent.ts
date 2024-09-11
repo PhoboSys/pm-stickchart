@@ -1,7 +1,7 @@
 export class TouchStartEvent extends Event {
     public static readonly NAME: string = 'touchstart'
 
-    multitouch = false
+    public readonly multitouch: boolean = false
 
     constructor(inner: TouchEvent) {
         super(TouchStartEvent.NAME)
