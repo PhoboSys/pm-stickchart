@@ -111,6 +111,55 @@ export class PredictionTile extends BasePredictionsRenderer {
         },
     }
 
+    private wagerContainerMobileBaseStyles: any = {
+        [EPosition.Up]: {
+            offset: [24, 0],
+            background: {
+                width: 130,
+                height: 58,
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                color: 0x01A37A,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 1,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+        },
+        [EPosition.Zero]: {
+            offset: [-24, 0],
+            background: {
+                width: 130,
+                height: 58,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                color: 0xB7BDD7,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 1,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+        },
+        [EPosition.Down]: {
+            offset: [24, 0],
+            background: {
+                width: 130,
+                height: 58,
+                radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                color: 0xD7335B,
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 1,
+                    alpha: 1,
+                    alignment: 0,
+                },
+            },
+        },
+    }
+
     private wagerOrphanContainerStyles: any = merge({}, this.wagerContainerBaseStyles, {
         [EPosition.Up]: {
             background: {
@@ -138,7 +187,36 @@ export class PredictionTile extends BasePredictionsRenderer {
         },
     })
 
+    private wagerOrphanContainerMobileStyles: any = merge({}, this.wagerContainerMobileBaseStyles, {
+        [EPosition.Up]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+        [EPosition.Zero]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+        [EPosition.Down]: {
+            background: {
+                color: 0x081327,
+                lineStyle: {
+                    color: 0xD32F2F,
+                },
+            }
+        },
+    })
+
     private wagerContainerStyles: any = this.wagerContainerBaseStyles
+
+    private wagerContainerMobileStyles: any = this.wagerContainerMobileBaseStyles
 
     private wagerTextStyle: any = {
         [EPosition.Up]: {
@@ -325,10 +403,139 @@ export class PredictionTile extends BasePredictionsRenderer {
         },
     }
 
+    private profitContainerMobileStyle = {
+
+        [EPosition.Up]: {
+            default: {
+                offset: [-24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                    gradient: {
+                        width: 130,
+                        height: 58,
+                        points: [0, 58, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            claimable: {
+                offset: [-24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
+                },
+            },
+        },
+
+        [EPosition.Down]: {
+            default: {
+                offset: [-24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                    gradient: {
+                        width: 130,
+                        height: 58,
+                        points: [0, 58, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            claimable: {
+                offset: [-24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
+                },
+            },
+        },
+
+        [EPosition.Zero]: {
+            default: {
+                offset: [-130-24-8, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                    gradient: {
+                        width: 130,
+                        height: 58,
+                        points: [0, 58, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            claimable: {
+                offset: [-130-24-8, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+                    color: 0x0F2668,
+                },
+            },
+        },
+    }
+
     private profitBorderBottomStyle = {
         offset: [0, -1],
         background: {
             width: 170,
+            height: 58,
+            radiuses: <[number, number, number, number]>[28, 28, 28, 28],
+            lineStyle: {
+                color: 0xFFFFFF,
+                width: 1,
+                alpha: 0.2,
+                alignment: 0,
+            }
+        },
+    }
+
+    private profitBorderBottomMobileStyle = {
+        offset: [0, -1],
+        background: {
+            width: 130,
             height: 58,
             radiuses: <[number, number, number, number]>[28, 28, 28, 28],
             lineStyle: {
@@ -473,10 +680,85 @@ export class PredictionTile extends BasePredictionsRenderer {
         },
     }
 
+    private claimMobileStyle = {
+        [EPosition.Up]: {
+            offset: [-24, 58+10],
+            background: {
+                width: 130,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 130,
+                    height: 48,
+                    points: [0, 48, 130, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+        [EPosition.Down]: {
+            offset: [-24, -10-48],
+            background: {
+                width: 130,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 130,
+                    height: 48,
+                    points: [0, 48, 130, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+        [EPosition.Zero]: {
+            offset: [-24-130-8, 58+10],
+            background: {
+                width: 130,
+                height: 48,
+                anchor: [-1, 0],
+                radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+                color: 0xFFFFFF,
+                gradient: {
+                    width: 130,
+                    height: 48,
+                    points: [0, 48, 130, 0],
+                    colorStops: [
+                        { color: '#F7C15B', offset: 0 },
+                        { color: '#FFD78D', offset: 1 },
+                    ]
+                }
+            },
+        },
+    }
+
     private claimBorderBottomStyle = {
         offset: [0, -1],
         background: {
             width: 170,
+            height: 48,
+            radiuses: <[number, number, number, number]>[23, 23, 23, 23],
+            lineStyle: {
+                color: 0xFFE7BA,
+                width: 1,
+                alpha: 1,
+                alignment: 0,
+            }
+        },
+    }
+
+    private claimBorderBottomMobileStyle = {
+        offset: [0, -1],
+        background: {
+            width: 130,
             height: 48,
             radiuses: <[number, number, number, number]>[23, 23, 23, 23],
             lineStyle: {
@@ -937,7 +1219,7 @@ export class PredictionTile extends BasePredictionsRenderer {
 
         const [profitpropagatingContainer, profitpropagatingContainerState] = this.get(
             'profitpropagatingContainer',
-            () => this.createPropagatingContainer(this.profitContainerStyle[prediction.position].default)
+            () => this.createPropagatingContainer((context.options.isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[prediction.position].default)
         )
         if (profitpropagatingContainerState.new || profitState.new) profit.addChild(profitpropagatingContainer)
 
@@ -1088,7 +1370,7 @@ export class PredictionTile extends BasePredictionsRenderer {
 
             const [claimpropagatingContainer, claimpropagatingContainerState] = this.get(
                 'claimpropagatingContainer',
-                () => this.createPropagatingContainer(this.claimStyle[prediction.position])
+                () => this.createPropagatingContainer((context.options?.isMobile ? this.claimMobileStyle : this.claimStyle)[prediction.position])
             )
             if (claimpropagatingContainerState.new) claim.addChild(claimpropagatingContainer)
 
@@ -1122,11 +1404,13 @@ export class PredictionTile extends BasePredictionsRenderer {
         const { propagating, orphan } = state
 
         const position = prediction.position
+        
+        const wagerContainerStyles = context.options.isMobile ? this.wagerContainerMobileStyles[position] : this.wagerContainerStyles[position]
         const [wager, wagerState] = this.get(
             'wager',
             () => this.createContainer(orphan ?
-                this.wagerOrphanContainerStyles[position] :
-                this.wagerContainerStyles[position]
+                context.options.isMobile ? this.wagerOrphanContainerMobileStyles[position] : this.wagerOrphanContainerStyles[position] :
+                wagerContainerStyles
             ),
             [orphan]
         )
@@ -1167,7 +1451,7 @@ export class PredictionTile extends BasePredictionsRenderer {
 
         const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get(
             'wagerpropagatingContainer',
-            () => this.createPropagatingContainer(this.wagerContainerStyles[position])
+            () => this.createPropagatingContainer(wagerContainerStyles)
         )
         if (wagerpropagatingContainerState.new || wagerState.new) wager.addChild(wagerpropagatingContainer)
 
@@ -1380,17 +1664,19 @@ export class PredictionTile extends BasePredictionsRenderer {
     }
 
     private createProfitContainer(context, position, claimable): Container {
+        const isMobile = context.options?.isMobile;
+        const profitContainerStyle = (isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[position]
         if (claimable) {
-            const profit = this.createContainer(this.profitContainerStyle[position].claimable)
+            const profit = this.createContainer(profitContainerStyle.claimable)
             const mask = (<Graphics> profit.getChildAt(0)).clone()
             profit.addChild(mask)
             profit.mask = mask
-            const borderBottom = this.createContainerBorderBottom(this.profitBorderBottomStyle)
+            const borderBottom = this.createContainerBorderBottom(isMobile ? this.profitBorderBottomMobileStyle : this.profitBorderBottomStyle)
             profit.addChild(borderBottom)
 
             return profit
         } else {
-            const style = this.profitContainerStyle[position].default
+            const style = profitContainerStyle.default
             const texture = context.textures.get(GRADIENT_TEXTURE, style.background.gradient)
 
             return this.createContainer({ ...style, background: { ...style.background, texture } })
@@ -1413,7 +1699,7 @@ export class PredictionTile extends BasePredictionsRenderer {
         container.addChild(text)
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2)
 
-        const borderBottom = this.createContainerBorderBottom(this.claimBorderBottomStyle)
+        const borderBottom = this.createContainerBorderBottom(context.options?.isMobile ? this.claimBorderBottomMobileStyle :  this.claimBorderBottomStyle)
         container.addChild(borderBottom)
 
         return container

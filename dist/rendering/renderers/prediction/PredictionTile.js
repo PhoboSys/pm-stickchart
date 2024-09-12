@@ -85,6 +85,54 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 },
             },
         };
+        this.wagerContainerMobileBaseStyles = {
+            [_enums_1.EPosition.Up]: {
+                offset: [24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    radiuses: [28, 28, 28, 28],
+                    color: 0x01A37A,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                offset: [-24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    anchor: [-1, 0],
+                    radiuses: [28, 28, 28, 28],
+                    color: 0xB7BDD7,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                offset: [24, 0],
+                background: {
+                    width: 130,
+                    height: 58,
+                    radiuses: [28, 28, 28, 28],
+                    color: 0xD7335B,
+                    lineStyle: {
+                        color: 0xFFFFFF,
+                        width: 1,
+                        alpha: 1,
+                        alignment: 0,
+                    },
+                },
+            },
+        };
         this.wagerOrphanContainerStyles = (0, merge_1.default)({}, this.wagerContainerBaseStyles, {
             [_enums_1.EPosition.Up]: {
                 background: {
@@ -111,7 +159,34 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 }
             },
         });
+        this.wagerOrphanContainerMobileStyles = (0, merge_1.default)({}, this.wagerContainerMobileBaseStyles, {
+            [_enums_1.EPosition.Up]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+            [_enums_1.EPosition.Zero]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+            [_enums_1.EPosition.Down]: {
+                background: {
+                    color: 0x081327,
+                    lineStyle: {
+                        color: 0xD32F2F,
+                    },
+                }
+            },
+        });
         this.wagerContainerStyles = this.wagerContainerBaseStyles;
+        this.wagerContainerMobileStyles = this.wagerContainerMobileBaseStyles;
         this.wagerTextStyle = {
             [_enums_1.EPosition.Up]: {
                 text: {
@@ -291,10 +366,134 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 },
             },
         };
+        this.profitContainerMobileStyle = {
+            [_enums_1.EPosition.Up]: {
+                default: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                            alignment: 0,
+                        },
+                        gradient: {
+                            width: 130,
+                            height: 58,
+                            points: [0, 58, 130, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
+                    },
+                },
+                claimable: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
+                    },
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                default: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                            alignment: 0,
+                        },
+                        gradient: {
+                            width: 130,
+                            height: 58,
+                            points: [0, 58, 130, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
+                    },
+                },
+                claimable: {
+                    offset: [-24, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
+                    },
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                default: {
+                    offset: [-130 - 24 - 8, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        lineStyle: {
+                            color: 0xFFFFFF,
+                            width: 1,
+                            alpha: 1,
+                            alignment: 0,
+                        },
+                        gradient: {
+                            width: 130,
+                            height: 58,
+                            points: [0, 58, 130, 0],
+                            colorStops: [
+                                { color: '#F7C15B', offset: 0 },
+                                { color: '#FFD78D', offset: 1 },
+                            ]
+                        }
+                    },
+                },
+                claimable: {
+                    offset: [-130 - 24 - 8, 0],
+                    background: {
+                        width: 130,
+                        height: 58,
+                        anchor: [-1, 0],
+                        radiuses: [28, 28, 28, 28],
+                        color: 0x0F2668,
+                    },
+                },
+            },
+        };
         this.profitBorderBottomStyle = {
             offset: [0, -1],
             background: {
                 width: 170,
+                height: 58,
+                radiuses: [28, 28, 28, 28],
+                lineStyle: {
+                    color: 0xFFFFFF,
+                    width: 1,
+                    alpha: 0.2,
+                    alignment: 0,
+                }
+            },
+        };
+        this.profitBorderBottomMobileStyle = {
+            offset: [0, -1],
+            background: {
+                width: 130,
                 height: 58,
                 radiuses: [28, 28, 28, 28],
                 lineStyle: {
@@ -434,10 +633,83 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 },
             },
         };
+        this.claimMobileStyle = {
+            [_enums_1.EPosition.Up]: {
+                offset: [-24, 58 + 10],
+                background: {
+                    width: 130,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 130,
+                        height: 48,
+                        points: [0, 48, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            [_enums_1.EPosition.Down]: {
+                offset: [-24, -10 - 48],
+                background: {
+                    width: 130,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 130,
+                        height: 48,
+                        points: [0, 48, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+            [_enums_1.EPosition.Zero]: {
+                offset: [-24 - 130 - 8, 58 + 10],
+                background: {
+                    width: 130,
+                    height: 48,
+                    anchor: [-1, 0],
+                    radiuses: [23, 23, 23, 23],
+                    color: 0xFFFFFF,
+                    gradient: {
+                        width: 130,
+                        height: 48,
+                        points: [0, 48, 130, 0],
+                        colorStops: [
+                            { color: '#F7C15B', offset: 0 },
+                            { color: '#FFD78D', offset: 1 },
+                        ]
+                    }
+                },
+            },
+        };
         this.claimBorderBottomStyle = {
             offset: [0, -1],
             background: {
                 width: 170,
+                height: 48,
+                radiuses: [23, 23, 23, 23],
+                lineStyle: {
+                    color: 0xFFE7BA,
+                    width: 1,
+                    alpha: 1,
+                    alignment: 0,
+                }
+            },
+        };
+        this.claimBorderBottomMobileStyle = {
+            offset: [0, -1],
+            background: {
+                width: 130,
                 height: 48,
                 radiuses: [23, 23, 23, 23],
                 lineStyle: {
@@ -802,7 +1074,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer(this.profitContainerStyle[prediction.position].default));
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer((context.options.isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[prediction.position].default));
         if (profitpropagatingContainerState.new || profitState.new)
             profit.addChild(profitpropagatingContainer);
         const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
@@ -900,7 +1172,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 claimFragmentState.timeline = claimFragmentTimeline;
                 claim.addChild(claimFragment);
             }
-            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => this.createPropagatingContainer(this.claimStyle[prediction.position]));
+            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => { var _a; return this.createPropagatingContainer((((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ? this.claimMobileStyle : this.claimStyle)[prediction.position]); });
             if (claimpropagatingContainerState.new)
                 claim.addChild(claimpropagatingContainer);
             const [[claimpropagating, claimpropagatingtimeline], claimpropagatingState] = this.get('claimpropagating', () => this.createPropagatingBackground());
@@ -923,9 +1195,10 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
     updateWager(round, prediction, context, container, state) {
         const { propagating, orphan } = state;
         const position = prediction.position;
+        const wagerContainerStyles = context.options.isMobile ? this.wagerContainerMobileStyles[position] : this.wagerContainerStyles[position];
         const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ?
-            this.wagerOrphanContainerStyles[position] :
-            this.wagerContainerStyles[position]), [orphan]);
+            context.options.isMobile ? this.wagerOrphanContainerMobileStyles[position] : this.wagerOrphanContainerStyles[position] :
+            wagerContainerStyles), [orphan]);
         if (wagerState.new)
             container.addChild(wager);
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
@@ -945,7 +1218,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             this.wagerStyle.orphan.text.fill :
             this.wagerStyle[position].text.fill;
         this.updateWagerCurrencyIcon(context, wagercontent, position, [wagerAmount.width, 0], orphan);
-        const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(this.wagerContainerStyles[position]));
+        const [wagerpropagatingContainer, wagerpropagatingContainerState] = this.get('wagerpropagatingContainer', () => this.createPropagatingContainer(wagerContainerStyles));
         if (wagerpropagatingContainerState.new || wagerState.new)
             wager.addChild(wagerpropagatingContainer);
         const [[wagerpropagating, wagerpropagatingtimeline], wagerpropagatingState] = this.get('wagerpropagating', () => this.createPropagatingBackground());
@@ -1076,22 +1349,26 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         return container;
     }
     createProfitContainer(context, position, claimable) {
+        var _a;
+        const isMobile = (_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile;
+        const profitContainerStyle = (isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[position];
         if (claimable) {
-            const profit = this.createContainer(this.profitContainerStyle[position].claimable);
+            const profit = this.createContainer(profitContainerStyle.claimable);
             const mask = profit.getChildAt(0).clone();
             profit.addChild(mask);
             profit.mask = mask;
-            const borderBottom = this.createContainerBorderBottom(this.profitBorderBottomStyle);
+            const borderBottom = this.createContainerBorderBottom(isMobile ? this.profitBorderBottomMobileStyle : this.profitBorderBottomStyle);
             profit.addChild(borderBottom);
             return profit;
         }
         else {
-            const style = this.profitContainerStyle[position].default;
+            const style = profitContainerStyle.default;
             const texture = context.textures.get(textures_1.GRADIENT_TEXTURE, style.background.gradient);
             return this.createContainer(Object.assign(Object.assign({}, style), { background: Object.assign(Object.assign({}, style.background), { texture }) }));
         }
     }
     createClaim(context, position) {
+        var _a;
         const style = this.claimStyle[position];
         const containerTexture = context.textures.get(textures_1.GRADIENT_TEXTURE, style.background.gradient);
         const container = this.createContainer(Object.assign(Object.assign({}, style), { background: Object.assign(Object.assign({}, style.background), { texture: containerTexture }) }));
@@ -1101,7 +1378,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         const text = _rendering_1.GraphicUtils.createText('Withdraw', this.claimTextStyle.offset, this.claimTextStyle.text);
         container.addChild(text);
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
-        const borderBottom = this.createContainerBorderBottom(this.claimBorderBottomStyle);
+        const borderBottom = this.createContainerBorderBottom(((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ? this.claimBorderBottomMobileStyle : this.claimBorderBottomStyle);
         container.addChild(borderBottom);
         return container;
     }
