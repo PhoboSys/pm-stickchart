@@ -1219,7 +1219,11 @@ export class PredictionTile extends BasePredictionsRenderer {
 
         const [profitpropagatingContainer, profitpropagatingContainerState] = this.get(
             'profitpropagatingContainer',
-            () => this.createPropagatingContainer((context.options.isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[prediction.position].default)
+            () => this.createPropagatingContainer((
+                context.options.isMobile
+                    ? this.profitContainerMobileStyle
+                    : this.profitContainerStyle
+            )[prediction.position].default)
         )
         if (profitpropagatingContainerState.new || profitState.new) profit.addChild(profitpropagatingContainer)
 
@@ -1370,7 +1374,13 @@ export class PredictionTile extends BasePredictionsRenderer {
 
             const [claimpropagatingContainer, claimpropagatingContainerState] = this.get(
                 'claimpropagatingContainer',
-                () => this.createPropagatingContainer((context.options?.isMobile ? this.claimMobileStyle : this.claimStyle)[prediction.position])
+                () => this.createPropagatingContainer(
+                    (
+                        context.options?.isMobile ?
+                            this.claimMobileStyle :
+                            this.claimStyle
+                    )[prediction.position]
+                )
             )
             if (claimpropagatingContainerState.new) claim.addChild(claimpropagatingContainer)
 
@@ -1404,14 +1414,18 @@ export class PredictionTile extends BasePredictionsRenderer {
         const { propagating, orphan } = state
 
         const position = prediction.position
-        
-        const wagerContainerStyles = context.options.isMobile ? this.wagerContainerMobileStyles[position] : this.wagerContainerStyles[position]
+
+        const wagerContainerStyles = context.options.isMobile
+            ? this.wagerContainerMobileStyles[position]
+            : this.wagerContainerStyles[position]
+
+        const wagerOrphanContainerStyles = context.options.isMobile
+            ? this.wagerOrphanContainerMobileStyles[position]
+            : this.wagerOrphanContainerStyles[position]
+
         const [wager, wagerState] = this.get(
             'wager',
-            () => this.createContainer(orphan ?
-                context.options.isMobile ? this.wagerOrphanContainerMobileStyles[position] : this.wagerOrphanContainerStyles[position] :
-                wagerContainerStyles
-            ),
+            () => this.createContainer(orphan ? wagerOrphanContainerStyles : wagerContainerStyles),
             [orphan]
         )
         if (wagerState.new) container.addChild(wager)
@@ -1664,14 +1678,18 @@ export class PredictionTile extends BasePredictionsRenderer {
     }
 
     private createProfitContainer(context, position, claimable): Container {
-        const isMobile = context.options?.isMobile;
+        const isMobile = context.options?.isMobile
         const profitContainerStyle = (isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[position]
         if (claimable) {
             const profit = this.createContainer(profitContainerStyle.claimable)
             const mask = (<Graphics> profit.getChildAt(0)).clone()
             profit.addChild(mask)
             profit.mask = mask
-            const borderBottom = this.createContainerBorderBottom(isMobile ? this.profitBorderBottomMobileStyle : this.profitBorderBottomStyle)
+            const borderBottom = this.createContainerBorderBottom(
+                isMobile
+                    ? this.profitBorderBottomMobileStyle
+                    : this.profitBorderBottomStyle
+            )
             profit.addChild(borderBottom)
 
             return profit
@@ -1699,7 +1717,11 @@ export class PredictionTile extends BasePredictionsRenderer {
         container.addChild(text)
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2)
 
-        const borderBottom = this.createContainerBorderBottom(context.options?.isMobile ? this.claimBorderBottomMobileStyle :  this.claimBorderBottomStyle)
+        const borderBottom = this.createContainerBorderBottom(
+            context.options?.isMobile
+                ? this.claimBorderBottomMobileStyle
+                : this.claimBorderBottomStyle
+        )
         container.addChild(borderBottom)
 
         return container

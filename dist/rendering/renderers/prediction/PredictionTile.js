@@ -1074,7 +1074,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 payout.position.set(ofx, (profitcontent.height - payout.height) / 2);
             }
         }
-        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer((context.options.isMobile ? this.profitContainerMobileStyle : this.profitContainerStyle)[prediction.position].default));
+        const [profitpropagatingContainer, profitpropagatingContainerState] = this.get('profitpropagatingContainer', () => this.createPropagatingContainer((context.options.isMobile
+            ? this.profitContainerMobileStyle
+            : this.profitContainerStyle)[prediction.position].default));
         if (profitpropagatingContainerState.new || profitState.new)
             profit.addChild(profitpropagatingContainer);
         const [[profitpropagating, profitpropagatingtimeline], profitpropagatingState] = this.get('profitpropagating', () => this.createPropagatingBackground());
@@ -1172,7 +1174,12 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 claimFragmentState.timeline = claimFragmentTimeline;
                 claim.addChild(claimFragment);
             }
-            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => { var _a; return this.createPropagatingContainer((((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ? this.claimMobileStyle : this.claimStyle)[prediction.position]); });
+            const [claimpropagatingContainer, claimpropagatingContainerState] = this.get('claimpropagatingContainer', () => {
+                var _a;
+                return this.createPropagatingContainer((((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ?
+                    this.claimMobileStyle :
+                    this.claimStyle)[prediction.position]);
+            });
             if (claimpropagatingContainerState.new)
                 claim.addChild(claimpropagatingContainer);
             const [[claimpropagating, claimpropagatingtimeline], claimpropagatingState] = this.get('claimpropagating', () => this.createPropagatingBackground());
@@ -1195,10 +1202,13 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
     updateWager(round, prediction, context, container, state) {
         const { propagating, orphan } = state;
         const position = prediction.position;
-        const wagerContainerStyles = context.options.isMobile ? this.wagerContainerMobileStyles[position] : this.wagerContainerStyles[position];
-        const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ?
-            context.options.isMobile ? this.wagerOrphanContainerMobileStyles[position] : this.wagerOrphanContainerStyles[position] :
-            wagerContainerStyles), [orphan]);
+        const wagerContainerStyles = context.options.isMobile
+            ? this.wagerContainerMobileStyles[position]
+            : this.wagerContainerStyles[position];
+        const wagerOrphanContainerStyles = context.options.isMobile
+            ? this.wagerOrphanContainerMobileStyles[position]
+            : this.wagerOrphanContainerStyles[position];
+        const [wager, wagerState] = this.get('wager', () => this.createContainer(orphan ? wagerOrphanContainerStyles : wagerContainerStyles), [orphan]);
         if (wagerState.new)
             container.addChild(wager);
         const [wagercontent, wagercontentState] = this.get('wagercontent', () => this.createContainer(this.contentStyle));
@@ -1357,7 +1367,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             const mask = profit.getChildAt(0).clone();
             profit.addChild(mask);
             profit.mask = mask;
-            const borderBottom = this.createContainerBorderBottom(isMobile ? this.profitBorderBottomMobileStyle : this.profitBorderBottomStyle);
+            const borderBottom = this.createContainerBorderBottom(isMobile
+                ? this.profitBorderBottomMobileStyle
+                : this.profitBorderBottomStyle);
             profit.addChild(borderBottom);
             return profit;
         }
@@ -1378,7 +1390,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         const text = _rendering_1.GraphicUtils.createText('Withdraw', this.claimTextStyle.offset, this.claimTextStyle.text);
         container.addChild(text);
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
-        const borderBottom = this.createContainerBorderBottom(((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ? this.claimBorderBottomMobileStyle : this.claimBorderBottomStyle);
+        const borderBottom = this.createContainerBorderBottom(((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile)
+            ? this.claimBorderBottomMobileStyle
+            : this.claimBorderBottomStyle);
         container.addChild(borderBottom);
         return container;
     }
