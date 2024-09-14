@@ -101,7 +101,7 @@ export class RoundOpenPriceTag extends BaseRoundsRenderer {
         context: RenderingContext,
         container: Container,
     ): void {
-        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue) return this.clear()
 
         this.updateOpenPriceTag(round, context, container)
     }
@@ -122,13 +122,13 @@ export class RoundOpenPriceTag extends BaseRoundsRenderer {
             height,
         } = context.screen
 
-        const [x] = datamath.scale([round.openPriceTimestamp], timerange, width)
-        const [y] = datamath.scaleReverse([round.openPriceValue], pricerange, height)
+        const [x] = datamath.scale([round.entryPriceTimestamp], timerange, width)
+        const [y] = datamath.scaleReverse([round.entryPriceValue], pricerange, height)
         const position = this.getRoundResolution(round, context)
         const coverStyle = this.coverStyle[position]
 
         const [cover, coverState] = this.get('cover', () => GraphicUtils.createCoveredText(
-            ui.currency(round.openPriceValue, context.game.quote),
+            ui.currency(round.entryPriceValue, context.game.quote),
             coverStyle.offset,
             { ...coverStyle, color: 0xFFFFFF },
         ))

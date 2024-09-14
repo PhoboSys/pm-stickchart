@@ -109,11 +109,11 @@ class RoundBackground extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     updateRound(round, context, container) {
         var _a;
         const isHistorical = this.isHistoricalRound(round, context);
-        if (!round.openPriceTimestamp || !round.openPriceValue || !isHistorical)
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || !isHistorical)
             return this.clear();
         const { width } = context.screen;
         const { timerange } = context.plotdata;
-        const { openPriceTimestamp, endDate } = round;
+        const { entryPriceTimestamp, endDate } = round;
         const rprice = this.getResolutionPricePoint(round, context);
         const rdate = (rprice === null || rprice === void 0 ? void 0 : rprice.timestamp) || endDate;
         const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
@@ -131,7 +131,7 @@ class RoundBackground extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             return claimable;
         });
         const shouldRenderClaimable = !(0, utils_1.isEmpty)(predictions) && hashClaimablePrediction;
-        const [ox, rx] = datamath_1.default.scale([openPriceTimestamp, rdate], timerange, width);
+        const [ox, rx] = datamath_1.default.scale([entryPriceTimestamp, rdate], timerange, width);
         this.udateDefaultBackground(context, container, [ox, rx], round, !shouldRenderClaimable);
         let bgTextureColorStops;
         if (hasWonPrediction)

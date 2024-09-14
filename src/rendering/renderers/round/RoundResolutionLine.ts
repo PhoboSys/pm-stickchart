@@ -144,7 +144,7 @@ export class RoundResolutionLine extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (context.features.curvedResolutionLines || !round.openPriceTimestamp || !round.openPriceValue) return this.clear()
+        if (context.features.curvedResolutionLines || !round.entryPriceTimestamp || !round.entryPriceValue) return this.clear()
 
         const [group] = this.updateGroup(context, container, round)
 
@@ -218,8 +218,8 @@ export class RoundResolutionLine extends BaseRoundsRenderer {
         const { timerange, pricerange } = context.plotdata
         const { width, height } = context.screen
 
-        const [x] = datamath.scale([round.openPriceTimestamp], timerange, width)
-        const [y] = datamath.scaleReverse([round.openPriceValue], pricerange, height)
+        const [x] = datamath.scale([round.entryPriceTimestamp], timerange, width)
+        const [y] = datamath.scaleReverse([round.entryPriceValue], pricerange, height)
 
         const [openpoint, openpointstate] = this.get(
             'openpoint',
@@ -269,8 +269,8 @@ export class RoundResolutionLine extends BaseRoundsRenderer {
         const { timerange, pricerange } = context.plotdata
         const { width, height } = context.screen
 
-        const [x1, x2] = datamath.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width)
-        const [y1, y2] = datamath.scaleReverse([round.openPriceValue, Number(rprice.value)], pricerange, height)
+        const [x1, x2] = datamath.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width)
+        const [y1, y2] = datamath.scaleReverse([round.entryPriceValue, Number(rprice.value)], pricerange, height)
 
         const style = won ? this.lineStyle.won : this.lineStyle[resolution]
 

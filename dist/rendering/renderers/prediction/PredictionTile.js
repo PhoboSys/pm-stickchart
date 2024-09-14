@@ -920,7 +920,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
     updatePrediction(round, prediction, context, container) {
         if (!(prediction.position in this.validPredictionPositions))
             return this.clear();
-        if (!round.openPriceTimestamp || !round.openPriceValue)
+        if (!round.entryPriceTimestamp || !round.entryPriceValue)
             return this.clear();
         const state = this.getPredictionState(round, prediction, context);
         if (!state.win && !state.nocontest && state.isHistorical)
@@ -932,8 +932,8 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         this.updateClaim(round, prediction, context, group, state);
     }
     getGroupPosition(context, round, position) {
-        const [ox] = datamath_1.default.scale([round.openPriceTimestamp], context.plotdata.timerange, context.screen.width);
-        const [oy] = datamath_1.default.scaleReverse([round.openPriceValue], context.plotdata.pricerange, context.screen.height);
+        const [ox] = datamath_1.default.scale([round.entryPriceTimestamp], context.plotdata.timerange, context.screen.width);
+        const [oy] = datamath_1.default.scaleReverse([round.entryPriceValue], context.plotdata.pricerange, context.screen.height);
         let vertical = null;
         if (position === _enums_1.EPosition.Up)
             vertical = 0;
@@ -1100,7 +1100,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             if (claimState.new) {
                 container.addChild(claim);
                 this.get('resolved', () => round.resolved, [round.resolved]);
-                this.get('settlement', () => { var _a; return (_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]; }, [(_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]]);
+                this.get('settlment', () => { var _a; return (_a = context.settlments) === null || _a === void 0 ? void 0 : _a[round.endDate]; }, [(_a = context.settlments) === null || _a === void 0 ? void 0 : _a[round.endDate]]);
                 this.get('nocontest', () => state.nocontest, [state.nocontest]);
                 claim.interactive = true;
                 claim.cursor = 'pointer';
@@ -1118,7 +1118,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                     this.rebind(roundid, predictionid);
                     this.animate('claim', 'tab_claim');
                     const [rslvd] = this.read('resolved');
-                    const [sttlmnt] = this.read('settlement');
+                    const [sttlmnt] = this.read('settlment');
                     const [nocontest] = this.read('nocontest');
                     if (rslvd) {
                         context.eventTarget.dispatchEvent(new _events_1.WithdrawEvent(roundid, predictionid, erc20, e));
@@ -1128,7 +1128,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                             context.eventTarget.dispatchEvent(new _events_3.ResolveWithdrawNocontestEvent(roundid, predictionid, erc20, e));
                         }
                         else if (sttlmnt) {
-                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, predictionid, erc20, sttlmnt.resolutionPrice, sttlmnt.controlPrice, e));
+                            context.eventTarget.dispatchEvent(new _events_2.ResolveWithdrawEvent(roundid, predictionid, erc20, sttlmnt.exitPrice, sttlmnt.controlPrice, e));
                         }
                     }
                 };
@@ -1195,7 +1195,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         else {
             this.clear('claim');
             this.clear('resolved');
-            this.clear('settlement');
+            this.clear('settlment');
             this.clear('nocontest');
         }
     }

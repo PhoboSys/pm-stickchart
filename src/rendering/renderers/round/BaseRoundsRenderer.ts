@@ -80,13 +80,13 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
 
     private getRoundResolutionByPrice(
         round: any,
-        resolutionPrice: PricePoint | null,
+        exitPrice: PricePoint | null,
     ): EPosition {
 
-        if (!resolutionPrice || !round.openPriceValue) return EPosition.Undefined
-        if (eq(resolutionPrice.value, round.openPriceValue)) return EPosition.Zero
-        if (gt(resolutionPrice.value, round.openPriceValue)) return EPosition.Up
-        if (lt(resolutionPrice.value, round.openPriceValue)) return EPosition.Down
+        if (!exitPrice || !round.entryPriceValue) return EPosition.Undefined
+        if (eq(exitPrice.value, round.entryPriceValue)) return EPosition.Zero
+        if (gt(exitPrice.value, round.entryPriceValue)) return EPosition.Up
+        if (lt(exitPrice.value, round.entryPriceValue)) return EPosition.Down
 
         return EPosition.Undefined
     }
@@ -143,7 +143,7 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
 
         return (
             round.resolved ||
-            !!context.settlements?.[round.endDate]
+            !!context.settlments?.[round.endDate]
         )
     }
 
@@ -154,38 +154,38 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
 
         if (this.isActualRound(round, context)) {
             const latest = DataBuilder.getLatest(context.chartdata)
-            if (latest.timestamp > round.openPriceTimestamp) return latest
+            if (latest.timestamp > round.entryPriceTimestamp) return latest
 
             return null
         }
 
-        const isResolveReady = !round.resolved && context.settlements?.[round.endDate]
+        const isResolveReady = !round.resolved && context.settlments?.[round.endDate]
         if (isResolveReady) {
             return {
-                value: context.settlements[round.endDate].resolutionPrice.value,
-                timestamp: context.settlements[round.endDate].resolutionPrice.timestamp,
+                value: context.settlments[round.endDate].exitPrice.value,
+                timestamp: context.settlments[round.endDate].exitPrice.timestamp,
             }
         }
 
-        const isResolved = round.resolved && round.resolutionPriceTimestamp && round.resolutionPriceValue
+        const isResolved = round.resolved && round.exitPriceTimestamp && round.exitPriceValue
         if (isResolved) {
             return {
-                value: round.resolutionPriceValue,
-                timestamp: round.resolutionPriceTimestamp,
+                value: round.exitPriceValue,
+                timestamp: round.exitPriceTimestamp,
             }
         }
 
-        const isResolvedNoResolutionPrice = round.resolved && (!round.resolutionPriceTimestamp || !round.resolutionPriceValue)
-        if (isResolvedNoResolutionPrice && context.settlements?.[round.endDate]) {
+        const isResolvedNoResolutionPrice = round.resolved && (!round.exitPriceTimestamp || !round.exitPriceValue)
+        if (isResolvedNoResolutionPrice && context.settlments?.[round.endDate]) {
             return {
-                value: context.settlements[round.endDate].resolutionPrice.value,
-                timestamp: context.settlements[round.endDate].resolutionPrice.timestamp,
+                value: context.settlments[round.endDate].exitPrice.value,
+                timestamp: context.settlments[round.endDate].exitPrice.timestamp,
             }
         }
 
         const latest = DataBuilder.getLatest(context.chartdata)
 
-        if (latest.timestamp <= round.openPriceTimestamp) return null
+        if (latest.timestamp <= round.entryPriceTimestamp) return null
         if (latest.timestamp < round.endDate) return latest
 
         return this.getRoundResolutionPriceFormPricefeed(round.endDate, context.chartdata)

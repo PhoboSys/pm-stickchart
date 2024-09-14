@@ -20,7 +20,7 @@ export class RoundActualBackground extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (!round.openPriceTimestamp || !round.openPriceValue || !this.isActualRound(round, context)) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || !this.isActualRound(round, context)) return this.clear()
 
         this.updateBackground(round, context, container)
 
@@ -38,9 +38,9 @@ export class RoundActualBackground extends BaseRoundsRenderer {
         } = context.screen
 
         const { timerange } = context.plotdata
-        const { openPriceTimestamp, endDate } = round
+        const { entryPriceTimestamp, endDate } = round
 
-        const [ox, rx] = datamath.scale([openPriceTimestamp, endDate], timerange, width)
+        const [ox, rx] = datamath.scale([entryPriceTimestamp, endDate], timerange, width)
 
         const shape = [
             ox, 0,

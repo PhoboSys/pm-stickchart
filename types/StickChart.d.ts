@@ -31,7 +31,7 @@ export declare class StickChart extends EventTarget {
         rounds: any[];
         predictions: any[];
         resolved: any[];
-        settlements: any;
+        settlments: any;
         focusroundid: any;
         blocksLatest: any;
         transactions: any;

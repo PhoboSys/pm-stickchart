@@ -131,12 +131,12 @@ export class RoundBackground extends BaseRoundsRenderer {
 
         const isHistorical = this.isHistoricalRound(round, context)
 
-        if (!round.openPriceTimestamp || !round.openPriceValue || !isHistorical) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || !isHistorical) return this.clear()
 
         const { width } = context.screen
 
         const { timerange } = context.plotdata
-        const { openPriceTimestamp, endDate } = round
+        const { entryPriceTimestamp, endDate } = round
 
         const rprice = this.getResolutionPricePoint(round, context)
         const rdate = rprice?.timestamp || endDate
@@ -160,7 +160,7 @@ export class RoundBackground extends BaseRoundsRenderer {
         })
         const shouldRenderClaimable = !isEmpty(predictions) && hashClaimablePrediction
 
-        const [ox, rx] = datamath.scale([openPriceTimestamp, rdate], timerange, width)
+        const [ox, rx] = datamath.scale([entryPriceTimestamp, rdate], timerange, width)
 
         this.udateDefaultBackground(context, container, [ox, rx], round, !shouldRenderClaimable)
 

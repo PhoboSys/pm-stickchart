@@ -28,7 +28,7 @@ class RoundOpen extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     updateRound(round, context, container) {
         var _a;
         const predictions = (_a = context.predictions) === null || _a === void 0 ? void 0 : _a[round.roundid];
-        if (!round.openPriceTimestamp || !this.isActualRound(round, context) && (0, utils_1.isEmpty)(predictions))
+        if (!round.entryPriceTimestamp || !this.isActualRound(round, context) && (0, utils_1.isEmpty)(predictions))
             return this.clear();
         const resolution = this.getRoundResolution(round, context);
         const hasWinPrediction = predictions && predictions.some(prediction => prediction.position === resolution);
@@ -57,7 +57,7 @@ class RoundOpen extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             return this.clear('line');
         const { width, height } = context.screen;
         const { timerange } = context.plotdata;
-        const [x] = datamath_1.default.scale([round.openPriceTimestamp], timerange, width);
+        const [x] = datamath_1.default.scale([round.entryPriceTimestamp], timerange, width);
         const [line, linestate] = this.get('line', () => _rendering_1.GraphicUtils.createVerticalDashLine(0, [0, context.screen.height], this.dashLineStyle), [height]);
         if (linestate.new)
             container.addChild(line);

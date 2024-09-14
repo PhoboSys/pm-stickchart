@@ -59,18 +59,18 @@ class RoundOpenPriceTag extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return this.configAnimations;
     }
     updateRound(round, context, container) {
-        if (!round.openPriceTimestamp || !round.openPriceValue)
+        if (!round.entryPriceTimestamp || !round.entryPriceValue)
             return this.clear();
         this.updateOpenPriceTag(round, context, container);
     }
     updateOpenPriceTag(round, context, container) {
         const { timerange, pricerange, } = context.plotdata;
         const { width, height, } = context.screen;
-        const [x] = datamath_1.default.scale([round.openPriceTimestamp], timerange, width);
-        const [y] = datamath_1.default.scaleReverse([round.openPriceValue], pricerange, height);
+        const [x] = datamath_1.default.scale([round.entryPriceTimestamp], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([round.entryPriceValue], pricerange, height);
         const position = this.getRoundResolution(round, context);
         const coverStyle = this.coverStyle[position];
-        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(index_1.default.currency(round.openPriceValue, context.game.quote), coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
+        const [cover, coverState] = this.get('cover', () => _rendering_1.GraphicUtils.createCoveredText(index_1.default.currency(round.entryPriceValue, context.game.quote), coverStyle.offset, Object.assign(Object.assign({}, coverStyle), { color: 0xFFFFFF })));
         const [ofx, ofy] = coverStyle.offset;
         if (coverState.new)
             container.addChild(cover);

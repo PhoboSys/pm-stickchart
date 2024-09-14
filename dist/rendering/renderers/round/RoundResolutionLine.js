@@ -85,7 +85,7 @@ class RoundResolutionLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     }
     updateRound(round, context, container) {
         var _a;
-        if (context.features.curvedResolutionLines || !round.openPriceTimestamp || !round.openPriceValue)
+        if (context.features.curvedResolutionLines || !round.entryPriceTimestamp || !round.entryPriceValue)
             return this.clear();
         const [group] = this.updateGroup(context, container, round);
         const rprice = this.getResolutionPricePoint(round, context);
@@ -139,8 +139,8 @@ class RoundResolutionLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     updateOpenPoint(context, container, resolution, round, won) {
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
-        const [x] = datamath_1.default.scale([round.openPriceTimestamp], timerange, width);
-        const [y] = datamath_1.default.scaleReverse([round.openPriceValue], pricerange, height);
+        const [x] = datamath_1.default.scale([round.entryPriceTimestamp], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([round.entryPriceValue], pricerange, height);
         const [openpoint, openpointstate] = this.get('openpoint', () => this.createPricePoint(won ? this.torusStyle.won : this.torusStyle[resolution]), [resolution, won]);
         if (openpointstate.new)
             container.addChild(openpoint);
@@ -163,8 +163,8 @@ class RoundResolutionLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             return this.clear('line');
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
-        const [x1, x2] = datamath_1.default.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width);
-        const [y1, y2] = datamath_1.default.scaleReverse([round.openPriceValue, Number(rprice.value)], pricerange, height);
+        const [x1, x2] = datamath_1.default.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width);
+        const [y1, y2] = datamath_1.default.scaleReverse([round.entryPriceValue, Number(rprice.value)], pricerange, height);
         const style = won ? this.lineStyle.won : this.lineStyle[resolution];
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
         if (linestate.new) {

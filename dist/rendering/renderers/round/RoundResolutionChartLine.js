@@ -85,7 +85,7 @@ class RoundResolutionChartLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return this.configAnimations;
     }
     updateRound(round, context, container) {
-        if (!round.openPriceTimestamp || !round.openPriceValue)
+        if (!round.entryPriceTimestamp || !round.entryPriceValue)
             return this.clear();
         const rprice = this.getResolutionPricePoint(round, context);
         if (context.features.curvedResolutionLines) {
@@ -143,8 +143,8 @@ class RoundResolutionChartLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
     updateOpenPoint(context, container, resolution, round) {
         const { timerange, pricerange } = context.plotdata;
         const { width, height } = context.screen;
-        const [x] = datamath_1.default.scale([round.openPriceTimestamp], timerange, width);
-        const [y] = datamath_1.default.scaleReverse([round.openPriceValue], pricerange, height);
+        const [x] = datamath_1.default.scale([round.entryPriceTimestamp], timerange, width);
+        const [y] = datamath_1.default.scaleReverse([round.entryPriceValue], pricerange, height);
         const [openpoint, openpointstate] = this.get('openpoint', () => this.createPricePoint(this.torusStyle[resolution]), [resolution]);
         if (openpointstate.new)
             container.addChild(openpoint);
@@ -171,8 +171,8 @@ class RoundResolutionChartLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const { xs, ys } = context.plotdata;
         const { width, height } = context.screen;
         const { timerange, pricerange } = context.plotdata;
-        const [startx, endx] = datamath_1.default.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width);
-        const [starty, endy] = datamath_1.default.scaleReverse([Number(round.openPriceValue), Number(rprice.value)], pricerange, height);
+        const [startx, endx] = datamath_1.default.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width);
+        const [starty, endy] = datamath_1.default.scaleReverse([Number(round.entryPriceValue), Number(rprice.value)], pricerange, height);
         const roundxs = [];
         const roundys = [];
         roundxs.push(startx);
@@ -198,8 +198,8 @@ class RoundResolutionChartLine extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const { xs, ys } = context.plotdata;
         const { width, height } = context.screen;
         const { timerange, pricerange } = context.plotdata;
-        const [startx, endx] = datamath_1.default.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width);
-        const [starty, endy] = datamath_1.default.scaleReverse([Number(round.openPriceValue), Number(rprice.value)], pricerange, height);
+        const [startx, endx] = datamath_1.default.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width);
+        const [starty, endy] = datamath_1.default.scaleReverse([Number(round.entryPriceValue), Number(rprice.value)], pricerange, height);
         const roundxs = [];
         const roundys = [];
         roundxs.push(startx);

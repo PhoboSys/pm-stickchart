@@ -77,7 +77,7 @@ export class PredictionLine extends BasePredictionsRenderer {
     ): void {
 
         if (!(prediction.position in this.validPredictionPositions)) return this.clear()
-        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue) return this.clear()
 
         const state = this.getPredictionState(round, prediction, context)
 
@@ -105,10 +105,10 @@ export class PredictionLine extends BasePredictionsRenderer {
 
         const { height } = context.screen
         const { pricerange } = context.plotdata
-        const { openPriceValue, openPriceTimestamp } = round
+        const { entryPriceValue, entryPriceTimestamp } = round
 
-        const [ox] = datamath.scale([openPriceTimestamp], context.plotdata.timerange, context.screen.width)
-        const [oy] = datamath.scaleReverse([openPriceValue], pricerange, height)
+        const [ox] = datamath.scale([entryPriceTimestamp], context.plotdata.timerange, context.screen.width)
+        const [oy] = datamath.scaleReverse([entryPriceValue], pricerange, height)
 
         const [line, linestate] = this.get('line', () => new Graphics())
         if (linestate.new) container.addChild(line)

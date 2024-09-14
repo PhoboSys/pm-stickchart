@@ -56,14 +56,14 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
         const resolution = this.getRoundResolutionByPrice(round, rprice);
         return resolution;
     }
-    getRoundResolutionByPrice(round, resolutionPrice) {
-        if (!resolutionPrice || !round.openPriceValue)
+    getRoundResolutionByPrice(round, exitPrice) {
+        if (!exitPrice || !round.entryPriceValue)
             return _enums_1.EPosition.Undefined;
-        if ((0, calc_utils_1.eq)(resolutionPrice.value, round.openPriceValue))
+        if ((0, calc_utils_1.eq)(exitPrice.value, round.entryPriceValue))
             return _enums_1.EPosition.Zero;
-        if ((0, calc_utils_1.gt)(resolutionPrice.value, round.openPriceValue))
+        if ((0, calc_utils_1.gt)(exitPrice.value, round.entryPriceValue))
             return _enums_1.EPosition.Up;
-        if ((0, calc_utils_1.lt)(resolutionPrice.value, round.openPriceValue))
+        if ((0, calc_utils_1.lt)(exitPrice.value, round.entryPriceValue))
             return _enums_1.EPosition.Down;
         return _enums_1.EPosition.Undefined;
     }
@@ -105,39 +105,39 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
         if (this.isActualRound(round, context))
             return false;
         return (round.resolved ||
-            !!((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]));
+            !!((_a = context.settlments) === null || _a === void 0 ? void 0 : _a[round.endDate]));
     }
     getResolutionPricePoint(round, context) {
         var _a, _b;
         if (this.isActualRound(round, context)) {
             const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
-            if (latest.timestamp > round.openPriceTimestamp)
+            if (latest.timestamp > round.entryPriceTimestamp)
                 return latest;
             return null;
         }
-        const isResolveReady = !round.resolved && ((_a = context.settlements) === null || _a === void 0 ? void 0 : _a[round.endDate]);
+        const isResolveReady = !round.resolved && ((_a = context.settlments) === null || _a === void 0 ? void 0 : _a[round.endDate]);
         if (isResolveReady) {
             return {
-                value: context.settlements[round.endDate].resolutionPrice.value,
-                timestamp: context.settlements[round.endDate].resolutionPrice.timestamp,
+                value: context.settlments[round.endDate].exitPrice.value,
+                timestamp: context.settlments[round.endDate].exitPrice.timestamp,
             };
         }
-        const isResolved = round.resolved && round.resolutionPriceTimestamp && round.resolutionPriceValue;
+        const isResolved = round.resolved && round.exitPriceTimestamp && round.exitPriceValue;
         if (isResolved) {
             return {
-                value: round.resolutionPriceValue,
-                timestamp: round.resolutionPriceTimestamp,
+                value: round.exitPriceValue,
+                timestamp: round.exitPriceTimestamp,
             };
         }
-        const isResolvedNoResolutionPrice = round.resolved && (!round.resolutionPriceTimestamp || !round.resolutionPriceValue);
-        if (isResolvedNoResolutionPrice && ((_b = context.settlements) === null || _b === void 0 ? void 0 : _b[round.endDate])) {
+        const isResolvedNoResolutionPrice = round.resolved && (!round.exitPriceTimestamp || !round.exitPriceValue);
+        if (isResolvedNoResolutionPrice && ((_b = context.settlments) === null || _b === void 0 ? void 0 : _b[round.endDate])) {
             return {
-                value: context.settlements[round.endDate].resolutionPrice.value,
-                timestamp: context.settlements[round.endDate].resolutionPrice.timestamp,
+                value: context.settlments[round.endDate].exitPrice.value,
+                timestamp: context.settlments[round.endDate].exitPrice.timestamp,
             };
         }
         const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
-        if (latest.timestamp <= round.openPriceTimestamp)
+        if (latest.timestamp <= round.entryPriceTimestamp)
             return null;
         if (latest.timestamp < round.endDate)
             return latest;

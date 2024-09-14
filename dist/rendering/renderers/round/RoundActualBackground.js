@@ -13,15 +13,15 @@ class RoundActualBackground extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return RoundActualBackground.ROUND_ACTUAL_BACKGROUND_ID;
     }
     updateRound(round, context, container) {
-        if (!round.openPriceTimestamp || !round.openPriceValue || !this.isActualRound(round, context))
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || !this.isActualRound(round, context))
             return this.clear();
         this.updateBackground(round, context, container);
     }
     updateBackground(round, context, container) {
         const { width, height, } = context.screen;
         const { timerange } = context.plotdata;
-        const { openPriceTimestamp, endDate } = round;
-        const [ox, rx] = datamath_1.default.scale([openPriceTimestamp, endDate], timerange, width);
+        const { entryPriceTimestamp, endDate } = round;
+        const [ox, rx] = datamath_1.default.scale([entryPriceTimestamp, endDate], timerange, width);
         const shape = [
             ox, 0,
             rx, 0,

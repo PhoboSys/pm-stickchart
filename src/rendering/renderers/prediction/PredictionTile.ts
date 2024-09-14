@@ -982,7 +982,7 @@ export class PredictionTile extends BasePredictionsRenderer {
     ): void {
 
         if (!(prediction.position in this.validPredictionPositions)) return this.clear()
-        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue) return this.clear()
 
         const state = this.getPredictionState(round, prediction, context)
 
@@ -1001,8 +1001,8 @@ export class PredictionTile extends BasePredictionsRenderer {
         round: any,
         position: EPosition,
     ): [number, number] {
-        const [ox] = datamath.scale([round.openPriceTimestamp], context.plotdata.timerange, context.screen.width)
-        const [oy] = datamath.scaleReverse([round.openPriceValue], context.plotdata.pricerange, context.screen.height)
+        const [ox] = datamath.scale([round.entryPriceTimestamp], context.plotdata.timerange, context.screen.width)
+        const [oy] = datamath.scaleReverse([round.entryPriceValue], context.plotdata.pricerange, context.screen.height)
 
         let vertical: any = null
         if (position === EPosition.Up) vertical = 0
@@ -1259,7 +1259,7 @@ export class PredictionTile extends BasePredictionsRenderer {
                 container.addChild(claim)
 
                 this.get('resolved', () => round.resolved, [round.resolved])
-                this.get('settlement', () => context.settlements?.[round.endDate], [context.settlements?.[round.endDate]])
+                this.get('settlment', () => context.settlments?.[round.endDate], [context.settlments?.[round.endDate]])
                 this.get('nocontest', () => state.nocontest, [state.nocontest])
 
                 claim.interactive = true
@@ -1281,7 +1281,7 @@ export class PredictionTile extends BasePredictionsRenderer {
                     this.rebind(roundid, predictionid)
                     this.animate('claim', 'tab_claim')
                     const [rslvd] = this.read('resolved')
-                    const [sttlmnt] = this.read('settlement')
+                    const [sttlmnt] = this.read('settlment')
                     const [nocontest] = this.read('nocontest')
 
                     if (rslvd) {
@@ -1311,7 +1311,7 @@ export class PredictionTile extends BasePredictionsRenderer {
                                     roundid,
                                     predictionid,
                                     erc20,
-                                    sttlmnt.resolutionPrice,
+                                    sttlmnt.exitPrice,
                                     sttlmnt.controlPrice,
                                     e
                                 )
@@ -1399,7 +1399,7 @@ export class PredictionTile extends BasePredictionsRenderer {
         } else {
             this.clear('claim')
             this.clear('resolved')
-            this.clear('settlement')
+            this.clear('settlment')
             this.clear('nocontest')
         }
     }

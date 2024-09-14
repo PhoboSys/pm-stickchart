@@ -150,7 +150,7 @@ export class RoundResolutionChartLine extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (!round.openPriceTimestamp || !round.openPriceValue) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue) return this.clear()
         const rprice = this.getResolutionPricePoint(round, context)
         if (context.features.curvedResolutionLines) {
             this.clear('actualLine')
@@ -226,8 +226,8 @@ export class RoundResolutionChartLine extends BaseRoundsRenderer {
         const { timerange, pricerange } = context.plotdata
         const { width, height } = context.screen
 
-        const [x] = datamath.scale([round.openPriceTimestamp], timerange, width)
-        const [y] = datamath.scaleReverse([round.openPriceValue], pricerange, height)
+        const [x] = datamath.scale([round.entryPriceTimestamp], timerange, width)
+        const [y] = datamath.scaleReverse([round.entryPriceValue], pricerange, height)
 
         const [openpoint, openpointstate] = this.get(
             'openpoint',
@@ -277,8 +277,8 @@ export class RoundResolutionChartLine extends BaseRoundsRenderer {
         const { width, height } = context.screen
         const { timerange, pricerange } = context.plotdata
 
-        const [startx, endx] = datamath.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width)
-        const [starty, endy] = datamath.scaleReverse([Number(round.openPriceValue), Number(rprice.value)], pricerange, height)
+        const [startx, endx] = datamath.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width)
+        const [starty, endy] = datamath.scaleReverse([Number(round.entryPriceValue), Number(rprice.value)], pricerange, height)
 
         const roundxs: number[] = []
         const roundys: number[] = []
@@ -318,8 +318,8 @@ export class RoundResolutionChartLine extends BaseRoundsRenderer {
         const { width, height } = context.screen
         const { timerange, pricerange } = context.plotdata
 
-        const [startx, endx] = datamath.scale([round.openPriceTimestamp, rprice.timestamp], timerange, width)
-        const [starty, endy] = datamath.scaleReverse([Number(round.openPriceValue), Number(rprice.value)], pricerange, height)
+        const [startx, endx] = datamath.scale([round.entryPriceTimestamp, rprice.timestamp], timerange, width)
+        const [starty, endy] = datamath.scaleReverse([Number(round.entryPriceValue), Number(rprice.value)], pricerange, height)
 
         const roundxs: number[] = []
         const roundys: number[] = []

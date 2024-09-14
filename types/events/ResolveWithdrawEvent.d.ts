@@ -5,7 +5,7 @@ export declare class ResolveWithdrawEvent extends Event {
     readonly roundid: string;
     readonly predictionid: string;
     readonly erc20: string;
-    readonly resolutionPrice: PricefeedPoint;
+    readonly exitPrice: PricefeedPoint;
     readonly controlPrice: PricefeedPoint;
-    constructor(roundid: string, predictionid: string, erc20: string, resolutionPrice: PricefeedPoint, controlPrice: PricefeedPoint, inner: Event);
+    constructor(roundid: string, predictionid: string, erc20: string, exitPrice: PricefeedPoint, controlPrice: PricefeedPoint, inner: Event);
 }

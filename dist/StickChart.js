@@ -116,7 +116,7 @@ class StickChart extends EventTarget {
             game: context.game,
             rounds: context.rounds,
             predictions: context.predictions,
-            settlements: context.settlements,
+            settlments: context.settlments,
             focusroundid: context.focusroundid,
             blocksLatest: context.blocksLatest,
             transactions: context.transactions,

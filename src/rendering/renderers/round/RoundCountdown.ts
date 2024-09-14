@@ -308,7 +308,7 @@ export class RoundCountdown extends BaseRoundsRenderer {
             gradientresBackground.position.x = rx
 
             const resolution = this.getRoundResolution(round, context)
-            if (round.openPriceValue && round.openPriceTimestamp && (resolution in this.validPredictionPositions) && locked) {
+            if (round.entryPriceValue && round.entryPriceTimestamp && (resolution in this.validPredictionPositions) && locked) {
 
                 const [winningcontainer, winningcontainerState] = this.get('winningcontainer', () => this.createWinningContainer())
                 if (winningcontainerState.new || gradientresBackgroundState.new) gradientresBackground.addChild(winningcontainer)

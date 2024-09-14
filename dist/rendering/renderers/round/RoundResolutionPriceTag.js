@@ -59,7 +59,7 @@ class RoundResolutionPriceTag extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return RoundResolutionPriceTag.ROUND_RESOLUTION_PRICE_TAG_ID;
     }
     updateRound(round, context, container) {
-        if (!round.openPriceTimestamp || !round.openPriceValue || this.isActualRound(round, context))
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || this.isActualRound(round, context))
             return this.clear();
         const rprice = this.getResolutionPricePoint(round, context);
         if (!rprice)

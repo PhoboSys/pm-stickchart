@@ -63,7 +63,7 @@ class PredictionLine extends BasePredictionsRenderer_1.BasePredictionsRenderer {
     updatePrediction(round, prediction, context, container) {
         if (!(prediction.position in this.validPredictionPositions))
             return this.clear();
-        if (!round.openPriceTimestamp || !round.openPriceValue)
+        if (!round.entryPriceTimestamp || !round.entryPriceValue)
             return this.clear();
         const state = this.getPredictionState(round, prediction, context);
         if (!state.win && !state.nocontest && state.isHistorical)
@@ -81,9 +81,9 @@ class PredictionLine extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             return this.clear('line');
         const { height } = context.screen;
         const { pricerange } = context.plotdata;
-        const { openPriceValue, openPriceTimestamp } = round;
-        const [ox] = datamath_1.default.scale([openPriceTimestamp], context.plotdata.timerange, context.screen.width);
-        const [oy] = datamath_1.default.scaleReverse([openPriceValue], pricerange, height);
+        const { entryPriceValue, entryPriceTimestamp } = round;
+        const [ox] = datamath_1.default.scale([entryPriceTimestamp], context.plotdata.timerange, context.screen.width);
+        const [oy] = datamath_1.default.scaleReverse([entryPriceValue], pricerange, height);
         const [line, linestate] = this.get('line', () => new pixi_1.Graphics());
         if (linestate.new)
             container.addChild(line);

@@ -34,7 +34,7 @@ export class RoundOpen extends BaseRoundsRenderer {
     ): void {
 
         const predictions = context.predictions?.[round.roundid]
-        if (!round.openPriceTimestamp || !this.isActualRound(round, context) && isEmpty(predictions)) return this.clear()
+        if (!round.entryPriceTimestamp || !this.isActualRound(round, context) && isEmpty(predictions)) return this.clear()
 
         const resolution = this.getRoundResolution(round, context)
         const hasWinPrediction = predictions && predictions.some(prediction => prediction.position === resolution)
@@ -71,7 +71,7 @@ export class RoundOpen extends BaseRoundsRenderer {
 
         const { width, height } = context.screen
         const { timerange } = context.plotdata
-        const [x] = datamath.scale([round.openPriceTimestamp], timerange, width)
+        const [x] = datamath.scale([round.entryPriceTimestamp], timerange, width)
 
         const [line, linestate] = this.get('line', () => GraphicUtils.createVerticalDashLine(
             0,

@@ -18,7 +18,7 @@ export type RenderingContext = {
     predictions: any[]
     focusroundid: any
     resolved: any[]
-    settlements: any
+    settlments: any
     blocksLatest: any
     transactions: any
     blocksEntities: any

@@ -102,7 +102,7 @@ export class RoundResolutionPriceTag extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (!round.openPriceTimestamp || !round.openPriceValue || this.isActualRound(round, context)) return this.clear()
+        if (!round.entryPriceTimestamp || !round.entryPriceValue || this.isActualRound(round, context)) return this.clear()
 
         const rprice = this.getResolutionPricePoint(round, context)
         if (!rprice) return this.clear()
