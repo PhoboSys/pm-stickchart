@@ -115,7 +115,7 @@ export class PredictionTile extends BasePredictionsRenderer {
         [EPosition.Up]: {
             offset: [24, 0],
             background: {
-                width: 130,
+                width: 150,
                 height: 58,
                 radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                 color: 0x01A37A,
@@ -130,7 +130,7 @@ export class PredictionTile extends BasePredictionsRenderer {
         [EPosition.Zero]: {
             offset: [-24, 0],
             background: {
-                width: 130,
+                width: 150,
                 height: 58,
                 anchor: [-1, 0],
                 radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -146,7 +146,7 @@ export class PredictionTile extends BasePredictionsRenderer {
         [EPosition.Down]: {
             offset: [24, 0],
             background: {
-                width: 130,
+                width: 150,
                 height: 58,
                 radiuses: <[number, number, number, number]>[28, 28, 28, 28],
                 color: 0xD7335B,
@@ -409,7 +409,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             default: {
                 offset: [-24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -420,9 +420,9 @@ export class PredictionTile extends BasePredictionsRenderer {
                         alignment: 0,
                     },
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 58,
-                        points: [0, 58, 130, 0],
+                        points: [0, 58, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -433,7 +433,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             claimable: {
                 offset: [-24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -446,7 +446,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             default: {
                 offset: [-24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -457,9 +457,9 @@ export class PredictionTile extends BasePredictionsRenderer {
                         alignment: 0,
                     },
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 58,
-                        points: [0, 58, 130, 0],
+                        points: [0, 58, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -470,7 +470,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             claimable: {
                 offset: [-24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -481,9 +481,9 @@ export class PredictionTile extends BasePredictionsRenderer {
 
         [EPosition.Zero]: {
             default: {
-                offset: [-130-24-8, 0],
+                offset: [-150-24-8, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -494,9 +494,9 @@ export class PredictionTile extends BasePredictionsRenderer {
                         alignment: 0,
                     },
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 58,
-                        points: [0, 58, 130, 0],
+                        points: [0, 58, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -505,9 +505,9 @@ export class PredictionTile extends BasePredictionsRenderer {
                 },
             },
             claimable: {
-                offset: [-130-24-8, 0],
+                offset: [-150-24-8, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: <[number, number, number, number]>[28, 28, 28, 28],
@@ -535,7 +535,7 @@ export class PredictionTile extends BasePredictionsRenderer {
     private profitBorderBottomMobileStyle = {
         offset: [0, -1],
         background: {
-            width: 130,
+            width: 150,
             height: 58,
             radiuses: <[number, number, number, number]>[28, 28, 28, 28],
             lineStyle: {
@@ -684,15 +684,15 @@ export class PredictionTile extends BasePredictionsRenderer {
         [EPosition.Up]: {
             offset: [-24, 58+10],
             background: {
-                width: 130,
+                width: 150,
                 height: 48,
                 anchor: [-1, 0],
                 radiuses: <[number, number, number, number]>[23, 23, 23, 23],
                 color: 0xFFFFFF,
                 gradient: {
-                    width: 130,
+                    width: 150,
                     height: 48,
-                    points: [0, 48, 130, 0],
+                    points: [0, 48, 150, 0],
                     colorStops: [
                         { color: '#F7C15B', offset: 0 },
                         { color: '#FFD78D', offset: 1 },
@@ -703,15 +703,15 @@ export class PredictionTile extends BasePredictionsRenderer {
         [EPosition.Down]: {
             offset: [-24, -10-48],
             background: {
-                width: 130,
+                width: 150,
                 height: 48,
                 anchor: [-1, 0],
                 radiuses: <[number, number, number, number]>[23, 23, 23, 23],
                 color: 0xFFFFFF,
                 gradient: {
-                    width: 130,
+                    width: 150,
                     height: 48,
-                    points: [0, 48, 130, 0],
+                    points: [0, 48, 150, 0],
                     colorStops: [
                         { color: '#F7C15B', offset: 0 },
                         { color: '#FFD78D', offset: 1 },
@@ -720,17 +720,17 @@ export class PredictionTile extends BasePredictionsRenderer {
             },
         },
         [EPosition.Zero]: {
-            offset: [-24-130-8, 58+10],
+            offset: [-24-150-8, 58+10],
             background: {
-                width: 130,
+                width: 150,
                 height: 48,
                 anchor: [-1, 0],
                 radiuses: <[number, number, number, number]>[23, 23, 23, 23],
                 color: 0xFFFFFF,
                 gradient: {
-                    width: 130,
+                    width: 150,
                     height: 48,
-                    points: [0, 48, 130, 0],
+                    points: [0, 48, 150, 0],
                     colorStops: [
                         { color: '#F7C15B', offset: 0 },
                         { color: '#FFD78D', offset: 1 },
@@ -758,7 +758,7 @@ export class PredictionTile extends BasePredictionsRenderer {
     private claimBorderBottomMobileStyle = {
         offset: [0, -1],
         background: {
-            width: 130,
+            width: 150,
             height: 48,
             radiuses: <[number, number, number, number]>[23, 23, 23, 23],
             lineStyle: {
@@ -1702,7 +1702,7 @@ export class PredictionTile extends BasePredictionsRenderer {
     }
 
     private createClaim(context, position): Container {
-        const style = this.claimStyle[position]
+        const style = context.options?.isMobile ? this.claimMobileStyle[position] : this.claimStyle[position]
         const containerTexture = context.textures.get(GRADIENT_TEXTURE, style.background.gradient)
 
         const container = this.createContainer({ ...style, background: { ...style.background, texture: containerTexture } })

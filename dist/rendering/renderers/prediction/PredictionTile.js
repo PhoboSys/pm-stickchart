@@ -89,7 +89,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             [_enums_1.EPosition.Up]: {
                 offset: [24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     radiuses: [28, 28, 28, 28],
                     color: 0x01A37A,
@@ -104,7 +104,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             [_enums_1.EPosition.Zero]: {
                 offset: [-24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     anchor: [-1, 0],
                     radiuses: [28, 28, 28, 28],
@@ -120,7 +120,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             [_enums_1.EPosition.Down]: {
                 offset: [24, 0],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 58,
                     radiuses: [28, 28, 28, 28],
                     color: 0xD7335B,
@@ -371,7 +371,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 default: {
                     offset: [-24, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -382,9 +382,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                             alignment: 0,
                         },
                         gradient: {
-                            width: 130,
+                            width: 150,
                             height: 58,
-                            points: [0, 58, 130, 0],
+                            points: [0, 58, 150, 0],
                             colorStops: [
                                 { color: '#F7C15B', offset: 0 },
                                 { color: '#FFD78D', offset: 1 },
@@ -395,7 +395,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 claimable: {
                     offset: [-24, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -407,7 +407,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 default: {
                     offset: [-24, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -418,9 +418,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                             alignment: 0,
                         },
                         gradient: {
-                            width: 130,
+                            width: 150,
                             height: 58,
-                            points: [0, 58, 130, 0],
+                            points: [0, 58, 150, 0],
                             colorStops: [
                                 { color: '#F7C15B', offset: 0 },
                                 { color: '#FFD78D', offset: 1 },
@@ -431,7 +431,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 claimable: {
                     offset: [-24, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -441,9 +441,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             },
             [_enums_1.EPosition.Zero]: {
                 default: {
-                    offset: [-130 - 24 - 8, 0],
+                    offset: [-150 - 24 - 8, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -454,9 +454,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                             alignment: 0,
                         },
                         gradient: {
-                            width: 130,
+                            width: 150,
                             height: 58,
-                            points: [0, 58, 130, 0],
+                            points: [0, 58, 150, 0],
                             colorStops: [
                                 { color: '#F7C15B', offset: 0 },
                                 { color: '#FFD78D', offset: 1 },
@@ -465,9 +465,9 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                     },
                 },
                 claimable: {
-                    offset: [-130 - 24 - 8, 0],
+                    offset: [-150 - 24 - 8, 0],
                     background: {
-                        width: 130,
+                        width: 150,
                         height: 58,
                         anchor: [-1, 0],
                         radiuses: [28, 28, 28, 28],
@@ -493,7 +493,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         this.profitBorderBottomMobileStyle = {
             offset: [0, -1],
             background: {
-                width: 130,
+                width: 150,
                 height: 58,
                 radiuses: [28, 28, 28, 28],
                 lineStyle: {
@@ -637,15 +637,15 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             [_enums_1.EPosition.Up]: {
                 offset: [-24, 58 + 10],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 48,
                     anchor: [-1, 0],
                     radiuses: [23, 23, 23, 23],
                     color: 0xFFFFFF,
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 48,
-                        points: [0, 48, 130, 0],
+                        points: [0, 48, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -656,15 +656,15 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
             [_enums_1.EPosition.Down]: {
                 offset: [-24, -10 - 48],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 48,
                     anchor: [-1, 0],
                     radiuses: [23, 23, 23, 23],
                     color: 0xFFFFFF,
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 48,
-                        points: [0, 48, 130, 0],
+                        points: [0, 48, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -673,17 +673,17 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                 },
             },
             [_enums_1.EPosition.Zero]: {
-                offset: [-24 - 130 - 8, 58 + 10],
+                offset: [-24 - 150 - 8, 58 + 10],
                 background: {
-                    width: 130,
+                    width: 150,
                     height: 48,
                     anchor: [-1, 0],
                     radiuses: [23, 23, 23, 23],
                     color: 0xFFFFFF,
                     gradient: {
-                        width: 130,
+                        width: 150,
                         height: 48,
-                        points: [0, 48, 130, 0],
+                        points: [0, 48, 150, 0],
                         colorStops: [
                             { color: '#F7C15B', offset: 0 },
                             { color: '#FFD78D', offset: 1 },
@@ -709,7 +709,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         this.claimBorderBottomMobileStyle = {
             offset: [0, -1],
             background: {
-                width: 130,
+                width: 150,
                 height: 48,
                 radiuses: [23, 23, 23, 23],
                 lineStyle: {
@@ -1380,8 +1380,8 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         }
     }
     createClaim(context, position) {
-        var _a;
-        const style = this.claimStyle[position];
+        var _a, _b;
+        const style = ((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile) ? this.claimMobileStyle[position] : this.claimStyle[position];
         const containerTexture = context.textures.get(textures_1.GRADIENT_TEXTURE, style.background.gradient);
         const container = this.createContainer(Object.assign(Object.assign({}, style), { background: Object.assign(Object.assign({}, style.background), { texture: containerTexture }) }));
         const mask = container.getChildAt(0).clone();
@@ -1390,7 +1390,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
         const text = _rendering_1.GraphicUtils.createText('Withdraw', this.claimTextStyle.offset, this.claimTextStyle.text);
         container.addChild(text);
         text.position.set((container.width - text.width) / 2, (container.height - text.height) / 2);
-        const borderBottom = this.createContainerBorderBottom(((_a = context.options) === null || _a === void 0 ? void 0 : _a.isMobile)
+        const borderBottom = this.createContainerBorderBottom(((_b = context.options) === null || _b === void 0 ? void 0 : _b.isMobile)
             ? this.claimBorderBottomMobileStyle
             : this.claimBorderBottomStyle);
         container.addChild(borderBottom);
