@@ -1,10 +1,10 @@
 {
   "name": "pm-stickchart",
   "description": "Chart",
-  "version": "0.0.5",
-  "author": "Phobosys",
+  "version": "1.0.0",
+  "author": "Oracly Team <team@oracly.io>",
   "private": false,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "engines": {

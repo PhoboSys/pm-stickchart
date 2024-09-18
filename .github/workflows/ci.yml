@@ -1,4 +1,4 @@
-name: Deploy Stickchart to CodeArtifact
+name: Deploy Stickchart to public registry
 
 on:
   push:
@@ -6,10 +6,9 @@ on:
       - master
       - staging
 
-
 jobs:
   Deploy:
-    name: Deploy stickchart to AWS CodeArtifact
+    name: Publish @oracly/pm-stickchart to public npmjs
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -30,7 +29,11 @@ jobs:
 
     - name: Configure NPM credentials
       run: |
-        npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+        export NPM_TOKEN=$(aws secretsmanager get-secret-value          \
+        --secret-id general | jq -r '.SecretString'                     \
+        | jq .NPM_TOKEN | tr -d \"  )
+        npm set "//registry.npmjs.org/:_authToken" $NPM_TOKEN
+        npm set @oracly:registry https://registry.npmjs.org/
 
     - name: Install packages
       run: |
@@ -47,16 +50,18 @@ jobs:
         --secret-id general | jq -r '.SecretString'                      \
         | jq .STICKCHART_VERSION | tr -d \"  )
 
+        if [[ "${{ github.ref_name }}" == "master" ]]; then
 
-        if [[ "${{  github.ref_name }}" == "master" ]]; then
           VER=$(echo $VER | awk -F. -v OFS=. '{$NF += 1 ; print}')
-          NEW_SECRET=$(aws secretsmanager get-secret-value                                      \
-          --secret-id general | jq -r '.SecretString'                              \
-          | jq ". += {\"STICKCHART_VERSION\":\"$VER\"}")
+          NEW_SECRET=$(aws secretsmanager get-secret-value              \
+              --secret-id general | jq -r '.SecretString'               \
+              | jq ". += {\"STICKCHART_VERSION\":\"$VER\"}")
           aws secretsmanager update-secret --secret-id general --secret-string "$NEW_SECRET"
 
-        elif [[ "${{  github.ref_name }}" == "staging" ]]; then
+        elif [[ "${{ github.ref_name }}" == "staging" ]]; then
+
           VER="$VER@${GITHUB_SHA:0:9}"
+
         fi
 
         jq ". += {\"version\":\"$VER\"}" package.json > new_pj
@@ -65,8 +70,6 @@ jobs:
     - name: Push package to Public npmjs
       run: |
         set -x
-        npm init --scope=@phobosys -y
-        
+        npm init --scope=@oracly -y
         npm publish --access public
-
 
