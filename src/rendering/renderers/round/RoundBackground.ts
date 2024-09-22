@@ -475,16 +475,16 @@ export class RoundBackground extends BaseRoundsRenderer {
 
         const name = this.getCointAnimationName(context, win)
         const animation = context.textures.animations(name)
-        const icon = new AnimatedSprite(animation)
+        const coin = new AnimatedSprite(animation)
 
         // animation
-        icon.play()
-        icon.animationSpeed = speed
+        coin.play()
+        coin.animationSpeed = speed
 
-        icon.scale.set(scale)
-        icon.anchor.set(...anchor)
+        coin.scale.set(scale)
+        coin.anchor.set(...anchor)
 
-        return icon
+        return coin
     }
 
     private createCoinShine(

@@ -10,6 +10,8 @@ const _infra_1 = require("../../infra/index.js");
 const pixi_1 = require("../../lib/pixi");
 const pixi_2 = require("../../lib/pixi");
 const symbols_1 = require("./symbols");
+const COIN_UNKNOWN_base64_png_1 = __importDefault(require("../../assets/COIN_UNKNOWN.base64.png"));
+const COIN_UNKNOWN_json_1 = __importDefault(require("../../assets/COIN_UNKNOWN.json"));
 const COIN_DEMO_GOLD_base64_png_1 = __importDefault(require("../../assets/COIN_DEMO_GOLD.base64.png"));
 const COIN_DEMO_GOLD_json_1 = __importDefault(require("../../assets/COIN_DEMO_GOLD.json"));
 const COIN_DEMO_SILVER_base64_png_1 = __importDefault(require("../../assets/COIN_DEMO_SILVER.base64.png"));
@@ -406,9 +408,9 @@ class TextureStorage {
     }
     [symbols_1.UNKNOWN_CURRENCY_TEXTURE](onready) {
         // TODO: update with UNKNOWN_CURRENCY_base64_png sprite as soon as ready
-        const texture = pixi_1.BaseTexture.from(COIN_DEMO_GOLD_base64_png_1.default);
-        const sheet = new pixi_2.Spritesheet(texture, COIN_DEMO_GOLD_json_1.default);
-        const [name] = Object.keys(COIN_DEMO_GOLD_json_1.default.animations);
+        const texture = pixi_1.BaseTexture.from(COIN_UNKNOWN_base64_png_1.default);
+        const sheet = new pixi_2.Spritesheet(texture, COIN_UNKNOWN_json_1.default);
+        const [name] = Object.keys(COIN_UNKNOWN_json_1.default.animations);
         sheet.parse().then(() => {
             _infra_1.Logger.warn('Spritesheet Textures Ready', name);
             onready(sheet.animations[name]);

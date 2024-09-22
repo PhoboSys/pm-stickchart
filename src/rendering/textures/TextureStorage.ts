@@ -50,6 +50,9 @@ import {
 
 } from './symbols'
 
+import COIN_UNKNOWN_base64_png from '@assets/COIN_UNKNOWN.base64.png'
+import COIN_UNKNOWN_json from '@assets/COIN_UNKNOWN.json'
+
 import COIN_DEMO_GOLD_base64_png from '@assets/COIN_DEMO_GOLD.base64.png'
 import COIN_DEMO_GOLD_json from '@assets/COIN_DEMO_GOLD.json'
 
@@ -593,9 +596,9 @@ export class TextureStorage implements ITextureStorage {
     private [UNKNOWN_CURRENCY_TEXTURE](onready): void {
 
         // TODO: update with UNKNOWN_CURRENCY_base64_png sprite as soon as ready
-        const texture = BaseTexture.from(COIN_DEMO_GOLD_base64_png)
-        const sheet = new Spritesheet(texture, COIN_DEMO_GOLD_json)
-        const [name] = Object.keys(COIN_DEMO_GOLD_json.animations)
+        const texture = BaseTexture.from(COIN_UNKNOWN_base64_png)
+        const sheet = new Spritesheet(texture, COIN_UNKNOWN_json)
+        const [name] = Object.keys(COIN_UNKNOWN_json.animations)
 
         sheet.parse().then(() => {
             Logger.warn('Spritesheet Textures Ready', name)

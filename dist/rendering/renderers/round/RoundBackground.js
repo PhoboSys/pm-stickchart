@@ -368,13 +368,13 @@ class RoundBackground extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         const { scale, anchor, speed } = this.coinStyle;
         const name = this.getCointAnimationName(context, win);
         const animation = context.textures.animations(name);
-        const icon = new pixi_1.AnimatedSprite(animation);
+        const coin = new pixi_1.AnimatedSprite(animation);
         // animation
-        icon.play();
-        icon.animationSpeed = speed;
-        icon.scale.set(scale);
-        icon.anchor.set(...anchor);
-        return icon;
+        coin.play();
+        coin.animationSpeed = speed;
+        coin.scale.set(scale);
+        coin.anchor.set(...anchor);
+        return coin;
     }
     createCoinShine(context, win) {
         const style = win ? this.coinShineStyle.gold : this.coinShineStyle.silver;
