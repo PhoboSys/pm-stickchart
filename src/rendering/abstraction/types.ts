@@ -1,4 +1,4 @@
-import { Bettor, PlotData } from '@chartdata'
+import { Bettor, ChartTheme, PlotData } from '@chartdata'
 import { Features } from '@features'
 import { Options } from '@options'
 import { Rectangle } from '@lib/pixi'
@@ -29,6 +29,7 @@ export type RenderingContext = {
     textures: ITextureStorage
     timeframe: Timeframe
     charttype: EChartType
+    charttheme: ChartTheme
     features: Features
     plotdata: PlotData
     chartdata: { prices: string[], timestamps: number[] }

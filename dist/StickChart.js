@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StickChart = void 0;
 const _chartdata_1 = require("./chartdata/index.js");
 const _config_1 = __importDefault(require("./config.js"));
+const _constants_1 = require("./constants/index.js");
 const _infra_1 = require("./infra/index.js");
 const _events_1 = require("./events/index.js");
 const _features_1 = require("./features/index.js");
@@ -125,6 +126,7 @@ class StickChart extends EventTarget {
             bettor: context.bettor,
             resolved: context.resolved,
             charttype: context.charttype,
+            charttheme: context.charttheme || _constants_1.DEFAULT_THEME,
             screen: this.application.screen,
             textures: this.textureStorage,
             timeframe: this.timeframe,

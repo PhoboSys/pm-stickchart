@@ -1,7 +1,7 @@
 {
   "name": "@oracly/pm-stickchart",
   "description": "Chart",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "author": "Oracly Team <team@oracly.io>",
   "private": false,
   "license": "MIT",

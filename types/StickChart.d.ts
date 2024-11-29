@@ -1,4 +1,4 @@
-import { ChartData, Bettor } from '@chartdata';
+import { ChartData, ChartTheme, Bettor } from '@chartdata';
 import { EChartType } from '@enums';
 import { Features } from '@features';
 import { Options } from '@options';
@@ -39,6 +39,7 @@ export declare class StickChart extends EventTarget {
         transactionsEntities: any;
         bettor: Bettor;
         features: Features;
+        charttheme: ChartTheme;
     }): void;
     destroy(): void;
 }

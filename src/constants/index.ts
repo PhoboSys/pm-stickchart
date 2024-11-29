@@ -1,3 +1,4 @@
+export * from './themes'
 export * from './currencies'
 export * from './roundlevels'
 export * from './prizefunds'

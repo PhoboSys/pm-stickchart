@@ -1,5 +1,6 @@
-import { DataBuilder, ChartData, Bettor } from '@chartdata'
+import { DataBuilder, ChartData, ChartTheme, Bettor } from '@chartdata'
 import config from '@config'
+import { DEFAULT_THEME } from '@constants'
 
 import { EChartType } from '@enums'
 import { Logger } from '@infra'
@@ -154,6 +155,7 @@ export class StickChart extends EventTarget {
         transactionsEntities: any,
         bettor: Bettor,
         features: Features,
+        charttheme: ChartTheme,
     }): void {
         if (!context.game) {
             return Logger.error('Cannot initiate chart "game" is not provided!')
@@ -185,6 +187,7 @@ export class StickChart extends EventTarget {
             bettor: context.bettor,
             resolved: context.resolved,
             charttype: context.charttype,
+            charttheme: context.charttheme || DEFAULT_THEME,
             screen: this.application.screen,
             textures: this.textureStorage,
             timeframe: this.timeframe,
