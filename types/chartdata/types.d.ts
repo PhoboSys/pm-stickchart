@@ -1,6 +1,8 @@
+import { DEFAULT_THEME, TOURNAMENT_THEME } from '@constants';
 export type ChartData = {
     [key: number]: string;
 };
+export type ChartTheme = typeof DEFAULT_THEME | typeof TOURNAMENT_THEME;
 export type PricePoint = {
     value: string;
     timestamp: number;
