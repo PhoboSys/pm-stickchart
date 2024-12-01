@@ -69,7 +69,7 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
     }
     isNoContestRound(round, context) {
         if (this.isActualRound(round, context)) {
-            if ((0, utils_1.nowUnixTS)() < round.lockDate)
+            if (((0, utils_1.nowUnixTS)() - (context.options.noContestDelay || 0)) < round.lockDate)
                 return false;
             const price = _chartdata_1.DataBuilder.getLatest(context.chartdata);
             if (!(price === null || price === void 0 ? void 0 : price.timestamp) || price.timestamp < round.lockDate)

@@ -97,7 +97,7 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
     ): boolean {
 
         if (this.isActualRound(round, context)) {
-            if (nowUnixTS() < round.lockDate) return false
+            if ((nowUnixTS() - (context.options.noContestDelay || 0)) < round.lockDate) return false
 
             const price = DataBuilder.getLatest(context.chartdata)
             if (!price?.timestamp || price.timestamp < round.lockDate) return false

@@ -987,7 +987,7 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
     }
     updateProfit(round, prediction, context, container, state) {
         const { emptyround, nocontest, undef, win, phantom, orphan, propagating, claimable, } = state;
-        if (orphan) {
+        if (orphan || (emptyround && !claimable)) {
             this.clear('profit');
             this.clear('profitcontent');
             this.clear('profitCurrency');

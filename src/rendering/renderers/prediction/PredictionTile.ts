@@ -1099,7 +1099,7 @@ export class PredictionTile extends BasePredictionsRenderer {
             claimable,
         } = state
 
-        if (orphan) {
+        if (orphan || (emptyround && !claimable)) {
             this.clear('profit')
             this.clear('profitcontent')
             this.clear('profitCurrency')
