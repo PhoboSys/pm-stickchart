@@ -10,7 +10,7 @@ class datamath {
     static min(data) {
         let [minimum] = data;
         for (const item of data) {
-            if (item < minimum)
+            if ((0, calc_utils_1.lt)(item, minimum))
                 minimum = item;
         }
         return minimum;
@@ -18,7 +18,7 @@ class datamath {
     static max(data) {
         let [maximum] = data;
         for (const item of data) {
-            if (item > maximum)
+            if ((0, calc_utils_1.gt)(item, maximum))
                 maximum = item;
         }
         return maximum;
@@ -27,9 +27,9 @@ class datamath {
         let [minimum] = data;
         let [maximum] = data;
         for (const item of data) {
-            if (item < minimum)
+            if ((0, calc_utils_1.lt)(item, minimum))
                 minimum = item;
-            if (item > maximum)
+            if ((0, calc_utils_1.gt)(item, maximum))
                 maximum = item;
         }
         return [minimum, maximum];
