@@ -1,14 +1,14 @@
 import Big from 'big.js'
 
 import { binarySearchNearest } from '@lib/utils'
-import { sub, add, div, mul } from '@lib/calc-utils'
+import { sub, add, div, mul, gt, lt } from '@lib/calc-utils'
 
 export default class datamath {
 
     static min(data: number[]): number {
         let [minimum] = data
         for (const item of data) {
-            if (item < minimum) minimum = item
+            if (lt(item, minimum)) minimum = item
         }
 
         return minimum
@@ -17,7 +17,7 @@ export default class datamath {
     static max(data: number[]): number {
         let [maximum] = data
         for (const item of data) {
-            if (item > maximum) maximum = item
+            if (gt(item, maximum)) maximum = item
         }
 
         return maximum
@@ -27,8 +27,8 @@ export default class datamath {
         let [minimum] = data
         let [maximum] = data
         for (const item of data) {
-            if (item < minimum) minimum = item
-            if (item > maximum) maximum = item
+            if (lt(item, minimum)) minimum = item
+            if (gt(item, maximum)) maximum = item
         }
 
         return [minimum, maximum]
