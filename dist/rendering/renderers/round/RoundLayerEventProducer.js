@@ -49,7 +49,7 @@ class RoundLayerEventProducer extends BaseRoundsRenderer_1.BaseRoundsRenderer {
             });
             layer.addEventListener('pointermove', (e) => {
                 if (e.buttons === 1) {
-                    if (this.lastTouch.x !== e.x || this.lastTouch.y !== e.y) {
+                    if (this.lastTouch && (this.lastTouch.x !== e.x || this.lastTouch.y !== e.y)) {
                         this.moved = true;
                     }
                 }
