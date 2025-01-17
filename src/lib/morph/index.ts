@@ -11,6 +11,8 @@ export default class MorphController {
 
     #active: { timestamps: number[], prices: string[] }
 
+    #next: PricePoint | null
+
     constructor(
         private _onUpdate: () => void
     ) {
@@ -20,6 +22,12 @@ export default class MorphController {
 
     public get isActive(): boolean {
         return this.#timeline.isActive()
+    }
+
+    public get next(): PricePoint | null {
+        if (this.isActive) return this.#next
+
+        return null
     }
 
     public morph(previous?: ChartData, next?: ChartData): void {
@@ -35,8 +43,8 @@ export default class MorphController {
 
         // 1. Find all points that was added from previous to next
         const frontdiff: number[] = []
-        const pts = previous.timestamps[previous.timestamps.length-1]
-        const ats = this.#active.timestamps[this.#active.timestamps.length-1]
+        const pts = previous.timestamps.at(-1)
+        const ats = this.#active.timestamps.at(-1)
 
         let cidx = next.timestamps.length
         let intersect = false
@@ -123,6 +131,9 @@ export default class MorphController {
             {
                 ...end,
                 ...config.morph.animation,
+                onStart: () => {
+                    this.#next = end
+                },
                 onUpdate: () => {
                     next.timestamps[idx] = animated.timestamp
                     next.prices[idx] = animated.value
@@ -134,6 +145,7 @@ export default class MorphController {
                     // we have to apply it explicitly
                     next.timestamps[idx] = end.timestamp
                     next.prices[idx] = end.value
+                    this.#next = null
                     this._onUpdate()
                 }
             }

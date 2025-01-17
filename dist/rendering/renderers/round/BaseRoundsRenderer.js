@@ -109,12 +109,6 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
     }
     getResolutionPricePoint(round, context) {
         var _a, _b;
-        if (this.isActualRound(round, context)) {
-            const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
-            if (latest.timestamp > round.entryPriceTimestamp)
-                return latest;
-            return null;
-        }
         const isResolveReady = !round.resolved && ((_a = context.settlments) === null || _a === void 0 ? void 0 : _a[round.endDate]);
         if (isResolveReady) {
             return {
@@ -139,8 +133,13 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
         const latest = _chartdata_1.DataBuilder.getLatest(context.chartdata);
         if (latest.timestamp <= round.entryPriceTimestamp)
             return null;
-        if (latest.timestamp < round.endDate)
+        if (latest.timestamp < round.endDate) {
+            const nextpp = context.morph.next;
+            if (nextpp && nextpp.timestamp > round.endDate) {
+                return _chartdata_1.DataBuilder.getSecondLatest(context.chartdata);
+            }
             return latest;
+        }
         return this.getRoundResolutionPriceFormPricefeed(round.endDate, context.chartdata);
     }
     getRoundResolutionPriceFormPricefeed(endDate, chartdata) {

@@ -152,13 +152,6 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
         context: RenderingContext,
     ): PricePoint | null {
 
-        if (this.isActualRound(round, context)) {
-            const latest = DataBuilder.getLatest(context.chartdata)
-            if (latest.timestamp > round.entryPriceTimestamp) return latest
-
-            return null
-        }
-
         const isResolveReady = !round.resolved && context.settlments?.[round.endDate]
         if (isResolveReady) {
             return {
@@ -186,7 +179,14 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
         const latest = DataBuilder.getLatest(context.chartdata)
 
         if (latest.timestamp <= round.entryPriceTimestamp) return null
-        if (latest.timestamp < round.endDate) return latest
+        if (latest.timestamp < round.endDate) {
+            const nextpp = context.morph.next
+            if (nextpp && nextpp.timestamp > round.endDate) {
+                return DataBuilder.getSecondLatest(context.chartdata)
+            }
+
+            return latest
+        }
 
         return this.getRoundResolutionPriceFormPricefeed(round.endDate, context.chartdata)
 

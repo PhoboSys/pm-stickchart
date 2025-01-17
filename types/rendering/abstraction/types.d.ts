@@ -3,6 +3,7 @@ import { Features } from '@features';
 import { Options } from '@options';
 import { Rectangle } from '../../lib/pixi';
 import { Timeframe } from '../../lib/timeframe';
+import MorphController from '../../lib/morph';
 import { ITextureStorage } from './interfaces';
 import { EChartType } from '@enums';
 export type DoneFunction = () => void;
@@ -22,6 +23,7 @@ export type RenderingContext = {
     screen: Rectangle;
     textures: ITextureStorage;
     timeframe: Timeframe;
+    morph: MorphController;
     charttype: EChartType;
     charttheme: ChartTheme;
     features: Features;
