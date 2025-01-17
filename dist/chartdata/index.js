@@ -41,6 +41,13 @@ class DataBuilder {
             timestamp: Number(timestamps.at(-1)),
         };
     }
+    static getSecondLatest(chartdata) {
+        const { timestamps, prices } = chartdata;
+        return {
+            value: prices.at(-2),
+            timestamp: Number(timestamps.at(-2)),
+        };
+    }
     static normalize(timestampsOrig, pricesOrig, chartdata, timeframe, screen) {
         if ((0, utils_1.isEmpty)(timestampsOrig) || (0, utils_1.isEmpty)(pricesOrig))
             return DataBuilder.EMPTY_PLOTDATA;

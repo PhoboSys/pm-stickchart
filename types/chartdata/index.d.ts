@@ -14,6 +14,10 @@ export declare class DataBuilder {
         timestamps: any;
         prices: any;
     }): PricePoint;
+    static getSecondLatest(chartdata: {
+        timestamps: any;
+        prices: any;
+    }): PricePoint;
     static EMPTY_PLOTDATA: PlotData;
     static normalize(timestampsOrig: any, pricesOrig: any, chartdata: {
         timestamps: any;
