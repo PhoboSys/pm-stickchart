@@ -43,6 +43,17 @@ export class DataBuilder {
         }
     }
 
+    static getSecondLatest(
+        chartdata: { timestamps, prices },
+    ): PricePoint {
+        const { timestamps, prices } = chartdata
+
+        return {
+            value: prices.at(-2),
+            timestamp: Number(timestamps.at(-2)),
+        }
+    }
+
     static EMPTY_PLOTDATA: PlotData = {
         latestY: 0,
         latestX: 0,

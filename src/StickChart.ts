@@ -191,6 +191,7 @@ export class StickChart extends EventTarget {
             screen: this.application.screen,
             textures: this.textureStorage,
             timeframe: this.timeframe,
+            morph: this.morphController,
 
             eventTarget: this,
             chartdata,
