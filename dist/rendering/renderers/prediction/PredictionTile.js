@@ -1028,13 +1028,10 @@ class PredictionTile extends BasePredictionsRenderer_1.BasePredictionsRenderer {
                     if (prediction.claimed) {
                         return ui_1.default.erc20(prediction.payout);
                     }
-                    else if (emptyround) {
-                        return ui_1.default.erc20(prediction.wager);
-                    }
                     else {
-                        return ui_1.default.erc20((0, calc_utils_1.actualReturn)(round.prizefunds, prediction.wager, prediction.position));
+                        return ui_1.default.erc20((0, calc_utils_1.actualReturnDecimal)(round.prizefunds, prediction.wager, prediction.position, prediction.erc20));
                     }
-                }, [prediction.wager, prediction.position, prediction.claimed, round.prizefunds[_constants_1.PRIZEFUNDS.TOTAL], nocontest, emptyround]);
+                }, [prediction.wager, prediction.position, prediction.claimed, round.prizefunds[_constants_1.PRIZEFUNDS.TOTAL]]);
                 payout.text = prizeAmount;
                 payout.position.set(...this.payoutStyle.default.offset);
                 const [profitText, profitTextState] = this.get('profitText', () => _rendering_1.GraphicUtils.createText('Profit', this.profitTextStyle.default.offset, this.profitTextStyle.default.text));

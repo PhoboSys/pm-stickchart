@@ -5,7 +5,25 @@ export declare const USDT = "USDT";
 export declare const WETH = "WETH";
 export declare const WBTC = "WBTC";
 export declare const UNKNOWN = "UNKNOWN";
+export declare const ORCY_ADDRESS = "0x8def651cbf7deaa35835ed6d4a4d4daabb8b898b";
+export declare const DEMO_ADDRESS = "0xde41431172704248b723a36d00044f8132fa444e";
+export declare const USDC_ADDRESS = "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359";
+export declare const USDT_ADDRESS = "0xc2132d05d31c914a87c6611c10748aeb04b58e8f";
+export declare const WETH_ADDRESS = "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619";
+export declare const WBTC_ADDRESS = "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6";
 export declare const ERC20: {
+    ORCY: string;
+    DEMO: string;
+    USDC: string;
+    USDT: string;
+    WETH: string;
+    WBTC: string;
+    "0x8def651cbf7deaa35835ed6d4a4d4daabb8b898b": string;
+    "0xde41431172704248b723a36d00044f8132fa444e": string;
+    "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": string;
+    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f": string;
+    "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": string;
+    "0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6": string;
     SYMBOL: {
         DEMO: string;
         ORCY: string;

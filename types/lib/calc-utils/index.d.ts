@@ -1,5 +1,10 @@
+export declare function fromDecimal(number: any, decimals: any): string;
+export declare function toDecimalERC20(amount: any, erc20: any): string;
+export declare function fromDecimalERC20(amount: any, erc20: any): string;
 export declare function futureReturn(prizefunds: any, wager: any, position: any): string;
+export declare function __actualReturn(prizefunds: any, wager: any, position: any): string;
 export declare function actualReturn(prizefunds: any, wager: any, position: any): string;
+export declare function actualReturnDecimal(prizefunds: any, wager: any, position: any, erc20: any): string;
 export declare function profitPercent(prize: any, wager: any): string;
 export declare function gt(number1: any, number2: any): boolean;
 export declare function gte(number1: any, number2: any): boolean;
