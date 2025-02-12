@@ -1,11 +1,15 @@
 import Big from 'big.js'
-import { PRIZEFUNDS } from '@constants'
+import { toLower } from 'lodash'
+
+import { ERC20, PRIZEFUNDS } from '@constants'
 import { mapValues } from '@lib/utils'
 
-const ONE = Big(1)
 const ZERO = Big(0)
+const ONE = Big(1)
+const TEN = Big(10)
 
 const VIGORISH = Big(0.01)
+const VIGORISH_PERCENT = Big(1)
 
 function __inNumbers(...args): boolean {
     for (const num of args) {
@@ -17,6 +21,38 @@ function __inNumbers(...args): boolean {
     }
 
     return true
+}
+
+function toDecimal(number, decimals): string {
+    if (!__inNumbers(number, decimals)) return ''
+
+    return Big(number)
+        .div(TEN.pow(decimals))
+        .toString()
+}
+
+export function fromDecimal(number, decimals): string {
+    if (!__inNumbers(number, decimals)) return ''
+
+    return Big(number)
+        .times(TEN.pow(decimals))
+        .toString()
+}
+
+export function toDecimalERC20(amount, erc20): string {
+    erc20 = toLower(erc20)
+    if (!amount) return amount
+    if (!ERC20[erc20]) return amount
+
+    return toDecimal(amount, ERC20.DECIMALS[ERC20[erc20]])
+}
+
+export function fromDecimalERC20(amount, erc20): string {
+    erc20 = toLower(erc20)
+    if (!amount) return amount
+    if (!ERC20[erc20]) return amount
+
+    return fromDecimal(amount, ERC20.DECIMALS[ERC20[erc20]])
 }
 
 function __inNotZeroNumbers(...args): boolean {
@@ -52,19 +88,13 @@ export function futureReturn(prizefunds, wager, position): string {
     return result.toString()
 }
 
-function __actualReturn(prizefunds, wager, position): Big {
+export function __actualReturn(prizefunds, wager, position): string {
+
     if (!__inNotZeroNumbers(prizefunds?.[PRIZEFUNDS.TOTAL], prizefunds?.[position], wager)) return ZERO
 
-    wager = Big(wager)
-    prizefunds = mapValues(prizefunds, prizefund => Big(prizefund))
-
-    const result = prizefunds[PRIZEFUNDS.TOTAL]
-        .times(
-            wager.div(prizefunds[position])
-        )
-        .times(
-            ONE.minus(VIGORISH)
-        )
+    const prize = Big(prizefunds[PRIZEFUNDS.TOTAL]).times(wager).div(prizefunds[position]).round(0, Big.roundDown)
+    const commission = prize.times(VIGORISH_PERCENT).div(100).round(0, Big.roundUp)
+    const result = prize.minus(commission)
 
     return result
 }
@@ -73,6 +103,14 @@ export function actualReturn(prizefunds, wager, position): string {
     const result = __actualReturn(prizefunds, wager, position)
 
     return result.toString()
+}
+
+export function actualReturnDecimal(prizefunds, wager, position, erc20): string {
+
+    prizefunds = mapValues(prizefunds, (amount) => fromDecimalERC20(amount, erc20))
+    wager = fromDecimalERC20(wager, erc20)
+
+    return toDecimalERC20(actualReturn(prizefunds, wager, position), erc20)
 }
 
 export function profitPercent(prize, wager): string {

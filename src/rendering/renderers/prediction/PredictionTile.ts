@@ -20,7 +20,7 @@ import { Logger } from '@infra'
 import datamath from '@lib/datamath'
 import { Graphics, Container, Sprite, Assets, gsap } from '@lib/pixi'
 import ui from '@lib/ui'
-import { actualReturn, profitPercent } from '@lib/calc-utils'
+import { actualReturnDecimal, profitPercent } from '@lib/calc-utils'
 
 import { RoundHoverEvent, RoundUnhoverEvent, TouchStartEvent, WithdrawEvent } from '@events'
 import { ResolveWithdrawEvent, RoundPinEvent, RoundUnpinEvent } from '@events'
@@ -1159,13 +1159,11 @@ export class PredictionTile extends BasePredictionsRenderer {
                     () => {
                         if (prediction.claimed) {
                             return ui.erc20(prediction.payout)
-                        } else if (emptyround) {
-                            return ui.erc20(prediction.wager)
                         } else {
-                            return ui.erc20(actualReturn(round.prizefunds, prediction.wager, prediction.position))
+                            return ui.erc20(actualReturnDecimal(round.prizefunds, prediction.wager, prediction.position, prediction.erc20))
                         }
                     },
-                    [prediction.wager, prediction.position, prediction.claimed, round.prizefunds[PRIZEFUNDS.TOTAL], nocontest, emptyround]
+                    [prediction.wager, prediction.position, prediction.claimed, round.prizefunds[PRIZEFUNDS.TOTAL]]
                 )
                 payout.text = prizeAmount
                 payout.position.set(...this.payoutStyle.default.offset)
