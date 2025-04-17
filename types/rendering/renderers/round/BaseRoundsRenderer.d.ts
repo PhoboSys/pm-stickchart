@@ -24,6 +24,7 @@ export declare abstract class BaseRoundsRenderer extends BaseRenderer {
         prices: any;
     }): PricePoint | null;
     protected isActualRound(round: any, context: RenderingContext): boolean;
+    protected hasRoundPrice(round: any, context: RenderingContext): boolean;
     protected getLevelTextureName(context: RenderingContext): symbol;
     protected abstract updateRound(round: any, context: RenderingContext, container: Container, index: number): void;
 }

@@ -212,7 +212,7 @@ export class RoundCountdown extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (!this.isActualRound(round, context)) return this.clear()
+        if (!this.isActualRound(round, context) || !this.hasRoundPrice(round, context)) return this.clear()
 
         container.sortableChildren = true
 
