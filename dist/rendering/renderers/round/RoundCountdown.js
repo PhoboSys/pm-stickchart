@@ -184,7 +184,7 @@ class RoundCountdown extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return this._countdownTick();
     }
     updateRound(round, context, container) {
-        if (!this.isActualRound(round, context))
+        if (!this.isActualRound(round, context) || !this.hasRoundPrice(round, context))
             return this.clear();
         container.sortableChildren = true;
         this.updateBackground(round, context, container);

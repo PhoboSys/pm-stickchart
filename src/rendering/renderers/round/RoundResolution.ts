@@ -32,7 +32,7 @@ export class RoundResolution extends BaseRoundsRenderer {
         container: Container,
     ): void {
 
-        if (this.isHistoricalRound(round, context)) return this.clear()
+        if (this.isHistoricalRound(round, context) || !this.hasRoundPrice(round, context)) return this.clear()
 
         this.updateActualRound(round, context, container)
 

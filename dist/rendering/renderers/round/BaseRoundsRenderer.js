@@ -158,6 +158,11 @@ class BaseRoundsRenderer extends _rendering_1.BaseRenderer {
         const end = round === null || round === void 0 ? void 0 : round.endDate;
         return end > now;
     }
+    hasRoundPrice(round, context) {
+        var _a, _b;
+        return ((round === null || round === void 0 ? void 0 : round.entryPriceValue) ||
+            (0, calc_utils_1.gte)((_b = (_a = context === null || context === void 0 ? void 0 : context.plotdata) === null || _a === void 0 ? void 0 : _a.latest) === null || _b === void 0 ? void 0 : _b.timestamp, round === null || round === void 0 ? void 0 : round.startDate));
+    }
     getLevelTextureName(context) {
         var _a, _b;
         switch ((_a = context.game) === null || _a === void 0 ? void 0 : _a.level) {

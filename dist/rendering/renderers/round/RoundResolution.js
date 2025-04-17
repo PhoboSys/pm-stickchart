@@ -26,7 +26,7 @@ class RoundResolution extends BaseRoundsRenderer_1.BaseRoundsRenderer {
         return RoundResolution.ROUND_RESOLUTION_ID;
     }
     updateRound(round, context, container) {
-        if (this.isHistoricalRound(round, context))
+        if (this.isHistoricalRound(round, context) || !this.hasRoundPrice(round, context))
             return this.clear();
         this.updateActualRound(round, context, container);
     }

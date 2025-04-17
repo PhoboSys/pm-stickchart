@@ -5,7 +5,7 @@ import { SILVER_LEVEL_TEXTURE, GOLD_LEVEL_TEXTURE, BRONZE_LEVEL_TEXTURE } from '
 
 import { Container } from '@lib/pixi'
 import { isEmpty, forEach, nowUnixTS, binarySearchNearest } from '@lib/utils'
-import { eq, gt, lt } from '@lib/calc-utils'
+import { eq, gt, gte, lt } from '@lib/calc-utils'
 import { PricePoint, DataBuilder } from '@chartdata'
 import { EPosition } from '@enums'
 
@@ -217,6 +217,16 @@ export abstract class BaseRoundsRenderer extends BaseRenderer {
         const end = round?.endDate
 
         return end > now
+    }
+
+    protected hasRoundPrice(
+        round: any,
+        context: RenderingContext,
+    ): boolean {
+        return (
+            round?.entryPriceValue ||
+            gte(context?.plotdata?.latest?.timestamp, round?.startDate)
+        )
     }
 
     protected getLevelTextureName(context: RenderingContext): symbol {
