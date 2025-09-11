@@ -14,7 +14,7 @@ export default class MorphController {
     #next: PricePoint | null
 
     constructor(
-        private _onUpdate: () => void
+        private _onUpdate: (force?: boolean) => void
     ) {
         this.#timeline = gsap.timeline()
         this.#active = { timestamps: [], prices: [] }
@@ -105,7 +105,7 @@ export default class MorphController {
                 // 9. Clear and reperform default update/render
                 if (this.isActive) this.#timeline.progress(1)
                 this.#timeline.clear()
-                this._onUpdate()
+                this._onUpdate(true)
 
             }
 
@@ -114,7 +114,7 @@ export default class MorphController {
             // 10. Clear and reperform default update/render
             if (this.isActive) this.#timeline.progress(1)
             this.#timeline.clear()
-            this._onUpdate()
+            this._onUpdate(true)
 
         }
 
@@ -146,7 +146,7 @@ export default class MorphController {
                     next.timestamps[idx] = end.timestamp
                     next.prices[idx] = end.value
                     this.#next = null
-                    this._onUpdate()
+                    this._onUpdate(true)
                 }
             }
         )

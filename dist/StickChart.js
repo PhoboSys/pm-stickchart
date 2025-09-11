@@ -37,7 +37,7 @@ class StickChart extends EventTarget {
         this.eventsProducer = new _events_1.EventsProducer(this, this.canvas, stageElement, !!(options === null || options === void 0 ? void 0 : options.isMobile));
         this.textureStorage = new _rendering_2.TextureStorage(this.application);
         this.timeframe = new timeframe_1.Timeframe(this, () => this.applyTimeframe(), !!(options === null || options === void 0 ? void 0 : options.isMobile));
-        this.morphController = new morph_1.default(() => this.applyMorph());
+        this.morphController = new morph_1.default((force) => this.applyMorph(force));
         const renderer = new _rendering_2.GraphicStorage(this.application.stage);
         this.pipelineFactory = new _rendering_1.RenderingPipelineFactory(renderer);
     }
@@ -50,19 +50,19 @@ class StickChart extends EventTarget {
         if (!this._context)
             return;
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
-        this.rerender('resize');
+        this.rerender('resize', true);
     }
     setTimeframe(timeframe) {
         this.timeframe.save(timeframe);
     }
     resetTimeframe() {
         this.timeframe.reset();
-        this.applyTimeframe();
+        this.applyTimeframe(true);
     }
     get canvas() {
         return this.application.view;
     }
-    applyTimeframe() {
+    applyTimeframe(force = false) {
         var _a, _b;
         if (!this._context)
             return;
@@ -70,10 +70,12 @@ class StickChart extends EventTarget {
             return;
         if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
             return;
+        if (this.frameRenderRequested && !force)
+            return;
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
-        this.rerender('timeframe');
+        this.rerender('timeframe', force);
     }
-    applyMorph() {
+    applyMorph(force = false) {
         var _a, _b;
         if (!this._context)
             return;
@@ -81,12 +83,18 @@ class StickChart extends EventTarget {
             return;
         if (((_b = this._context.screen) === null || _b === void 0 ? void 0 : _b.height) === 0)
             return;
+        if (this.frameRenderRequested && !force)
+            return;
         this._context.plotdata = _chartdata_1.DataBuilder.plotdata(this._context.chartdata, this.application.screen, this.timeframe.now(_chartdata_1.DataBuilder.getLatestTS(this._context.chartdata)).get());
-        this.rerender('morph');
+        this.rerender('morph', force);
     }
-    rerender(reason) {
+    rerender(reason, force = false) {
+        if (this.frameRenderRequested && !force)
+            return;
+        this.frameRenderRequested = true;
         window.requestAnimationFrame(() => {
             var _a, _b;
+            this.frameRenderRequested = false;
             if (!this._context)
                 return;
             if (((_a = this._context.screen) === null || _a === void 0 ? void 0 : _a.width) === 0)
