@@ -36,8 +36,6 @@ export class StickChart extends EventTarget {
 
     private fontsready: FontsReady
 
-    private frameRenderRequested: boolean
-
     constructor(
         private stageElement: HTMLElement,
         private options? : Options,
@@ -62,7 +60,7 @@ export class StickChart extends EventTarget {
         this.eventsProducer = new EventsProducer(this, this.canvas, stageElement, !!options?.isMobile)
         this.textureStorage = new TextureStorage(this.application)
         this.timeframe = new Timeframe(this, () => this.applyTimeframe(), !!options?.isMobile)
-        this.morphController = new MorphController((force) => this.applyMorph(force))
+        this.morphController = new MorphController(() => this.applyMorph())
 
         const renderer = new GraphicStorage(this.application.stage)
 
@@ -82,7 +80,7 @@ export class StickChart extends EventTarget {
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
-        this.rerender('resize', true)
+        this.rerender('resize')
     }
 
     public setTimeframe(timeframe: number): void {
@@ -91,46 +89,41 @@ export class StickChart extends EventTarget {
 
     public resetTimeframe(): void {
         this.timeframe.reset()
-        this.applyTimeframe(true)
+        this.applyTimeframe()
     }
 
     public get canvas(): HTMLCanvasElement {
         return this.application.view
     }
 
-    private applyTimeframe(force = false): void {
+    private applyTimeframe(): void {
         if (!this._context) return
         if (this._context.screen?.width === 0) return
         if (this._context.screen?.height === 0) return
-        if (this.frameRenderRequested && !force) return
 
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
-        this.rerender('timeframe', force)
+        this.rerender('timeframe')
     }
 
-    private applyMorph(force = false): void {
+    private applyMorph(): void {
         if (!this._context) return
         if (this._context.screen?.width === 0) return
         if (this._context.screen?.height === 0) return
-        if (this.frameRenderRequested && !force) return
 
         this._context.plotdata = DataBuilder.plotdata(
             this._context.chartdata,
             this.application.screen,
             this.timeframe.now(DataBuilder.getLatestTS(this._context.chartdata)).get(),
         )
-        this.rerender('morph', force)
+        this.rerender('morph')
     }
 
-    public rerender(reason: string, force: boolean = false): void { // eslint-disable-line
-        if (this.frameRenderRequested && !force) return
-        this.frameRenderRequested = true
+    public rerender(reason: string): void { // eslint-disable-line
         window.requestAnimationFrame(() => {
-            this.frameRenderRequested = false
             if (!this._context) return
             if (this._context.screen?.width === 0) return
             if (this._context.screen?.height === 0) return

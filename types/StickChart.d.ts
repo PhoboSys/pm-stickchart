@@ -13,7 +13,6 @@ export declare class StickChart extends EventTarget {
     private _context;
     private timeframe;
     private fontsready;
-    private frameRenderRequested;
     constructor(stageElement: HTMLElement, options?: Options | undefined);
     setScreenSize({ width, height }: {
         width: any;
@@ -24,7 +23,7 @@ export declare class StickChart extends EventTarget {
     get canvas(): HTMLCanvasElement;
     private applyTimeframe;
     private applyMorph;
-    rerender(reason: string, force?: boolean): void;
+    rerender(reason: string): void;
     render(context: {
         chartdata: ChartData;
         charttype: EChartType;

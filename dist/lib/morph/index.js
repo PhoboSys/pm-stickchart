@@ -99,7 +99,7 @@ _MorphController_timeline = new WeakMap(), _MorphController_active = new WeakMap
             if (this.isActive)
                 __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
             __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
-            this._onUpdate(true);
+            this._onUpdate();
         }
     }
     else {
@@ -107,7 +107,7 @@ _MorphController_timeline = new WeakMap(), _MorphController_active = new WeakMap
         if (this.isActive)
             __classPrivateFieldGet(this, _MorphController_timeline, "f").progress(1);
         __classPrivateFieldGet(this, _MorphController_timeline, "f").clear();
-        this._onUpdate(true);
+        this._onUpdate();
     }
 }, _MorphController_add = function _MorphController_add(animated, end, next, idx) {
     __classPrivateFieldGet(this, _MorphController_timeline, "f").to(animated, Object.assign(Object.assign(Object.assign({}, end), _config_1.default.morph.animation), { onStart: () => {
@@ -123,7 +123,7 @@ _MorphController_timeline = new WeakMap(), _MorphController_active = new WeakMap
             next.timestamps[idx] = end.timestamp;
             next.prices[idx] = end.value;
             __classPrivateFieldSet(this, _MorphController_next, null, "f");
-            this._onUpdate(true);
+            this._onUpdate();
         } }));
 };
 //# sourceMappingURL=index.js.map
